@@ -8,6 +8,10 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.4. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.5. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
+
+## v0.5
+
+Pause → Weapons and the results screen show effective damage, damage share, DPS, finishing-hit kills and boss damage. Recent runs retain the breakdown. Five weapons received an initial damage tuning pass. Shattered Belt and Storm Relay each have three themed boss encounters; Neon Expanse retains its original roster.

@@ -1,3 +1,18 @@
+# REACTOR ROGUE — current handover
+
+## v0.5 — 31 October 2026
+
+Use `index.html` in this repository as the source of truth. The historical notes below describe earlier builds.
+
+- Weapon accounting is centralized in `hit`: actual enemy HP removed after armour, excluding overkill/scenery. The optional fourth argument preserves ownership for piercing shots and singularity fields. Source aliases handle DOT, mines, evolutions and synergy effects. Ship/reactor/environment damage is its own row.
+- `weaponStats` stores damage, bossDamage, kills, hit events and game seconds equipped. Pause → Weapons, results, and expandable Recent runs display breakdowns. DPS includes idle time while equipped, excludes pauses and uses game seconds at any speed. Snapshot/cleanRun round-trip bounded stats; older records show unavailable rather than invented data.
+- Initial tuning: harpoon 8+4L → 10+5L; mortar 35+18L → 42+21L; phase torpedo 28+14L → 38+20L. Gravity tick 7+5L → 6+4L; poison tick 5+4L → 4+3.5L. Upgrade previews share the new values. This is an initial balance pass, not a claim that all builds have equal DPS.
+- `sectorBossDefs`: original Neon Expanse unchanged. Belt: Grapple Corsair, Scrap Crusher, Salvage Dreadnought. Storm: Relay Keeper, Arc Conductor, Tempest Citadel. All use the existing 3/6/10 minute schedule and mutation/cache/victory pipeline.
+- Sector boss attacks alternate projectile patterns and 1.5-second ground warnings. Belt drops moving salvage hazards; the final carrier also launches physical debris. Storm bosses use arc zones; later tiers deploy at most two destroyable firing relays, increasing boss armour from 20% to 40% while any relay is alive. Below half health attacks accelerate. Boss defeat clears owned relays and hazards.
+- Automated checks: full boot, save/load stats, overkill/death guards, all 26 weapon attribution sums, all nine bosses, warnings, relay cap/armour/cleanup, pause/results, v0.4 mechanics regression, responsive render paths, and original arena byte-for-byte preservation. Runtime harnesses use mocked DOM and real simulation; hosted browser checks supplement them. Full human ten-minute runs and physical iPad touch remain manual QA.
+
+---
+
 # NEON SWARM — Development handover
 
 Prepared 30 October 2026 (Europe/London). This is a portable snapshot; use the HTML supplied alongside this document as the source of truth.
