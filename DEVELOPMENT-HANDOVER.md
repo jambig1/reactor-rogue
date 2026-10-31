@@ -383,3 +383,30 @@ Actual browser testing remains unverified: Playwright was present but no browser
 
 ### Helpers
 mobility / updateMobility / dash; addDamageNumber / enemyDamage / drawEnemyShip; rrEmblem / drawMenuScene; sectors / frames / modules / contracts / hangar / commitHangar / initExpansion / openHangar / renderHangar; specialisations / offerSpecialisation / chooseSpecialisation / upgradeComparison / applyProjectileSpec; encounter / roleInfo / spawnSpecial / specialistHeading / specialistAttack / updateExpansion / drawExpansion / drawSpecialist.
+
+
+## v0.4 — Ten weapons, ten evolutions, sector art and recipe UI
+
+Source of truth is now GitHub jambig1/reactor-rogue, index.html. GitHub Pages publishes main/root automatically at https://jambig1.github.io/reactor-rogue/. User authorised publishing future requested game updates automatically. The GitHub connector has read access but returned 403 on writes during setup; browser upload was authorised and used. Recheck current repository before editing. No credentials belong in source or handover.
+
+Neon Expanse's drawArena is preserved byte-for-byte. Only belt/storm select drawSectorArena: fractured amber grid, dim station hulks and parallax asteroid silhouettes for Shattered Belt; violet angled circuitry, relay towers, power pulses and electrical motes for Storm Relay. These structures are decorative; existing gameplay hazards stay outlined. Reduced motion stops decorative drift/pulses.
+
+The arsenal is now 26 weapons, each with an evolution. Ten new IDs and recipes:
+- harpoon, Ion Harpoon + Targeting Array → Thunderhook: two simultaneous tethers and an extra electric branch.
+- ember, Ember Wake + Thrusters → Solar Slipstream: longer/wider burning trails, twin trails while using mobility. Trail ignites toxic gas.
+- prism, Prism Satellites + Size Matrix → Prismatic Array: four double-firing satellites and three Pulse Laser refractions.
+- scrap, Scrapstorm + Armour Plating → Junkstar Barrage: explosion-charged shards split once into three children. Guards prevent recursive splitting.
+- buoy, Tesla Buoys + Point Defence → Storm Bastions: up to five long-lived, multi-target towers that intercept shots.
+- saw, Saw Drones + Kinetic Drive → Razor Squadron: faster, stronger penetrating saws return to the pilot.
+- mortar, Orbital Mortar + Power Amplifier → Meteor Battery: three delayed marked explosions.
+- nanite, Nanite Swarm + Regeneration → Grey Tide: infection casualties spread once and heal a small amount. Spread infections do not cascade.
+- phaseTorp, Phase Torpedoes + Phase Safeguard → Rift Torpedoes: armour-piercing projectiles leave pulsing slow/damage rifts.
+- sonic, Sonic Pulse + Repulsion Field → Resonance Engine: second delayed, stronger slowing shockwave.
+
+Normal six weapon/six support slots and five-level caps remain. All original sixteen evolutions retained. New weapons are automatic acquired weapons; original manual-starter rules are unchanged. New sound dispatch uses existing procedural cues and dedicated evolved profiles. New effects live in s.arsenal and reset with a run. Bounds: tethers 2, wakes 50, buoys 5, strikes 18, infections 80, rifts 12, pulses 12; projectiles retain the shared 250 cap.
+
+Ten displayed weapon combinations: Harpoon/Chain branches; Ember/Toxic ignition; Prism/Laser refraction; Scrap/Cannon explosion charging; Saw/Frost bonus frozen damage; Nanite/Gravity boosted infection; Mortar/Frost boosted frozen damage; Phase Torpedoes/Gravity impact pull; Sonic/Mines outward mine deployment and accelerated arming; Buoys/Shield recharge on successful zaps. Some underlying physical interactions (e.g. explosion charging) also work with other compatible sources.
+
+Evolutions tab defaults to My build, with Ready to evolve and All 26 recipes filters. Cards show equipped weapon level/progress, owned or missing support, evolved status, readiness and explicit next action. Support-slot and banishment blockers are explained. Combinations show active/missing partner; upgrades flag combinations with equipped items. Existing requirements remain weapon level 5, support level 1+, then elite cache.
+
+Automated verification: full-script mocked boot/start/render; every new weapon deals damage at base/evolved levels; all ten cache recipes claim correctly; original systems, specialisations, Hangar, storage failure and progression regression checks; all-sector rendering paths at mobile/tablet/desktop sizes; recipe status/filter checks; Junkstar charge/child guard; original arena renderer equality. Combined evolved build tested with bounded effect arrays. These are mocked checks, not visual/performance guarantees. Hosted browser menu/launch/pause/Hangar smoke checks were completed for v0.3; v0.4 visual results should be recorded after deployment. Physical iPad and long-run balance remain user playtest tasks.

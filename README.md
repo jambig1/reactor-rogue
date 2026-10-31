@@ -1,9 +1,13 @@
 # Reactor Rogue
 
-An offline-capable, single-file spaceship survivor game.
+[Play Reactor Rogue](https://jambig1.github.io/reactor-rogue/)
 
-Open `index.html` in a full browser, or play through GitHub Pages once enabled. No installation or build step is required.
+A neon spaceship survivor game with six pilots, distinct movement abilities, 26 weapons and evolutions, weapon combinations, three sectors and a persistent Hangar.
 
-Supports keyboard and mouse, mouse-only, keyboard-only and touch controls. Progress is saved locally in each browser.
+Open `index.html` in a full browser to play offline. No installation, dependencies, API keys or build step are required. Keyboard/mouse and touch controls are supported. Progress stays in each browser.
 
-Current version: 0.3. See `DEVELOPMENT-HANDOVER.md` for features and testing limitations.
+## Development
+
+Current version: 0.4. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+
+GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
