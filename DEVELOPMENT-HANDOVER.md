@@ -1,3 +1,39 @@
+# v0.6 progression — 31 October 2026
+
+Authoritative source: repository `index.html`. Ship progression is versioned under `rr_hangar.progressionVersion=1`. First upgrade of an existing Hangar save grants legacy ownership of all six original ships; recognised older pilot/archive progress also qualifies. Fresh saves own Vanguard only. Migration writes once immediately. New ships are never granted by migration.
+
+Ship challenge / price:
+- Vanguard: free.
+- Wasp: 500 lifetime kills / 40 credits.
+- Bastion: 100 Siege Cannon finishing-hit kills / 50.
+- Harrier: survive 6 minutes in one run / 60.
+- Glacier: freeze 200 different enemies across runs / 75.
+- Tempest: defeat any sector boss / 85.
+- Scavenger: collect 500 gem pickups (merged gems count once) / 100.
+- Spectre: defeat a boss without losing HP during its encounter; shield damage allowed / 160.
+- Architect: 250 Tesla Buoy finishing-hit kills / 120.
+- Helios: 50 gas ignitions / 140.
+- Echo: discover Sonic Pulse evolution / 180.
+
+`shipChallenges`, `shipOwned`, `shipReady`, `buyProgression` own all purchase/selection checks. Launch checks ownership independently of menu state. New pilot identities round-trip through archive validation. Challenge progress is banked with the run when ended or abandoned, using `hangarCheckpoint.progress` deltas; repeated records never duplicate progress or currency. Enemy freezing counts unique living enemies using `freezeTracked`. Boss HP-loss baseline is captured at spawn. Previous runs cannot reconstruct untracked freezing or clean-boss encounters.
+
+Currency reuses existing Hangar salvage, now labelled credits: floor(kills/25) + 10 per boss + 8 per breach + floor(game seconds/60), plus one-time contract rewards. Results show credits earned including contract bonuses. Existing balances and equipment costs are preserved. No credits are spent or lost merely on defeat.
+
+Tool ranks: 3 base uses plus up to 3 purchased ranks for each tool. Prices: skips 35/80/150, rerolls 50/100/180, banishes 60/120/200. Purchases are permanent, validated/clamped in saves, and never refill the active run. Each run snapshots its initial tool caps for Pause display.
+
+New ship abilities:
+- Scavenger: Scrapstorm, 95 HP, 185 speed, 1 armour. Salvage Burst marks gems/supply drops within 300 for attraction, 8s cooldown.
+- Spectre: Phase Torpedoes, 70 HP, 215 speed. Phase Shift lasts 0.9s with invulnerability, 25% movement boost and no enemy collision push, 6s cooldown.
+- Architect: Tesla Buoys, 115 HP, 155 speed, 1 armour. One 4s beacon at a time, 110 radius: 30% incoming damage reduction while inside and one hostile interception per .35s, 9s cooldown.
+- Helios: Ember Wake, 90 HP, 205 speed. 2s Solar Boost activates the existing boosted-wake interaction, 7s cooldown.
+- Echo: Sonic Pulse, 100 HP, 180 speed. Two shockwave dash charges, each 5s cooldown; cast emits Sonic Pulse.
+
+Validation: fresh and legacy save migration, challenge gating, all ship purchases, duplicate/insufficient-funds guards, three tool ranks/caps, next-run allowance snapshot, deduplicated progress and earnings, unique freeze count, beacon reduction, five abilities/starter attacks, all eleven archive identities, Hangar pages; existing 26-weapon/nine-boss and sector/evolution regression suites. Full human balance runs and physical iPad touch remain manual QA.
+
+Backlog — deliberately deferred: optional convoys, distress signals, reactor station objectives and risky caches. No new objective/event system added in v0.6.
+
+---
+
 # REACTOR ROGUE — current handover
 
 ## v0.5 — 31 October 2026
