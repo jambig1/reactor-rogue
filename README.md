@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.17.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.18.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -149,3 +149,11 @@ Merchant exclusives: Salvage Drone, Phase Plating, Cache Decoder, Echo Chamber, 
 Settings → Developer contains a session-only password gate (default `ReactorBert`), fresh test launches with any of the twelve ships and three sectors, invulnerability, enemy freeze, unlimited ability charges, temporary 0.25–4× simulation speed, hull/shield restoration, level-up and upgrade tools, equipment levels/removal/forced evolution, mutations, enemy/boss/terrain spawning, attack/enemy cleanup, pickups and merchant stock/scrap tests. Existing slot, heavy-enemy and population limits remain.
 
 This is a convenience lock in inspectable client-side code, not secure authentication. Unlocking/browsing alone does not flag a normal run. Any run control marks it permanently as a developer test for its lifetime: no new Hangar progress/credits, archive entries or best scores. Existing legitimately banked progress remains. Locking or disabling cheats does not remove that flag. Start a fresh normal run to restore progression. Test launch choices never buy/unlock ships or modify saved pilot/sector choices. Graphics/audio/control settings continue to work normally. Dev speed is temporary and separate from saved game pace. `node TEST-DEV.cjs` checks the lock, action groups, transaction/save exclusions and reset paths. Roadmap is unchanged.
+
+## v0.18.0 — enemy formations and pacing
+
+Ordinary pursuit now mixes with V-shaped fighter squadrons, crossing interceptor lanes with a three-slot gap, a brute with fighter escorts, an encirclement with a wide marked opening, opposing pincer wings and a light-fighter burst followed by a recovery window. Pattern eligibility starts at18/65/110/150/220/280 game seconds. A1.6s edge-arrow warning precedes arrivals; all ships begin outside the current viewport. They hold a coherent approach for8s (lanes9s), then resume ordinary pursuit. Existing armour, damage and kill/XP/drop accounting are retained.
+
+Formations borrow future ordinary spawn slots one-for-one:6–12 ships, max24 outstanding borrowed slots, max2 active groups, no formation launch above200 living enemies, all within cap240 and existing heavy quotas. No warnings in the ten seconds before a scheduled boss; active bosses cancel warnings, release formations and hold new groups for12s after the fight. Warnings respect reduced motion and consume no gameplay RNG. State resets each run. Settings → Developer now lets you queue any formation for testing (password unchanged: ReactorBert).
+
+Run `node TEST-FORMATIONS.cjs` for six-pattern/four-viewport, gaps, warning timing, borrowed spawn accounting, caps, boss holds, pause/reset and actual update/render checks. Difficulty tiers remain deferred while the core gameplay foundation is reviewed.

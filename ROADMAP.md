@@ -30,3 +30,8 @@ Requested twelfth playable ship: premium600-credit licence after20 sector bosses
 ### Current priority
 
 Step 4 / Reactor Protocols explicitly saved for later. Step 5 is the current completed implementation; verify live deployment and responsiveness. Step 6 difficulty tiers is next, not started.
+
+
+### Core foundations take priority — v0.18.0
+
+James deferred difficulty tiers to review the core game first. Foundation1, enemy pacing/variety, now adds six formations, readable warnings and escape gaps while replacing ordinary spawn slots and respecting caps. Other review areas: weapon balance/identity, build clarity, run structure/ending, combat readability, progression pacing, movement/collection, performance/reliability, first-run guidance and sound feedback. These are review priorities, not permission to implement all at once. Roadmap step6 remains unstarted; Reactor Protocols remain saved for later.
