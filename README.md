@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.15.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.15.1. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -129,3 +129,7 @@ Launch and Hangar previews now use the same complete ship renderer as gameplay: 
 ## v0.15.0 — Sovereign, the twelfth ship
 
 A violet-and-gold rift flagship completes the twelve-ship roster. Defeat 20 sector bosses across runs to unlock its licence, then purchase it for 600 credits, the highest ship price. 125 HP, 1 armour, 165 speed; starts with Void Seeds. Imperial Arsenal adds 4% weapon damage per evolved weapon, capped at 24%. Singularity Jump blinks 220 range with 0.4s invulnerability, leaving a single 135-range departure rift for 2.4s. Eight 18-base-damage pulses slow nearby ships; non-boss, non-stationary, unfrozen ships are drawn inward. Bosses resist pull and take normally mitigated damage. One charge, 10s recharge. Rift damage is tracked as Other and excludes the evolution passive. All effects reset per run; earned progress and existing saves are retained. Run TEST-SOVEREIGN.cjs and TEST-SHIP-PREVIEWS.cjs. Roadmap step 4 remains on hold.
+
+## v0.15.1 — overcharged beam visuals
+
+Pulse Laser, evolved laser lances, Rail Lance, Solar Sails, Leech Beam and Prism refraction now use layered energy, bright cores, tapered/rippling envelopes, emitter lenses and weapon-specific travelling details. Rail/Solar/Pulse hits add compact contact flares. Leech siphon nodes flow back towards the pilot. Plasma Fences and Ion Harpoon use matching energy styling. Low and crowded Auto use a simpler clear core; reduced motion fixes decorative movement. At most twelve beam draws per frame receive full detail, with up to four contact markers per short beam effect and no new particle arrays or long-beam shadow blur. Combat calculations, lifetimes, cooldowns and RNG are unchanged. TEST-BEAMS.cjs checks tagging, state/RNG isolation, quality/motion and marker bounds. TEST-BEAMS.html is an isolated visual showroom using the release renderer; it does not use saves or simulate combat.
