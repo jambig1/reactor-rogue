@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.7.3. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.7.4. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -37,3 +37,7 @@ Salvage crates now use a level-gated, Luck-aware weighted pool inspired by Vampi
 
 ## v0.7.3 — cinematic pickup waves
 Purge now sends three expanding pressure ripples through a glowing honeycomb grid, with a flattened equatorial shock ring and travelling ship destruction. Visible ships, including bosses, break into hull fragments as the front reaches them; hostile projectiles inside the front are cleared too. Existing kill/XP/cache/mutation accounting is preserved, with reward menus held until the targeted ships are cleared. Chrono Stop sends an icy pulse and encases frozen ships in faceted ice, cracks and crystal spikes. Both pickups have distinct synthesised cues. Reduced motion uses static fading geometry without expanding rings, shimmer, shake or flying shards.
+
+
+## v0.7.4 — combat explosions
+Ship deaths, boss deaths, explosive impacts, fuel/gas chains and salvage destruction now use layered reactor blooms, bright cores, pressure rings, broken arcs, outward streaks and glowing hull fragments. Small ships have short compact bursts; bosses get wider, longer detonations with an equatorial shock disc. Frozen ships shatter in icy blue, with compact ship pops and deeper boss detonation sounds. Large blasts leave the existing fading smoke/embers. Effects are bounded, overlapping same-frame blasts merge, and reduced motion uses static fading geometry. This update changes visuals only: damage, drop rates, prices and progression are unchanged.
