@@ -557,3 +557,6 @@ Expanded upgradeSynergy into a compact per-card hint renderer for all26 evolutio
 
 ## v0.8.2 — clean per-run upgrade hints
 Ownership/evolved state was already reinitialised by start(), and upgradeSynergy reads s.items rather than persistent data. start() now also clears the global choices array and #choices markup explicitly, removing stale cards/hints immediately at the new-run boundary. Cross-run regression covers restart, different pilots and persistent archive/Hangar evolution history; starter-owned recipes correctly remain visible.
+
+## v0.8.3
+Only the missing second component card shows contextual evolution/synergy hints. Already-equipped cards return no hint, including completed/evolved pairs. Current-run ownership and start resets remain authoritative.

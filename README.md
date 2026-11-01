@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.8.2. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.8.3. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -53,3 +53,6 @@ Level-up cards show related evolution recipes and weapon synergies only when at 
 
 ## v0.8.2 — clean per-run upgrade hints
 Starting or restarting a run explicitly clears the previous upgrade choices and card markup. Combination hints continue to use only current-run equipped items and evolution state; prior runs and archive discoveries do not reveal them. Your starting weapon counts as owned.
+
+## v0.8.3 — hints on the missing component
+Upgrade cards only show a combination or evolution hint when the offered item is not equipped and its partner is already equipped in this run. Owned-item upgrade cards and completed pairs show no hints.
