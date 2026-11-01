@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.9.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.10.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -59,3 +59,11 @@ Upgrade cards only show a combination or evolution hint when the offered item is
 
 ## v0.9.0 — priority enemy ships
 Existing shield carriers gain a distinct wing silhouette. Hunters lock a 0.95s warning lane before a 0.5s charge; volatile ships leave a 0.45s enemy-only chain blast; fighter carriers warn for 1.2s before launching two fighters (six alive and twelve total per carrier). Introductions at 50/80/105/145 seconds, using the existing specialist spawn budget. Caps: 12 specialists, two shield/fighter carriers each, four other specialists per role, 240 total ships, 24 queued chain blasts. Freeze pauses abilities; carrier protection retains existing 20% reduction, damage numbers use actual mitigated damage, chain damage is attributed to the triggering weapon. No new cache farming or permanent progression. Contextual hints remain missing-component-only and reset each run.
+
+## v0.10.0 — optional distress signals
+
+Rescue a stranded pilot and reach extraction, protect a freighter with its own hull, or destroy an unstable reactor before containment closes. Signals require acceptance and can be ignored, dismissed or abandoned. Their timers and objective damage pause during bosses. One optional encounter is shown at a time using the existing HUD; a shuffled set of three signals is followed by an original reactor breach.
+
+Successful signals give 20 XP, 300 points and one reward choice: compatible Rare-or-better equipment (40 XP fallback), repair (reroll fallback at full hull), or 25 bankable credits. Raiders have a one-second arrival warning and a twelve-ship lifetime cap per event, within the existing ship budget. New signal completions stay separate from reactor-breach unlock requirements. Equipment slots, banishes and existing saves are respected.
+
+See [ROADMAP.md](ROADMAP.md) for the agreed ten-step plan. Step 2, more weapon specialisations, is next and has not started. Run `node TEST-DISTRESS.cjs` for the dependency-free state/regression checks. Render and device-performance checks are documented in the handover.
