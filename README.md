@@ -2,13 +2,13 @@
 
 [Play Reactor Rogue](https://jambig1.github.io/reactor-rogue/)
 
-A neon spaceship survivor game with eleven pilots, distinct movement abilities, 26 weapons and evolutions, weapon combinations, three sectors and a persistent Hangar.
+A neon spaceship survivor game with eleven pilots, distinct movement abilities, 36 weapons and evolutions, weapon combinations, three sectors and a persistent Hangar.
 
 Open `index.html` in a full browser to play offline. No installation, dependencies, API keys or build step are required. Keyboard/mouse and touch controls are supported. Progress stays in each browser.
 
 ## Development
 
-Current version: 0.11.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.12.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -75,3 +75,11 @@ Eight additional weapons now branch at level 3: Neon Bolts, Scatterburst, Frost 
 Each path has an explicit trade-off, remains active through evolution, uses no extra slot and resets each run. Original Cannon/Repeater/Shield paths remain, for 22 choices across 11 branching items. Upgrade previews apply the chosen damage multiplier, cards identify the path, Pause explains it and weapon reports name it. Specialisation choices use compact responsive cards and pause combat. Run `node TEST-SPECIALISATIONS.cjs` for the new mechanics/regressions; `node TEST-DISTRESS.cjs` continues to check step 1.
 
 Roadmap step 2 is complete. Step 3, interactive sector features, is next and has not started.
+
+## v0.12.0 — ten weapons and eight supports
+
+Step 2 expands further with Rail Lance, Flak Battery, Crescent Blades, Plasma Fences, Leech Beam, Cryo Charges, Kinetic Ram, Solar Sails, Void Seeds and Stasis Net. Each has an elite-cache evolution and two level-3 specialisations. Ten new contextual weapon synergies connect them to the existing arsenal. Total: 36 weapons/evolutions and 42 branch choices across twenty weapons and Energy Shield.
+
+Defensive supports: Ablative Plates, Reactive Screen, Decoy Beacon and Salvage Medics. Passive supports: Supply Tractor, Guidance Chip, Field Capacitor and Salvage Appraiser. All use the existing six support slots and level to five. The weapon limit stays six. New effects, plate charges, decoys and fractional salvage bonuses reset per run; credit banking uses existing checkpoints.
+
+Run `node TEST-ARSENAL.cjs` to check new attacks, evolutions, branches, support mechanics, synergy amplification, slot/banish restrictions, pickup values, banking guards and bounded crowded fights. Existing distress and specialisation checks remain available. Step 3 is still next; it has not started.
