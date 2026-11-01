@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.8. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.8.1. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -45,3 +45,7 @@ Ship deaths, boss deaths, explosive impacts, fuel/gas chains and salvage destruc
 
 ## v0.8 — Graphics & Effects
 Settings now has a Graphics & Effects tab with Auto/Low/Medium/High/Custom presets; glow, particles/debris, explosion detail, smoke, damage-number modes, screen shake, flashes, playfield resolution, 30/60/display drawing limits, FPS counter and reduced-motion controls. Choices apply immediately, save independently of progression, and have a graphics-only reset. Auto starts at Medium, drops to Low after sustained slow frames, and cautiously recovers to Medium; High is an explicit choice. Enemy outlines, attack warnings, damage-area footprints and pickup icons remain visible. Menus/HUD use native resolution. Rendering limits are separate from simulation pace.
+
+
+## v0.8.1 — contextual upgrade combinations
+Level-up cards show related evolution recipes and weapon synergies only when at least one part is already equipped. Both component names are shown with owned/missing marks; evolution weapons show their level out of5. Ready recipes point to an elite cache, evolved weapons are marked, and synergy cards show active or completes-on-pick status. Neither part owned means no hint, even when that item is offered.
