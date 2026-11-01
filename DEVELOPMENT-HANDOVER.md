@@ -1,3 +1,33 @@
+# v0.7 — ship identity and progression feedback
+
+Each ship now has an explicit passive. `traitDamage` applies eligible weapon bonuses through the central damage pipeline, retaining armour/piercing, critical hits, actual HP-loss accounting and kill attribution. Mutation/ship/environment damage (`other`) is excluded. Arc Feedback is applied per Arc Disc contact and counts enemies, excluding debris, capped at three bonuses.
+
+| Ship | Passive | Rule |
+|---|---|---|
+| Wasp | Afterdash Overclock | 20% faster weapon firing for 3 seconds after using a dash. |
+| Vanguard | Pristine Reactor | Deal 10% more weapon damage while above 75% hull. |
+| Bastion | Siege Stabilisers | Siege Cannon deals 20% more damage after holding position for half a second. |
+| Harrier | Point-Blank Assault | Deal 20% more weapon damage to enemies within 150 range. |
+| Glacier | Brittle Hulls | Deal 20% more weapon damage to frozen enemies. Retains 0.5 HP/sec repair. |
+| Tempest | Arc Feedback | Arc Discs gain 15% damage per enemy already pierced, up to 45% extra. |
+| Scavenger | Salvage Dividend | Earn 20% extra run credits, rounded down. Contract bonuses are unchanged. |
+| Spectre | Phase Ambush | Deal 35% more weapon damage for 3 seconds after Phase Shift ends. |
+| Architect | Field Engineer | Tesla Buoys, Plasma Mines, Gravity Well and Orbital Mortar deal 25% more damage. |
+| Helios | Solar Reclamation | Gas ignitions restore 3 HP, at most once per second. |
+| Echo | Resonant Pressure | Your Sonic Pulses slow enemies for 1 second. Deal 15% more damage to slowed targets. |
+
+Timers advance in simulation time only. Phase Ambush begins when phase ends. Solar Reclamation is capped to one heal per second. Siege Stabilisers tracks recent movement with a half-second setup. Afterdash Overclock divides weapon firing intervals by 1.2. Scavenger's 20% bonus floors the base run earnings before contract bonuses and uses the existing banking checkpoint to prevent duplicate credits.
+
+`liveChallengeProgress` projects unbanked progress without mutating permanent saves. Each run snapshots starting challenge values, suppresses notifications for already-owned/previously-complete challenges, and queues new completions once. HUD notices never pause combat, never auto-purchase, and respect menu visibility. Results show progress/deltas for the two most relevant unowned ships, with a Hangar shortcut.
+
+All eleven hulls have code-native details rather than sharing the old generic centre hull overlay. Matching SVG menu hulls, bounded 42-point engine trails and distinct cast effects reinforce identity. Reduced motion disables trails and leaves ability pulses static apart from fades. HUD credit display stays at an edge and is hidden while menus are open.
+
+Balance changes: first level guarantees an eligible starter offer; owned weapon upgrades use the regular upgrade rarity tier while retaining their displayed item rarity. New weapon acquisition odds are unchanged. Guarantee respects banishment, level caps and rerolls. Phase Torpedoes: base/evolved salvo 2/3, 2.2s interval, radius 7. Prices unchanged after run/currency checks. See BALANCE-NOTES.md.
+
+Validation: individual passive rules, caps/timers, credit bonus dedup, live projection and challenge notices, results progress, starter guarantee/banishment, torpedo cadence/count, all hulls through real Canvas2D, bounded effects, v0.6 saves/purchases/abilities and v0.5 weapon/boss regression suites. Full simulated runs completed for all eleven pilots with two additional Spectre seeds. Simulation cannot establish human difficulty, physical touch feel or win rates. Optional objectives remain deferred.
+
+---
+
 # v0.6.1 — menu and progression review
 
 - Fixed page-wide `touch-action:none`: body/menus now permit native scrolling; canvas alone owns flight gestures. All dialog panels are bounded and scrollable. Hangar has a single independently scrollable content pane with fixed tabs and Back; tab switches reset scroll position.
