@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.7. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.7.2. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -29,3 +29,7 @@ Compact launch roster, ship list/detail Hangar, clear ownership and affordabilit
 Every ship has a distinct passive, detailed hull and menu icon, engine trail and ability effect. The HUD shows available credits and run earnings, with non-blocking ship challenge notifications. Results show progress towards the next two unowned ships and a shortcut to their licences. Scavenger earns 20% extra run credits, excluding contract rewards.
 
 Starter balance: the first level offers a starter upgrade, and equipped weapon upgrades no longer inherit their acquisition rarity penalty. Phase Torpedoes fire two shots (three evolved), with a 2.2s base cycle. Licence prices are unchanged. See `BALANCE-NOTES.md` for simulation results and limitations.
+
+
+## v0.7.2 — weighted salvage
+Salvage crates now use a level-gated, Luck-aware weighted pool inspired by Vampire Survivors. Crates check for a spawn each game second at 10% base chance (50% Luck cap; 10 crates nearby). Their drops include credit chips/bundles/caches, 30 HP repair cells, XP-only vacuum, Chrono Stop, Purge Beacon, Plasma Breath, Fortune Shards, Reroll Tokens, and level-30 Salvage Fever/Reactor Surge. Credit values are adapted to this game: 1/5/25. Common ships retain XP; elites retain caches and can drop existing combat supplies/passive upgrades. Bosses resist Chrono Stop and are immune to Purge. Drop rates and effects are listed under How to play → Salvage drops and rates. The v0.7.1 compact card fix is retained.
