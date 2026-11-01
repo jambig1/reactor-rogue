@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.14.5. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.14.6. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -121,3 +121,7 @@ Violet/pink aurora ribbons, purple-tinted panels, selected tabs, ship selection 
 ## v0.14.5 — Exo 2 throughout the game
 
 User-selected font option D, Exo 2, is embedded as a variable TrueType font for offline use. Menus, buttons, HUD, damage numbers and canvas labels use it, with system symbol fallback and tabular numeric styling for stats. Approved logo and reserved app mark are unchanged. See FONT-LICENSE-Exo2.txt for SIL Open Font License and attribution; a copy is embedded in the HTML.
+
+## v0.14.6 — full in-game ship previews
+
+Launch and Hangar previews now use the same complete ship renderer as gameplay: distinct hulls, plating, engine pods, cockpit and turret. SVG export keeps the preview sharp at every menu size; a neutral static pose excludes temporary combat upgrades/effects. Selected unlocked paint colours apply. Preview generation is bounded/cached and never changes the current run. TEST-SHIP-PREVIEWS.cjs covers all eleven ships and state isolation.
