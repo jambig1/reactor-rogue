@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.13.1. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.14.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -97,3 +97,7 @@ Boss encounters hold docking, conduit countdowns, salvage collection and current
 Yellow elites now use one steady health curve rather than multiplying two time-scaling curves. At five minutes: 2,750 HP instead of about 9,733; their 35% armour, cache and 50 XP rewards remain. Limit two living yellow elites and eight ordinary purple brutes; specialist quotas and boss stats remain separate. At the brute limit, regular arrivals favour lighter ships. Elite arrivals blocked by population limits retry after five seconds, and a successful spawn begins its next 60-second interval without overdue bursts.
 
 Auto quality immediately suppresses glow and simplifies frozen-hull decoration during dense fights, with a short hold to avoid flicker. It also lowers detail after the first expensive render sample instead of relying only on callback timing. Warnings, boundaries and damage-number preferences remain. Manual Low/Medium/High/Custom choices are respected. `node TEST-PRESSURE.cjs` checks the population, rewards and cosmetic boundaries. This balance/performance pass is complete; roadmap step 4 is next.
+
+## v0.14.0 — aurora flight deck
+
+Main and pause menus gain slow mint/violet aurora ribbons, dark readable panels, consistent spacing and responsive layouts. Launch groups the selected ship, passive description, sector, hull, module and credits beside flight controls. Pause keeps pilot/time/kills/level/hull visible across its three pages, with fixed tabs and action buttons around a scrollable content area. Overview includes ability, equipment, pace, weapon/support slots, credits/tools, specialisations, signals, mutations and advanced stats. Existing reports and evolution recipes remain. Aurora is hidden in combat and respects reduced motion. TEST-MENUS.html provides desktop/tablet/phone CSS viewport checks using normal game controls. Roadmap step 4 is still on hold.

@@ -18,3 +18,7 @@ Existing features include 11 pilots, 26 weapons/evolutions, three sectors and th
 ## Before step 4: crowding/performance pass — completed in v0.13.1
 
 Ordinary purple brutes cap at eight, yellow elites at two. Yellow health scales once (650 + 7 × game seconds); elite cache/50 XP rewards and boss stats stay unchanged. Brute overflow becomes lighter ships; capped elite arrivals retry without a catch-up burst. Auto graphics immediately drops glow/ice decoration under crowd pressure and responds to measured render cost earlier. Manual presets remain explicit choices. Step 4 is still next.
+
+### Additional interlude — v0.14.0 menu refresh
+
+Requested before step 4: moving aurora, main/pause visual overhaul, information and responsive spacing audit. See DEVELOPMENT-HANDOVER.md for checkpoint and verification status. Step 4 remains next.
