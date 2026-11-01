@@ -732,7 +732,7 @@ Published commit eb5048c1396e7ec632f53a050ed0acd9d6a943ad; Pages run41352629897 
 
 ## v0.17.0 — Settings developer panel
 
-James requested a password-gated in-game dev panel with usual testing controls. Default convenience password ReactorDev!17; in-memory devUnlocked false on reload, manual Lock button; password input cleared after attempt, no localStorage credentials. Public client source is inspectable, explicitly labelled convenience lock. No server authentication claim.
+James requested a password-gated in-game dev panel with usual testing controls. Default convenience password ReactorBert; in-memory devUnlocked false on reload, manual Lock button; password input cleared after attempt, no localStorage credentials. Public client source is inspectable, explicitly labelled convenience lock. No server authentication claim.
 
 Settings tab Developer uses existing tab/content scrolling system; devLogin/devControls gate, native details groups, labelled selects/checkboxes and responsive action rows. Fresh test launch selects any ship/sector without changing selectedPilot/hangar selections or licences. Existing active run ends through normal start() checkpoint; new s.dev.test set by devLaunch then launch cleared. Normal start resets all modifiers/speed/test flags. Start test leaves run paused with Settings open; Done then Resume. Controls require unlocked session plus Settings returning to Pause; browse/unlock alone leaves normal run unflagged. Mutating controls set sticky test flag before applying. Locking does not disable current effects or restore ranked status (notice explains).
 

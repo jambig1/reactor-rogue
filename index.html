@@ -942,7 +942,7 @@ $('merchantPortrait').innerHTML=merchantPortrait();$('merchantCall').onclick=ope
 
 // Convenience lock only: public, client-side game code is inspectable.
 let devUnlocked=false,devLaunch=null;
-const devPassword='ReactorDev!17';
+const devPassword='ReactorBert';
 function initDevRun(){s.dev={test:!!devLaunch,god:false,freeze:false,infiniteAbility:false,speed:1};devLaunch=null}
 function devRunActive(){return !!s&&state==='settings'&&settingsReturn==='pause'}
 function devMark(){if(!devUnlocked||!devRunActive())return false;s.dev.test=true;s.hangarReport='Developer test — new progress and records are not saved.';return true}
