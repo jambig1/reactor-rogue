@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.14.4. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.14.5. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -117,3 +117,7 @@ Approved logo spacing refined so the T in REACTOR no longer intrudes into the G 
 ## v0.14.4 — logo colour harmony
 
 Violet/pink aurora ribbons, purple-tinted panels, selected tabs, ship selection and fine border highlights connect the menus to the approved logo. Main actions stay mint. A slow spectrum shifts across the thin menu header edge. Both animations respect reduced motion and remain menu-only. No combat colours or mechanics changed.
+
+## v0.14.5 — Exo 2 throughout the game
+
+User-selected font option D, Exo 2, is embedded as a variable TrueType font for offline use. Menus, buttons, HUD, damage numbers and canvas labels use it, with system symbol fallback and tabular numeric styling for stats. Approved logo and reserved app mark are unchanged. See FONT-LICENSE-Exo2.txt for SIL Open Font License and attribution; a copy is embedded in the HTML.

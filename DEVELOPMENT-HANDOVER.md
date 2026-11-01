@@ -685,3 +685,7 @@ User spotted the T of REACTOR intruding into the G of ROGUE. Imagegen edited onl
 ## v0.14.4 — logo palette in menus
 
 James requested logo colours through menus and moving purple while retaining the aurora. Enhanced violet ribbon strength, made third ribbon violet/pink, added purple tint to readable menu panels/cards and selected tabs/buttons, retaining mint primary actions. Two-pixel spectrum border moves slowly only on visible main/pause panels; existing motion-class override and system media query stop it. No added blur, particles or JS animation loop. Combat colours/mechanics unchanged; aurora still hidden during play. v0.14.3 deployment and desktop/390px image decode/bounds passed; RR app mark remains reserved. Step 4 still on hold. Current colour patch pending publish/browser visual checks.
+
+## v0.14.5 — chosen font D / Exo 2
+
+James selected option D from the actual-font comparison. Applied Exo 2 across CSS font families/shorthands and all canvas text declarations (including damage numbers, pickups and warnings). Variable TTF embedded in @font-face, weights 100–900, font-display swap, system/Apple Symbols/Segoe UI Symbol fallback. No remote font fetch or dependency for offline HTML. SIL OFL copied to FONT-LICENSE-Exo2.txt and HTML comment. Logo PNG bytes/app mark unchanged. Stats use tabular figures where supported. Step 4 remains on hold. Pending font-load/phone/menu/Canvas checks and deployment verification.
