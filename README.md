@@ -2,13 +2,13 @@
 
 [Play Reactor Rogue](https://jambig1.github.io/reactor-rogue/)
 
-A neon spaceship survivor game with eleven pilots, distinct movement abilities, 36 weapons and evolutions, weapon combinations, three sectors and a persistent Hangar.
+A neon spaceship survivor game with twelve pilots, distinct movement abilities, 36 weapons and evolutions, weapon combinations, three sectors and a persistent Hangar.
 
 Open `index.html` in a full browser to play offline. No installation, dependencies, API keys or build step are required. Keyboard/mouse and touch controls are supported. Progress stays in each browser.
 
 ## Development
 
-Current version: 0.14.6. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.15.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -125,3 +125,7 @@ User-selected font option D, Exo 2, is embedded as a variable TrueType font for 
 ## v0.14.6 — full in-game ship previews
 
 Launch and Hangar previews now use the same complete ship renderer as gameplay: distinct hulls, plating, engine pods, cockpit and turret. SVG export keeps the preview sharp at every menu size; a neutral static pose excludes temporary combat upgrades/effects. Selected unlocked paint colours apply. Preview generation is bounded/cached and never changes the current run. TEST-SHIP-PREVIEWS.cjs covers all eleven ships and state isolation.
+
+## v0.15.0 — Sovereign, the twelfth ship
+
+A violet-and-gold rift flagship completes the twelve-ship roster. Defeat 20 sector bosses across runs to unlock its licence, then purchase it for 600 credits, the highest ship price. 125 HP, 1 armour, 165 speed; starts with Void Seeds. Imperial Arsenal adds 4% weapon damage per evolved weapon, capped at 24%. Singularity Jump blinks 220 range with 0.4s invulnerability, leaving a single 135-range departure rift for 2.4s. Eight 18-base-damage pulses slow nearby ships; non-boss, non-stationary, unfrozen ships are drawn inward. Bosses resist pull and take normally mitigated damage. One charge, 10s recharge. Rift damage is tracked as Other and excludes the evolution passive. All effects reset per run; earned progress and existing saves are retained. Run TEST-SOVEREIGN.cjs and TEST-SHIP-PREVIEWS.cjs. Roadmap step 4 remains on hold.

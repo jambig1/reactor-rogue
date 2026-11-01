@@ -22,3 +22,7 @@ Ordinary purple brutes cap at eight, yellow elites at two. Yellow health scales 
 ### Additional interlude — v0.14.0 menu refresh
 
 Requested before step 4: moving aurora, main/pause visual overhaul, information and responsive spacing audit. See DEVELOPMENT-HANDOVER.md for checkpoint and verification status. Step 4 remains next.
+
+### Additional interlude — v0.15.0 Sovereign
+
+Requested twelfth playable ship: premium600-credit licence after20 sector bosses; Void Seeds starter, evolution passive and Singularity Jump gravity-rift ability. Step4 remains next.
