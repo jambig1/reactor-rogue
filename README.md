@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.14.1. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.14.2. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -105,3 +105,7 @@ Main and pause menus gain slow mint/violet aurora ribbons, dark readable panels,
 ## v0.14.1 — phone aurora visibility
 
 Phone launch/pause panels now let the aurora show through their backing. Ribbons fit the full viewport instead of cropping a wide scene into portrait, with explicit SVG gradient coordinates for consistency. Text and inner content cards keep their contrast. Reduced-motion rules still apply.
+
+## v0.14.2 — approved Overcharged Arcade logo
+
+The main menu uses the approved concept C wordmark, without the small RR symbol beneath it. Transparent PNG is embedded into index.html to preserve single-file offline play. reactor-rogue-wordmark.png is the standalone source; reactor-rogue-app-mark.png preserves the separate RR mark for a future app. The app mark is not currently used as a favicon or installed app icon. Future platform exports need appropriate opaque backgrounds and safe-area variants.

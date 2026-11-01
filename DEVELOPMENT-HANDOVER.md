@@ -673,3 +673,7 @@ Final spacing commit 020526560a2985994d951632512a31079b54384d deployed successfu
 ## v0.14.1 phone aurora follow-up
 
 User reports aurora invisible on iPhone. Confirmed design cause: nearly opaque launch/pause panels occupy almost all portrait viewport. Mobile backing now uses 64–72% opacity instead of 93–96%, vignette weaker, ribbon SVG fits viewport without wide-scene crop, explicit percentage gradient coordinates. Inner cards remain dark/readable, reduced motion unchanged. Step 4 still on hold. Publish and verify phone viewport; physical Safari check remains user-side.
+
+## v0.14.2 — approved logo C implementation
+
+James chose Overcharged Arcade C: big wordmark in game, no small RR underneath; retain separate RR for a possible future app. Imagegen edits of approved C produced transparent wordmark and separate RR source mark. Both original PNG assets saved in repository; wordmark embedded once as PNG data URL in index.html, preserving offline HTML use. Main h1 contains accessible alt text, responsive max-height 200 desktop/150 phone/100 short landscape. No added animated filters; no RR app mark in current gameplay or favicon. Existing compact HUD icon retained, stale version label updated. User request for future app mark is preservation, not approval to create or publish an app. Step 4 remains on hold. Pending live responsive/image-load QA and deployment verification.
