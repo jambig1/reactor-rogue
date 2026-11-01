@@ -1,3 +1,15 @@
+# v0.6.1 — menu and progression review
+
+- Fixed page-wide `touch-action:none`: body/menus now permit native scrolling; canvas alone owns flight gestures. All dialog panels are bounded and scrollable. Hangar has a single independently scrollable content pane with fixed tabs and Back; tab switches reset scroll position.
+- Main menu: one selected ship preview plus compact roster. Locked roster entries open the matching Hangar detail. Desktop Hangar has a list/detail layout; mobile has a horizontal two-row roster above the detail. Owned ships never display misleading incomplete unlock bars: retained legacy ships explicitly explain ownership.
+- Tool upgrades use consistent rows, clear current/next allowances, rank pips, prices, disabled states and exact shortfall. Shared permanent/next-run instructions replace repeated paragraphs.
+- Functional fix: opening Hangar from Pause calls `commitHangar('progress')` before rendering. Current credits, challenges and contract rewards become usable immediately, with existing checkpoint deduplication. This does not refill current-run tools or create an extra run record. Close refreshes Pause wallet and launch summary.
+- Settings, records and Hangar hide/restore their parent menu rather than stacking translucent dialogs. Start/back dismiss every secondary overlay, including Hangar and specialisation. HUD elements hide while a menu is active. Dialog roles added for accessibility.
+- Pause uses structured overview cards; results use summary statistics and a distinct earned-credit/wallet breakdown. Field manual rewritten into concise expandable instructions; obsolete version notes removed. Records have a single entry point with internal tabs.
+- Tests: one-screen transitions and return paths; pause-Hangar banking/dedup; purchases during run vs next-run allowances; locked/ready/unaffordable/legacy ownership states; results navigation; all v0.6 progression/ability and v0.5 weapon/boss regressions; Canvas render paths and original Neon Expanse preservation. Live desktop menu screenshots complement simulation tests. Physical iPad touch remains manual QA.
+
+---
+
 # v0.6 progression — 31 October 2026
 
 Authoritative source: repository `index.html`. Ship progression is versioned under `rr_hangar.progressionVersion=1`. First upgrade of an existing Hangar save grants legacy ownership of all six original ships; recognised older pilot/archive progress also qualifies. Fresh saves own Vanguard only. Migration writes once immediately. New ships are never granted by migration.
