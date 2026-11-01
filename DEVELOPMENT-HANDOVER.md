@@ -681,3 +681,7 @@ James chose Overcharged Arcade C: big wordmark in game, no small RR underneath; 
 ## v0.14.3 — logo spacing correction during review
 
 User spotted the T of REACTOR intruding into the G of ROGUE. Imagegen edited only wordmark spacing, exposing separation between the letterforms and preserving approved colours/style. Updated standalone wordmark and embedded PNG; RR app-mark source unchanged. v0.14.2 commit dffb75f0cc0af98d658b80d9e8e8e300b9442a6e was already submitted while correction arrived, superseded by this patch. Verify v0.14.3 live, image decode and desktop/phone bounds before reporting.
+
+## v0.14.4 — logo palette in menus
+
+James requested logo colours through menus and moving purple while retaining the aurora. Enhanced violet ribbon strength, made third ribbon violet/pink, added purple tint to readable menu panels/cards and selected tabs/buttons, retaining mint primary actions. Two-pixel spectrum border moves slowly only on visible main/pause panels; existing motion-class override and system media query stop it. No added blur, particles or JS animation loop. Combat colours/mechanics unchanged; aurora still hidden during play. v0.14.3 deployment and desktop/390px image decode/bounds passed; RR app mark remains reserved. Step 4 still on hold. Current colour patch pending publish/browser visual checks.

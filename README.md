@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.14.3. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.14.4. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -113,3 +113,7 @@ The main menu uses the approved concept C wordmark, without the small RR symbol 
 ### v0.14.3 — title spacing
 
 Approved logo spacing refined so the T in REACTOR no longer intrudes into the G in ROGUE. Separate reserved app mark is unchanged.
+
+## v0.14.4 — logo colour harmony
+
+Violet/pink aurora ribbons, purple-tinted panels, selected tabs, ship selection and fine border highlights connect the menus to the approved logo. Main actions stay mint. A slow spectrum shifts across the thin menu header edge. Both animations respect reduced motion and remain menu-only. No combat colours or mechanics changed.
