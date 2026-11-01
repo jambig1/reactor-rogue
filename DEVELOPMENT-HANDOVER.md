@@ -677,3 +677,7 @@ User reports aurora invisible on iPhone. Confirmed design cause: nearly opaque l
 ## v0.14.2 — approved logo C implementation
 
 James chose Overcharged Arcade C: big wordmark in game, no small RR underneath; retain separate RR for a possible future app. Imagegen edits of approved C produced transparent wordmark and separate RR source mark. Both original PNG assets saved in repository; wordmark embedded once as PNG data URL in index.html, preserving offline HTML use. Main h1 contains accessible alt text, responsive max-height 200 desktop/150 phone/100 short landscape. No added animated filters; no RR app mark in current gameplay or favicon. Existing compact HUD icon retained, stale version label updated. User request for future app mark is preservation, not approval to create or publish an app. Step 4 remains on hold. Pending live responsive/image-load QA and deployment verification.
+
+## v0.14.3 — logo spacing correction during review
+
+User spotted the T of REACTOR intruding into the G of ROGUE. Imagegen edited only wordmark spacing, exposing separation between the letterforms and preserving approved colours/style. Updated standalone wordmark and embedded PNG; RR app-mark source unchanged. v0.14.2 commit dffb75f0cc0af98d658b80d9e8e8e300b9442a6e was already submitted while correction arrived, superseded by this patch. Verify v0.14.3 live, image decode and desktop/phone bounds before reporting.
