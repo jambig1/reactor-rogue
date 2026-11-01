@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.10.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.11.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -66,4 +66,12 @@ Rescue a stranded pilot and reach extraction, protect a freighter with its own h
 
 Successful signals give 20 XP, 300 points and one reward choice: compatible Rare-or-better equipment (40 XP fallback), repair (reroll fallback at full hull), or 25 bankable credits. Raiders have a one-second arrival warning and a twelve-ship lifetime cap per event, within the existing ship budget. New signal completions stay separate from reactor-breach unlock requirements. Equipment slots, banishes and existing saves are respected.
 
-See [ROADMAP.md](ROADMAP.md) for the agreed ten-step plan. Step 2, more weapon specialisations, is next and has not started. Run `node TEST-DISTRESS.cjs` for the dependency-free state/regression checks. Render and device-performance checks are documented in the handover.
+See [ROADMAP.md](ROADMAP.md) for the agreed ten-step plan. Step 2 was completed in v0.11.0; step 3 is next. Run `node TEST-DISTRESS.cjs` for the dependency-free state/regression checks. Render and device-performance checks are documented in the handover.
+
+## v0.11.0 — more weapon specialisations
+
+Eight additional weapons now branch at level 3: Neon Bolts, Scatterburst, Frost Shards, Chain Lightning, Toxic Cloud, Gravity Well, Nova Reactor and Pulse Laser. Choose between extra bolts or penetrating lances, tight or wide shotgun cones, stronger freeze or forward ice javelins, longer chains or concentrated triple strikes, ship-centred or concentrated poison, stronger gravity pull or early collapse, wide or double novas, and broad or armour-cutting beams.
+
+Each path has an explicit trade-off, remains active through evolution, uses no extra slot and resets each run. Original Cannon/Repeater/Shield paths remain, for 22 choices across 11 branching items. Upgrade previews apply the chosen damage multiplier, cards identify the path, Pause explains it and weapon reports name it. Specialisation choices use compact responsive cards and pause combat. Run `node TEST-SPECIALISATIONS.cjs` for the new mechanics/regressions; `node TEST-DISTRESS.cjs` continues to check step 1.
+
+Roadmap step 2 is complete. Step 3, interactive sector features, is next and has not started.

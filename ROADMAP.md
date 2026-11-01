@@ -3,8 +3,8 @@
 Agreed order: work through items 1–10. Complete one stage before starting the next unless James changes the plan.
 
 1. **Optional distress signals and objectives — implemented in v0.10.0.** Stranded pilot boarding/extraction, freighter defence, and a timed destructible reactor. One optional encounter at a time alongside existing reactor breaches, with explicit acceptance, dismissal, boss suspension and a reward choice. Validate balance with real play; device FPS testing remains outstanding.
-2. **More weapon specialisations — next, not started.** Expand the existing Cannon, Repeater and Shield branching upgrades to more weapons, with meaningful alternative behaviours.
-3. **Interactive sector features — planned.** Asteroid cover, derelict stations, power conduits and salvage fields that change movement and tactics.
+2. **More weapon specialisations — implemented in v0.11.0.** Eight additional weapons receive two paths each: Bolts, Scatterburst, Frost Shards, Chain Lightning, Toxic Cloud, Gravity Well, Nova Reactor and Pulse Laser. Sixteen new paths; 22 total choices across ten weapons and Energy Shield. Paths persist through evolution and reset each run. Existing Cannon, Repeater and Shield branches retained.
+3. **Interactive sector features — next, not started.** Asteroid cover, derelict stations, power conduits and salvage fields that change movement and tactics.
 4. **Rewards with a downside — planned.** Optional bargains such as extra damage for weaker shields, or better salvage for tougher opposition.
 5. **Occasional travelling merchant — planned.** Spend resources earned during the run on repairs or selected upgrades without competing with permanent ship licences.
 6. **Difficulty tiers with new rules — planned.** Unlock harder sectors with different formations, boss mechanics and resource rules rather than health increases alone.
