@@ -553,3 +553,7 @@ Small ship destruction now uses a short synthesised pop; boss death uses a low r
 
 ## v0.8.1 — contextual upgrade combinations
 Expanded upgradeSynergy into a compact per-card hint renderer for all26 evolutions and10 weapon combinations. It checks actual s.items ownership of either component; an offered but unowned item does not count as ownership. It displays both names, owned/missing marks, weapon level/5 and ready-cache/evolved/active-combo/completes-combo status. Shared passives show only relevant recipes with an owned part. Unknown/recovery options have no hint. Stats remain ahead of hints; the fixed mobile card grid is retained. No recipes, slot rules or gameplay values changed.
+
+
+## v0.8.2 — clean per-run upgrade hints
+Ownership/evolved state was already reinitialised by start(), and upgradeSynergy reads s.items rather than persistent data. start() now also clears the global choices array and #choices markup explicitly, removing stale cards/hints immediately at the new-run boundary. Cross-run regression covers restart, different pilots and persistent archive/Hangar evolution history; starter-owned recipes correctly remain visible.
