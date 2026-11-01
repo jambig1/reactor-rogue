@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.13.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.13.1. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -91,3 +91,9 @@ Step 3 makes the sectors tactically different while retaining their backgrounds.
 Destructible cover blocks physical shots from both sides, stops hunter charges and affects enemy routes. Beams and area damage bypass it. Dock at a station with F or the contextual touch button, staying nearby for four seconds during combat to repair 45 HP. Salvage pockets slow normal ships by 20% and hold three 5-credit pods, compatible with Supply Tractor, appraisal and salvage healing. Prime a conduit by shooting or pressing F, then escape its marked 1.4-second, 150-range blast. Ion currents can carry the player and ordinary enemies along their direction.
 
 Boss encounters hold docking, conduit countdowns, salvage collection and currents; cover remains solid. Features begin at 18s and cycle approximately every 40s when there is room. All objects, one-use charges and normal-run reward budgets reset each run. Run `node TEST-TERRAIN.cjs` for collision, reward, boss-hold, sector-cycle and crowded-scene regressions. Roadmap step 4, rewards with a downside, is next and has not started.
+
+## v0.13.1 — mid-run crowding and Auto graphics
+
+Yellow elites now use one steady health curve rather than multiplying two time-scaling curves. At five minutes: 2,750 HP instead of about 9,733; their 35% armour, cache and 50 XP rewards remain. Limit two living yellow elites and eight ordinary purple brutes; specialist quotas and boss stats remain separate. At the brute limit, regular arrivals favour lighter ships. Elite arrivals blocked by population limits retry after five seconds, and a successful spawn begins its next 60-second interval without overdue bursts.
+
+Auto quality immediately suppresses glow and simplifies frozen-hull decoration during dense fights, with a short hold to avoid flicker. It also lowers detail after the first expensive render sample instead of relying only on callback timing. Warnings, boundaries and damage-number preferences remain. Manual Low/Medium/High/Custom choices are respected. `node TEST-PRESSURE.cjs` checks the population, rewards and cosmetic boundaries. This balance/performance pass is complete; roadmap step 4 is next.

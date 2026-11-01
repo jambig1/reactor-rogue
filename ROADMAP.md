@@ -14,3 +14,7 @@ Agreed order: work through items 1–10. Complete one stage before starting the 
 10. **Daily seeded challenges — planned.** A shared ship, sector and upgrade seed with personal records.
 
 Existing features include 11 pilots, 26 weapons/evolutions, three sectors and themed bosses, Hangar challenges and licences, permanent tools, reactor mutations, three weapon/support specialisations, original risk-selectable reactor breaches, weighted salvage, weapon statistics, endless continuation, graphics controls and priority enemy specialists. Extend these systems rather than reintroducing them as missing features.
+
+## Before step 4: crowding/performance pass — completed in v0.13.1
+
+Ordinary purple brutes cap at eight, yellow elites at two. Yellow health scales once (650 + 7 × game seconds); elite cache/50 XP rewards and boss stats stay unchanged. Brute overflow becomes lighter ships; capped elite arrivals retry without a catch-up burst. Auto graphics immediately drops glow/ice decoration under crowd pressure and responds to measured render cost earlier. Manual presets remain explicit choices. Step 4 is still next.
