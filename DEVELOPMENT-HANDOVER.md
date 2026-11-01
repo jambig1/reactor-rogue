@@ -560,3 +560,8 @@ Ownership/evolved state was already reinitialised by start(), and upgradeSynergy
 
 ## v0.8.3
 Only the missing second component card shows contextual evolution/synergy hints. Already-equipped cards return no hint, including completed/evolved pairs. Current-run ownership and start resets remain authoritative.
+
+## v0.9.0 — priority enemy ships
+Existing shield carriers gain a distinct wing silhouette. Hunters lock a 0.95s warning lane before a 0.5s charge; volatile ships leave a 0.45s enemy-only chain blast; fighter carriers warn for 1.2s before launching two fighters (six alive and twelve total per carrier). Introductions at 50/80/105/145 seconds, using the existing specialist spawn budget. Caps: 12 specialists, two shield/fighter carriers each, four other specialists per role, 240 total ships, 24 queued chain blasts. Freeze pauses abilities; carrier protection retains existing 20% reduction, damage numbers use actual mitigated damage, chain damage is attributed to the triggering weapon. No new cache farming or permanent progression. Contextual hints remain missing-component-only and reset each run.
+
+Validation: role-specific warning/freeze/charge tests, shield mitigation/removal, delayed two-ship chains and weapon attribution, purge suppression, reinforcement lifetime/active caps, 240-ship simulation and native Canvas2D rendering passed. Existing menu, contextual-hint, graphics, pickup and explosion suites checked. Visual QA uses a staged native Canvas2D scene; device FPS has not been measured for this update. Distress signals remain deferred.
