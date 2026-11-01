@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.12.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.13.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -83,3 +83,11 @@ Step 2 expands further with Rail Lance, Flak Battery, Crescent Blades, Plasma Fe
 Defensive supports: Ablative Plates, Reactive Screen, Decoy Beacon and Salvage Medics. Passive supports: Supply Tractor, Guidance Chip, Field Capacitor and Salvage Appraiser. All use the existing six support slots and level to five. The weapon limit stays six. New effects, plate charges, decoys and fractional salvage bonuses reset per run; credit banking uses existing checkpoints.
 
 Run `node TEST-ARSENAL.cjs` to check new attacks, evolutions, branches, support mechanics, synergy amplification, slot/banish restrictions, pickup values, banking guards and bounded crowded fights. Existing distress and specialisation checks remain available. Step 3 is still next; it has not started.
+
+## v0.13.0 — interactive sector features
+
+Step 3 makes the sectors tactically different while retaining their backgrounds. Neon Expanse gains cargo cover, derelict repair stations and salvage pockets. Shattered Belt favours asteroid cover and salvage; Storm Relay has overloadable conduits, directional ion currents and stations.
+
+Destructible cover blocks physical shots from both sides, stops hunter charges and affects enemy routes. Beams and area damage bypass it. Dock at a station with F or the contextual touch button, staying nearby for four seconds during combat to repair 45 HP. Salvage pockets slow normal ships by 20% and hold three 5-credit pods, compatible with Supply Tractor, appraisal and salvage healing. Prime a conduit by shooting or pressing F, then escape its marked 1.4-second, 150-range blast. Ion currents can carry the player and ordinary enemies along their direction.
+
+Boss encounters hold docking, conduit countdowns, salvage collection and currents; cover remains solid. Features begin at 18s and cycle approximately every 40s when there is room. All objects, one-use charges and normal-run reward budgets reset each run. Run `node TEST-TERRAIN.cjs` for collision, reward, boss-hold, sector-cycle and crowded-scene regressions. Roadmap step 4, rewards with a downside, is next and has not started.
