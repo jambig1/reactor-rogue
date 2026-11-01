@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.15.1. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.16.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -133,3 +133,13 @@ A violet-and-gold rift flagship completes the twelve-ship roster. Defeat 20 sect
 ## v0.15.1 — overcharged beam visuals
 
 Pulse Laser, evolved laser lances, Rail Lance, Solar Sails, Leech Beam and Prism refraction now use layered energy, bright cores, tapered/rippling envelopes, emitter lenses and weapon-specific travelling details. Rail/Solar/Pulse hits add compact contact flares. Leech siphon nodes flow back towards the pilot. Plasma Fences and Ion Harpoon use matching energy styling. Low and crowded Auto use a simpler clear core; reduced motion fixes decorative movement. At most twelve beam draws per frame receive full detail, with up to four contact markers per short beam effect and no new particle arrays or long-beam shadow blur. Combat calculations, lifetimes, cooldowns and RNG are unchanged. TEST-BEAMS.cjs checks tagging, state/RNG isolation, quality/motion and marker bounds. TEST-BEAMS.html is an isolated visual showroom using the release renderer; it does not use saves or simulate combat.
+
+## v0.16.0 — The Lost Signal alien merchant
+
+Three transmissions around 2:00, 5:00 and 8:00 offer three rotating, unowned modifications from a pool of fifteen. Open the transmission button or J within 45 game seconds; bosses hold arrival/departure, and shopping pauses combat and departure. Each visit has one free refresh, then 15/25/35… scrap refreshes. Leaving closes that visit. Installed modifications appear in Pause → Overview and use no weapon/support slots.
+
+Run-only scrap is separate from Hangar credits: every fourth ordinary kill drops 3, elites 12, bosses 30. Collect nearby scrap before its 90-second lifetime ends; at most 80 stacks exist. Unspent scrap and all modifications reset next run. Existing credit rewards and saves stay unchanged.
+
+Merchant exclusives: Salvage Drone, Phase Plating, Cache Decoder, Echo Chamber, Scrap Converter, Rift Anchor, Execution Lens, Emergency Warp, Prism Mirror, Afterburner Core, Bounty Scanner, Reactor Battery, Gravity Collector, Overkill Capacitor and Smuggler’s Beacon. Shop rules are in How to play; exact effects/prices are on shop cards; these never enter level-up/drop pools. Fifteen distinct inline SVG icons and a six-eyed hooded hologram match approved concept C, with the existing Exo 2/neon palette and reduced-motion support.
+
+`node TEST-MERCHANT.cjs` covers every effect, transactions, bounded arrays, pause/boss holds, per-run reset and crowded update/render integration. `TEST-MERCHANT.html` is an isolated viewport/purchase preview using release markup/CSS/art/code with sample scrap, no combat or save access. Step 4 is deferred: Reactor Protocols (Arcana-inspired cards) are saved for later. Step 6 is next after this merchant pass.
