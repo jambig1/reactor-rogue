@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.16.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.17.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -143,3 +143,9 @@ Run-only scrap is separate from Hangar credits: every fourth ordinary kill drops
 Merchant exclusives: Salvage Drone, Phase Plating, Cache Decoder, Echo Chamber, Scrap Converter, Rift Anchor, Execution Lens, Emergency Warp, Prism Mirror, Afterburner Core, Bounty Scanner, Reactor Battery, Gravity Collector, Overkill Capacitor and Smuggler’s Beacon. Shop rules are in How to play; exact effects/prices are on shop cards; these never enter level-up/drop pools. Fifteen distinct inline SVG icons and a six-eyed hooded hologram match approved concept C, with the existing Exo 2/neon palette and reduced-motion support.
 
 `node TEST-MERCHANT.cjs` covers every effect, transactions, bounded arrays, pause/boss holds, per-run reset and crowded update/render integration. `TEST-MERCHANT.html` is an isolated viewport/purchase preview using release markup/CSS/art/code with sample scrap, no combat or save access. Step 4 is deferred: Reactor Protocols (Arcana-inspired cards) are saved for later. Step 6 is next after this merchant pass.
+
+## v0.17.0 — developer test panel
+
+Settings → Developer contains a session-only password gate (default `ReactorDev!17`), fresh test launches with any of the twelve ships and three sectors, invulnerability, enemy freeze, unlimited ability charges, temporary 0.25–4× simulation speed, hull/shield restoration, level-up and upgrade tools, equipment levels/removal/forced evolution, mutations, enemy/boss/terrain spawning, attack/enemy cleanup, pickups and merchant stock/scrap tests. Existing slot, heavy-enemy and population limits remain.
+
+This is a convenience lock in inspectable client-side code, not secure authentication. Unlocking/browsing alone does not flag a normal run. Any run control marks it permanently as a developer test for its lifetime: no new Hangar progress/credits, archive entries or best scores. Existing legitimately banked progress remains. Locking or disabling cheats does not remove that flag. Start a fresh normal run to restore progression. Test launch choices never buy/unlock ships or modify saved pilot/sector choices. Graphics/audio/control settings continue to work normally. Dev speed is temporary and separate from saved game pace. `node TEST-DEV.cjs` checks the lock, action groups, transaction/save exclusions and reset paths. Roadmap is unchanged.
