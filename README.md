@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.14.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.14.1. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -101,3 +101,7 @@ Auto quality immediately suppresses glow and simplifies frozen-hull decoration d
 ## v0.14.0 — aurora flight deck
 
 Main and pause menus gain slow mint/violet aurora ribbons, dark readable panels, consistent spacing and responsive layouts. Launch groups the selected ship, passive description, sector, hull, module and credits beside flight controls. Pause keeps pilot/time/kills/level/hull visible across its three pages, with fixed tabs and action buttons around a scrollable content area. Overview includes ability, equipment, pace, weapon/support slots, credits/tools, specialisations, signals, mutations and advanced stats. Existing reports and evolution recipes remain. Aurora is hidden in combat and respects reduced motion. TEST-MENUS.html provides desktop/tablet/phone CSS viewport checks using normal game controls. Roadmap step 4 is still on hold.
+
+## v0.14.1 — phone aurora visibility
+
+Phone launch/pause panels now let the aurora show through their backing. Ribbons fit the full viewport instead of cropping a wide scene into portrait, with explicit SVG gradient coordinates for consistency. Text and inner content cards keep their contrast. Reduced-motion rules still apply.
