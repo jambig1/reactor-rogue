@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.7.4. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.8. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -41,3 +41,7 @@ Purge now sends three expanding pressure ripples through a glowing honeycomb gri
 
 ## v0.7.4 — combat explosions
 Ship deaths, boss deaths, explosive impacts, fuel/gas chains and salvage destruction now use layered reactor blooms, bright cores, pressure rings, broken arcs, outward streaks and glowing hull fragments. Small ships have short compact bursts; bosses get wider, longer detonations with an equatorial shock disc. Frozen ships shatter in icy blue, with compact ship pops and deeper boss detonation sounds. Large blasts leave the existing fading smoke/embers. Effects are bounded, overlapping same-frame blasts merge, and reduced motion uses static fading geometry. This update changes visuals only: damage, drop rates, prices and progression are unchanged.
+
+
+## v0.8 — Graphics & Effects
+Settings now has a Graphics & Effects tab with Auto/Low/Medium/High/Custom presets; glow, particles/debris, explosion detail, smoke, damage-number modes, screen shake, flashes, playfield resolution, 30/60/display drawing limits, FPS counter and reduced-motion controls. Choices apply immediately, save independently of progression, and have a graphics-only reset. Auto starts at Medium, drops to Low after sustained slow frames, and cautiously recovers to Medium; High is an explicit choice. Enemy outlines, attack warnings, damage-area footprints and pickup icons remain visible. Menus/HUD use native resolution. Rendering limits are separate from simulation pace.
