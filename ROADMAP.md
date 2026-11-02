@@ -65,3 +65,8 @@ James authorised full normal-run testing and pacing pass. Five fresh-Vanguard no
 ### James's notes — priority1 pickup visibility, v0.24.0
 
 Implemented stronger pickup shapes, labels, layers, expiry visibility and bounded important edge markers. This addresses pickup readability within foundation7; broader movement/collection mechanics remain unchanged. New notes retained: profiles/local saves/export-import then account sync; achievements/contracts; music DnB/jungle/techno; more equipment; distinct new sectors. Only pickup visibility authorised this turn.
+
+
+### James's notes — priority2 local profiles / backups, v0.25.0
+
+Authorised next priority. Named local profiles and export/import transfer implemented, preserving current default save and using non-overwriting imports. Current run resume is not included. Account-based automatic cross-device sync remains pending a backend/service choice; no fake sign-in provided. Other noted content/music/contract/sector priorities remain unstarted.
