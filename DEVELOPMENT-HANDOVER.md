@@ -1,4 +1,4 @@
-# v0.7 — ship identity and progression feedback
+# v0.7 - ship identity and progression feedback
 
 Each ship now has an explicit passive. `traitDamage` applies eligible weapon bonuses through the central damage pipeline, retaining armour/piercing, critical hits, actual HP-loss accounting and kill attribution. Mutation/ship/environment damage (`other`) is excluded. Arc Feedback is applied per Arc Disc contact and counts enemies, excluding debris, capped at three bonuses.
 
@@ -30,7 +30,7 @@ Validation: individual passive rules, caps/timers, credit bonus dedup, live proj
 
 ---
 
-# v0.6.1 — menu and progression review
+# v0.6.1 - menu and progression review
 
 - Fixed page-wide `touch-action:none`: body/menus now permit native scrolling; canvas alone owns flight gestures. All dialog panels are bounded and scrollable. Hangar has a single independently scrollable content pane with fixed tabs and Back; tab switches reset scroll position.
 - Main menu: one selected ship preview plus compact roster. Locked roster entries open the matching Hangar detail. Desktop Hangar has a list/detail layout; mobile has a horizontal two-row roster above the detail. Owned ships never display misleading incomplete unlock bars: retained legacy ships explicitly explain ownership.
@@ -43,7 +43,7 @@ Validation: individual passive rules, caps/timers, credit bonus dedup, live proj
 
 ---
 
-# v0.6 progression — 31 October 2026
+# v0.6 progression - 31 October 2026
 
 Authoritative source: repository `index.html`. Ship progression is versioned under `rr_hangar.progressionVersion=1`. First upgrade of an existing Hangar save grants legacy ownership of all six original ships; recognised older pilot/archive progress also qualifies. Fresh saves own Vanguard only. Migration writes once immediately. New ships are never granted by migration.
 
@@ -75,13 +75,13 @@ New ship abilities:
 
 Validation: fresh and legacy save migration, challenge gating, all ship purchases, duplicate/insufficient-funds guards, three tool ranks/caps, next-run allowance snapshot, deduplicated progress and earnings, unique freeze count, beacon reduction, five abilities/starter attacks, all eleven archive identities, Hangar pages; existing 26-weapon/nine-boss and sector/evolution regression suites. Full human balance runs and physical iPad touch remain manual QA.
 
-Backlog — deliberately deferred: optional convoys, distress signals, reactor station objectives and risky caches. No new objective/event system added in v0.6.
+Backlog - deliberately deferred: optional convoys, distress signals, reactor station objectives and risky caches. No new objective/event system added in v0.6.
 
 ---
 
-# REACTOR ROGUE — current handover
+# REACTOR ROGUE - current handover
 
-## v0.5 — 31 October 2026
+## v0.5 - 31 October 2026
 
 Use `index.html` in this repository as the source of truth. The historical notes below describe earlier builds.
 
@@ -94,7 +94,7 @@ Use `index.html` in this repository as the source of truth. The historical notes
 
 ---
 
-# NEON SWARM — Development handover
+# NEON SWARM - Development handover
 
 Prepared 30 October 2026 (Europe/London). This is a portable snapshot; use the HTML supplied alongside this document as the source of truth.
 
@@ -344,7 +344,7 @@ Do not claim these already exist.
 When new features are added, update this document and copy the current HTML alongside it again. Check both files belong to the same snapshot. The scheduled end-of-day refresh was completed on 30 October 2026 after 16:45 UK time. The supplied HTML is the latest working source.
 
 
-## Subsequent update — Reactor breaches and touch-only controls
+## Subsequent update - Reactor breaches and touch-only controls
 
 This section supersedes the earlier “not yet implemented” map-event notes and three-control-mode summary.
 
@@ -360,12 +360,12 @@ This section supersedes the earlier “not yet implemented” map-event notes an
 - Verified with mocked runtime tests: all risk levels, reward rarity floors, slot caps, completion/failure, boss suspension, input detection, action-button visibility, E/1–3/Escape navigation, stats saving, and live simulated combat for hybrid/mouse/keyboard/touch. Physical touch and visual browser checks remain unverified.
 
 
-## Latest preference — no multikill callouts
+## Latest preference - no multikill callouts
 
 The user found multikill callouts excessive in dense fights. All multikill banners and associated audio have been removed. Keep score multiplier UI and its celebrations. Historic and current multikill statistics still track silently. Do not restore multikill announcements unless requested.
 
 
-## Latest update — Knockback and destructible salvage
+## Latest update - Knockback and destructible salvage
 
 - Shot impacts impart damped momentum; brutes/elites/bosses have greater mass. Colliding with enemies pushes them away even when the pilot is temporarily invulnerable. Dash rams deal damage and a stronger impulse; Bastion is strongest.
 - Added drifting, spinning asteroids and neon supply wreckage, initially seeded and replenished around the moving arena (cap 24). Debris is pushable rather than an impassable wall.
@@ -376,27 +376,27 @@ The user found multikill callouts excessive in dense fights. All multikill banne
 - Verified in mocked runtime: weighted knockback resistance, priority targeting, single loot emission, dash rams, impulse decay, blast damage, and combat in hybrid/mouse/keyboard/touch. Browser visual and physical-device validation still needed.
 
 
-## Latest update — Sparse asteroids, fragments and damaging shrapnel
+## Latest update - Sparse asteroids, fragments and damaging shrapnel
 
 Supersedes earlier guaranteed loot / density notes: initial debris is 6 whole objects, replenished every 8 seconds up to 8 whole objects. Total fragments/objects capped at 48. Asteroids split once into 2–3 small physical chunks which expire after 6 seconds; fragments never split or drop loot. Auto-targeting ignores fragments. Explosion pressure charges whole debris and fragments for 2 seconds; fast pieces moving toward enemies deal momentum-scaled damage and knockback, once per target per blast charge. Friendly debris does not hurt the pilot. Ordinary bumps alone do not cause shrapnel damage. Surviving fragments inherit parent blast charge and hit history. Objects can drop nothing: asteroid XP chance 28%, supply chance 12%; wreckage XP chance 65%, supply chance 50%. Independent rolls. Verified fragmentation, no duplicate loot, sparse spawning, expiry, target priority, momentum damage/guards and all control-mode simulations. Visual/browser testing remains unverified.
 
 
-## Latest update — Explosive fuel cells
+## Latest update - Explosive fuel cells
 
 Sparse debris now includes orange pulsing fuel cells (20% of whole-object spawns; wreckage 22%; rest asteroids). Shooting/destroying one triggers a 155-range blast, enemy damage, physical pressure, gas ignition and nearby fuel-cell chains. Each cell explodes only once, creates five fast temporary hull shards subject to the 48-object cap, awards points and chain progress, and drops no loot. Friendly explosions do not hurt the pilot. Shards are emitted AFTER the blast/chain propagation so they survive their own explosion. New function detonateFuel; fuel property on whole debris; fuelShard marks its fragments. Tests cover cell chaining, gas ignition, enemy pressure/damage, live shrapnel, no duplicate reward, no self-damage and bounded combat. Visual/browser inspection remains unverified.
 
 
-## Latest update — Warning fuses and dramatic chains
+## Latest update - Warning fuses and dramatic chains
 
 Fuel cells now arm on lethal damage: HP stays at 1, a ~0.65s fuse flashes the cell and shows a countdown ring, then detonateFuel marks it broken/dead. Repeat hits cannot reset the fuse. Linked cells each get their own warning delay. chainBlastFX tracks consecutive fuel/gas detonations within 1.8 seconds and escalates multi-layer shockwaves, spark output, shrapnel (5–10 per fuel cell), capped screen shake (16 maximum) and a brief subtle warm screen tint. Visual blast size grows without expanding fuel damage radius. Reduced-motion suppresses viewport shake/tint. Debris cap remains 48. Test checks passed for fuses, sequential propagation, no duplicate explosions, bounded fragments, visual effect code paths and tint decay with/without reduced-motion. Browser visual inspection remains unverified.
 
 
-## Latest update — Reactive smoke, scorch marks and salvage-only consumables
+## Latest update - Reactive smoke, scorch marks and salvage-only consumables
 
 Hot explosions/gas-chain blasts now leave scorch marks (~24s, cap 48) and drifting grey smoke (~8s, cap 18). Smoke uses the gas disturbance simulation with seven lobes: ship/enemy/debris motion, shots, beams and blast pressure stir it. Smoke has no poison damage and cannot ignite. Scorches render under objects; smoke stays under ships and attacks. Nearby simultaneous marks are deduplicated, reduced-motion stops extra drift, and all aftermath expires. Added s.smoke/s.scorches and addAftermath/updateAftermath/drawSmoke/drawScorches. Salvage drops are explicitly tagged origin=salvage and restricted to repair/vacuum/speed/damage/defence plus XP gems; a defensive collection guard converts any invalid salvage passive to repair. Permanent passive drops from enemy supply rolls remain unchanged. Verified creation, flow response, shot wakes, bounds, expiry, reduced-motion and consumable-only salvage in mocked runtime. Browser visual inspection remains unverified.
 
 
-## Latest update — Six ships and more visible salvage
+## Latest update - Six ships and more visible salvage
 
 Three new pilots join the original three: Harrier (85 HP, speed 210, Scatterburst starter +2 starter pellets, 3.5s/1000-speed dash), Glacier (105 HP, speed 170, Frost Shards starter, 0.5 HP/sec innate regeneration, 4.2s/780 dash), Tempest (90 HP, speed 195, Arc Discs starter, all weapon cycles 10% faster, 3.8s/920 dash). Distinct hulls and picker silhouettes; responsive picker uses 3 columns desktop / 2 mobile. All sixteen weapons remain available to all pilots. Manual fire still governs only the chosen starter. New starters receive proper pilot firing-rate modifiers. Save validation, per-pilot stats and records include all six IDs.
 
@@ -405,7 +405,7 @@ Salvage was too sparse: now 10 visible initial objects (5 asteroids, 3 wreckage,
 Also corrected the turret render layer so it draws once independently of hull/armour, including unarmoured pilots. Verified balanced canvas transforms across all six hulls and armour levels. Runtime checks passed for starters, manual gating, special traits, all-pilot save/stat support, visible salvage, and combat across all input modes. Visual/browser checks remain unverified.
 
 
-## Latest update — Full sixteen-weapon evolution roster
+## Latest update - Full sixteen-weapon evolution roster
 
 Every weapon now has one themed evolution. The original four remain. New recipes (weapon level 5 + paired support level 1, then an elite cache):
 
@@ -429,22 +429,22 @@ Evolution caches offer up to three eligible choices. Recipes/effects are shown i
 Tests passed for all sixteen unlock recipes and slot preservation, new effects, capped choices, evolved combat and history persistence. Original four already regression-tested previously; full runtime rendering passes remain mocked, not browser-visual verification.
 
 
-## Latest update — Pause evolution tab and limited upgrade tools
+## Latest update - Pause evolution tab and limited upgrade tools
 
 Evolution recipes/effects now live only in a separate Evolutions tab inside Pause; Overview keeps run multipliers, mutations and upgrade-tool counters. Removed recipe hints from level-up cards to reduce clutter. Every new run starts with 3 Skips, 3 Rerolls and 3 Banishes. Skip consumes the current level-up without an item or XP refund. Reroll draws three new legal choices at the same level (avoids the previous set when enough alternatives exist). Banish toggles selection mode; select a displayed item to exclude it from future level-up/breach choices without removing equipped levels, then choose from fresh cards. Cancellation costs no charge; repair fallback cards cannot be banished. All counters/banished IDs reset on new runs; queued XP levels remain intact. Tools apply to normal level-up choices, not automatic floor consumables or boss mutation selections. New functions: drawUpgradeChoices/renderUpgradeChoices, skipUpgrade/rerollUpgrade/toggleBanish/banishChoice, setPauseTab. Tests passed for per-run limits, no duplicate XP/levels, banished pool exclusion, cancellation, fallback exhaustion, queue processing and pause-tab rendering.
 
 
-## Latest update — Distinct weapon firing patterns
+## Latest update - Distinct weapon firing patterns
 
 Forward turret weapons: Neon Bolts, Needle Repeater, Siege Cannon, Scatterburst, Pulse Laser, Void Lance. In Auto they fire only when a target is within a forward cone; they no longer pivot every weapon toward the nearest enemy. Turn the turret using your selected controls. Arc Discs use rotating radial spokes; Frost Shards use 360-degree rings; missiles launch around the pilot and then home. Lightning, seeker drones, gas and gravity wells still acquire targets independently. Blades/Nova remain all-round and mines trail. Manual mode overrides only the pilot starter to an aimed forward spread, including Glacier/Tempest starters. Additional weapons remain automatic. Weapon pattern labels appear on upgrade cards. New firingPatterns/forwardWeapon/forwardTarget helpers. Radial projectile counts increased for coverage; further balance tuning may be needed. Tests passed for forward gating, all radial quadrants, independent targets, all six manual starters and evolved combined combat.
 
 
-## Latest update — Distinct evolved weapon audiovisual identity
+## Latest update - Distinct evolved weapon audiovisual identity
 
 All sixteen evolutions now have evoStyles colour/accent/synth profiles and dedicated evolvedSound firing cues (layered tones/noise with individual cooldowns, existing voice cap and volume/mute respected). New evolution selection triggers a three-second named reveal, particle ring and evolution fanfare. Projectile rendering wraps projectileBase with distinct luminous cores, double trails, crystal branches, multi-ring discs, rocket armour and singularity rings. Evolved non-projectile visuals include Iron Halo shield blades, Living Plague bioluminescent tendrils, Shrapnel Garden spike rings, Tidal Collapse/Event Horizon containment arcs, gold Solar Lance beams and blue Aegis Nova. Effects are cosmetic; core weapon damage/physics unchanged. Gold laser still ignites gas. New helpers: evolvedSound, celebrateEvolution, drawEvolvedAreas and projectileBase/drawProjectile wrapper. Reduced-motion CSS/visual paths retained. Tests passed for all sixteen sound profiles, normal/evolved dispatch, mute/effects-zero, voice/object bounds and combined evolved render/runtime paths with/without reduced motion. These are mocked audio/render tests, not audible listening or browser visual verification.
 
 
-## Final end-of-day verification — 30 October 2026
+## Final end-of-day verification - 30 October 2026
 
 The ZIP was refreshed after the final evolved audiovisual update and contains the latest game, this handover, START-HERE.txt and SHA256.txt. The game parses as JavaScript and the packaged bytes were checked against the current output. No gameplay changes were made during final packaging.
 
@@ -453,11 +453,11 @@ Hands-on browser testing was attempted twice using approved native control and i
 At home: attach NEON-SWARM-v0.2.html and DEVELOPMENT-HANDOVER.md to a new development chat, ask it to read both, and state the next change. This file includes later update sections which supersede earlier summaries; the current HTML is authoritative. No browser stats, settings, credentials or development-browser profiles are included in the package.
 
 
-## Update — RPG damage numbers, 31 October 2026
+## Update - RPG damage numbers, 31 October 2026
 Enemy damage now displays floating world-space numbers after power, Overcharge and critical bonuses. Normal hits are pale mint; critical hits are larger gold numbers with !. Rapid same-enemy hits of the same critical status combine within short fixed windows; labels cap at 100 and offscreen hits are omitted. Numbers use game-time expiry, pause with combat, reset per run and suppress drift/pop under reduced motion. Displayed damage includes overkill to make weapon strength comparable; lifetime damage tracking remains capped to actual HP lost. No damage balance changed. Helpers: addDamageNumber, damageLabel, updateDamageNumbers, drawDamageNumbers. Automated logic checks only; real browser/iPad visual verification remains outstanding.
 
 
-## Authoritative snapshot — REACTOR ROGUE v0.3, 31 October 2026
+## Authoritative snapshot - REACTOR ROGUE v0.3, 31 October 2026
 
 The game has been renamed REACTOR ROGUE. Use REACTOR-ROGUE.html alongside this file. Earlier NEON SWARM names, packaging instructions and files describe the historical builds. This snapshot incorporates all prior changes, including damage numbers, enemy ships/armour, six ship mobility abilities and the new animated vector menu branding.
 
@@ -481,7 +481,7 @@ Actual browser testing remains unverified: Playwright was present but no browser
 mobility / updateMobility / dash; addDamageNumber / enemyDamage / drawEnemyShip; rrEmblem / drawMenuScene; sectors / frames / modules / contracts / hangar / commitHangar / initExpansion / openHangar / renderHangar; specialisations / offerSpecialisation / chooseSpecialisation / upgradeComparison / applyProjectileSpec; encounter / roleInfo / spawnSpecial / specialistHeading / specialistAttack / updateExpansion / drawExpansion / drawSpecialist.
 
 
-## v0.4 — Ten weapons, ten evolutions, sector art and recipe UI
+## v0.4 - Ten weapons, ten evolutions, sector art and recipe UI
 
 Source of truth is now GitHub jambig1/reactor-rogue, index.html. GitHub Pages publishes main/root automatically at https://jambig1.github.io/reactor-rogue/. User authorised publishing future requested game updates automatically. The GitHub connector has read access but returned 403 on writes during setup; browser upload was authorised and used. Recheck current repository before editing. No credentials belong in source or handover.
 
@@ -522,7 +522,7 @@ Hosted v0.4 checks: deployment succeeded; live menu reports 26 weapons; launch a
 Full simulated runs (seed12345, normal HP/XP/loot/upgrades, automated movement/aim; not human balance evidence): Vanguard victory753s, level61, 246 credits, three bosses. Scavenger victory682s, level62, 327 credits, three bosses. Bot follows gems rather than prioritising crates. The new currency increases earnings; prices are intentionally unchanged and need human-run economy feedback. Chrono-frozen contact cannot harm the pilot while the pickup is active. No physical iPhone/iPad test.
 
 
-## v0.7.3 — cinematic pickup waves (supersedes v0.7.2 Purge immunity)
+## v0.7.3 - cinematic pickup waves (supersedes v0.7.2 Purge immunity)
 User requested a rippling honeycomb space shockwave which destroys all enemies, plus a cooler freeze effect. `launchPickupWave`, `updatePickupWaves`, `drawPickupWaves`, `drawFrozenHull` implement Canvas-native effects, not external bitmap assets.
 - Purge snapshots all visible living ships, including bosses and arrival ships, and resolves their normal hit/death path as the front reaches their activation distance. Arrival protection is intentionally removed for this pickup. Offscreen/future enemies are not targeted. Boss credit, XP, caches, mutations and victory remain on the normal path. Huge overkill numerals and pickup critical chains are suppressed. Pending upgrade/reward menus wait until the target snapshot is cleared.
 - Three trailing rings, a flattened disc, warm/cold hexagon fronts and bounded hull shards. Up to4 active waves and210 shards. Replacing an oldest wave resolves any outstanding kills first, so spam cannot lose rewards. FX live outside the generic150-effect cap. Hex draw work is viewport-clipped and capped850 cells per wave.
@@ -530,7 +530,7 @@ User requested a rippling honeycomb space shockwave which destroys all enemies, 
 - Automated test-drops073.cjs covers weighted drops plus travelling kills, visible boss kills, offscreen exclusion, duplicate death, bounds, cleanup and both motion modes. Actual Canvas2D renderer produced a paired24-frame animation preview. Existing v0.7/menu/v0.5 regressions pass. No physical iPhone/iPad testing.
 
 
-## v0.7.4 — combat explosion visuals
+## v0.7.4 - combat explosion visuals
 `combatExplosion`, `updateCombatExplosions`, `drawCombatExplosions` add visual-only detonations to normal enemy/boss deaths, non-fragment debris, gasBlast impacts and chainBlastFX. Purge retains its separate honeycomb/shard treatment. No new random draws: shard direction/speed/life use deterministic geometry and positions, preserving combat/drop RNG.
 - Radius26 for basic ships,48 for strong ships,80 for elites,160 for bosses; impact sizes clamped15–190. Durations0.48/0.8/1.1s. Frozen kills use icy colour/core rather than warm fire.
 - Up to48 blasts and180 shards; merge same-frame overlapping blasts, allowing a larger boss blast to replace a small impact. Viewport culling, local bloom instead of extra fullscreen flashes, and compact normal ship bursts protect readability. Existing smoke/scorch pools remain bounded18/48.
@@ -540,7 +540,7 @@ User requested a rippling honeycomb space shockwave which destroys all enemies, 
 Small ship destruction now uses a short synthesised pop; boss death uses a low reactor detonation. Both honour existing audio volume/mute/debounce behaviour. No additional fullscreen flash or shake was introduced.
 
 
-## v0.8 — graphics controls and adaptive quality
+## v0.8 - graphics controls and adaptive quality
 - Added Settings → Graphics & Effects with native labelled selects and a scrollable two-column label/control layout. Existing horizontal tab navigation, parent restoration and touch scrolling remain. Preferences use the independent `ns_graphics` key, validated through an allow-list. Invalid JSON/fields safely default; blocked storage is session-only. Reset affects graphics only.
 - Presets: Low = no blur/particles/smoke/shake/flash, simple explosions, combined numbers,75% playfield resolution; Medium = capped3px glow,25% particles, reduced smoke, detailed explosions, combined numbers, low shake/reduced flashes,100%; High = original full effects, individual numbers,100%. Custom retains explicitly chosen effective settings. Changing FPS limit, FPS counter or motion does not disable Auto. Manual visual changes capture the active preset then switch to Custom.
 - Auto starts Medium, lowers after two consecutive2s slow windows (>125% target frame interval), recovers after nine consecutive2s headroom windows (within112% target and JS cost<35% budget). Ceiling Medium prioritises performance; High remains manual. It ignores paused/menu/background frames. Effective choices and current tier appear in Settings. No enemy count or damage/difficulty changes.
@@ -551,22 +551,22 @@ Small ship destruction now uses a short synthesised pop; boss death uses a low r
 - test-graphics08.cjs covers presets, Custom, persistence/reload/reset, corrupt/blocked storage, OS motion, auto hysteresis/manual locks, budgets, separate visual RNG, equal hit damage, number modes, frame pacing and all render modes. Existing combat/progression/menu suites pass; legacy full-particle effect tests explicitly select High. Native Canvas heavy-scene comparisons are diagnostic CPU raster measurements, not browser/device FPS. No physical iPhone/iPad test.
 
 
-## v0.8.1 — contextual upgrade combinations
+## v0.8.1 - contextual upgrade combinations
 Expanded upgradeSynergy into a compact per-card hint renderer for all26 evolutions and10 weapon combinations. It checks actual s.items ownership of either component; an offered but unowned item does not count as ownership. It displays both names, owned/missing marks, weapon level/5 and ready-cache/evolved/active-combo/completes-combo status. Shared passives show only relevant recipes with an owned part. Unknown/recovery options have no hint. Stats remain ahead of hints; the fixed mobile card grid is retained. No recipes, slot rules or gameplay values changed.
 
 
-## v0.8.2 — clean per-run upgrade hints
+## v0.8.2 - clean per-run upgrade hints
 Ownership/evolved state was already reinitialised by start(), and upgradeSynergy reads s.items rather than persistent data. start() now also clears the global choices array and #choices markup explicitly, removing stale cards/hints immediately at the new-run boundary. Cross-run regression covers restart, different pilots and persistent archive/Hangar evolution history; starter-owned recipes correctly remain visible.
 
 ## v0.8.3
 Only the missing second component card shows contextual evolution/synergy hints. Already-equipped cards return no hint, including completed/evolved pairs. Current-run ownership and start resets remain authoritative.
 
-## v0.9.0 — priority enemy ships
+## v0.9.0 - priority enemy ships
 Existing shield carriers gain a distinct wing silhouette. Hunters lock a 0.95s warning lane before a 0.5s charge; volatile ships leave a 0.45s enemy-only chain blast; fighter carriers warn for 1.2s before launching two fighters (six alive and twelve total per carrier). Introductions at 50/80/105/145 seconds, using the existing specialist spawn budget. Caps: 12 specialists, two shield/fighter carriers each, four other specialists per role, 240 total ships, 24 queued chain blasts. Freeze pauses abilities; carrier protection retains existing 20% reduction, damage numbers use actual mitigated damage, chain damage is attributed to the triggering weapon. No new cache farming or permanent progression. Contextual hints remain missing-component-only and reset each run.
 
 Validation: role-specific warning/freeze/charge tests, shield mitigation/removal, delayed two-ship chains and weapon attribution, purge suppression, reinforcement lifetime/active caps, 240-ship simulation and native Canvas2D rendering passed. Existing menu, contextual-hint, graphics, pickup and explosion suites checked. Visual QA uses a staged native Canvas2D scene; device FPS has not been measured for this update. Distress signals remain deferred.
 
-## v0.10.0 — roadmap step 1: optional distress signals
+## v0.10.0 - roadmap step 1: optional distress signals
 
 The ten-step plan is saved in ROADMAP.md. Only step 1 is implemented. Step 2 is next; do not start it automatically.
 
@@ -582,7 +582,7 @@ UI: reuse one compact objective HUD at the screen edge with direction, timer, pr
 
 Validation: TEST-DISTRESS.cjs covers scheduling/deck, proximity, opt-in/ignore/dismiss, staged rescue, freighter hull/cooldown/freeze/hostile shots, weapon/blade reactor damage and stationary behaviour, purge exclusion, full-slot/banish fallbacks, rewards and credit-bank deduplication, all boss holds/resume, timeout/abandonment, resets, extra-spawn budgets and legacy breaches. Native Canvas2D scenes checked for all three kinds, Low quality and reduced motion. Full simulation also completes each signal with normal automatic attacks, and checks crowded limits plus phone/tablet/desktop render paths. Existing menu, hint, specialist, graphics and pickup suites pass. Browser smoke and deployment verification are required before reporting live. Real-device iPhone/iPad FPS is not measured by the Node harness.
 
-## v0.11.0 — roadmap step 2: eight more branching weapons
+## v0.11.0 - roadmap step 2: eight more branching weapons
 
 Only step 2 is implemented here; ROADMAP.md marks step 3 as next. specialisations now has 11 keys: original Cannon, Repeater and Shield plus Bolt, Scatter, Frost, Chain, Toxic, Gravity, Nova and Laser. Each offers two choices at item level 3 through the existing paused specialisation surface. initExpansion resets s.spec and the bounded s.specEchoes queue; start also clears pendingSpec and old choice markup. Existing run snapshots already store specialisations; labels read both live spec and recorded specialisations. There is no persistent damage upgrade or save migration.
 
@@ -600,7 +600,7 @@ Projectile effects are applied once before evolution; copied Photon Echo project
 
 Validation: TEST-SPECIALISATIONS.cjs covers every level gate/choice, 16 new path behaviours, evolved projectiles, one-time application, count/penetration/cones, actual damage versus previews, frozen duration, chain range/target lock, poison placement and ticks, early gravity collapse, double-nova delay/reflection, laser armour/trail ownership, card/Pause/history labels, 240-ship loops and reset. Native Canvas2D checked representative frost, toxic, gravity, nova and laser states at Medium, Low and reduced motion. Menu, contextual-hint, graphics and weighted-pickup regressions pass. TEST-DISTRESS fixture now selects paths explicitly when testing mission completion, since level-3 weapons correctly open new branch menus. This is initial numerical tuning, not a claim that every path has identical effectiveness; real-device FPS and long-term win-rate balance still need play feedback. Verify browser launch/manual and Pages deployment before reporting live.
 
-## v0.12.0 — step 2 extension: ten weapons, eight supports
+## v0.12.0 - step 2 extension: ten weapons, eight supports
 
 ROADMAP.md retains the agreed order; step 3 remains next. The added arsenal is a bounded subsystem in s.newArsenal with fences (8), charges (8), delayed seeds (32), nets (5) and one decoy. initNewArsenal resets this and s.defence (plate charges, recharge clock, reactive-screen timer/cooldown and fractional pickup credits) on every run. extraWeaponIds includes the new rows so the base attack loop excludes them; attackExtra delegates once to attackNewWeapons and skips them in its legacy loop. New projectile modifiers are already captured at emission and excluded from applyProjectileSpec to prevent multiplication twice. All new hits use weapon IDs, so armour, actual-damage numbers, traits and per-weapon statistics remain shared.
 
@@ -624,7 +624,7 @@ Ten contextual synergies are registered with actual effects: rail/seed + gravity
 
 Validation: TEST-ARSENAL.cjs covers all new casts/paths and cache evolutions, damage previews, returning projectiles, flak deduplication, fences, healing exclusions, freezing, cone hits, side beams, finite seed echoes, net interception budgets, plates/recharge/full absorption, reactive timers, decoy goals, appraisal fractional arithmetic, repair and credit-bank dedup, tractor, duration/speed snapshots, slot and banish limits, synergy multipliers and six-weapon 240-ship stress loops/reset. Native Canvas2D rendered all ten evolved weapons at Medium, Low and reduced motion. Existing menus, contextual hints, distress, specialisations, graphics and salvage regressions pass. Initial numbers require normal play feedback; no physical iPhone/iPad FPS claim is made. Verify Pages/live launch before reporting deployment complete.
 
-## v0.13.0 — roadmap step 3: interactive sector features
+## v0.13.0 - roadmap step 3: interactive sector features
 
 Step 3 is implemented; step 4 remains next in ROADMAP.md. Arena background renderers are unchanged. New world-space s.terrain objects are drawn separately and reset by initTerrain. Array cap 12, off-screen cleanup at 1.8 viewport diagonals +500 world units; cover formations cost three slots. First feature at 18s, then a 40s opportunity clock; failed placement advances the cycle without forcing overlaps. Safe spawns avoid current optional objectives and nearby features. Normal-run spawn budgets: three stations, four salvage pockets, five conduits. Endless removes these lifetime reward budgets while retaining active-object caps. Spent objects clean up after short visual remnants; unused landmarks remain until the pilot leaves their region. Objective spawning clears overlapping cover so rescue/defence/breach zones remain accessible.
 
@@ -640,7 +640,7 @@ Bosses pause feature creation, docking clocks, pod collection, conduit countdown
 
 Validation: TEST-TERRAIN.cjs checks sector order and initial timing; swept hostile and piercing/ricocheting friendly collision; cover durability/no kill farming; pilot overlap/phase/hunter interactions; repair opt-in, leaving, one-use/full-hull guards and boss holds; salvage slow/tractor/appraisal/healing/banking; conduit warnings, boss hold and bilateral damage; current direction/freeze/boss behaviour; budgets/object cap/objective clearance/reset; crowded three-sector and phone/tablet/landscape render paths. Native Canvas2D scenes checked belt/storm/grid and Low/reduced-motion readability. Existing menu, distress, arsenal, specialisation, graphics and salvage tests pass. These are simulation/render checks, not physical iPhone/iPad FPS or long-term balance evidence. Verify Pages deployment and browser launch/help before reporting live.
 
-## v0.13.1 — requested crowding/performance pass before step 4
+## v0.13.1 - requested crowding/performance pass before step 4
 
 Diagnosis on v0.13.0: yellow HP was (650 + 10*t)*(1 + t/180), plus 35% armour. A newly spawned 5-minute elite had ~9,733 HP / ~14,974 effective HP without cover. Elite spawning had no class limit or total-population guard. Ordinary purple brutes used a 12% regular-arrival roll but no class quota. A normal scripted seed-12345 replay at minutes 4–5 had a sampled purple peak of 11 and a killed yellow lifetime of 95.5s. Two protected replays isolated buildup and had yellow lifetimes of 115.8s and 83.9s; they are not win-rate evidence.
 
@@ -656,7 +656,7 @@ Fixed original 5-minute snapshot, identical 27 actors and effects, 1024x768 soft
 
 Validation: TEST-PRESSURE.cjs covers brute fallback, specialist separation, elite cap/linear HP, successful retry cadence, cache/XP deduplication, spawn helper population guard, unchanged boss HP, immediate Auto/hysteresis/paused backdrop, manual preset control, cost-sensitive adaptation and visual RNG separation. Terrain, arsenal, distress, specialisation, menu and graphics regressions pass; salvage/purge suite rerun. New pressure tests are dependency-free Node VM checks. The graphics regression's slow-interval fixture now uses cheap rendering to keep testing two-interval hysteresis independently of the new expensive-render trigger. Pages and live launch/help verification required before reporting deployed. Roadmap step 4 has not started.
 
-## v0.14.0 — menu refresh requested before step 4 (work checkpoint)
+## v0.14.0 - menu refresh requested before step 4 (work checkpoint)
 
 James requested main/pause visual refresh with a moving aurora, full information audit, responsive alignment/spacing, and saved progress if credits interrupt work. Step 4 remains on hold. Main menu now separates ship/loadout from flight controls; labels sector, hull, module and credits; exposes selected pilot passive description. Pause adds persistent pilot/time/kills/level/hull telemetry, flight ability/equipment/pace/slot information, and a bounded scrolling page area with fixed tabs and footer. Existing weapon reports, 36 evolution recipes/filters, credits/tools, sector/specialisations, mutations, signals and advanced stats remain.
 
@@ -674,29 +674,29 @@ Final spacing commit 020526560a2985994d951632512a31079b54384d deployed successfu
 
 User reports aurora invisible on iPhone. Confirmed design cause: nearly opaque launch/pause panels occupy almost all portrait viewport. Mobile backing now uses 64–72% opacity instead of 93–96%, vignette weaker, ribbon SVG fits viewport without wide-scene crop, explicit percentage gradient coordinates. Inner cards remain dark/readable, reduced motion unchanged. Step 4 still on hold. Publish and verify phone viewport; physical Safari check remains user-side.
 
-## v0.14.2 — approved logo C implementation
+## v0.14.2 - approved logo C implementation
 
 James chose Overcharged Arcade C: big wordmark in game, no small RR underneath; retain separate RR for a possible future app. Imagegen edits of approved C produced transparent wordmark and separate RR source mark. Both original PNG assets saved in repository; wordmark embedded once as PNG data URL in index.html, preserving offline HTML use. Main h1 contains accessible alt text, responsive max-height 200 desktop/150 phone/100 short landscape. No added animated filters; no RR app mark in current gameplay or favicon. Existing compact HUD icon retained, stale version label updated. User request for future app mark is preservation, not approval to create or publish an app. Step 4 remains on hold. Pending live responsive/image-load QA and deployment verification.
 
-## v0.14.3 — logo spacing correction during review
+## v0.14.3 - logo spacing correction during review
 
 User spotted the T of REACTOR intruding into the G of ROGUE. Imagegen edited only wordmark spacing, exposing separation between the letterforms and preserving approved colours/style. Updated standalone wordmark and embedded PNG; RR app-mark source unchanged. v0.14.2 commit dffb75f0cc0af98d658b80d9e8e8e300b9442a6e was already submitted while correction arrived, superseded by this patch. Verify v0.14.3 live, image decode and desktop/phone bounds before reporting.
 
-## v0.14.4 — logo palette in menus
+## v0.14.4 - logo palette in menus
 
 James requested logo colours through menus and moving purple while retaining the aurora. Enhanced violet ribbon strength, made third ribbon violet/pink, added purple tint to readable menu panels/cards and selected tabs/buttons, retaining mint primary actions. Two-pixel spectrum border moves slowly only on visible main/pause panels; existing motion-class override and system media query stop it. No added blur, particles or JS animation loop. Combat colours/mechanics unchanged; aurora still hidden during play. v0.14.3 deployment and desktop/390px image decode/bounds passed; RR app mark remains reserved. Step 4 still on hold. Current colour patch pending publish/browser visual checks.
 
-## v0.14.5 — chosen font D / Exo 2
+## v0.14.5 - chosen font D / Exo 2
 
 James selected option D from the actual-font comparison. Applied Exo 2 across CSS font families/shorthands and all canvas text declarations (including damage numbers, pickups and warnings). Variable TTF embedded in @font-face, weights 100–900, font-display swap, system/Apple Symbols/Segoe UI Symbol fallback. No remote font fetch or dependency for offline HTML. SIL OFL copied to FONT-LICENSE-Exo2.txt and HTML comment. Logo PNG bytes/app mark unchanged. Stats use tabular figures where supported. Step 4 remains on hold. Pending font-load/phone/menu/Canvas checks and deployment verification.
 
-## v0.14.6 — menu ships match gameplay
+## v0.14.6 - menu ships match gameplay
 
 James observed menu icons still looked like the old designs. shipIcon previously used a simplified hand-authored SVG with only hull/partial identity parts; pilotDesign added engine pods, vents, cockpit core and rotating turret during play. Now shipPainter provides the shared primitive API; drawIdentityHull and pilotDesign accept an explicit painter/view, defaulting to live Canvas/state. A small SVG context exports that same full renderer at t=0 in neutral state, pointing up, without transient phase, dash, shield/armour upgrades. Menu/Hangar SVGs use 72×76 viewBox with padding for turret and hull tips. Original Canvas pixel output for all eleven ships was compared before/after and is identical. No gameplay drawing/design change. 
 
 Preview colour follows selected unlocked global paint, using the same Aurora/Solar colours as initExpansion. Cache keyed by pilot ID, shape, effective colour and motion preference, bounded at 66 entries; previews use no gameplay RNG or state writes. SVG excludes soft shadow blur and the world-only ground shadow; it preserves hull/engine geometry, lights, plating and turret. Native Canvas sheet comparison passed, TEST-SHIP-PREVIEWS.cjs checks eleven unique SVGs and shared detail/turret, no run mutation, no-run generation, and menu/Hangar paths. Existing menu and identity/passive regression suites pass. Pending browser main/Hangar/phone visual checks and deployment. Step 4 remains on hold.
 
-## v0.15.0 — Sovereign / twelve-ship roster
+## v0.15.0 - Sovereign / twelve-ship roster
 
 User requested one more really cool ship, completing an even roster, with the most expensive unlock. Added sovereign: violet/gold crown-wing hull with multiple gold inlays and reactor rings, shared menu/gameplay painter, diamond engine trails and a geometric arrival aperture. Stats 125 HP, 165 speed, 1 innate armour, starter Void Seeds. Licence challenge: 20 cumulative sector bosses, existing hangar.bosses/liveChallengeProgress/checkpoint banking; 600 credits versus prior maximum 180. No new permanent progress schema or auto purchase. Added new ID to loadHangar save whitelist; purchase persistence test caught and fixed omission. Pre-existing ship licences/balances are retained. Menu roster is 12, three full rows of four. Preview cache cap now pilots.length*6, notice cap pilots.length.
 
@@ -704,7 +704,7 @@ Passive Imperial Arsenal: +4% weapon damage per key in current-run s.evolved, ma
 
 Validation: TEST-SOVEREIGN.cjs covers locked/ready/unaffordable/purchase/persistence/repeat purchase, starter/stats, evolution scaling/cap/ability exclusion, distance/invulnerability/cooldown, exactly eight pulse timings, boss armour/pull resistance, arrivals/objectives, elite cache/kill dedup, live and banked challenge progress, paused frames, menu/pause/artwork, render paths/reset. Updated preview roster expectation to12. Menu, original identity/passives, arsenal, pressure and terrain regressions pass. Native Canvas/SVG all12 hull render sheets checked. Exo 2 font and approved logo unchanged. Browser main/locked challenge/phone and deployment checks still required before reporting live. This is an additional interlude; step4 not started.
 
-## v0.15.1 — beam weapon visual pass
+## v0.15.1 - beam weapon visual pass
 
 James requested better-looking beam weapons. drawWeaponBeam adds layered colour/core, tapered gradient/rippling envelopes, lens/muzzle facets, terminal taper, travelling chevrons (rail), diagonal gold bands (sails), reverse-flow braided leech strands and crystal prism nodes. Plasma Fences and Ion Harpoon render through the same helper. line now optionally tags beamStyle and returns its existing visual object; only friendly beam weapon call sites are tagged. Generic lightning, hostile warnings and support zaps retain their previous draw paths. Rail/Solar/Pulse collision loops add at most4 fixed-coordinate contact markers to their short-lived existing visual; no targeting change. Evolved laser lances use their previous lifetime/width and get the same renderer.
 
@@ -713,7 +713,7 @@ Graphics: no shadow blur on long beam geometry. Full detail capped at12 helper c
 TEST-BEAMS.html is a standalone release-renderer visual loop with quality/reduced-motion controls; it never loads a player save or runs combat. Generated from the production helper for visual QA, not a new game menu. Main HTML remains self-contained with embedded logo/font. Pending live deployment, showroom/Low/motion and normal game launch checks. Step4 remains on hold.
 
 
-## v0.16.0 — The Lost Signal alien merchant
+## v0.16.0 - The Lost Signal alien merchant
 
 James approved simplified concept C: six gold eyes in a neon purple hologram hood, mint controls, dark panels and Exo 2. Requested fifteen exclusive offers rotating at each transmission, with matching item images. Implemented inline SVG portrait and fifteen distinct icons, native scrollable shop body with fixed header/footer, compact horizontal offer rows on phones and reduced-motion CSS. No new raster/network assets. Current build v0.16.0.
 
@@ -730,7 +730,7 @@ TEST-MERCHANT.cjs passes all fifteen mechanics, guards, ownership/cost/refresh, 
 Published commit eb5048c1396e7ec632f53a050ed0acd9d6a943ad; Pages run41352629897 succeeded (build20s/deploy10s). Live title v0.16.0, normal launch, rendered arena and pause Overview with Alien modifications verified. Isolated release-code preview checked at1280×800,390×844,320×568 and844×390: fixed shop header/footer remain accessible, inner body scrolls at short sizes, all three cards fit phone portrait, distinct icons and six-eyed portrait visible. Buy Drone:145→80scrap, removed stock,1/15installed, other purchases correctly unaffordable. Free refresh changes offers without spending and next label15scrap. Screenshots captured desktop/phone. No game-source console errors observed; cloud extension metadata warnings unrelated. Browser checks use CSS viewports, not physical Safari/FPS, and actual timed merchant encounters/effect combat were exercised in VM integration rather than a full manual browser run. Step5 complete; Reactor Protocols remain deferred, step6 not started.
 
 
-## v0.17.0 — Settings developer panel
+## v0.17.0 - Settings developer panel
 
 James requested a password-gated in-game dev panel with usual testing controls. Default convenience password ReactorBert; in-memory devUnlocked false on reload, manual Lock button; password input cleared after attempt, no localStorage credentials. Public client source is inspectable, explicitly labelled convenience lock. No server authentication claim.
 
@@ -747,7 +747,7 @@ TEST-DEV.cjs passes default/wrong-password/session locks, fresh locked Sovereign
 Developer release a744629 deployed successfully via Pages run41353893558 (build24s/deploy17s). Live title v0.17.0 verified. Settings → Developer initially password-gated; correct password reveals controls, run actions disabled on launch menu. Fresh test launch selected locked Sovereign/Storm Relay; developer test status displayed, invulnerability and0.5× selected. +250 scrap and Open merchant transmission opened real shop with250 scrap and selected Drone offer. Leave → Pause → Back to start preserved original Vanguard/Neon Expanse,0credits,0best and all locked ships. Phone390×844 Settings tab scrolling, password gate and unlocked controls checked via TEST-MENUS; no overflow, Done stays fixed, internal content scrolls. Screenshot reactor-rogue-v017-dev-panel.jpg captured. No physical Safari or device-FPS claim. Development task complete; roadmap unchanged.
 
 
-## v0.18.0 — core gameplay pacing: formations
+## v0.18.0 - core gameplay pacing: formations
 
 James deferred difficulty tiers to build core foundations first, choosing enemy pacing/variety. Added six readable formations to existing random pursuit, not a new population allowance. formationDefs eligibility: squad18s, lanes65s, escort110s, ring150s, pincer220s, rush280s. At most one pending warning; next opportunity24s after launch (30s after rush), eligibility avoids previous pattern when alternatives exist. Failed placement/crowd/budget retries in5s, no catch-up loop. First warning18s,1.6s before launch. Formation offsets remain relative to current player for warning and spawn, so moving during warning cannot cause an on-screen spawn. Ring positions ray-project to viewport rectangle+100 rather than ellipse (avoids diagonal spawns inside desktop view). All positions outside viewport tested at1280×800,390×844,320×568,844×390.
 
@@ -762,7 +762,7 @@ Warnings: max12 small edge chevrons,11px name/countdown, ring outline with mint 
 Release bde88f5 deployed via Pages run41355578062 (build22s/deploy11s, Success). Live v0.18.0 title verified. ReactorBert unlocks Developer; fresh Vanguard test launched, formation dropdown lists all six patterns. Queue Encirclement → Done → Resume produces edge chevrons, countdown, partial violet ring and mint OPEN escape marker, then normal formation activation toast. Runtime logs show cloud-extension metadata warnings only, no observed game error. Native actual update/draw scenes cover all six approaches; browser live check covers warning/activation. Viewport/cap/pacing tests documented above. No physical Safari/device FPS claim. Foundation1 implementation complete; subsequent foundation tasks require James's next choice.
 
 
-## v0.19.0 — foundation2 weapon balance/identity
+## v0.19.0 - foundation2 weapon balance/identity
 
 Resumed James's interrupted request to start foundation2. Source saved before edits as v0.18.0; current v0.19.0. Benchmark576 matched20s scenes per version (36weapons×4level profiles×4scenarios),60Hzseed12345. BENCHMARK-WEAPONS.cjs deliberately bypasses offerSpecialisation in test harness; initial aborted matrix that paused at level3 was discarded and replaced with valid uninterrupted results. Durable held targets, no support/branches/merchant/ship damage trait; trail scene moves100/s. Raw retained in BALANCE-V019.json; exact changes/results/limits in BALANCE-NOTES.md. Not a player-win-rate/device-performance test. Current values changed for9weapons plus mortar prediction; remaining weapons retain their established utility roles.
 
@@ -776,7 +776,7 @@ weaponRoles covers36defs; compact role text on upgrade cards and role tip in wea
 Code commit dad1413164bc1832c72d91173830667f82454ddd deployed successfully through Pages run41421805950 (build20s/deploy10s). Live title v0.19.0 verified. Developer test run equipped six weapons; Pause → Weapons correctly shows role/usage tips alongside damage/DPS/kills/boss damage, within the existing scroll area. Live level2 Neon Bolts card shows GENERALIST and22→29 damage plus1→2 shots/volley. Phone390×844 viewport check shows compact single-column cards, full-width descriptions, role labels and accessible skip/reroll/banish controls; internal scrolling retained. Screenshots reactor-rogue-v019-weapons.jpg, reactor-rogue-v019-upgrades.jpg and reactor-rogue-v019-phone.jpg saved. Phone check is CSS viewport coverage, not physical Safari/device FPS. Foundation2 complete. Foundation3, difficulty tiers and Reactor Protocols not started.
 
 
-## v0.20.0 — foundation3 build clarity
+## v0.20.0 - foundation3 build clarity
 
 James authorised foundation3. Added fourth Pause tab Build inside existing bounded scrolling page. buildEquipment filters current defs/items only; buildNext derives each owned weapon recipe requirements via evolutionStatus, identifies banished support/full slots/cache-ready/evolved. buildInventory lists current levels, evolved names, specialisations and descriptions/role tips; buildReport includes active-only synergyDefs and owned-weapon next steps, directs other information to existing Overview/Weapons/Evolutions pages. Upgrade render calls renderUpgradeBuild, populating collapsed native details with current slot counts/equipment, refreshed after reroll/banish/new run. No combat HUD panels or saved discovery state. Existing missing-component-only hints unchanged. Responsive columns collapse below650px; four pause tabs fit mobile. TEST-BUILD-CLARITY passes all36 recipes, blockers, active-only pairs, state purity and fresh resets. Weapon Balance, Menu061, upgrade hints083 and Dev pass. Live verification pending. Foundation4 not started. Reactor Protocols and difficulty tiers deferred.
 
@@ -786,7 +786,7 @@ James authorised foundation3. Added fourth Pause tab Build inside existing bound
 Code0cb0e03d4e522effc206079c5b42077c1d477204 deployed via Pages run41426417985, Success (build20s/deploy9s). Live v0.20.0 verified. Desktop Developer test: Bolt5/Overclock1/Chain1 → Pause Build shows2weapon/1support slots, cache-ready Photon Echo, exact missing Critical Core and Chain level requirement. Phone390×844: four pause tabs fit, Build collapses to one column with independent page scroll and accessible fixed footer. Queue level-up shows collapsed current-run1/6weapon0/6support summary; expansion lists actual Needle Repeater level1 and empty support state within scroll panel. Screenshots v020-build, v020-phone-build and v020-phone-upgrade captured. CSS viewport test, not physical Safari/device FPS. Build, Weapon Balance, Menu061, missing-only hint083, Dev, Arsenal, Merchant600-frame and Graphics tests pass. Foundation3 complete; foundation4 remains unstarted.
 
 
-## v0.21.0 — foundation4 run structure and ending
+## v0.21.0 - foundation4 run structure and ending
 
 James authorised foundation4. runBossTimes180/360/600 shares existing schedule; runObjective replaces visible arbitrary wave count (wave counter logic retained) with next reactor/countdown, ENGAGED, secured or endless. Existing HUD footprint. runRouteReport on Pause Overview and results maps actual sector boss definitions, timestamps successful kills via run-only routeKills; routeIndex assigned at spawn. updateRunApproach names upcoming boss once in last15s (routeWarned perrun). No schedule/health/spawn/reward changes.
 
@@ -798,7 +798,7 @@ Final hit increments existing bossKills and marks finalClearPending; hurtPlayer 
 Code b286952a deployed content serving v0.21.0 at?v=0210; Pages run41427703453 deploy job125218432197 verified succeeded in12s (build24s). Initial summary displayed stale In progress until opening the job. Desktop normal devpanel controls used (no state injection): Spawn next sector boss + new Defeat active sector boss control three times, Resume and select mutation after each. Final title reads Final reactor secured; final selection reaches Jump corridor open / SECTOR CLEAR, all3actual route ticks, devtest no permanent rewards. Explicit Re-enter sector endless returns to play; Pause shows sector clear retained. New dev control uses devMark + real hit path (boss arrival cleared), covered in TEST-RUN-STRUCTURE. Phone390×844 normal launch/pause route stacks all3actual names/times and keeps footer accessible; no physical Safari/FPS claim. Screenshots reactor-rogue-v021-victory.jpg, v021-route.jpg and v021-phone-route.jpg captured. Graphics checks also pass. No foundation5 changes.
 
 
-## v0.22.0 — foundation5 combat readability
+## v0.22.0 - foundation5 combat readability
 
 James authorised next foundation. Removed original early hostile-shot drawing and relocated charged/boss warnings plus live rail hazard drawings to drawCombatReadability at end of world pass after combat explosions/pickup waves/damage numbers. Existing warning geometry/timing preserved, dead charged enemies excluded. New drawHostileShots only renders live visible shots, dark backing/warm diamond/native-colour core, no glow/particles/RNG. threatRing outlines sector hazard physical radii (dashed preparing, solid active) and enemyBursts. threatLine gives rail/hunter warm/dark aimlines, max12 specialist cues; existing specialist counts capped12. drawPlayerLocator static four corner marks21units aroundplayer, explicitly not hitbox. damageNumberPosition draws labels at least44units fromplayer without mutating numbers. One extra bounded enemy pass; no sorting, persistent objects or combat mutations. All graphics profiles including Low/reduced motion retain cues. Help entry explains marks. TEST-COMBAT-READABILITY passes state purity, RNG rejection, quality/motion variants, culling and final draw order; RunStructure,Beams,Merchant600-frame,Formations andDev pass. Live QA pending. Foundation6 not started.
 
@@ -813,7 +813,7 @@ Code f6944dabfde7d159c5b4f792005ee02679a794b4 committed; Pages run41429672700 bu
 Fresh checkpoint commit911dddc triggered Pages run41430325971: Success, build32s/deploy13s. Live titlev0.22.0 verified at?v=0220. Original run49 attempt2 remained queued; no permission changes made. Desktop Developer normal controls: god+4speed, two yellow elites+first boss,100fighters, Nova5/Cannon5, claimed ordinary specialisations and earned upgrades. Actual fight reached101kills/10s; screenshot shows player brackets amid pickups/enemies and outlined pink hostile diamonds distinct from cyan XP. Phone390×844 normal launch verified player locator and compact HUD. Native bounded draw tests cover threat ordering, hazard outlines and Low/reduced-motion persistence; browser checks are visual, not physical Safari/FPS claims. Saved reactor-rogue-v022-combat.jpg and reactor-rogue-v022-phone.jpg. Foundation5 complete. Foundation6 progression pacing remains unstarted.
 
 
-## v0.23.0 — normal-run playtest and pacing
+## v0.23.0 - normal-run playtest and pacing
 
 James requested full normal-run playtest/pacing. Added PLAYTEST-NORMAL-RUN.cjs real60Hz update driver, fresh isolated storage, Vanguard/grid/no paidmeta, devfalse, normal movement/dash/offered choices. Two baseline desktop seeds12345/54321 clear710.13/679.10s at levels60/58; after changes653.07/669.22s at50/55. Touch390×844 movement-facing after seed12345 clears688.95s level54,178taken,minHP69.4,twoevolutions. Raw five complete logs/samples in PACING-V023.json; methods/limitations in PACING-NOTES.md. Initial keyboard fleeing driver unable to aim was excluded and corrected to normal hybrid mouse aim before baseline pair. Optional merchant/distress unaccepted; native systems run. Not human win rates/FPS; instant menus; build/RNG divergence limits causal claims.
 
@@ -825,7 +825,7 @@ Changes: levelXPRequirement(1)=5 instead6; levels2–20 oldformula; above20 adds
 Release e54704d via Pages run41433040015 Success (build25s/deploy9s). Live titlev0.23.0 at?v=0230 verified. Separate live UI smoke used normal developer controls to spawn/defeat first boss, Resume/select mutation; HUD shows RECOVERY8s, pause retains window. This smoke is distinct from the five normal-rules devfalse full-run simulations. Help → Post-reactor recovery correctly describes reduced ordinary reinforcements, remaining danger, paused timer and unchanged next boss schedule. Returned live game to launch so user starts normal progression. Screenshot reactor-rogue-v023-recovery.jpg saved. Tests passed: Pacing,RunStructure,Dev,Merchant600-frame,BuildClarity,Formations/fourviewports,CombatReadability,missing-onlyUpgradeHints083,Menu061. No physical-device FPS or human difficulty claim. Foundation6 complete; foundation7 not started.
 
 
-## v0.24.0 — pickup visibility
+## v0.24.0 - pickup visibility
 
 James chose priority1 from notes. Pure pickupInfo/importantPickup helpers. drawDrop replaces spinning common diamonds/blinking expiry with dark-backed round credits, hex supplies, square gold cache, larger native glyphs and10px important labels. Last5seconds show countdown, no disappearance. Drop bodies relocated above decorative blasts/waves before numbers/threats; XP diamond darkoutline, merchant scraphex7/darkbacking. No reward/range/lifetime/drop-rate changes. pickupMarkerLayout only important chest/repair/freeze/novaDrop/vacuum, offscreen-safe area, prioritycache thenneededrepair thennearest; max4phone/6desktop, >=36px spacing. No redundant visible badges or currencyedgeclutter. Existing ns_markers preference retained. Allpure/noRNG. Helpadded. TEST-PICKUPS covers everyicon/expiry/unknown, Low+motion, priority/budget/spacing/toggle/state. Readabilitytest adjusted for new intermediate pickup pass, preserves threats drawnlast. Pacing,RunStructure,Merchant600-frame pass. LiveQA pending. Other notes saved inROADMAP; not implemented.
 
@@ -835,7 +835,7 @@ James chose priority1 from notes. Pure pickupInfo/importantPickup helpers. drawD
 Release e299008bf1c7acd1d69bee30a239821b20cf6422 deployed via Pages run41435369742 Success (build24s/deploy49s). Live TEST-MENUS titlev0.24.0 confirmed. Phone390×844 Developer fresh test → place Elite cache → Resume shows square dark-backed gold case, large star and readable EVOLUTION CACHE label beside player, above scenery, no redundant in-view marker. Saved reactor-rogue-v024-phone-cache.jpg. Native tests cover all supplies/credits/expiry, Low/reduced motion, offscreen priorities/budget/spacing and preference. Phone viewport test not physical Safari/deviceFPS. No changes to collection/rates/rewards. Other notes retained only.
 
 
-## v0.25.0 — named local profiles and backup transfer
+## v0.25.0 - named local profiles and backup transfer
 
 James chose priority2. Four progress keys rr_hangar/ns_archive/neonSwarm02/ns_pilot routed through profileStorage; default uses unchanged legacy keys, new profiles rr_profile_ID_KEY. Device/audio/graphics/control preferences retain shared keys. Manifest rr_profiles_v1 stores version1/active/up-to8 names. sessionProfileId fixed per page so another tab selecting a different profile cannot redirect this tab's writes. No data migrations/deletions of default. Main launch Profile button and Settings Profiles & saves tab; create/rename/switch/import restricted to launch, switch commits manifest then reloads. No delete action. Export banked Hangar/archive/best/selected ship only, available during run; active run not included.
 
@@ -851,7 +851,7 @@ Initial release def6f9ae479aad775c9021929a19485998517130 deployed Pages414378676
 Polish follow-up fixes singular ship/record preview grammar and scrolls selected Settings tab into view. Mutations refresh latest profile manifest first to preserve profiles added by another open tab; stale-tab regression added. Saves/Menu061 pass after changes. Cloud accounts/automatic sync still unconnected; active runs not backed up. Local profiles/export/import complete; other priorities not started.
 
 
-## v0.26.0 — typed caches and mixed sector hulls
+## v0.26.0 - typed caches and mixed sector hulls
 
 Resumed prior profile polish first: committed e566ae0 via browser after fresh turn access restored. Then James's screenshot fix. Internal chest id retained for compatibility; makeCacheDrop sets cacheKind at creation (evolution only if eligible and none outstanding on floor/queue/open reward; otherwise supply). All normal elite/boss/surge and dev drop sources use factory. Ground info: supply cyanhex/▣, evolutiongoldsquare/✦. collectDrop queues kind in run-onlycacheRewards; openReward consumes typed ticket, supply never upgrades retroactively. Evolution options all actualeligibleevolutions. Header/title/hint/icons consistent. CacheDecoder: supply4thnavData option; evolution4thchoice ifpossible elseautomatic+1reroll alongsidechosenEV. Bonus one-use guarded. refreshCacheKinds handles recipe removal viaDev and postEV by converting stale floorEV tosupplies beforecollection. Legacy test-created untyped chests derive readiness. No saveformat migration or new cache drop rate.
 
@@ -865,7 +865,7 @@ Profile finish commit e566ae0 deployed via Pages41463181990 Success first. Cache
 FreshShatteredBelt thenStormRelay devtest spawned10ordinarytype2budgeted ships: newmechanicalhulled andcrystalvaned variants visiblymixed withfamiliarships. Strengthcolours, headings and silhouettes readable; native same-seed/stat tests cover no gameplay changes. Screenshots reactor-rogue-v026-supply.jpg, v026-evolution.jpg, v026-belt-fleet.jpg, v026-storm-fleet.jpg saved. Native tests alsoSovereign/Arsenal/Pacing/Readability/UpgradeHints083/Menu061 pass. These aredesktop livevisualchecks plusnative render/functional checks, not physicalSafari/FPS. Returned tolaunch fornormalrun. Both userrequests complete; no newcontent/AIstats orcloudbackend added.
 
 
-## v0.27.0 — expanded achievements and contracts
+## v0.27.0 - expanded achievements and contracts
 
 James requested more achievements/contracts.24new/31total, newrewards545credits one-off (old7remain150). CategoriesMilestones/Combat/Mastery/Exploration plusoldBlueprints. Goals include kills2500/10000,boss25,wins5,survival2/10m,cannon500/buoy500kills,250kbeamdamage(laser/rail/leech/sails),500missile-familykills(rocket/seeker/phaseTorp),250freezes/100ignitions/5cleanbosses,x10combo,15/30distinctEV,3EV/fourpaths/eightmerchantmods/3signalsinrun,1000/5000gem pickups,all3sectorwins/3pilotwins. Numbers reflect effective weapon accounting and mergedgemcount semantics. No weapon/stats/drop/pacing changes.
 
@@ -874,7 +874,7 @@ New h.progress fields beamDamage,missileKills,maxEvolutions,maxSpecialisations,m
 Contractboard status+category filters, banked progress, paidbadges and readyclaim states; survival displayedastime. Existing unlockNotice queue reused at.5s cadence with boundedcontract entries, onlynormalruns; completed results max4detailcards pluscount. No new permanentcombatHUD panel. Addedportable TEST-MENUS.cjs from prior scratchmenu061 suite; exactbankcredit assertion updated for newFlightCadet10reward (old scratch assertion expected6andnowrightlysees16). TEST-CONTRACTS testsall31thresholds,695totalincludingold, no doubleclaim/bank, liveprojectionpure, cumdeltas, max/masks/endless, devexclusion, notice/results/filters, once-onlyhistorymigration andbackup/importreboot. Saves/Dev/Menus/Merchant600-frame/RunStructure/Pacing/CachesSectors/Formations pass. LiveQA pending. Other priorities untouched.
 
 
-# v0.28.0 — twelve new weapons and six supports
+# v0.28.0 - twelve new weapons and six supports
 
 James requested notes priority5 / more equipment, then explicitly expanded scope beyond the original four-weapon proposal using Vampire Survivors inspiration. Final:12 weapons/12 evolutions/24 paths/6 supports/12 synergies. See README table for names/recipes. Original art and code-native geometry retained; reference research uses https://vampire.survivors.wiki/w/Weapons . No copied assets/code.
 
@@ -890,7 +890,7 @@ Native tests passed for new attack modes/evolutions/paths/supports/synergies, de
 Live QA: code commit9f55517 deployed via Pages run61 (41473618908), successful build/deploy in1m8s. Live titlev0.28.0 verified. Through ordinary DEV controls equipped a legal six-weapon level2 build (Ion Guardians/Plasma Rain/Prism Tracers/Comet Scythes/Ion Curtain/Coronal Shroud), spawned100 fighters, resumed and paused with33 kills. Damage report attributed effective damage to the relevant new weapons; screenshots show readable hull, effects and labels. All new48 recipes render;390×844 CSS viewport check shows Citadel Orbit requirements/effect with wrapped text, scrolling body and accessible fixed actions. Corrected stale “All36 recipes” filter label to48 and Plasma Lash description to forward/rear, matching its actual facing-relative sweep. No application-origin console errors observed; extension metadata errors are external. Native queued full checks passed. This is a short render/control smoke test, not a full-run balance pass or hardware FPS benchmark. Screenshot proof lives in task workspace (v028-equipment.jpg and v028-phone-recipes.jpg). Follow-up publication only corrects wording/counts and records QA; no combat changes.
 
 
-# v0.29.0 — approved complete attack art
+# v0.29.0 - approved complete attack art
 
 Scope: James approved the second muted vector-like visual study; corrected initial six-weapon scope to ALL attacks and defensive weapons, then added enemy attacks. Implemented across all48 weapon families, base/evolved styles, defence, ability fields and hostile shots/beams/warnings/hazards. The selected exact study was image-edit-target-6e22f19798d6e2e4.png; generated one transparent4-cell atlas for bolt/missile/scythe/guardian, copied to repo and embedded for offline use. Other art remains procedural; fallback silhouettes always work before image load and on Low.
 
@@ -914,7 +914,7 @@ Live first publication82ccbc9 / Pages run63 (41481388488) succeeded1m2s. Gallery
 Follow-up adds final all80 item art/catalogue, native fallback improvements and rate-limited real-repair feedback: only positive actual healing, min0.75 accumulated HP and0.8s cooldown, two tiny green repair ticks for0.35s. Updated helper gallery uses the current release module and actual ship SVG. Final publication/browser item and phone checks follow.
 
 
-# v0.30.0 — original adaptive soundtrack
+# v0.30.0 - original adaptive soundtrack
 
 Six16-bar mono22050Hz synthesized loops (menu112, grid170, belt174, storm138, boss176, merchant104 BPM). Private LCG for synthesis and startup SFX noise; no gameplay RNG consumed. Worker embeds renderMusicChunks generator and renderMusicPCM wrapper, transfers PCM; cooperative6ms-budget fallback yields between synthesis steps and output chunks. LRU max4 buffers. Looping sources use separate fade gains into existing music bus,0.55s crossfades, max2 retiring tails, remembered playheads. No effects voice consumption or per-note combat scheduling.
 
@@ -923,11 +923,11 @@ ns_audio retains existing volume/mute fields and adds soundtrack=auto and pauseM
 TEST-MUSIC covers deterministic finite bounded/seam-faded PCM, worker isolation, adaptive transitions, independent bus, bounded cache/tails, offset resume, pause/mute/hidden behaviour and saved selection. Native synthesis tests are not hardware timing or human listening evaluation. Browser QA/deployment recorded separately after publication. No combat balance/progression changes.
 
 
-## v0.30.1 — stable weapon silhouettes and touch selection
+## v0.30.1 - stable weapon silhouettes and touch selection
 Atlas weapon silhouettes no longer depend on Auto/Low detail or the frame-order72-sprite allowance, which could swap a live projectile/device between PNG and procedural shapes. Existing projectile/device population bounds remain; trails/glow/field decorations still simplify. Missing/unloaded atlas retains procedural safety fallback. Page selection, iOS touch callouts and tap highlight disabled; input/textarea/contenteditable retain text selection. Noneditable selectstart/context menus suppressed; native menu scrolling/control gestures unchanged. Native attack-art and menu regressions checked; physical iPhone long-press behaviour requires user verification.
 
 
-# v0.31.0 — two frontier sectors
+# v0.31.0 - two frontier sectors
 
 foundry/cryo added to sectors, sectorOpen(first clear contract), DEV choices and cleanRun archive IDs. Existing profile validator uses sector catalogue. Original trilogy win mask deliberately remains original3 IDs; value masks with7. Selection previews are inline SVG, no image requests. Native tests check existing profile round-trip plus new archive IDs.
 
@@ -943,7 +943,7 @@ TEST-FRONTIER-SECTORS covers first-clear gating, six boss routes/ending, warning
 Live QA: d4535d3 published via Pages run67(41512756572), Success1m21s. DEV Foundry and Cryo launches,25fighters and first boss each rendered without application-origin console errors. No permanent progression. Screenshots in task workspace. Phone390×844 selector check found existing auto-grid rows compressing sector card contents; set max-content rows and card minimums, and corrected missing sectorPreview insertion. Follow-up polish publication retains v0.31.0. All native checks above passed, including music worker/transport; these short live checks do not establish phone FPS or full-run balance.
 
 
-# v0.32.0 — Neon Undercity / boss identity
+# v0.32.0 - Neon Undercity / boss identity
 
 city in sector catalogue/unlock(first clear)/archive/DEV/2-of-3 hull mix/music(grid DnB). drawCityArena:340world-unit roads,4 roof blocks/tile, windows, roof equipment, signs and2 light streaks/tile; viewport bounded, no RNG, reduced motion static. Roofs explicitly decorative below ship. Existing cover/station/conduit cycle and specialist interceptor/rail weighting within same quotas. City security hull has twin light bars; boss tiers add side banks and chassis.
 
@@ -954,28 +954,40 @@ Cryo differentiated: paired side emitter pincer(6/8/10shots), radial fracture pl
 TEST-CITY-SECTOR asserts6catalogue/18unique names, unlocks, three plan shapes/counts/safe gaps, warning no-damage then collision, ambient holds, finalclear, mixedfleet/archive/music,24hazard cap, low/high/auto/reduced RNG-free pure draws and180enemy real updates. Updated frontier volley counts. Native menus/saves/frontier/runstructure pass. Live release smoke follows publication; native/CSS tests do not establish phone FPS/human balance.
 
 
-## v0.32.1 — preview correction
+## v0.32.1 - preview correction
 James rejected the schematic sector previews. Replaced sectorPreview with cached detailed SVG scenes(320×180), shared restrained palette and miniature ship/terrain motifs. Static illustrative previews rather than literal screenshots. Sector-specific class and grid(min265px) create3-column desktop /1phone, edge-to-edge16:9 image; existing scrolling/content-height rows retained. Locked sector cards stay full opacity and use explicit unlock status; disabled selection unchanged. No new canvas, timer, RNG or network. Native menu/city regression checks passed; browser visual QA follows publication.
 
 
-## v0.32.2 — requested gameplay screenshots
+## v0.32.2 - requested gameplay screenshots
 User clarified literal gameplay stills. Captured all6maps from livev0321 via ordinary DEV controls(Vanguard,25fighters,firstsectorboss; no permanent progression). CUA screenshot clip x202 y200 w960 h540 excludes HUD and includes actual scenery/ship/boss. No illustration generation or rendering replacements. Saved6sector-ID.jpg originals and embedded JPEG bytes into sectorGameplayStills; sectorPreview outputs image only. Removed SVG illustration generator/cache. Compact two-column desktop grid with horizontal image/details cards; one-column below800px, phone preserves complete row content and scrolling. Version0322. Native menu/city checks and image signature/dimension checks, followed by live screenshot/UI verification.
 
 
-## v0.33.0 — high-altitude Neon Undercity
+## v0.33.0 - high-altitude Neon Undercity
 Approved cloud/neon concept implemented as live procedural scenery: small varied rooftops, L/circular footprints, stepped high-rise crowns, pink/cyan roof lights, analytic street traffic trails, trains and translucent cloud wisps below combat. City uses0.55 camera parallax for distance. Scenery does not alter enemies, damage, collisions, hazards, rewards or saves. Reduced motion freezes traffic/trains/clouds; Low/crowded Auto reduces traffic lanes and cloud count. Static320px tiles cache in a32-entry LRU; one512×96 cloud sprite is reused, no per-frame shadow blur, particles or global RNG. At most100 visible traffic cells processed. TEST-CITY-SCENERY verifies cache reuse/bounds, render purity/RNG independence and reduced-motion time invariance. Existing city/menu/readability tests pass. Device FPS is not established by native checks. Actual gameplay sector still refreshed after deployment.
 
 
 Live v033 QA: initial Pages73(41522998443)47s Success; polish Pages74(41523489958)1m12s Success. Live check caught correlated coordinate hash; added avalanche mixing so neighbouring lots/roofs differ and reduced highrise frequency to18%. Strengthened neon and cloud texture modestly. Final live code hash marker verified after cache-busting reload. DEV25fighter+boss scene ran to11seconds/4kills, lockdown lane readable over city; no app-origin console errors, no permanent progression. Refreshed city preview from exact960×540 gameplay crop, never generated concept art. These are short control/render checks, not physical phone FPS/full-run balance.
 
 
-## v0.33.1 — neon traffic lights
+## v0.33.1 - neon traffic lights
 Traffic now uses two cached96×20 light sprites with fading coloured tails, layered soft halos and paired bright headlights/taillights, rotated along roads. No per-frame shadow blur or particles; Low uses reduced intensity/count, reduced motion still freezes positions. Original simple-line fallback only when offscreen canvas is unavailable.
 
 
-## v0.33.2 — centred touch ability labels
+## v0.33.2 - centred touch ability labels
 The circular ability control now removes inherited menu padding and uses explicit flex centring, unit line height, zero letter spacing and native-appearance reset. Dash counts, boost/phase labels and recharge times share the same centre at both 64px and 72px sizes.
 
 
-## v0.34.0 — public website and installation
+## v0.34.0 - public website and installation
 `home.html` is the public landing page with actual gameplay, controls, sectors, install help and user-reviewed GitHub feedback/downloadable reports. Bare root URLs redirect to home; existing versioned URLs and index.html still open the game. New menu links open the website without abandoning the run. Manifest, existing approved logo icons and a versioned service worker support standalone installation/offline shell; no forced activation during a run. Bump sw.js CACHE with future changes. Local save origin/keys unchanged. Domain remains free GitHub address by user choice. Cloud account integration is prepared but disabled pending an owner Supabase project and RLS/auth/email verification; see CLOUD-SETUP.md. Do not describe cloud saves as live.
+
+
+### Pending Supabase activation
+Owner supplied public config for project `kykieqonuxpvvtwjnlfd`. Auth settings reachable with publishable key; email enabled, sign-ups allowed, confirmation required. Cloud table returned PGRST205 (not in schema cache). Local cloud-config.js now holds public URL/key with enabled:false; cloud-save.js explicitly requires enabled:true. Not published yet. Supabase plugin discovered and suggested to execute schema and verify RLS without admin secrets. Await confirmed connection; never activate or claim production cloud sync before tests.
+
+
+### Supabase database completed, sender pending
+Dashboard GitHub sign-in succeeded for owner. Public schema initially empty. Applied CLOUD-SAVES.sql (PUBLIC/anon table privileges revoked) and ran TEST-CLOUD-SECURITY.sql with a full editor replacement (Ctrl+A, Backspace, fill). Test PASS: own saves, reciprocal cross-account read/write denial, forged owner denial, revisions/CAS, anon read/RPC; all test users/data rolled back. REST confirms 401/42501 for anonymous table and RPC. Captured proof reactor-rogue-cloud-security.jpg in workspace. Email templates on free project require custom SMTP or Pro; SMTP not configured. Owner selected help setting up sender; propose Brevo verified sender. Browser controls then timed out twice; no further dashboard mutations. Cloud remains disabled, no live auth session test. Pending local files: cloud-config.js/cloud-save.js explicit enabled gate, CLOUD-SAVES.sql revoke PUBLIC, TEST-CLOUD-SECURITY.sql, CLOUD-SETUP.md and this handover. GitHub writes still 403, not published.
+
+
+## v0.34.1 - direct feedback and wording
+Removed em dashes from game/website wording and project notes. Website feedback now POSTs to the Supabase public rr_submit_feedback RPC, no account/email/GitHub required. Reports live in rr_private.feedback, not a public listing; owner reviews through the Supabase Table Editor or SQL Editor. Public roles cannot read, update or delete the inbox or access cloud saves. Bounded private SECURITY DEFINER intake with fixed SQL and empty search_path, invoker public wrapper, validation, honeypot, advisory-lock-serialised cap of 10 reports/minute and 100/24h, and UUID idempotency. These are basic beta spam controls, not per-user CAPTCHA protection. No IP address, email address or browser user agent stored in reports. Download remains an offline fallback. Cache version bumped. Cloud account sign-in remains disabled pending SMTP setup; feedback does not use Auth or SMTP. TEST-FEEDBACK-SECURITY.sql passed on project with transaction rollback; TEST-FEEDBACK.cjs covers success/retry/error/duplicate/validation. Existing save/menu and offline-shell tests pass.

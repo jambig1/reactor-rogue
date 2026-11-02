@@ -1,4 +1,4 @@
-# Normal-run playtest and pacing pass — v0.23.0
+# Normal-run playtest and pacing pass - v0.23.0
 
 Five complete automated runs used the actual combat, enemy, pickup, XP, boss and reward systems. All started with a fresh Vanguard in Neon Expanse; developer flags stayed false.
 

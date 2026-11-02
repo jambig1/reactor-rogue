@@ -6,7 +6,7 @@ create table if not exists public.rr_cloud_saves (
  payload jsonb not null check (octet_length(payload::text) < 2000000)
 );
 alter table public.rr_cloud_saves enable row level security;
-revoke all on public.rr_cloud_saves from anon;
+revoke all on public.rr_cloud_saves from public,anon;
 grant select,insert,update on public.rr_cloud_saves to authenticated;
 create policy "Read own checkpoint" on public.rr_cloud_saves for select to authenticated using ((select auth.uid()) = user_id);
 create policy "Insert own checkpoint" on public.rr_cloud_saves for insert to authenticated with check ((select auth.uid()) = user_id);
