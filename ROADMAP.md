@@ -55,3 +55,8 @@ Authorised by James. Clear three-reactor route, compact countdown/engagement obj
 ### Foundation5 — combat readability, v0.22.0
 
 Authorised by James. Critical threat drawing moved above decorative effects; hostile shot diamond/contrast backing, hazard boundary outlines, specialist warning lines and player locator added. Damage labels move clear of locator visually only. Existing combat logic untouched. Foundation6 progression pacing not started. Difficulty tiers and Reactor Protocols remain deferred.
+
+
+### Foundation6 — normal-run playtest / progression pacing, v0.23.0
+
+James authorised full normal-run testing and pacing pass. Five fresh-Vanguard normal-rules automated clears measured, including phone movement-facing. Small opening/late XP adjustments plus8s ordinary-spawn boss recovery implemented; exact data and limits in PACING-NOTES.md/PACING-V023.json. Foundation7 movement/collection not started. Difficulty tiers and Reactor Protocols deferred.

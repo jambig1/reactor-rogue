@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.22.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.23.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -178,3 +178,8 @@ Compact reactor countdown replaces the arbitrary wave number in the combat HUD. 
 ## v0.22.0 — combat readability
 
 Hostile bullets gain a consistent warm diamond outline, bright centre and dark contrast backing. Charged warnings, active rail hazards and hostile shots render after explosions/damage numbers. Essential sector hazard boundaries and nearby specialist aim lines remain visible across graphics profiles. Small pale corner marks locate the player; damage labels are drawn outside a44-unit locator area without changing their stored positions. All cues are static/reduced-motion safe and add no particles. No damage, hitbox, timing or balance changes. How to play explains these cues. `node TEST-COMBAT-READABILITY.cjs` checks draw purity/RNG separation, profiles, visibility and layering.
+
+
+## v0.23.0 — measured normal-run pacing
+
+Five complete fresh-Vanguard automated normal-rules runs cover desktop baseline/repeat seeds and a phone movement-facing sample. First level costs5XP; levels2–20 unchanged; later requirements grow gently to reduce repeated upgrade pauses. Boss defeats give8game seconds of reduced ordinary reinforcements, with a RECOVERY objective cue. Boss schedule, health, rewards and currency unchanged. See PACING-NOTES.md for results/limits and PACING-V023.json for raw logs. PLAYTEST-NORMAL-RUN.cjs reproduces the driver; TEST-PACING.cjs covers regressions.

@@ -1,0 +1,5007 @@
+{
+  "method": {
+    "engine": "Real game update at1/60s; isolated Node VM with no-op DOM/canvas",
+    "startingState": "Fresh Vanguard / Neon Expanse / no Hangar tools, meta equipment or purchased ships",
+    "driver": "Movement toward XP/cache/repair pickups with local enemy/projectile avoidance; ordinary dash; desktop mouse aim, touch movement-facing",
+    "choices": "Deterministic offered-item priority; normal specialisation, mutation and cache selection; no forced drops, gear or evolution",
+    "optional": "Merchant and distress offers left optional/unaccepted by driver; normal systems continue running",
+    "limits": [
+      "Five automated normal-rules runs, not human win rates",
+      "Instant menu choices; times are game-clock, not wall-clock",
+      "No rendering/FPS/device Safari measurements",
+      "Changes alter RNG consumption and build choices; small-seed before/after is exploratory, not an isolated causal experiment"
+    ],
+    "excludedDiagnostic": "Initial keyboard-only fleeing driver failed to face enemies; excluded from balance conclusions and corrected to normal hybrid aim."
+  },
+  "runs": [
+    {
+      "seed": 12345,
+      "status": "end",
+      "completed": true,
+      "time": 710.13,
+      "level": 60,
+      "kills": 3258,
+      "bosses": 3,
+      "damageTaken": 36,
+      "minHP": 84,
+      "peakEnemies": 121,
+      "dev": false,
+      "items": {
+        "bolt": 5,
+        "armour": 5,
+        "laser": 5,
+        "chain": 5,
+        "repulse": 5,
+        "singularity": 5,
+        "magnet": 5,
+        "decoy": 5,
+        "thorns": 5,
+        "speed": 5,
+        "blade": 5,
+        "scrap": 5
+      },
+      "evolved": {
+        "blade": true,
+        "scrap": true
+      },
+      "samples": [
+        {
+          "t": 0,
+          "level": 1,
+          "hp": 100,
+          "kills": 0,
+          "enemies": 1,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 0,
+          "need": 6,
+          "gems": 0,
+          "evolved": 0
+        },
+        {
+          "t": 30,
+          "level": 2,
+          "hp": 100,
+          "kills": 20,
+          "enemies": 22,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 11,
+          "need": 14,
+          "gems": 3,
+          "evolved": 0
+        },
+        {
+          "t": 60,
+          "level": 6,
+          "hp": 100,
+          "kills": 78,
+          "enemies": 29,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 13,
+          "need": 34,
+          "gems": 9,
+          "evolved": 0
+        },
+        {
+          "t": 90,
+          "level": 12,
+          "hp": 100,
+          "kills": 151,
+          "enemies": 20,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 23,
+          "need": 68,
+          "gems": 11,
+          "evolved": 0
+        },
+        {
+          "t": 120,
+          "level": 15,
+          "hp": 100,
+          "kills": 205,
+          "enemies": 12,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 78,
+          "need": 86,
+          "gems": 7,
+          "evolved": 0
+        },
+        {
+          "t": 150,
+          "level": 18,
+          "hp": 100,
+          "kills": 238,
+          "enemies": 11,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 31,
+          "need": 105,
+          "gems": 4,
+          "evolved": 0
+        },
+        {
+          "t": 180,
+          "level": 19,
+          "hp": 100,
+          "kills": 281,
+          "enemies": 26,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 106,
+          "need": 111,
+          "gems": 3,
+          "evolved": 0
+        },
+        {
+          "t": 210,
+          "level": 21,
+          "hp": 94,
+          "kills": 346,
+          "enemies": 12,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 96,
+          "need": 124,
+          "gems": 11,
+          "evolved": 0
+        },
+        {
+          "t": 240,
+          "level": 23,
+          "hp": 100,
+          "kills": 397,
+          "enemies": 19,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 81,
+          "need": 137,
+          "gems": 22,
+          "evolved": 0
+        },
+        {
+          "t": 270,
+          "level": 25,
+          "hp": 98,
+          "kills": 465,
+          "enemies": 21,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 22,
+          "need": 151,
+          "gems": 24,
+          "evolved": 0
+        },
+        {
+          "t": 300,
+          "level": 28,
+          "hp": 100,
+          "kills": 542,
+          "enemies": 17,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 161,
+          "need": 171,
+          "gems": 20,
+          "evolved": 0
+        },
+        {
+          "t": 330,
+          "level": 30,
+          "hp": 100,
+          "kills": 625,
+          "enemies": 44,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 75,
+          "need": 185,
+          "gems": 25,
+          "evolved": 0
+        },
+        {
+          "t": 360,
+          "level": 33,
+          "hp": 100,
+          "kills": 840,
+          "enemies": 62,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 139,
+          "need": 206,
+          "gems": 40,
+          "evolved": 0
+        },
+        {
+          "t": 390,
+          "level": 36,
+          "hp": 84,
+          "kills": 1010,
+          "enemies": 60,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 74,
+          "need": 227,
+          "gems": 26,
+          "evolved": 0
+        },
+        {
+          "t": 420,
+          "level": 39,
+          "hp": 84,
+          "kills": 1202,
+          "enemies": 35,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 68,
+          "need": 248,
+          "gems": 35,
+          "evolved": 0
+        },
+        {
+          "t": 450,
+          "level": 41,
+          "hp": 84,
+          "kills": 1360,
+          "enemies": 44,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 71,
+          "need": 263,
+          "gems": 40,
+          "evolved": 0
+        },
+        {
+          "t": 480,
+          "level": 43,
+          "hp": 84,
+          "kills": 1539,
+          "enemies": 32,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 274,
+          "need": 278,
+          "gems": 30,
+          "evolved": 1
+        },
+        {
+          "t": 510,
+          "level": 47,
+          "hp": 100,
+          "kills": 1761,
+          "enemies": 56,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 58,
+          "need": 308,
+          "gems": 43,
+          "evolved": 1
+        },
+        {
+          "t": 540,
+          "level": 50,
+          "hp": 94,
+          "kills": 2072,
+          "enemies": 88,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 17,
+          "need": 330,
+          "gems": 61,
+          "evolved": 1
+        },
+        {
+          "t": 570,
+          "level": 52,
+          "hp": 88,
+          "kills": 2426,
+          "enemies": 55,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 272,
+          "need": 346,
+          "gems": 61,
+          "evolved": 1
+        },
+        {
+          "t": 600,
+          "level": 54,
+          "hp": 88,
+          "kills": 2624,
+          "enemies": 52,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 276,
+          "need": 361,
+          "gems": 45,
+          "evolved": 1
+        },
+        {
+          "t": 630,
+          "level": 55,
+          "hp": 100,
+          "kills": 2780,
+          "enemies": 66,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 355,
+          "need": 369,
+          "gems": 49,
+          "evolved": 1
+        },
+        {
+          "t": 660,
+          "level": 57,
+          "hp": 100,
+          "kills": 2979,
+          "enemies": 34,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 273,
+          "need": 384,
+          "gems": 49,
+          "evolved": 2
+        },
+        {
+          "t": 690,
+          "level": 59,
+          "hp": 100,
+          "kills": 3144,
+          "enemies": 36,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 14,
+          "need": 400,
+          "gems": 55,
+          "evolved": 2
+        }
+      ],
+      "log": [
+        {
+          "t": 21.95,
+          "type": "level",
+          "level": 2
+        },
+        {
+          "t": 21.95,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 30.38,
+          "type": "level",
+          "level": 3
+        },
+        {
+          "t": 30.38,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 36.92,
+          "type": "level",
+          "level": 4
+        },
+        {
+          "t": 36.92,
+          "type": "upgrade",
+          "name": "Pulse Laser"
+        },
+        {
+          "t": 41.6,
+          "type": "level",
+          "level": 5
+        },
+        {
+          "t": 41.6,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 50.68,
+          "type": "level",
+          "level": 6
+        },
+        {
+          "t": 50.68,
+          "type": "upgrade",
+          "name": "Repulsion Field"
+        },
+        {
+          "t": 62.62,
+          "type": "level",
+          "level": 7
+        },
+        {
+          "t": 62.62,
+          "type": "upgrade",
+          "name": "Void Lance"
+        },
+        {
+          "t": 66.45,
+          "type": "level",
+          "level": 8
+        },
+        {
+          "t": 66.45,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 74.05,
+          "type": "level",
+          "level": 9
+        },
+        {
+          "t": 74.05,
+          "type": "upgrade",
+          "name": "Decoy Beacon"
+        },
+        {
+          "t": 78.95,
+          "type": "level",
+          "level": 10
+        },
+        {
+          "t": 78.95,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 83.43,
+          "type": "level",
+          "level": 11
+        },
+        {
+          "t": 83.43,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 83.62,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 87.07,
+          "type": "level",
+          "level": 12
+        },
+        {
+          "t": 87.07,
+          "type": "upgrade",
+          "name": "Reactive Spikes"
+        },
+        {
+          "t": 93.42,
+          "type": "level",
+          "level": 13
+        },
+        {
+          "t": 93.42,
+          "type": "upgrade",
+          "name": "Thrusters"
+        },
+        {
+          "t": 98.3,
+          "type": "level",
+          "level": 14
+        },
+        {
+          "t": 98.3,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 110.18,
+          "type": "level",
+          "level": 15
+        },
+        {
+          "t": 110.18,
+          "type": "upgrade",
+          "name": "Decoy Beacon"
+        },
+        {
+          "t": 123.9,
+          "type": "level",
+          "level": 16
+        },
+        {
+          "t": 123.9,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 139.4,
+          "type": "level",
+          "level": 17
+        },
+        {
+          "t": 139.4,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 147.65,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 147.65,
+          "type": "upgrade",
+          "name": "Scrapstorm"
+        },
+        {
+          "t": 147.67,
+          "type": "level",
+          "level": 18
+        },
+        {
+          "t": 161.15,
+          "type": "level",
+          "level": 19
+        },
+        {
+          "t": 161.15,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 180.8,
+          "type": "level",
+          "level": 20
+        },
+        {
+          "t": 180.8,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 180.8,
+          "type": "specialisation",
+          "name": "chain"
+        },
+        {
+          "t": 191.38,
+          "type": "level",
+          "level": 21
+        },
+        {
+          "t": 191.38,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 216.33,
+          "type": "level",
+          "level": 22
+        },
+        {
+          "t": 216.33,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 226.27,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 226.27,
+          "type": "upgrade",
+          "name": "Pulse Laser"
+        },
+        {
+          "t": 226.28,
+          "type": "level",
+          "level": 23
+        },
+        {
+          "t": 249.37,
+          "type": "level",
+          "level": 24
+        },
+        {
+          "t": 249.37,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 265.82,
+          "type": "level",
+          "level": 25
+        },
+        {
+          "t": 265.82,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 282.73,
+          "type": "level",
+          "level": 26
+        },
+        {
+          "t": 282.73,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 282.73,
+          "type": "specialisation",
+          "name": "bolt"
+        },
+        {
+          "t": 287.93,
+          "type": "boss",
+          "boss": 1
+        },
+        {
+          "t": 287.93,
+          "type": "mutation",
+          "name": "selected"
+        },
+        {
+          "t": 288.17,
+          "type": "level",
+          "level": 27
+        },
+        {
+          "t": 288.17,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 288.55,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 288.55,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 288.57,
+          "type": "level",
+          "level": 28
+        },
+        {
+          "t": 288.72,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 300.65,
+          "type": "level",
+          "level": 29
+        },
+        {
+          "t": 300.65,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 319.05,
+          "type": "level",
+          "level": 30
+        },
+        {
+          "t": 319.05,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 338.85,
+          "type": "level",
+          "level": 31
+        },
+        {
+          "t": 338.85,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 346.67,
+          "type": "level",
+          "level": 32
+        },
+        {
+          "t": 346.67,
+          "type": "upgrade",
+          "name": "Decoy Beacon"
+        },
+        {
+          "t": 355.77,
+          "type": "level",
+          "level": 33
+        },
+        {
+          "t": 355.77,
+          "type": "upgrade",
+          "name": "Decoy Beacon"
+        },
+        {
+          "t": 356.32,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 362.02,
+          "type": "level",
+          "level": 34
+        },
+        {
+          "t": 362.02,
+          "type": "upgrade",
+          "name": "Reactive Spikes"
+        },
+        {
+          "t": 370.22,
+          "type": "level",
+          "level": 35
+        },
+        {
+          "t": 370.22,
+          "type": "upgrade",
+          "name": "Reactive Spikes"
+        },
+        {
+          "t": 383.75,
+          "type": "level",
+          "level": 36
+        },
+        {
+          "t": 383.75,
+          "type": "upgrade",
+          "name": "Decoy Beacon"
+        },
+        {
+          "t": 396.5,
+          "type": "level",
+          "level": 37
+        },
+        {
+          "t": 396.5,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 408.17,
+          "type": "level",
+          "level": 38
+        },
+        {
+          "t": 408.17,
+          "type": "upgrade",
+          "name": "Repulsion Field"
+        },
+        {
+          "t": 413.97,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 417.7,
+          "type": "level",
+          "level": 39
+        },
+        {
+          "t": 417.7,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 429.82,
+          "type": "level",
+          "level": 40
+        },
+        {
+          "t": 429.82,
+          "type": "upgrade",
+          "name": "Pulse Laser"
+        },
+        {
+          "t": 429.82,
+          "type": "specialisation",
+          "name": "laser"
+        },
+        {
+          "t": 441.38,
+          "type": "level",
+          "level": 41
+        },
+        {
+          "t": 441.38,
+          "type": "upgrade",
+          "name": "Pulse Laser"
+        },
+        {
+          "t": 459.43,
+          "type": "level",
+          "level": 42
+        },
+        {
+          "t": 459.43,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 470.85,
+          "type": "level",
+          "level": 43
+        },
+        {
+          "t": 470.85,
+          "type": "upgrade",
+          "name": "Reactive Spikes"
+        },
+        {
+          "t": 472.75,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 480.95,
+          "type": "level",
+          "level": 44
+        },
+        {
+          "t": 480.95,
+          "type": "upgrade",
+          "name": "Reactive Spikes"
+        },
+        {
+          "t": 483.03,
+          "type": "boss",
+          "boss": 2
+        },
+        {
+          "t": 483.03,
+          "type": "mutation",
+          "name": "selected"
+        },
+        {
+          "t": 483.52,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 485.58,
+          "type": "level",
+          "level": 45
+        },
+        {
+          "t": 485.58,
+          "type": "upgrade",
+          "name": "Pulse Laser"
+        },
+        {
+          "t": 499.97,
+          "type": "level",
+          "level": 46
+        },
+        {
+          "t": 499.97,
+          "type": "upgrade",
+          "name": "Repulsion Field"
+        },
+        {
+          "t": 504.82,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 505.98,
+          "type": "level",
+          "level": 47
+        },
+        {
+          "t": 505.98,
+          "type": "upgrade",
+          "name": "Thrusters"
+        },
+        {
+          "t": 518.37,
+          "type": "level",
+          "level": 48
+        },
+        {
+          "t": 518.37,
+          "type": "upgrade",
+          "name": "Thrusters"
+        },
+        {
+          "t": 530.83,
+          "type": "level",
+          "level": 49
+        },
+        {
+          "t": 530.83,
+          "type": "upgrade",
+          "name": "Repulsion Field"
+        },
+        {
+          "t": 539,
+          "type": "level",
+          "level": 50
+        },
+        {
+          "t": 539,
+          "type": "upgrade",
+          "name": "Repulsion Field"
+        },
+        {
+          "t": 551.58,
+          "type": "level",
+          "level": 51
+        },
+        {
+          "t": 551.58,
+          "type": "upgrade",
+          "name": "Thrusters"
+        },
+        {
+          "t": 560.97,
+          "type": "level",
+          "level": 52
+        },
+        {
+          "t": 560.97,
+          "type": "upgrade",
+          "name": "Thrusters"
+        },
+        {
+          "t": 573.37,
+          "type": "level",
+          "level": 53
+        },
+        {
+          "t": 573.37,
+          "type": "upgrade",
+          "name": "Scrapstorm"
+        },
+        {
+          "t": 589.3,
+          "type": "level",
+          "level": 54
+        },
+        {
+          "t": 589.3,
+          "type": "upgrade",
+          "name": "Scrapstorm"
+        },
+        {
+          "t": 590.2,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 606.02,
+          "type": "level",
+          "level": 55
+        },
+        {
+          "t": 606.02,
+          "type": "upgrade",
+          "name": "Scrapstorm"
+        },
+        {
+          "t": 630.92,
+          "type": "level",
+          "level": 56
+        },
+        {
+          "t": 630.92,
+          "type": "upgrade",
+          "name": "Scrapstorm"
+        },
+        {
+          "t": 646.85,
+          "type": "level",
+          "level": 57
+        },
+        {
+          "t": 646.85,
+          "type": "upgrade",
+          "name": "Void Lance"
+        },
+        {
+          "t": 653.8,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 665.7,
+          "type": "level",
+          "level": 58
+        },
+        {
+          "t": 665.7,
+          "type": "upgrade",
+          "name": "Void Lance"
+        },
+        {
+          "t": 689.62,
+          "type": "level",
+          "level": 59
+        },
+        {
+          "t": 689.62,
+          "type": "upgrade",
+          "name": "Void Lance"
+        },
+        {
+          "t": 702.58,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 705.5,
+          "type": "level",
+          "level": 60
+        },
+        {
+          "t": 705.5,
+          "type": "upgrade",
+          "name": "Void Lance"
+        },
+        {
+          "t": 710.13,
+          "type": "boss",
+          "boss": 3
+        },
+        {
+          "t": 710.13,
+          "type": "mutation",
+          "name": "selected"
+        }
+      ],
+      "phase": "before",
+      "profile": "desktop",
+      "viewport": [
+        1024,
+        768
+      ]
+    },
+    {
+      "seed": 54321,
+      "status": "end",
+      "completed": true,
+      "time": 679.1,
+      "level": 58,
+      "kills": 3015,
+      "bosses": 3,
+      "damageTaken": 0,
+      "minHP": 100,
+      "peakEnemies": 86,
+      "dev": false,
+      "items": {
+        "bolt": 5,
+        "chain": 5,
+        "rapid": 5,
+        "shield": 5,
+        "screen": 3,
+        "nova": 5,
+        "armour": 5,
+        "regen": 5,
+        "reach": 5,
+        "magnet": 5,
+        "blade": 5,
+        "gravity": 5
+      },
+      "evolved": {
+        "nova": true,
+        "blade": true
+      },
+      "samples": [
+        {
+          "t": 0,
+          "level": 1,
+          "hp": 100,
+          "kills": 0,
+          "enemies": 1,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 0,
+          "need": 6,
+          "gems": 0,
+          "evolved": 0
+        },
+        {
+          "t": 30,
+          "level": 2,
+          "hp": 100,
+          "kills": 7,
+          "enemies": 35,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 1,
+          "need": 14,
+          "gems": 0,
+          "evolved": 0
+        },
+        {
+          "t": 60,
+          "level": 7,
+          "hp": 100,
+          "kills": 89,
+          "enemies": 18,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 39,
+          "need": 40,
+          "gems": 6,
+          "evolved": 0
+        },
+        {
+          "t": 90,
+          "level": 12,
+          "hp": 100,
+          "kills": 161,
+          "enemies": 10,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 38,
+          "need": 68,
+          "gems": 25,
+          "evolved": 0
+        },
+        {
+          "t": 120,
+          "level": 14,
+          "hp": 100,
+          "kills": 206,
+          "enemies": 11,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 50,
+          "need": 80,
+          "gems": 22,
+          "evolved": 0
+        },
+        {
+          "t": 150,
+          "level": 16,
+          "hp": 100,
+          "kills": 238,
+          "enemies": 11,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 77,
+          "need": 92,
+          "gems": 8,
+          "evolved": 0
+        },
+        {
+          "t": 180,
+          "level": 19,
+          "hp": 100,
+          "kills": 285,
+          "enemies": 22,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 48,
+          "need": 111,
+          "gems": 9,
+          "evolved": 0
+        },
+        {
+          "t": 210,
+          "level": 21,
+          "hp": 100,
+          "kills": 338,
+          "enemies": 20,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 51,
+          "need": 124,
+          "gems": 1,
+          "evolved": 0
+        },
+        {
+          "t": 240,
+          "level": 23,
+          "hp": 100,
+          "kills": 402,
+          "enemies": 14,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 114,
+          "need": 137,
+          "gems": 9,
+          "evolved": 1
+        },
+        {
+          "t": 270,
+          "level": 27,
+          "hp": 100,
+          "kills": 471,
+          "enemies": 17,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 53,
+          "need": 164,
+          "gems": 7,
+          "evolved": 1
+        },
+        {
+          "t": 300,
+          "level": 29,
+          "hp": 100,
+          "kills": 547,
+          "enemies": 12,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 4,
+          "need": 178,
+          "gems": 7,
+          "evolved": 1
+        },
+        {
+          "t": 330,
+          "level": 30,
+          "hp": 100,
+          "kills": 619,
+          "enemies": 43,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 67,
+          "need": 185,
+          "gems": 10,
+          "evolved": 1
+        },
+        {
+          "t": 360,
+          "level": 34,
+          "hp": 100,
+          "kills": 852,
+          "enemies": 51,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 59,
+          "need": 213,
+          "gems": 33,
+          "evolved": 1
+        },
+        {
+          "t": 390,
+          "level": 37,
+          "hp": 100,
+          "kills": 1049,
+          "enemies": 24,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 2,
+          "need": 234,
+          "gems": 61,
+          "evolved": 1
+        },
+        {
+          "t": 420,
+          "level": 39,
+          "hp": 100,
+          "kills": 1210,
+          "enemies": 30,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 107,
+          "need": 248,
+          "gems": 88,
+          "evolved": 1
+        },
+        {
+          "t": 450,
+          "level": 42,
+          "hp": 100,
+          "kills": 1385,
+          "enemies": 16,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 120,
+          "need": 270,
+          "gems": 105,
+          "evolved": 1
+        },
+        {
+          "t": 480,
+          "level": 44,
+          "hp": 100,
+          "kills": 1491,
+          "enemies": 20,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 107,
+          "need": 285,
+          "gems": 35,
+          "evolved": 1
+        },
+        {
+          "t": 510,
+          "level": 46,
+          "hp": 100,
+          "kills": 1730,
+          "enemies": 39,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 126,
+          "need": 300,
+          "gems": 59,
+          "evolved": 1
+        },
+        {
+          "t": 540,
+          "level": 49,
+          "hp": 100,
+          "kills": 2039,
+          "enemies": 61,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 196,
+          "need": 323,
+          "gems": 69,
+          "evolved": 1
+        },
+        {
+          "t": 570,
+          "level": 52,
+          "hp": 100,
+          "kills": 2370,
+          "enemies": 32,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 129,
+          "need": 346,
+          "gems": 99,
+          "evolved": 1
+        },
+        {
+          "t": 600,
+          "level": 54,
+          "hp": 100,
+          "kills": 2560,
+          "enemies": 39,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 120,
+          "need": 361,
+          "gems": 112,
+          "evolved": 2
+        },
+        {
+          "t": 630,
+          "level": 55,
+          "hp": 100,
+          "kills": 2731,
+          "enemies": 38,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 302,
+          "need": 369,
+          "gems": 112,
+          "evolved": 2
+        },
+        {
+          "t": 660,
+          "level": 57,
+          "hp": 100,
+          "kills": 2904,
+          "enemies": 32,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 255,
+          "need": 384,
+          "gems": 117,
+          "evolved": 2
+        }
+      ],
+      "log": [
+        {
+          "t": 19.03,
+          "type": "level",
+          "level": 2
+        },
+        {
+          "t": 19.03,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 40.65,
+          "type": "level",
+          "level": 3
+        },
+        {
+          "t": 40.65,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 42.53,
+          "type": "level",
+          "level": 4
+        },
+        {
+          "t": 42.53,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 43.95,
+          "type": "level",
+          "level": 5
+        },
+        {
+          "t": 43.95,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 47.25,
+          "type": "level",
+          "level": 6
+        },
+        {
+          "t": 47.25,
+          "type": "upgrade",
+          "name": "Reactive Screen"
+        },
+        {
+          "t": 52.07,
+          "type": "level",
+          "level": 7
+        },
+        {
+          "t": 52.07,
+          "type": "upgrade",
+          "name": "Nova Reactor"
+        },
+        {
+          "t": 60.25,
+          "type": "level",
+          "level": 8
+        },
+        {
+          "t": 60.25,
+          "type": "upgrade",
+          "name": "Nova Reactor"
+        },
+        {
+          "t": 68.1,
+          "type": "level",
+          "level": 9
+        },
+        {
+          "t": 68.1,
+          "type": "upgrade",
+          "name": "Nova Reactor"
+        },
+        {
+          "t": 68.1,
+          "type": "specialisation",
+          "name": "nova"
+        },
+        {
+          "t": 73.78,
+          "type": "level",
+          "level": 10
+        },
+        {
+          "t": 73.78,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 85.6,
+          "type": "level",
+          "level": 11
+        },
+        {
+          "t": 85.6,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 89.13,
+          "type": "level",
+          "level": 12
+        },
+        {
+          "t": 89.13,
+          "type": "upgrade",
+          "name": "Regeneration"
+        },
+        {
+          "t": 89.18,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 95.48,
+          "type": "level",
+          "level": 13
+        },
+        {
+          "t": 95.48,
+          "type": "upgrade",
+          "name": "Nova Reactor"
+        },
+        {
+          "t": 108.5,
+          "type": "level",
+          "level": 14
+        },
+        {
+          "t": 108.5,
+          "type": "upgrade",
+          "name": "Targeting Array"
+        },
+        {
+          "t": 124.37,
+          "type": "level",
+          "level": 15
+        },
+        {
+          "t": 124.37,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 134.87,
+          "type": "level",
+          "level": 16
+        },
+        {
+          "t": 134.87,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 153.1,
+          "type": "level",
+          "level": 17
+        },
+        {
+          "t": 153.1,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 153.27,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 156.4,
+          "type": "level",
+          "level": 18
+        },
+        {
+          "t": 156.4,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 174.53,
+          "type": "level",
+          "level": 19
+        },
+        {
+          "t": 174.53,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 174.53,
+          "type": "specialisation",
+          "name": "bolt"
+        },
+        {
+          "t": 187.42,
+          "type": "level",
+          "level": 20
+        },
+        {
+          "t": 187.42,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 206.85,
+          "type": "level",
+          "level": 21
+        },
+        {
+          "t": 206.85,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 215.97,
+          "type": "level",
+          "level": 22
+        },
+        {
+          "t": 215.97,
+          "type": "upgrade",
+          "name": "Nova Reactor"
+        },
+        {
+          "t": 234.28,
+          "type": "level",
+          "level": 23
+        },
+        {
+          "t": 234.28,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 234.55,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 246.02,
+          "type": "level",
+          "level": 24
+        },
+        {
+          "t": 246.02,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 263.8,
+          "type": "level",
+          "level": 25
+        },
+        {
+          "t": 263.8,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 268.47,
+          "type": "boss",
+          "boss": 1
+        },
+        {
+          "t": 268.47,
+          "type": "mutation",
+          "name": "selected"
+        },
+        {
+          "t": 269.48,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 269.65,
+          "type": "level",
+          "level": 26
+        },
+        {
+          "t": 269.65,
+          "type": "upgrade",
+          "name": "Regeneration"
+        },
+        {
+          "t": 269.65,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 269.67,
+          "type": "level",
+          "level": 27
+        },
+        {
+          "t": 269.98,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 280.07,
+          "type": "level",
+          "level": 28
+        },
+        {
+          "t": 280.07,
+          "type": "upgrade",
+          "name": "Gravity Well"
+        },
+        {
+          "t": 299.1,
+          "type": "level",
+          "level": 29
+        },
+        {
+          "t": 299.1,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 322.27,
+          "type": "level",
+          "level": 30
+        },
+        {
+          "t": 322.27,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 335.73,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 335.73,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 335.75,
+          "type": "level",
+          "level": 31
+        },
+        {
+          "t": 343.47,
+          "type": "level",
+          "level": 32
+        },
+        {
+          "t": 343.47,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 343.47,
+          "type": "specialisation",
+          "name": "chain"
+        },
+        {
+          "t": 351.53,
+          "type": "level",
+          "level": 33
+        },
+        {
+          "t": 351.53,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 351.53,
+          "type": "specialisation",
+          "name": "shield"
+        },
+        {
+          "t": 357.6,
+          "type": "level",
+          "level": 34
+        },
+        {
+          "t": 357.6,
+          "type": "upgrade",
+          "name": "Regeneration"
+        },
+        {
+          "t": 366.17,
+          "type": "level",
+          "level": 35
+        },
+        {
+          "t": 366.17,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 379.75,
+          "type": "level",
+          "level": 36
+        },
+        {
+          "t": 379.75,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 389.9,
+          "type": "level",
+          "level": 37
+        },
+        {
+          "t": 389.9,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 404.15,
+          "type": "level",
+          "level": 38
+        },
+        {
+          "t": 404.15,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 414.02,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 414.65,
+          "type": "level",
+          "level": 39
+        },
+        {
+          "t": 414.65,
+          "type": "upgrade",
+          "name": "Regeneration"
+        },
+        {
+          "t": 426.55,
+          "type": "level",
+          "level": 40
+        },
+        {
+          "t": 426.55,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 434.3,
+          "type": "boss",
+          "boss": 2
+        },
+        {
+          "t": 434.3,
+          "type": "mutation",
+          "name": "selected"
+        },
+        {
+          "t": 434.5,
+          "type": "level",
+          "level": 41
+        },
+        {
+          "t": 434.5,
+          "type": "upgrade",
+          "name": "Regeneration"
+        },
+        {
+          "t": 442.48,
+          "type": "level",
+          "level": 42
+        },
+        {
+          "t": 442.48,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 450.17,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 462.47,
+          "type": "level",
+          "level": 43
+        },
+        {
+          "t": 462.47,
+          "type": "upgrade",
+          "name": "Gravity Well"
+        },
+        {
+          "t": 470.88,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 474.52,
+          "type": "level",
+          "level": 44
+        },
+        {
+          "t": 474.52,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 474.52,
+          "type": "specialisation",
+          "name": "rapid"
+        },
+        {
+          "t": 490.75,
+          "type": "level",
+          "level": 45
+        },
+        {
+          "t": 490.75,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 503.22,
+          "type": "level",
+          "level": 46
+        },
+        {
+          "t": 503.22,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 515.95,
+          "type": "level",
+          "level": 47
+        },
+        {
+          "t": 515.95,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 517.37,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 525.4,
+          "type": "level",
+          "level": 48
+        },
+        {
+          "t": 525.4,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 533.08,
+          "type": "level",
+          "level": 49
+        },
+        {
+          "t": 533.08,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 544.02,
+          "type": "level",
+          "level": 50
+        },
+        {
+          "t": 544.02,
+          "type": "upgrade",
+          "name": "Gravity Well"
+        },
+        {
+          "t": 544.02,
+          "type": "specialisation",
+          "name": "gravity"
+        },
+        {
+          "t": 555.37,
+          "type": "level",
+          "level": 51
+        },
+        {
+          "t": 555.37,
+          "type": "upgrade",
+          "name": "Gravity Well"
+        },
+        {
+          "t": 563.65,
+          "type": "level",
+          "level": 52
+        },
+        {
+          "t": 563.65,
+          "type": "upgrade",
+          "name": "Gravity Well"
+        },
+        {
+          "t": 573.63,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 575.93,
+          "type": "level",
+          "level": 53
+        },
+        {
+          "t": 575.93,
+          "type": "upgrade",
+          "name": "Targeting Array"
+        },
+        {
+          "t": 593.03,
+          "type": "level",
+          "level": 54
+        },
+        {
+          "t": 593.03,
+          "type": "upgrade",
+          "name": "Targeting Array"
+        },
+        {
+          "t": 609.47,
+          "type": "level",
+          "level": 55
+        },
+        {
+          "t": 609.47,
+          "type": "upgrade",
+          "name": "Targeting Array"
+        },
+        {
+          "t": 633.57,
+          "type": "level",
+          "level": 56
+        },
+        {
+          "t": 633.57,
+          "type": "upgrade",
+          "name": "Targeting Array"
+        },
+        {
+          "t": 634.33,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 649.48,
+          "type": "level",
+          "level": 57
+        },
+        {
+          "t": 649.48,
+          "type": "upgrade",
+          "name": "Reactive Screen"
+        },
+        {
+          "t": 669.98,
+          "type": "level",
+          "level": 58
+        },
+        {
+          "t": 669.98,
+          "type": "upgrade",
+          "name": "Reactive Screen"
+        },
+        {
+          "t": 679.1,
+          "type": "boss",
+          "boss": 3
+        },
+        {
+          "t": 679.1,
+          "type": "mutation",
+          "name": "selected"
+        }
+      ],
+      "phase": "before",
+      "profile": "desktop",
+      "viewport": [
+        1024,
+        768
+      ]
+    },
+    {
+      "seed": 12345,
+      "status": "end",
+      "completed": true,
+      "time": 653.07,
+      "level": 50,
+      "kills": 2876,
+      "bosses": 3,
+      "damageTaken": 0,
+      "minHP": 100,
+      "peakEnemies": 90,
+      "dev": false,
+      "items": {
+        "bolt": 5,
+        "power": 4,
+        "arc": 5,
+        "blade": 5,
+        "fence": 5,
+        "frost": 5,
+        "hull": 5,
+        "intercept": 1,
+        "clock": 5,
+        "shield": 5,
+        "reach": 4,
+        "ember": 1
+      },
+      "evolved": {
+        "bolt": true,
+        "arc": true
+      },
+      "samples": [
+        {
+          "t": 0,
+          "level": 1,
+          "hp": 100,
+          "kills": 0,
+          "enemies": 1,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 0,
+          "need": 5,
+          "gems": 0,
+          "evolved": 0
+        },
+        {
+          "t": 30,
+          "level": 2,
+          "hp": 100,
+          "kills": 20,
+          "enemies": 22,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 13,
+          "need": 14,
+          "gems": 2,
+          "evolved": 0
+        },
+        {
+          "t": 60,
+          "level": 8,
+          "hp": 100,
+          "kills": 89,
+          "enemies": 18,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 8,
+          "need": 45,
+          "gems": 6,
+          "evolved": 0
+        },
+        {
+          "t": 90,
+          "level": 12,
+          "hp": 120,
+          "kills": 158,
+          "enemies": 13,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 11,
+          "need": 68,
+          "gems": 13,
+          "evolved": 0
+        },
+        {
+          "t": 120,
+          "level": 15,
+          "hp": 120,
+          "kills": 204,
+          "enemies": 13,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 52,
+          "need": 86,
+          "gems": 10,
+          "evolved": 0
+        },
+        {
+          "t": 150,
+          "level": 18,
+          "hp": 120,
+          "kills": 239,
+          "enemies": 11,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 57,
+          "need": 105,
+          "gems": 8,
+          "evolved": 0
+        },
+        {
+          "t": 180,
+          "level": 19,
+          "hp": 120,
+          "kills": 291,
+          "enemies": 16,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 93,
+          "need": 111,
+          "gems": 12,
+          "evolved": 0
+        },
+        {
+          "t": 210,
+          "level": 22,
+          "hp": 120,
+          "kills": 346,
+          "enemies": 12,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 18,
+          "need": 135,
+          "gems": 20,
+          "evolved": 0
+        },
+        {
+          "t": 240,
+          "level": 25,
+          "hp": 120,
+          "kills": 404,
+          "enemies": 16,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 20,
+          "need": 161,
+          "gems": 19,
+          "evolved": 0
+        },
+        {
+          "t": 270,
+          "level": 27,
+          "hp": 120,
+          "kills": 489,
+          "enemies": 20,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 1,
+          "need": 178,
+          "gems": 33,
+          "evolved": 1
+        },
+        {
+          "t": 300,
+          "level": 29,
+          "hp": 120,
+          "kills": 568,
+          "enemies": 24,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 6,
+          "need": 196,
+          "gems": 27,
+          "evolved": 1
+        },
+        {
+          "t": 330,
+          "level": 30,
+          "hp": 120,
+          "kills": 652,
+          "enemies": 45,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 116,
+          "need": 205,
+          "gems": 49,
+          "evolved": 1
+        },
+        {
+          "t": 360,
+          "level": 32,
+          "hp": 140,
+          "kills": 887,
+          "enemies": 45,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 171,
+          "need": 223,
+          "gems": 145,
+          "evolved": 1
+        },
+        {
+          "t": 390,
+          "level": 34,
+          "hp": 140,
+          "kills": 1051,
+          "enemies": 40,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 236,
+          "need": 241,
+          "gems": 188,
+          "evolved": 1
+        },
+        {
+          "t": 420,
+          "level": 37,
+          "hp": 180,
+          "kills": 1215,
+          "enemies": 42,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 2,
+          "need": 268,
+          "gems": 177,
+          "evolved": 1
+        },
+        {
+          "t": 450,
+          "level": 40,
+          "hp": 200,
+          "kills": 1359,
+          "enemies": 37,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 24,
+          "need": 296,
+          "gems": 170,
+          "evolved": 1
+        },
+        {
+          "t": 480,
+          "level": 41,
+          "hp": 200,
+          "kills": 1482,
+          "enemies": 21,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 207,
+          "need": 305,
+          "gems": 156,
+          "evolved": 1
+        },
+        {
+          "t": 510,
+          "level": 43,
+          "hp": 200,
+          "kills": 1718,
+          "enemies": 37,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 77,
+          "need": 324,
+          "gems": 170,
+          "evolved": 1
+        },
+        {
+          "t": 540,
+          "level": 44,
+          "hp": 200,
+          "kills": 2032,
+          "enemies": 71,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 299,
+          "need": 333,
+          "gems": 243,
+          "evolved": 1
+        },
+        {
+          "t": 570,
+          "level": 47,
+          "hp": 200,
+          "kills": 2395,
+          "enemies": 34,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 129,
+          "need": 362,
+          "gems": 268,
+          "evolved": 1
+        },
+        {
+          "t": 600,
+          "level": 49,
+          "hp": 200,
+          "kills": 2579,
+          "enemies": 31,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 166,
+          "need": 381,
+          "gems": 274,
+          "evolved": 2
+        },
+        {
+          "t": 630,
+          "level": 50,
+          "hp": 200,
+          "kills": 2752,
+          "enemies": 26,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 74,
+          "need": 390,
+          "gems": 330,
+          "evolved": 2
+        }
+      ],
+      "log": [
+        {
+          "t": 20.6,
+          "type": "level",
+          "level": 2
+        },
+        {
+          "t": 20.6,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 30.37,
+          "type": "level",
+          "level": 3
+        },
+        {
+          "t": 30.37,
+          "type": "upgrade",
+          "name": "Power Amplifier"
+        },
+        {
+          "t": 36.33,
+          "type": "level",
+          "level": 4
+        },
+        {
+          "t": 36.33,
+          "type": "upgrade",
+          "name": "Arc Discs"
+        },
+        {
+          "t": 40.9,
+          "type": "level",
+          "level": 5
+        },
+        {
+          "t": 40.9,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 44.03,
+          "type": "level",
+          "level": 6
+        },
+        {
+          "t": 44.03,
+          "type": "upgrade",
+          "name": "Plasma Fences"
+        },
+        {
+          "t": 51.87,
+          "type": "level",
+          "level": 7
+        },
+        {
+          "t": 51.87,
+          "type": "upgrade",
+          "name": "Frost Shards"
+        },
+        {
+          "t": 58.88,
+          "type": "level",
+          "level": 8
+        },
+        {
+          "t": 58.88,
+          "type": "upgrade",
+          "name": "Frost Shards"
+        },
+        {
+          "t": 67.73,
+          "type": "level",
+          "level": 9
+        },
+        {
+          "t": 67.73,
+          "type": "upgrade",
+          "name": "Reinforced Hull"
+        },
+        {
+          "t": 76.72,
+          "type": "level",
+          "level": 10
+        },
+        {
+          "t": 76.72,
+          "type": "upgrade",
+          "name": "Point Defence"
+        },
+        {
+          "t": 80.58,
+          "type": "level",
+          "level": 11
+        },
+        {
+          "t": 80.58,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 87.13,
+          "type": "level",
+          "level": 12
+        },
+        {
+          "t": 87.13,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 96.83,
+          "type": "level",
+          "level": 13
+        },
+        {
+          "t": 96.83,
+          "type": "upgrade",
+          "name": "Targeting Array"
+        },
+        {
+          "t": 96.88,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 98.35,
+          "type": "level",
+          "level": 14
+        },
+        {
+          "t": 98.35,
+          "type": "upgrade",
+          "name": "Ember Wake"
+        },
+        {
+          "t": 108.08,
+          "type": "level",
+          "level": 15
+        },
+        {
+          "t": 108.08,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 122.07,
+          "type": "level",
+          "level": 16
+        },
+        {
+          "t": 122.07,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 122.07,
+          "type": "specialisation",
+          "name": "bolt"
+        },
+        {
+          "t": 132.35,
+          "type": "level",
+          "level": 17
+        },
+        {
+          "t": 132.35,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 143.27,
+          "type": "level",
+          "level": 18
+        },
+        {
+          "t": 143.27,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 143.3,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 164.9,
+          "type": "level",
+          "level": 19
+        },
+        {
+          "t": 164.9,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 181.82,
+          "type": "level",
+          "level": 20
+        },
+        {
+          "t": 181.82,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 195.88,
+          "type": "level",
+          "level": 21
+        },
+        {
+          "t": 195.88,
+          "type": "upgrade",
+          "name": "Frost Shards"
+        },
+        {
+          "t": 195.88,
+          "type": "specialisation",
+          "name": "frost"
+        },
+        {
+          "t": 207.73,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 208.5,
+          "type": "level",
+          "level": 22
+        },
+        {
+          "t": 208.5,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 234.77,
+          "type": "boss",
+          "boss": 1
+        },
+        {
+          "t": 234.77,
+          "type": "mutation",
+          "name": "selected"
+        },
+        {
+          "t": 234.77,
+          "type": "upgrade",
+          "name": "Plasma Fences"
+        },
+        {
+          "t": 234.78,
+          "type": "level",
+          "level": 23
+        },
+        {
+          "t": 236.07,
+          "type": "level",
+          "level": 24
+        },
+        {
+          "t": 236.07,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 236.12,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 237.85,
+          "type": "level",
+          "level": 25
+        },
+        {
+          "t": 237.85,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 259.65,
+          "type": "level",
+          "level": 26
+        },
+        {
+          "t": 259.65,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 259.7,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 269.83,
+          "type": "level",
+          "level": 27
+        },
+        {
+          "t": 269.83,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 269.83,
+          "type": "specialisation",
+          "name": "shield"
+        },
+        {
+          "t": 283.05,
+          "type": "level",
+          "level": 28
+        },
+        {
+          "t": 283.05,
+          "type": "upgrade",
+          "name": "Power Amplifier"
+        },
+        {
+          "t": 298.33,
+          "type": "level",
+          "level": 29
+        },
+        {
+          "t": 298.33,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 327.68,
+          "type": "level",
+          "level": 30
+        },
+        {
+          "t": 327.68,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 328.57,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 337.77,
+          "type": "level",
+          "level": 31
+        },
+        {
+          "t": 337.77,
+          "type": "upgrade",
+          "name": "Reinforced Hull"
+        },
+        {
+          "t": 349.48,
+          "type": "level",
+          "level": 32
+        },
+        {
+          "t": 349.48,
+          "type": "upgrade",
+          "name": "Power Amplifier"
+        },
+        {
+          "t": 361.27,
+          "type": "level",
+          "level": 33
+        },
+        {
+          "t": 361.27,
+          "type": "upgrade",
+          "name": "Frost Shards"
+        },
+        {
+          "t": 373.72,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 374.22,
+          "type": "level",
+          "level": 34
+        },
+        {
+          "t": 374.22,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 390.07,
+          "type": "level",
+          "level": 35
+        },
+        {
+          "t": 390.07,
+          "type": "upgrade",
+          "name": "Reinforced Hull"
+        },
+        {
+          "t": 401.18,
+          "type": "level",
+          "level": 36
+        },
+        {
+          "t": 401.18,
+          "type": "upgrade",
+          "name": "Orbiting Blades"
+        },
+        {
+          "t": 419.68,
+          "type": "level",
+          "level": 37
+        },
+        {
+          "t": 419.68,
+          "type": "upgrade",
+          "name": "Reinforced Hull"
+        },
+        {
+          "t": 428.63,
+          "type": "boss",
+          "boss": 2
+        },
+        {
+          "t": 428.63,
+          "type": "mutation",
+          "name": "selected"
+        },
+        {
+          "t": 429.2,
+          "type": "level",
+          "level": 38
+        },
+        {
+          "t": 429.2,
+          "type": "upgrade",
+          "name": "Reinforced Hull"
+        },
+        {
+          "t": 429.25,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 435.3,
+          "type": "level",
+          "level": 39
+        },
+        {
+          "t": 435.3,
+          "type": "upgrade",
+          "name": "Plasma Fences"
+        },
+        {
+          "t": 435.3,
+          "type": "specialisation",
+          "name": "fence"
+        },
+        {
+          "t": 449.25,
+          "type": "level",
+          "level": 40
+        },
+        {
+          "t": 449.25,
+          "type": "upgrade",
+          "name": "Plasma Fences"
+        },
+        {
+          "t": 468.6,
+          "type": "level",
+          "level": 41
+        },
+        {
+          "t": 468.6,
+          "type": "upgrade",
+          "name": "Plasma Fences"
+        },
+        {
+          "t": 475.7,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 484.92,
+          "type": "level",
+          "level": 42
+        },
+        {
+          "t": 484.92,
+          "type": "upgrade",
+          "name": "Frost Shards"
+        },
+        {
+          "t": 505.73,
+          "type": "level",
+          "level": 43
+        },
+        {
+          "t": 505.73,
+          "type": "upgrade",
+          "name": "Arc Discs"
+        },
+        {
+          "t": 516.82,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 520.28,
+          "type": "level",
+          "level": 44
+        },
+        {
+          "t": 520.28,
+          "type": "upgrade",
+          "name": "Arc Discs"
+        },
+        {
+          "t": 541.03,
+          "type": "level",
+          "level": 45
+        },
+        {
+          "t": 541.03,
+          "type": "upgrade",
+          "name": "Arc Discs"
+        },
+        {
+          "t": 556.9,
+          "type": "level",
+          "level": 46
+        },
+        {
+          "t": 556.9,
+          "type": "upgrade",
+          "name": "Arc Discs"
+        },
+        {
+          "t": 567.03,
+          "type": "level",
+          "level": 47
+        },
+        {
+          "t": 567.03,
+          "type": "upgrade",
+          "name": "Power Amplifier"
+        },
+        {
+          "t": 577.85,
+          "type": "level",
+          "level": 48
+        },
+        {
+          "t": 577.85,
+          "type": "upgrade",
+          "name": "Targeting Array"
+        },
+        {
+          "t": 577.93,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 591.98,
+          "type": "level",
+          "level": 49
+        },
+        {
+          "t": 591.98,
+          "type": "upgrade",
+          "name": "Targeting Array"
+        },
+        {
+          "t": 623.15,
+          "type": "level",
+          "level": 50
+        },
+        {
+          "t": 623.15,
+          "type": "upgrade",
+          "name": "Targeting Array"
+        },
+        {
+          "t": 646,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 653.07,
+          "type": "boss",
+          "boss": 3
+        },
+        {
+          "t": 653.07,
+          "type": "mutation",
+          "name": "selected"
+        }
+      ],
+      "phase": "after",
+      "profile": "desktop",
+      "viewport": [
+        1024,
+        768
+      ]
+    },
+    {
+      "seed": 54321,
+      "status": "end",
+      "completed": true,
+      "time": 669.22,
+      "level": 55,
+      "kills": 3075,
+      "bosses": 3,
+      "damageTaken": 0,
+      "minHP": 100,
+      "peakEnemies": 76,
+      "dev": false,
+      "items": {
+        "bolt": 5,
+        "chain": 5,
+        "rapid": 5,
+        "shield": 5,
+        "screen": 5,
+        "voidSeed": 5,
+        "armour": 5,
+        "repulse": 4,
+        "clock": 5,
+        "magnet": 5,
+        "rail": 5,
+        "seeker": 1
+      },
+      "evolved": {
+        "bolt": true
+      },
+      "samples": [
+        {
+          "t": 0,
+          "level": 1,
+          "hp": 100,
+          "kills": 0,
+          "enemies": 1,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 0,
+          "need": 5,
+          "gems": 0,
+          "evolved": 0
+        },
+        {
+          "t": 30,
+          "level": 2,
+          "hp": 100,
+          "kills": 7,
+          "enemies": 35,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 2,
+          "need": 14,
+          "gems": 0,
+          "evolved": 0
+        },
+        {
+          "t": 60,
+          "level": 7,
+          "hp": 100,
+          "kills": 88,
+          "enemies": 19,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 34,
+          "need": 40,
+          "gems": 16,
+          "evolved": 0
+        },
+        {
+          "t": 90,
+          "level": 13,
+          "hp": 100,
+          "kills": 161,
+          "enemies": 10,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 48,
+          "need": 74,
+          "gems": 5,
+          "evolved": 0
+        },
+        {
+          "t": 120,
+          "level": 16,
+          "hp": 100,
+          "kills": 206,
+          "enemies": 11,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 10,
+          "need": 92,
+          "gems": 6,
+          "evolved": 0
+        },
+        {
+          "t": 150,
+          "level": 18,
+          "hp": 100,
+          "kills": 238,
+          "enemies": 12,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 22,
+          "need": 105,
+          "gems": 2,
+          "evolved": 0
+        },
+        {
+          "t": 180,
+          "level": 20,
+          "hp": 100,
+          "kills": 287,
+          "enemies": 18,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 0,
+          "need": 118,
+          "gems": 12,
+          "evolved": 0
+        },
+        {
+          "t": 210,
+          "level": 23,
+          "hp": 100,
+          "kills": 345,
+          "enemies": 21,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 142,
+          "need": 143,
+          "gems": 10,
+          "evolved": 0
+        },
+        {
+          "t": 240,
+          "level": 25,
+          "hp": 100,
+          "kills": 461,
+          "enemies": 42,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 117,
+          "need": 161,
+          "gems": 41,
+          "evolved": 0
+        },
+        {
+          "t": 270,
+          "level": 28,
+          "hp": 100,
+          "kills": 579,
+          "enemies": 7,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 11,
+          "need": 187,
+          "gems": 76,
+          "evolved": 0
+        },
+        {
+          "t": 300,
+          "level": 29,
+          "hp": 100,
+          "kills": 651,
+          "enemies": 6,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 111,
+          "need": 196,
+          "gems": 85,
+          "evolved": 0
+        },
+        {
+          "t": 330,
+          "level": 31,
+          "hp": 100,
+          "kills": 731,
+          "enemies": 22,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 54,
+          "need": 214,
+          "gems": 102,
+          "evolved": 0
+        },
+        {
+          "t": 360,
+          "level": 34,
+          "hp": 100,
+          "kills": 937,
+          "enemies": 47,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 63,
+          "need": 241,
+          "gems": 149,
+          "evolved": 0
+        },
+        {
+          "t": 390,
+          "level": 36,
+          "hp": 100,
+          "kills": 1119,
+          "enemies": 33,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 179,
+          "need": 259,
+          "gems": 171,
+          "evolved": 0
+        },
+        {
+          "t": 420,
+          "level": 39,
+          "hp": 100,
+          "kills": 1290,
+          "enemies": 18,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 197,
+          "need": 286,
+          "gems": 163,
+          "evolved": 0
+        },
+        {
+          "t": 450,
+          "level": 41,
+          "hp": 100,
+          "kills": 1444,
+          "enemies": 48,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 81,
+          "need": 305,
+          "gems": 171,
+          "evolved": 0
+        },
+        {
+          "t": 480,
+          "level": 42,
+          "hp": 100,
+          "kills": 1566,
+          "enemies": 18,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 230,
+          "need": 314,
+          "gems": 185,
+          "evolved": 1
+        },
+        {
+          "t": 510,
+          "level": 44,
+          "hp": 100,
+          "kills": 1788,
+          "enemies": 50,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 224,
+          "need": 333,
+          "gems": 197,
+          "evolved": 1
+        },
+        {
+          "t": 540,
+          "level": 47,
+          "hp": 100,
+          "kills": 2122,
+          "enemies": 67,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 214,
+          "need": 362,
+          "gems": 196,
+          "evolved": 1
+        },
+        {
+          "t": 570,
+          "level": 50,
+          "hp": 100,
+          "kills": 2491,
+          "enemies": 26,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 94,
+          "need": 390,
+          "gems": 224,
+          "evolved": 1
+        },
+        {
+          "t": 600,
+          "level": 51,
+          "hp": 100,
+          "kills": 2685,
+          "enemies": 27,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 372,
+          "need": 400,
+          "gems": 221,
+          "evolved": 1
+        },
+        {
+          "t": 630,
+          "level": 53,
+          "hp": 100,
+          "kills": 2848,
+          "enemies": 34,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 210,
+          "need": 419,
+          "gems": 194,
+          "evolved": 1
+        },
+        {
+          "t": 660,
+          "level": 54,
+          "hp": 100,
+          "kills": 3025,
+          "enemies": 24,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 366,
+          "need": 429,
+          "gems": 216,
+          "evolved": 1
+        }
+      ],
+      "log": [
+        {
+          "t": 18.35,
+          "type": "level",
+          "level": 2
+        },
+        {
+          "t": 18.35,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 40.65,
+          "type": "level",
+          "level": 3
+        },
+        {
+          "t": 40.65,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 42.53,
+          "type": "level",
+          "level": 4
+        },
+        {
+          "t": 42.53,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 43.95,
+          "type": "level",
+          "level": 5
+        },
+        {
+          "t": 43.95,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 47.25,
+          "type": "level",
+          "level": 6
+        },
+        {
+          "t": 47.25,
+          "type": "upgrade",
+          "name": "Reactive Screen"
+        },
+        {
+          "t": 51.4,
+          "type": "level",
+          "level": 7
+        },
+        {
+          "t": 51.4,
+          "type": "upgrade",
+          "name": "Void Seeds"
+        },
+        {
+          "t": 60.15,
+          "type": "level",
+          "level": 8
+        },
+        {
+          "t": 60.15,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 62.75,
+          "type": "level",
+          "level": 9
+        },
+        {
+          "t": 62.75,
+          "type": "upgrade",
+          "name": "Repulsion Field"
+        },
+        {
+          "t": 69.97,
+          "type": "level",
+          "level": 10
+        },
+        {
+          "t": 69.97,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 77.05,
+          "type": "level",
+          "level": 11
+        },
+        {
+          "t": 77.05,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 85.97,
+          "type": "level",
+          "level": 12
+        },
+        {
+          "t": 85.97,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 87.33,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 87.33,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 87.35,
+          "type": "level",
+          "level": 13
+        },
+        {
+          "t": 93.55,
+          "type": "level",
+          "level": 14
+        },
+        {
+          "t": 93.55,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 102.43,
+          "type": "level",
+          "level": 15
+        },
+        {
+          "t": 102.43,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 117.58,
+          "type": "level",
+          "level": 16
+        },
+        {
+          "t": 117.58,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 134.9,
+          "type": "level",
+          "level": 17
+        },
+        {
+          "t": 134.9,
+          "type": "upgrade",
+          "name": "Rail Lance"
+        },
+        {
+          "t": 148.02,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 148.02,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 148.02,
+          "type": "specialisation",
+          "name": "rapid"
+        },
+        {
+          "t": 148.03,
+          "type": "level",
+          "level": 18
+        },
+        {
+          "t": 166.6,
+          "type": "level",
+          "level": 19
+        },
+        {
+          "t": 166.6,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 166.6,
+          "type": "specialisation",
+          "name": "chain"
+        },
+        {
+          "t": 179.92,
+          "type": "level",
+          "level": 20
+        },
+        {
+          "t": 179.92,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 198.97,
+          "type": "level",
+          "level": 21
+        },
+        {
+          "t": 198.97,
+          "type": "upgrade",
+          "name": "Rail Lance"
+        },
+        {
+          "t": 200.85,
+          "type": "boss",
+          "boss": 1
+        },
+        {
+          "t": 200.85,
+          "type": "mutation",
+          "name": "selected"
+        },
+        {
+          "t": 201.65,
+          "type": "level",
+          "level": 22
+        },
+        {
+          "t": 201.65,
+          "type": "upgrade",
+          "name": "Void Seeds"
+        },
+        {
+          "t": 201.75,
+          "type": "level",
+          "level": 23
+        },
+        {
+          "t": 201.75,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 201.88,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 201.93,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 210.88,
+          "type": "level",
+          "level": 24
+        },
+        {
+          "t": 210.88,
+          "type": "upgrade",
+          "name": "Reactive Screen"
+        },
+        {
+          "t": 230.7,
+          "type": "level",
+          "level": 25
+        },
+        {
+          "t": 230.7,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 243.67,
+          "type": "level",
+          "level": 26
+        },
+        {
+          "t": 243.67,
+          "type": "upgrade",
+          "name": "Rail Lance"
+        },
+        {
+          "t": 243.67,
+          "type": "specialisation",
+          "name": "rail"
+        },
+        {
+          "t": 253.78,
+          "type": "level",
+          "level": 27
+        },
+        {
+          "t": 253.78,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 253.97,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 268.58,
+          "type": "level",
+          "level": 28
+        },
+        {
+          "t": 268.58,
+          "type": "upgrade",
+          "name": "Chain Lightning"
+        },
+        {
+          "t": 283.03,
+          "type": "level",
+          "level": 29
+        },
+        {
+          "t": 283.03,
+          "type": "upgrade",
+          "name": "Rail Lance"
+        },
+        {
+          "t": 314.22,
+          "type": "level",
+          "level": 30
+        },
+        {
+          "t": 314.22,
+          "type": "upgrade",
+          "name": "Reactive Screen"
+        },
+        {
+          "t": 314.4,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 326.1,
+          "type": "level",
+          "level": 31
+        },
+        {
+          "t": 326.1,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 339.77,
+          "type": "level",
+          "level": 32
+        },
+        {
+          "t": 339.77,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 347.13,
+          "type": "level",
+          "level": 33
+        },
+        {
+          "t": 347.13,
+          "type": "upgrade",
+          "name": "Armour Plating"
+        },
+        {
+          "t": 357.37,
+          "type": "level",
+          "level": 34
+        },
+        {
+          "t": 357.37,
+          "type": "upgrade",
+          "name": "Repulsion Field"
+        },
+        {
+          "t": 371.57,
+          "type": "level",
+          "level": 35
+        },
+        {
+          "t": 371.57,
+          "type": "upgrade",
+          "name": "Seeker Drones"
+        },
+        {
+          "t": 380.25,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 380.73,
+          "type": "level",
+          "level": 36
+        },
+        {
+          "t": 380.73,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 380.73,
+          "type": "specialisation",
+          "name": "bolt"
+        },
+        {
+          "t": 394.8,
+          "type": "level",
+          "level": 37
+        },
+        {
+          "t": 394.8,
+          "type": "upgrade",
+          "name": "Void Seeds"
+        },
+        {
+          "t": 394.8,
+          "type": "specialisation",
+          "name": "voidSeed"
+        },
+        {
+          "t": 406.55,
+          "type": "level",
+          "level": 38
+        },
+        {
+          "t": 406.55,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 410.6,
+          "type": "boss",
+          "boss": 2
+        },
+        {
+          "t": 410.6,
+          "type": "mutation",
+          "name": "selected"
+        },
+        {
+          "t": 411.22,
+          "type": "level",
+          "level": 39
+        },
+        {
+          "t": 411.22,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 411.55,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 427.58,
+          "type": "level",
+          "level": 40
+        },
+        {
+          "t": 427.58,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 442.42,
+          "type": "level",
+          "level": 41
+        },
+        {
+          "t": 442.42,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 456.08,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 463.2,
+          "type": "level",
+          "level": 42
+        },
+        {
+          "t": 463.2,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 463.2,
+          "type": "specialisation",
+          "name": "shield"
+        },
+        {
+          "t": 487.43,
+          "type": "level",
+          "level": 43
+        },
+        {
+          "t": 487.43,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 505.7,
+          "type": "level",
+          "level": 44
+        },
+        {
+          "t": 505.7,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 507.63,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 517.13,
+          "type": "level",
+          "level": 45
+        },
+        {
+          "t": 517.13,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 528.25,
+          "type": "level",
+          "level": 46
+        },
+        {
+          "t": 528.25,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 537.97,
+          "type": "level",
+          "level": 47
+        },
+        {
+          "t": 537.97,
+          "type": "upgrade",
+          "name": "Magnet"
+        },
+        {
+          "t": 545.15,
+          "type": "level",
+          "level": 48
+        },
+        {
+          "t": 545.15,
+          "type": "upgrade",
+          "name": "Energy Shield"
+        },
+        {
+          "t": 557.12,
+          "type": "level",
+          "level": 49
+        },
+        {
+          "t": 557.12,
+          "type": "upgrade",
+          "name": "Rail Lance"
+        },
+        {
+          "t": 557.45,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 565.87,
+          "type": "level",
+          "level": 50
+        },
+        {
+          "t": 565.87,
+          "type": "upgrade",
+          "name": "Reactive Screen"
+        },
+        {
+          "t": 586.13,
+          "type": "level",
+          "level": 51
+        },
+        {
+          "t": 586.13,
+          "type": "upgrade",
+          "name": "Reactive Screen"
+        },
+        {
+          "t": 603.2,
+          "type": "level",
+          "level": 52
+        },
+        {
+          "t": 603.2,
+          "type": "upgrade",
+          "name": "Void Seeds"
+        },
+        {
+          "t": 615.23,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 615.6,
+          "type": "level",
+          "level": 53
+        },
+        {
+          "t": 615.6,
+          "type": "upgrade",
+          "name": "Void Seeds"
+        },
+        {
+          "t": 642,
+          "type": "level",
+          "level": 54
+        },
+        {
+          "t": 642,
+          "type": "upgrade",
+          "name": "Repulsion Field"
+        },
+        {
+          "t": 665.18,
+          "type": "level",
+          "level": 55
+        },
+        {
+          "t": 665.18,
+          "type": "upgrade",
+          "name": "Repulsion Field"
+        },
+        {
+          "t": 669.22,
+          "type": "boss",
+          "boss": 3
+        },
+        {
+          "t": 669.22,
+          "type": "mutation",
+          "name": "selected"
+        }
+      ],
+      "phase": "after",
+      "profile": "desktop",
+      "viewport": [
+        1024,
+        768
+      ]
+    },
+    {
+      "seed": 12345,
+      "profile": "touch",
+      "viewport": [
+        390,
+        844
+      ],
+      "status": "end",
+      "completed": true,
+      "time": 688.95,
+      "level": 54,
+      "kills": 3048,
+      "bosses": 3,
+      "damageTaken": 178,
+      "minHP": 69.38999999999737,
+      "peakEnemies": 82,
+      "dev": false,
+      "items": {
+        "bolt": 5,
+        "hull": 5,
+        "flak": 3,
+        "clock": 5,
+        "rapid": 5,
+        "regen": 5,
+        "sonic": 5,
+        "velocity": 5,
+        "longBurn": 5,
+        "tractor": 5,
+        "ram": 1,
+        "scatter": 5
+      },
+      "evolved": {
+        "bolt": true,
+        "rapid": true
+      },
+      "samples": [
+        {
+          "t": 0,
+          "level": 1,
+          "hp": 100,
+          "kills": 0,
+          "enemies": 1,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 0,
+          "need": 5,
+          "gems": 0,
+          "evolved": 0
+        },
+        {
+          "t": 30,
+          "level": 3,
+          "hp": 120,
+          "kills": 27,
+          "enemies": 15,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 4,
+          "need": 19,
+          "gems": 4,
+          "evolved": 0
+        },
+        {
+          "t": 60,
+          "level": 7,
+          "hp": 120,
+          "kills": 87,
+          "enemies": 20,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 13,
+          "need": 40,
+          "gems": 15,
+          "evolved": 0
+        },
+        {
+          "t": 90,
+          "level": 10,
+          "hp": 120,
+          "kills": 149,
+          "enemies": 22,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 30,
+          "need": 56,
+          "gems": 19,
+          "evolved": 0
+        },
+        {
+          "t": 120,
+          "level": 15,
+          "hp": 120,
+          "kills": 208,
+          "enemies": 9,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 18,
+          "need": 86,
+          "gems": 22,
+          "evolved": 0
+        },
+        {
+          "t": 150,
+          "level": 17,
+          "hp": 120,
+          "kills": 237,
+          "enemies": 13,
+          "bosses": 0,
+          "bossIndex": 0,
+          "xp": 92,
+          "need": 99,
+          "gems": 14,
+          "evolved": 0
+        },
+        {
+          "t": 180,
+          "level": 19,
+          "hp": 140,
+          "kills": 284,
+          "enemies": 21,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 7,
+          "need": 111,
+          "gems": 27,
+          "evolved": 0
+        },
+        {
+          "t": 210,
+          "level": 20,
+          "hp": 123.8,
+          "kills": 337,
+          "enemies": 19,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 96,
+          "need": 118,
+          "gems": 33,
+          "evolved": 0
+        },
+        {
+          "t": 240,
+          "level": 22,
+          "hp": 144.7,
+          "kills": 403,
+          "enemies": 11,
+          "bosses": 0,
+          "bossIndex": 1,
+          "xp": 91,
+          "need": 135,
+          "gems": 53,
+          "evolved": 0
+        },
+        {
+          "t": 270,
+          "level": 25,
+          "hp": 160,
+          "kills": 469,
+          "enemies": 12,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 79,
+          "need": 161,
+          "gems": 65,
+          "evolved": 0
+        },
+        {
+          "t": 300,
+          "level": 27,
+          "hp": 180,
+          "kills": 540,
+          "enemies": 15,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 110,
+          "need": 178,
+          "gems": 55,
+          "evolved": 0
+        },
+        {
+          "t": 330,
+          "level": 29,
+          "hp": 180,
+          "kills": 634,
+          "enemies": 34,
+          "bosses": 1,
+          "bossIndex": 1,
+          "xp": 161,
+          "need": 196,
+          "gems": 67,
+          "evolved": 0
+        },
+        {
+          "t": 360,
+          "level": 32,
+          "hp": 200,
+          "kills": 856,
+          "enemies": 47,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 98,
+          "need": 223,
+          "gems": 140,
+          "evolved": 0
+        },
+        {
+          "t": 390,
+          "level": 34,
+          "hp": 200,
+          "kills": 1039,
+          "enemies": 34,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 105,
+          "need": 241,
+          "gems": 169,
+          "evolved": 0
+        },
+        {
+          "t": 420,
+          "level": 37,
+          "hp": 200,
+          "kills": 1206,
+          "enemies": 34,
+          "bosses": 1,
+          "bossIndex": 2,
+          "xp": 82,
+          "need": 268,
+          "gems": 147,
+          "evolved": 1
+        },
+        {
+          "t": 450,
+          "level": 40,
+          "hp": 200,
+          "kills": 1368,
+          "enemies": 9,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 225,
+          "need": 296,
+          "gems": 138,
+          "evolved": 1
+        },
+        {
+          "t": 480,
+          "level": 41,
+          "hp": 200,
+          "kills": 1460,
+          "enemies": 22,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 284,
+          "need": 305,
+          "gems": 106,
+          "evolved": 1
+        },
+        {
+          "t": 510,
+          "level": 43,
+          "hp": 200,
+          "kills": 1688,
+          "enemies": 45,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 249,
+          "need": 324,
+          "gems": 161,
+          "evolved": 1
+        },
+        {
+          "t": 540,
+          "level": 45,
+          "hp": 200,
+          "kills": 2008,
+          "enemies": 49,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 141,
+          "need": 343,
+          "gems": 189,
+          "evolved": 2
+        },
+        {
+          "t": 570,
+          "level": 47,
+          "hp": 200,
+          "kills": 2338,
+          "enemies": 41,
+          "bosses": 2,
+          "bossIndex": 2,
+          "xp": 289,
+          "need": 362,
+          "gems": 187,
+          "evolved": 2
+        },
+        {
+          "t": 600,
+          "level": 50,
+          "hp": 200,
+          "kills": 2545,
+          "enemies": 32,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 66,
+          "need": 390,
+          "gems": 215,
+          "evolved": 2
+        },
+        {
+          "t": 630,
+          "level": 51,
+          "hp": 200,
+          "kills": 2710,
+          "enemies": 35,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 364,
+          "need": 400,
+          "gems": 178,
+          "evolved": 2
+        },
+        {
+          "t": 660,
+          "level": 53,
+          "hp": 200,
+          "kills": 2883,
+          "enemies": 29,
+          "bosses": 2,
+          "bossIndex": 3,
+          "xp": 4,
+          "need": 419,
+          "gems": 199,
+          "evolved": 2
+        }
+      ],
+      "log": [
+        {
+          "t": 12.83,
+          "type": "level",
+          "level": 2
+        },
+        {
+          "t": 12.83,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 22.45,
+          "type": "level",
+          "level": 3
+        },
+        {
+          "t": 22.45,
+          "type": "upgrade",
+          "name": "Reinforced Hull"
+        },
+        {
+          "t": 39.65,
+          "type": "level",
+          "level": 4
+        },
+        {
+          "t": 39.65,
+          "type": "upgrade",
+          "name": "Flak Battery"
+        },
+        {
+          "t": 43.98,
+          "type": "level",
+          "level": 5
+        },
+        {
+          "t": 43.98,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 50.37,
+          "type": "level",
+          "level": 6
+        },
+        {
+          "t": 50.37,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 57.42,
+          "type": "level",
+          "level": 7
+        },
+        {
+          "t": 57.42,
+          "type": "upgrade",
+          "name": "Regeneration"
+        },
+        {
+          "t": 60.65,
+          "type": "level",
+          "level": 8
+        },
+        {
+          "t": 60.65,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 70.35,
+          "type": "level",
+          "level": 9
+        },
+        {
+          "t": 70.35,
+          "type": "upgrade",
+          "name": "Sonic Pulse"
+        },
+        {
+          "t": 78.63,
+          "type": "level",
+          "level": 10
+        },
+        {
+          "t": 78.63,
+          "type": "upgrade",
+          "name": "Kinetic Drive"
+        },
+        {
+          "t": 102.17,
+          "type": "level",
+          "level": 11
+        },
+        {
+          "t": 102.17,
+          "type": "upgrade",
+          "name": "Sonic Pulse"
+        },
+        {
+          "t": 105.03,
+          "type": "level",
+          "level": 12
+        },
+        {
+          "t": 105.03,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 105.9,
+          "type": "level",
+          "level": 13
+        },
+        {
+          "t": 105.9,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 105.9,
+          "type": "specialisation",
+          "name": "bolt"
+        },
+        {
+          "t": 107.12,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 107.85,
+          "type": "level",
+          "level": 14
+        },
+        {
+          "t": 107.85,
+          "type": "upgrade",
+          "name": "Kinetic Drive"
+        },
+        {
+          "t": 116.27,
+          "type": "level",
+          "level": 15
+        },
+        {
+          "t": 116.27,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 126.15,
+          "type": "level",
+          "level": 16
+        },
+        {
+          "t": 126.15,
+          "type": "upgrade",
+          "name": "Regeneration"
+        },
+        {
+          "t": 141.88,
+          "type": "level",
+          "level": 17
+        },
+        {
+          "t": 141.88,
+          "type": "upgrade",
+          "name": "Field Capacitor"
+        },
+        {
+          "t": 144.52,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 152.55,
+          "type": "level",
+          "level": 18
+        },
+        {
+          "t": 152.55,
+          "type": "upgrade",
+          "name": "Supply Tractor"
+        },
+        {
+          "t": 175.3,
+          "type": "level",
+          "level": 19
+        },
+        {
+          "t": 175.3,
+          "type": "upgrade",
+          "name": "Reinforced Hull"
+        },
+        {
+          "t": 193.28,
+          "type": "level",
+          "level": 20
+        },
+        {
+          "t": 193.28,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 193.28,
+          "type": "specialisation",
+          "name": "rapid"
+        },
+        {
+          "t": 211.48,
+          "type": "level",
+          "level": 21
+        },
+        {
+          "t": 211.48,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 216.88,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 226.97,
+          "type": "level",
+          "level": 22
+        },
+        {
+          "t": 226.97,
+          "type": "upgrade",
+          "name": "Reinforced Hull"
+        },
+        {
+          "t": 247.43,
+          "type": "level",
+          "level": 23
+        },
+        {
+          "t": 247.43,
+          "type": "upgrade",
+          "name": "Field Capacitor"
+        },
+        {
+          "t": 264.17,
+          "type": "boss",
+          "boss": 1
+        },
+        {
+          "t": 264.17,
+          "type": "mutation",
+          "name": "selected"
+        },
+        {
+          "t": 265.38,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 265.93,
+          "type": "level",
+          "level": 24
+        },
+        {
+          "t": 265.93,
+          "type": "upgrade",
+          "name": "Kinetic Ram"
+        },
+        {
+          "t": 265.93,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 265.95,
+          "type": "level",
+          "level": 25
+        },
+        {
+          "t": 280.97,
+          "type": "level",
+          "level": 26
+        },
+        {
+          "t": 280.97,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 293.23,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 293.23,
+          "type": "upgrade",
+          "name": "Reinforced Hull"
+        },
+        {
+          "t": 293.25,
+          "type": "level",
+          "level": 27
+        },
+        {
+          "t": 307.68,
+          "type": "level",
+          "level": 28
+        },
+        {
+          "t": 307.68,
+          "type": "upgrade",
+          "name": "Scatterburst"
+        },
+        {
+          "t": 317.25,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 318.88,
+          "type": "level",
+          "level": 29
+        },
+        {
+          "t": 318.88,
+          "type": "upgrade",
+          "name": "Neon Bolts"
+        },
+        {
+          "t": 332.1,
+          "type": "level",
+          "level": 30
+        },
+        {
+          "t": 332.1,
+          "type": "upgrade",
+          "name": "Sonic Pulse"
+        },
+        {
+          "t": 346.37,
+          "type": "level",
+          "level": 31
+        },
+        {
+          "t": 346.37,
+          "type": "upgrade",
+          "name": "Reinforced Hull"
+        },
+        {
+          "t": 357.32,
+          "type": "level",
+          "level": 32
+        },
+        {
+          "t": 357.32,
+          "type": "upgrade",
+          "name": "Overclock"
+        },
+        {
+          "t": 364.42,
+          "type": "level",
+          "level": 33
+        },
+        {
+          "t": 364.42,
+          "type": "upgrade",
+          "name": "Sonic Pulse"
+        },
+        {
+          "t": 381.3,
+          "type": "level",
+          "level": 34
+        },
+        {
+          "t": 381.3,
+          "type": "upgrade",
+          "name": "Kinetic Drive"
+        },
+        {
+          "t": 399.52,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 399.68,
+          "type": "level",
+          "level": 35
+        },
+        {
+          "t": 399.68,
+          "type": "upgrade",
+          "name": "Sonic Pulse"
+        },
+        {
+          "t": 410.87,
+          "type": "level",
+          "level": 36
+        },
+        {
+          "t": 410.87,
+          "type": "upgrade",
+          "name": "Regeneration"
+        },
+        {
+          "t": 415.73,
+          "type": "level",
+          "level": 37
+        },
+        {
+          "t": 415.73,
+          "type": "upgrade",
+          "name": "Kinetic Drive"
+        },
+        {
+          "t": 428.15,
+          "type": "level",
+          "level": 38
+        },
+        {
+          "t": 428.15,
+          "type": "upgrade",
+          "name": "Regeneration"
+        },
+        {
+          "t": 431.93,
+          "type": "boss",
+          "boss": 2
+        },
+        {
+          "t": 431.93,
+          "type": "mutation",
+          "name": "selected"
+        },
+        {
+          "t": 432.3,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 433.45,
+          "type": "level",
+          "level": 39
+        },
+        {
+          "t": 433.45,
+          "type": "upgrade",
+          "name": "Field Capacitor"
+        },
+        {
+          "t": 441.98,
+          "type": "level",
+          "level": 40
+        },
+        {
+          "t": 441.98,
+          "type": "upgrade",
+          "name": "Kinetic Drive"
+        },
+        {
+          "t": 445.88,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 454.62,
+          "type": "level",
+          "level": 41
+        },
+        {
+          "t": 454.62,
+          "type": "upgrade",
+          "name": "Needle Repeater"
+        },
+        {
+          "t": 482.68,
+          "type": "level",
+          "level": 42
+        },
+        {
+          "t": 482.68,
+          "type": "upgrade",
+          "name": "Regeneration"
+        },
+        {
+          "t": 501.02,
+          "type": "level",
+          "level": 43
+        },
+        {
+          "t": 501.02,
+          "type": "upgrade",
+          "name": "Field Capacitor"
+        },
+        {
+          "t": 511.6,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 512.8,
+          "type": "level",
+          "level": 44
+        },
+        {
+          "t": 512.8,
+          "type": "upgrade",
+          "name": "Field Capacitor"
+        },
+        {
+          "t": 531,
+          "type": "level",
+          "level": 45
+        },
+        {
+          "t": 531,
+          "type": "upgrade",
+          "name": "Supply Tractor"
+        },
+        {
+          "t": 547.63,
+          "type": "level",
+          "level": 46
+        },
+        {
+          "t": 547.63,
+          "type": "upgrade",
+          "name": "Supply Tractor"
+        },
+        {
+          "t": 560.12,
+          "type": "level",
+          "level": 47
+        },
+        {
+          "t": 560.12,
+          "type": "upgrade",
+          "name": "Supply Tractor"
+        },
+        {
+          "t": 575.23,
+          "type": "level",
+          "level": 48
+        },
+        {
+          "t": 575.23,
+          "type": "upgrade",
+          "name": "Supply Tractor"
+        },
+        {
+          "t": 577.03,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 587.65,
+          "type": "level",
+          "level": 49
+        },
+        {
+          "t": 587.65,
+          "type": "upgrade",
+          "name": "Scatterburst"
+        },
+        {
+          "t": 597.58,
+          "type": "level",
+          "level": 50
+        },
+        {
+          "t": 597.58,
+          "type": "upgrade",
+          "name": "Scatterburst"
+        },
+        {
+          "t": 597.58,
+          "type": "specialisation",
+          "name": "scatter"
+        },
+        {
+          "t": 613.67,
+          "type": "level",
+          "level": 51
+        },
+        {
+          "t": 613.67,
+          "type": "upgrade",
+          "name": "Scatterburst"
+        },
+        {
+          "t": 632.18,
+          "type": "level",
+          "level": 52
+        },
+        {
+          "t": 632.18,
+          "type": "upgrade",
+          "name": "Scatterburst"
+        },
+        {
+          "t": 635.58,
+          "type": "cache",
+          "name": "claimed"
+        },
+        {
+          "t": 659.23,
+          "type": "level",
+          "level": 53
+        },
+        {
+          "t": 659.23,
+          "type": "upgrade",
+          "name": "Flak Battery"
+        },
+        {
+          "t": 684.28,
+          "type": "level",
+          "level": 54
+        },
+        {
+          "t": 684.28,
+          "type": "upgrade",
+          "name": "Flak Battery"
+        },
+        {
+          "t": 684.28,
+          "type": "specialisation",
+          "name": "flak"
+        },
+        {
+          "t": 688.95,
+          "type": "boss",
+          "boss": 3
+        },
+        {
+          "t": 688.95,
+          "type": "mutation",
+          "name": "selected"
+        }
+      ],
+      "phase": "after"
+    }
+  ]
+}
