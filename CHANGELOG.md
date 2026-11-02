@@ -2,6 +2,12 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.35.2
+
+- Auto-start optional events after three continuous game seconds in their marked area, with a visible countdown and reset on leaving.
+- Open merchant arrivals automatically as paused transmissions, with no accept button or missed-call countdown. Bosses and other menus hold the connection.
+- Preserve event rewards and optional higher-risk breach choices; standard breaches need no selection.
+
 ## 0.35.1
 
 - Rebalance achievement payouts to 50-400 credits and ship licences to 125-500 credits, with Sovereign at 1,500 and Vanguard free.

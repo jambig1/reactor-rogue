@@ -17,6 +17,7 @@ var samples=[],log=[],lastLevel=1,lastBoss=0,lastSecond=-1,lastHP=s.p.hp,minHP=s
 function recordChoice(type,name){log.push({t:+s.t.toFixed(2),type,name})}
 function botChoice(d){let l=s.items[d.id]||0;let priority={bolt:100,clock:90,regen:88,armour:85,power:83,magnet:80,chain:78,laser:77,blade:76,rocket:74,hull:72,shield:70};let score=priority[d.id]||35;if(d.kind==='weapon'&&buildEquipment('weapon').length>=4&&!l)score-=45;if(l)score+=l*3;return score}
 function bot(){
+ if(state==='merchant'){recordChoice('merchant','transmission closed');leaveMerchant();return}
  if(state==='upgrade'){let ranked=choices.map((d,i)=>({i,score:botChoice(d)})).sort((a,b)=>b.score-a.score);recordChoice('upgrade',choices[ranked[0].i].name);choose(ranked[0].i);decisions++;return}
  if(state==='specialise'){recordChoice('specialisation',pendingSpec);chooseSpecialisation(0);return}
  if(state==='mutation'){let i=mutationOptions.findIndex(d=>d.id==='overflow');claimMutation(i<0?0:i);recordChoice('mutation','selected');return}
