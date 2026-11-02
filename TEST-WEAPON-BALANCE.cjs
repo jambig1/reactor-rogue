@@ -9,7 +9,7 @@ let c={console,Math,Date,Set,Map,JSON,Number,String,Array,Object,Infinity,perfor
 
 
 const fresh=()=>run("state='menu';start();s.enemies=[];s.debris=[];s.pilot={...s.pilot,starter:'test'};s.p.hp=50;s.items={};s.spec={};s.cd={};s.arsenal=null;s.formations.next=9999");
-fresh();assert.equal(run("defs.filter(d=>d.kind==='weapon').length"),36);assert(run("defs.filter(d=>d.kind==='weapon').every(d=>weaponRoles[d.id]?.role&&weaponRoles[d.id]?.tip)"));
+fresh();assert.equal(run("defs.filter(d=>d.kind==='weapon').length"),48);assert(run("defs.filter(d=>d.kind==='weapon').every(d=>weaponRoles[d.id]?.role&&weaponRoles[d.id]?.tip)"));
 // All base previews agree with newly balanced attack values.
 assert.equal(run("newBase('rail',3)"),130);assert.equal(run("newBase('leech',1)"),34);assert.equal(run("newBase('sails',5)"),116);assert.equal(run("weaponBase('chain',3)"),66);
 // Volley count changes match the real shots, including branch/evolution adjustments.
@@ -29,4 +29,4 @@ fresh();run("s.t=.8;s.enemies=[{x:0,y:0,hp:10000,max:10000,type:0,r:10}];newArse
 fresh();assert.equal(run('mortarAim({x:200,y:0,v:100},.85).x'),130);assert.equal(run('mortarAim({x:200,y:0,v:100,freeze:1},.85).x'),200);assert.equal(run('mortarAim({x:200,y:0,v:100,stationary:true},.85).x'),200);assert.equal(run('mortarAim({x:200,y:0,v:100,formation:{dx:0,dy:1}},.85).y'),70);
 // Roles and exact upgrade milestones appear without revealing unrelated recipes or changing state.
 fresh();run("s.items={bolt:1};choices=[defs.find(d=>d.id==='bolt')];renderUpgradeChoices()");assert(run("$('choices').innerHTML.includes('GENERALIST')"));assert(run("$('choices').innerHTML.includes('1 → 2 shots / volley')"));assert(run("weaponReport().includes('Reliable forward volleys')"));let snapshot=run('JSON.stringify(s)');run("weaponReport();upgradeComparison(defs.find(d=>d.id==='bolt'))");assert.equal(run('JSON.stringify(s)'),snapshot);
-console.log('PASS 36 weapon identities, tuned base values, focused volleys, aimed radial lead, armour niches, bounded overlapping damage, mortar prediction and accurate UI milestones/state isolation');
+console.log('PASS 48 weapon identities, tuned base values, focused volleys, aimed radial lead, armour niches, bounded overlapping damage, mortar prediction and accurate UI milestones/state isolation');

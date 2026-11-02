@@ -18,4 +18,4 @@ fresh();run("s.items=Object.fromEntries(defs.filter(d=>d.kind==='support'&&d.id!
 // Active combinations require both halves; no discovery persists into another run.
 fresh();run('s.items={[synergyDefs[0].a]:1}');assert(!run('buildReport().includes("✓ "+synergyDefs[0].name)'));run('s.items[synergyDefs[0].b]=1');assert(run('buildReport().includes("✓ "+synergyDefs[0].name)'));run('renderUpgradeBuild()');assert(run("$('upgradeBuild').innerHTML.includes(defs.find(d=>d.id===synergyDefs[0].a).name)"));run("state='menu';start();renderUpgradeBuild()");assert(!run('buildReport().includes("✓ "+synergyDefs[0].name)'));
 fresh();run("setPauseTab('build')");assert(run("$('pauseBuild').innerHTML.includes('Your build this run')"));assert(html.includes('aria-controls="pauseBuild"'));assert(html.includes('class="build-peek"'));
-console.log('PASS all36 recipe next steps, active-only combinations, slot/banish blockers, inspection purity, loadout refresh and run reset');
+console.log('PASS all48 recipe next steps, active-only combinations, slot/banish blockers, inspection purity, loadout refresh and run reset');

@@ -80,3 +80,8 @@ James requested after interrupted profile polish: separate supplies/evolutions, 
 ### James's notes — achievements / contracts, v0.27.0
 
 Authorised next goal.24new achievements/31total, one-off credit rewards, status/category board, completed badges, in-run notices and result summary. Per-profile counters/migration and reward deduplication included. Other content/music/new-sector/account-backend priorities remain unstarted.
+
+
+## Notes priority5 — more equipment (v0.28.0)
+
+Authorised by James, expanded on request after Vampire Survivors weapon research:12 new weapons/evolutions,24 paths,6 supports,12 synergies.48 total weapons and32 supports. Existing six-slot rules, missing-part-only hints, run resets, caches and save compatibility remain. Enemy/sectors/music/account backend are separate later tasks. Reactor Protocols and difficulty tiers remain deferred.

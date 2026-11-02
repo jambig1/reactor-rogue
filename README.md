@@ -2,13 +2,13 @@
 
 [Play Reactor Rogue](https://jambig1.github.io/reactor-rogue/)
 
-A neon spaceship survivor game with twelve pilots, distinct movement abilities, 36 weapons and evolutions, weapon combinations, three sectors and a persistent Hangar.
+A neon spaceship survivor game with twelve pilots, distinct movement abilities, 48 weapons and evolutions, weapon combinations, three sectors and a persistent Hangar.
 
 Open `index.html` in a full browser to play offline. No installation, dependencies, API keys or build step are required. Keyboard/mouse and touch controls are supported. Progress stays in each browser.
 
 ## Development
 
-Current version: 0.27.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.28.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -205,3 +205,29 @@ Shattered Belt mixes rugged Scrap Marauder hulls into the ordinary fleet; Storm 
 ## v0.27.0 — achievements and contracts
 
 24 new achievements join the7 existing blueprint contracts:31 total. Milestones, combat, mastery and exploration include three evolutions in one run, four specialisations, eight merchant modifications, different pilot/sector wins, weapon-family goals, freezes, ignitions and clean bosses. New goals offer545 one-off credits in total. Existing ship challenges and blueprint unlocks remain. Hangar → Contracts has status/category filters, earned badges, readable progress and claim buttons for ready historical goals. Normal run banking still pays rewards automatically; results show newly paid goals and existing notice UI announces new completions. Developer tests are excluded. New progress persists per profile and transfers in backups; available recorded history seeds new counters once. `node TEST-CONTRACTS.cjs` covers thresholds, rewards, banking, migration, filters and profile transfer. `node TEST-MENUS.cjs` is the portable menu regression suite updated for the new two-minute reward.
+
+
+## v0.28.0 — expanded survivor arsenal
+
+Adds twelve weapons with twelve evolutions, two level-3 paths each and twelve contextual synergies. Total: 48 weapons/evolutions, 32 supports and 66 branch choices across 32 weapons and Energy Shield. Six weapon/six support slots remain.
+
+| Weapon | Coverage | Evolution support → evolution |
+|---|---|---|
+| Storm Spires | Staggered fixed-area lightning | Predator Chip → Tempest Cathedral |
+| Echo Rings | Expanding wavefront, one hit per ship | Shock Baffles → Harmonic Horizon |
+| Crossfire Array | Converging paired side cannons | Manoeuvre Jets → Gemini Battery |
+| Rupture Drill | Delayed armour-piercing toughest-hull strike | Last Stand Core → Core Breacher |
+| Ion Guardians | Temporary medium-range orbiting sentries | Shield Coupler → Citadel Orbit |
+| Plasma Rain | Lingering plasma pools | Magnet → Nebula Reservoir |
+| Prism Tracers | Crystals reflect within a fixed launch box | Armour Plating → Reactor Pinball |
+| Comet Scythes | Curving heavy throws | Size Matrix → Orbital Reaping |
+| Ion Curtain | Vertical piercing column | Targeting Array → Polar Cascade |
+| Coronal Shroud | Continuous close-range damage aura | Repair Amplifier → Soul Reactor |
+| Plasma Lash | Alternating front/rear sweep | Reactive Spikes → Crimson Gyre |
+| Binary Wisps | Counter-rotating bombardment zones | Field Capacitor → Binary Supercluster |
+
+Six new support items: Manoeuvre Jets (+5% ability recovery/level), Shield Coupler (0.5s earlier shield recharge/level), Shock Baffles (reactive ordinary-ship slow, 8s cooldown), Repair Amplifier (+8% hull repair/level), Predator Chip (+4% elite/specialist/boss weapon damage/level), Last Stand Core (+6% weapon damage/level below40% hull). Configured support rarities are now honoured, including the earlier expansion’s definitions.
+
+Inspirations: Vampire Survivors’ orbit/zone/bounce/arc/column/aura/sweep/circling-bombardment coverage patterns, adapted to the original Reactor Rogue names, art, values and run rules. Research reference: https://vampire.survivors.wiki/w/Weapons . No game assets or source code copied.
+
+`node TEST-EQUIPMENT.cjs` checks all new attacks, evolutions, paths, supports, targeting/delays, conditional combinations, slot/banish/hint rules, archived path validation and bounded240-enemy simulations. Existing save, contract, developer, cache, UI and weapon regressions remain. Simulation checks are not a device FPS measurement or human win-rate study.
