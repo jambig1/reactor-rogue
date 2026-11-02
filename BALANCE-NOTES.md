@@ -1,3 +1,50 @@
+# v0.19.0 weapon balance and identity pass
+
+First core-foundation weapon pass after formations. All36 weapons reviewed across four deliberately different controlled scenes: one150-range target with35% armour; twelve frontal targets; twelve80-range surrounding targets; and twelve targets trailing a ship moving at100/s.20s each,60 simulation steps/s, seed12345, levels1/3/5 and evolved5:576 scenarios before and576 after. Full attack/projectile/field/hit code, no support items, chosen specialisations, merchant modifiers or ship damage traits. Target HP is effectively unlimited, positions held relative to the player; scenery and normal spawning disabled. The harness bypasses specialisation UI so level3/5 simulations remain active. This is not a human win-rate test or a universal weapon ranking. It under-represents utility and kill-triggered evolutions, and planted-zone results benefit from held targets.
+
+Reproduce current measurements with `node BENCHMARK-WEAPONS.cjs index.html result.json`. `BALANCE-V019.json` retains all matched before/after rows and methodology. Baseline was the saved v0.18.0 source. No physics, health, XP, loot, slot or evolution-recipe changes.
+
+## Changes
+
+- Neon Bolts: normal volley spacing0.16→0.075rad. Added shots remain useful against a focused target. Prism Fan retains its intentionally wide0.25rad spread.
+- Arc Discs: first radial spoke aims at the selected enemy, with the other spokes still radial. Fixes unreliable first-pick coverage; shot count/damage/cycle unchanged.
+- Crescent evolution: normal evolved volley spacing0.30→0.13rad. Three evolved blades no longer spread two shots off a target hit by the original pair. Wide branch retains0.65rad spread.
+- Rail Lance: base52+22×level→58+24×level, inherently ignores30% of enemy armour. Needle specialisation still ignores60%, replacing rather than multiplying penetration.2.4s cycle retained.
+- Leech Beam: base20+8×level→24+10×level, cycle1.8→1.6s. Healing remains capped at0.8HP per target (1.3 with healing branch), based on actual damage, never structures.
+- Solar Sails: base28+12×level→36+16×level, cycle2.5→2.2s, beam half-width8→10+level. Keeps its flank-specific aiming and four-direction evolution.
+- Chain Lightning: base20+12×level→24+14×level; cycle2.1→1.9s. Remains stronger against groups than lone targets.
+- Ember Wake: overlapping wakes share a per-target0.15s minimum burn interval, rather than multiplying damage for every overlapping patch. Trail width/lifetime/boost/evolution still matter for coverage.
+- Evolved Phase Torpedoes: max two rift ticks per target per0.4s game-time window, rather than a tick from every overlapping rift. Direct torpedo damage, armour penetration, slowing and rift array cap unchanged.
+- Orbital Mortar: leads ordinary moving targets by up to70m over its0.85s delay, following formation direction when present. Frozen, stationary, boss, specialist and structure targets retain their current position. No projectile count/damage increase.
+
+## Selected matched results
+
+Effective DPS after armour, over20s. These examples show the intended niche only; see raw rows for every scenario.
+
+| Weapon/profile | Scene | Before | After |
+|---|---|---:|---:|
+| Neon Bolts5 | Armoured target |47.1|144.6|
+| Arc Discs1 | Frontal group |20.3|44.6|
+| Rail Lance1 | Armoured target |21.6|27.9|
+| Leech Beam1 | Armoured target |10.9|14.4|
+| Chain Lightning1 | Frontal group |48.0|62.7|
+| Solar Sails1 | Surrounding group |32.0|52.0|
+| Evolved Crescent5 | Armoured target |41.2|123.6|
+| Evolved Ember5 | Trailing group |6906.2|1887.2|
+| Evolved Phase Torpedoes5 | Frontal group |5970.2|2873.9|
+
+Held targets exaggerate overlap cases: the last two rows explain why overlapping zones needed limits, not expected in-game DPS. Mortar prediction is checked with moving/frozen/formation targets separately; its stationary-target benchmark is unchanged.
+
+## Identity and information
+
+All36 weapons have a short role label on upgrade cards and a role/usage tip in the existing weapon report. Exact volley/target/beam count milestones are shown only when acquiring a weapon or when the next level changes that count. Existing descriptions, specialisation choices and current-run missing-component-only synergy hints retained. Overclock wording corrected to9% cycle-time reduction per rank, matching existing math. No new menu tab or equipment pool.
+
+## Validation and remaining review
+
+TEST-WEAPON-BALANCE checks base/preview agreement, role coverage, focused shots, radial lead aim, evolved crescents, armour factors, overlap limits, mortar prediction and UI state isolation. Existing Arsenal expected Rail3 base updated118→130; contextual1.3×Needle and1.25×gravity synergy assertions retained. Dev, Merchant, Formations, Graphics, Menu, Sovereign, Beams and upgrade-hint suites pass. Live UI/viewport checks are recorded in handover. Human mixed-build runs across sectors are still needed for final tuning; no device-FPS or player-win-rate claim.
+
+---
+
 # v0.7 balance notes
 
 ## Method

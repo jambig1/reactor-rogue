@@ -38,7 +38,7 @@ fresh();run("s.t=100;s.items={rail:5,flak:5,crescent:5,fence:5,voidSeed:5,stasis
 console.log('PASS 10 weapons, 10 evolutions, 20 branches, 8 supports, 10 synergies, targeting/status/healing/interception, slot limits, pickup/banking, bounded crowded combat and resets');
 
 // Real contextual synergies change damage/behaviour, rather than only displaying names.
-setup('rail','needle');run('s.items.gravity=1;s.fields=[{x:100,y:0,r:80,life:5}];attack(0)');assert(Math.abs(run("weaponStat('rail').damage")-118*1.3*1.25)<1e-7);
+setup('rail','needle');run('s.items.gravity=1;s.fields=[{x:100,y:0,r:80,life:5}];attack(0)');assert(Math.abs(run("weaponStat('rail').damage")-130*1.3*1.25)<1e-7);
 setup('crescent','quick');run('s.items.frost=1;target.freeze=1');assert.equal(run("arsenalSynergy(target,'crescent','')"),1.3);
 setup('fence','wide');run('s.items.stasisNet=1;target.slow=1');assert.equal(run("arsenalSynergy(target,'fence','')"),1.25);
 setup('leech','heal');run('s.items.nanite=1;s.arsenal.infections=[{target,life:2}]');assert.equal(run("arsenalSynergy(target,'leech','')"),1.3);

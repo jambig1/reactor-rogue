@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.18.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.19.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -157,3 +157,9 @@ Ordinary pursuit now mixes with V-shaped fighter squadrons, crossing interceptor
 Formations borrow future ordinary spawn slots one-for-one:6–12 ships, max24 outstanding borrowed slots, max2 active groups, no formation launch above200 living enemies, all within cap240 and existing heavy quotas. No warnings in the ten seconds before a scheduled boss; active bosses cancel warnings, release formations and hold new groups for12s after the fight. Warnings respect reduced motion and consume no gameplay RNG. State resets each run. Settings → Developer now lets you queue any formation for testing (password unchanged: ReactorBert).
 
 Run `node TEST-FORMATIONS.cjs` for six-pattern/four-viewport, gaps, warning timing, borrowed spawn accounting, caps, boss holds, pause/reset and actual update/render checks. Difficulty tiers remain deferred while the core gameplay foundation is reviewed.
+
+## v0.19.0 — weapon balance and identity
+
+A controlled576-scene before/after pass reviews all36 weapons at levels1/3/5/evolved5. Focused Neon Bolt and evolved Crescent volleys retain their extra shots on target; Arc Discs aim a lead spoke. Rail gains modest base damage and30% inherent armour penetration (Needle60%); Leech, Chain Lightning and flank-focused Solar Sails improve. Stacked Ember trails and evolved torpedo rifts now have per-target damage limits. Mortar leads ordinary moving targets, with a70m cap and no prediction for frozen/stationary targets. Utility and distinct coverage roles remain; this is not an equal-DPS redesign.
+
+Upgrade cards show a short weapon role and actual volley-count milestones; existing weapon reports explain each role. Current-run synergy hint rules, six-slot limits, recipes, saves and enemy formations remain. See BALANCE-NOTES.md for exact changes, method and limitations; BALANCE-V019.json contains every matched result. `node TEST-WEAPON-BALANCE.cjs` runs targeted regressions; `node BENCHMARK-WEAPONS.cjs index.html result.json` reproduces the current controlled matrix. Roadmap remains on the core-foundation review; difficulty tiers and Reactor Protocols are deferred.
