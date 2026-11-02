@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.21.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.22.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -173,3 +173,8 @@ Pause → Build shows current weapons and passives/defence with levels, speciali
 ## v0.21.0 — sector route and ending
 
 Compact reactor countdown replaces the arbitrary wave number in the combat HUD. Pause Overview maps the actual sector bosses at3:00,6:00,10:00, with engaged/defeated states. A15-second approach warning names the next reactor. Final boss death secures the clear immediately; a safe final mutation selection leads to a sector-clear debrief. Explicit endless continuation retains the win, with no duplicate banking. No extra boss health, spawn budget, currency rewards or longer run requirement. `node TEST-RUN-STRUCTURE.cjs` checks routes, warnings, final-hit protection, mutation exhaustion and endless banking.
+
+
+## v0.22.0 — combat readability
+
+Hostile bullets gain a consistent warm diamond outline, bright centre and dark contrast backing. Charged warnings, active rail hazards and hostile shots render after explosions/damage numbers. Essential sector hazard boundaries and nearby specialist aim lines remain visible across graphics profiles. Small pale corner marks locate the player; damage labels are drawn outside a44-unit locator area without changing their stored positions. All cues are static/reduced-motion safe and add no particles. No damage, hitbox, timing or balance changes. How to play explains these cues. `node TEST-COMBAT-READABILITY.cjs` checks draw purity/RNG separation, profiles, visibility and layering.

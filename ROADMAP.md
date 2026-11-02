@@ -50,3 +50,8 @@ Authorised by James after foundation2. Dedicated Pause Build page adds current e
 ### Foundation4 — run structure / ending, v0.21.0
 
 Authorised by James. Clear three-reactor route, compact countdown/engagement objective,15s approach cues, Pause route timeline and sector-clear debrief. Final kill protects the clear before next reward; exhausted mutation pool cannot block victory. Endless remains optional and preserves win without duplicate banking. Foundation5 combat readability not started. Difficulty tiers and Reactor Protocols remain deferred.
+
+
+### Foundation5 — combat readability, v0.22.0
+
+Authorised by James. Critical threat drawing moved above decorative effects; hostile shot diamond/contrast backing, hazard boundary outlines, specialist warning lines and player locator added. Damage labels move clear of locator visually only. Existing combat logic untouched. Foundation6 progression pacing not started. Difficulty tiers and Reactor Protocols remain deferred.
