@@ -2,6 +2,11 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.34.3
+
+- Simplified the website sector-gallery caption.
+- Replaced the crowded city preview with a cleaner gameplay still across the website and game.
+
 ## 0.34.2
 
 - Removed installation buttons from the website and game menu.
