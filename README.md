@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.32.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.32.1. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -268,3 +268,7 @@ Each route has three bosses at3:00/6:00/10:00: Slag Harvester/Furnace Warden/The
 Six sectors now have18 uniquely named bosses; the selector lists each sector’s actual roster. Neon Undercity unlocks after the first sector clear: rooftops, service roads, neon signs and ambient traffic below the ship. Roofs are decorative; marked terrain cover remains physical. Security fleets mix with familiar enemies. Patrol Interdictor uses a tight triple volley and aimed lockdown lane; Skyline Enforcer has twin cannon banks and paired avenues; Metroplex Overlord uses a ring with an escape wedge and a four-lane blockade with a safe central pocket. Warm dashed/solid rectangles show warning/active damage boundaries. Boss times remain3/6/10minutes. Existing drum & bass accompanies city combat.
 
 Cryo bosses now fire split pincer volleys from two emitters and place radial fractures with a safe centre; Foundry retains heavy cannon fans and parallel furnace rows. Existing three sector rosters remain separate. TEST-CITY-SECTOR validates all18 unique names, city plans, gaps, warnings/collision, holds, ending, archive/music/fleet integration, render purity and bounded crowded updates. Browser smoke and CSS viewport checks are not hardware FPS or full-run balance measurements.
+
+
+## v0.32.1 — sector scene previews
+Replaced schematic symbols with six detailed16:9 illustrated miniatures using each map’s actual visual motifs: grid/docks, wreckage and rocks, relay station, furnace platforms, fractured ice and rooftop city. Static cached SVG scenes, no network assets or animation cost. Wider cards and full-contrast locked previews preserve visibility; explicit unlock labels retain disabled selection. Gameplay unchanged.

@@ -952,3 +952,7 @@ City roster Interdictor/Enforcer/Overlord all unique;18 names across6maps tested
 Cryo differentiated: paired side emitter pincer(6/8/10shots), radial fracture placement170units from lock-on centre; Foundry retains5/7/9heavy fan and parallel rows. Warning geometry matches emitters. Existing tier health/reward/movement retained. Original3sector behaviours unchanged. Selector now shows actual boss roster under preview; min-content card sizes/scroll remain.
 
 TEST-CITY-SECTOR asserts6catalogue/18unique names, unlocks, three plan shapes/counts/safe gaps, warning no-damage then collision, ambient holds, finalclear, mixedfleet/archive/music,24hazard cap, low/high/auto/reduced RNG-free pure draws and180enemy real updates. Updated frontier volley counts. Native menus/saves/frontier/runstructure pass. Live release smoke follows publication; native/CSS tests do not establish phone FPS/human balance.
+
+
+## v0.32.1 — preview correction
+James rejected the schematic sector previews. Replaced sectorPreview with cached detailed SVG scenes(320×180), shared restrained palette and miniature ship/terrain motifs. Static illustrative previews rather than literal screenshots. Sector-specific class and grid(min265px) create3-column desktop /1phone, edge-to-edge16:9 image; existing scrolling/content-height rows retained. Locked sector cards stay full opacity and use explicit unlock status; disabled selection unchanged. No new canvas, timer, RNG or network. Native menu/city regression checks passed; browser visual QA follows publication.
