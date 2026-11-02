@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.33.2. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.34.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -288,3 +288,7 @@ Traffic now uses two cached96×20 light sprites with fading coloured tails, laye
 
 ## v0.33.2 — centred touch ability labels
 The circular ability control now removes inherited menu padding and uses explicit flex centring, unit line height, zero letter spacing and native-appearance reset. Dash counts, boost/phase labels and recharge times share the same centre at both 64px and 72px sizes.
+
+
+## v0.34.0 — public website and installation
+`home.html` is the public landing page with actual gameplay, controls, sectors, install help and user-reviewed GitHub feedback/downloadable reports. Bare root URLs redirect to home; existing versioned URLs and index.html still open the game. New menu links open the website without abandoning the run. Manifest, existing approved logo icons and a versioned service worker support standalone installation/offline shell; no forced activation during a run. Bump sw.js CACHE with future changes. Local save origin/keys unchanged. Domain remains free GitHub address by user choice. Cloud account integration is prepared but disabled pending an owner Supabase project and RLS/auth/email verification; see CLOUD-SETUP.md. Do not describe cloud saves as live.
