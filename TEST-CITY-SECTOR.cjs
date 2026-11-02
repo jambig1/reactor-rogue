@@ -1,0 +1,27 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');const file=require('path').join(__dirname,'index.html');let html=fs.readFileSync(file,'utf8'),js=html.match(/<script>([\s\S]*?)<\/script>/)[1],map={},storage={},events={},depth=0;
+const ctx=new Proxy({save(){depth++},restore(){depth--;assert(depth>=0)},createRadialGradient:()=>({addColorStop(){}}),createLinearGradient:()=>({addColorStop(){}}),measureText:t=>({width:t.length*8})},{get:(o,k)=>k in o?o[k]:(()=>{})});
+function element(id){return map[id]||(map[id]={style:{setProperty(){}},classList:{add(){},remove(){},toggle(){}},dataset:{},getContext:()=>ctx,addEventListener(){},setAttribute(){},setPointerCapture(){},querySelectorAll:()=>[],querySelector:()=>element('q'),textContent:'',innerHTML:'',value:1,checked:false})}
+let c={console,Image:class{constructor(){this.complete=true;this.naturalWidth=1254}},Math:Object.create(Math),Date,Set,Map,JSON,Number,String,Array,Object,Infinity,performance:{now:()=>0},document:{getElementById:element,querySelector:element,querySelectorAll:()=>[],addEventListener(){},hidden:false},localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v},matchMedia:()=>({matches:false}),innerWidth:1024,innerHeight:768,devicePixelRatio:1,addEventListener:(name,cb)=>{(events[name]??=[]).push(cb)},requestAnimationFrame(){},setTimeout(){},clearTimeout(){}};c.window=c;vm.createContext(c);vm.runInContext(js,c);let run=code=>vm.runInContext(code,c);
+
+
+
+function fresh(id='vanguard'){run(`state='menu';hangar.ships=pilots.map(p=>p.id);selectedPilot='${id}';start();s.debris=[];s.debrisClock=99999;s.need=Infinity;s.spawn=99999;s.elite=99999;s.enemies=[];s.items={[s.pilot.starter]:1}`)}
+
+function setup(id,path='',evolved=false){fresh();run(`Math.random=()=>.99;s.items={'${id}':3};s.spec=${path?`{'${id}':'${path}'}`:'{}'};s.evolved=${evolved?`{'${id}':true}`:'{}'};s.p.hp=50;s.pilot.damage=1;s.t=100;s.nextBreach=999;s.specialClock=999;s.spawn=999;s.elite=999;s.need=Infinity;s.debris=[];spawn(0);target=s.enemies[0];target.x=100;target.y=0;target.hp=target.max=100000;target.v=0;target.armour=0`)}
+
+
+
+const ids=run('sectors.map(x=>x.id)');assert.equal(ids.length,6);let names=run('sectors.flatMap(x=>(sectorBossDefs[x.id]||bossDefs).map(b=>b.name))');assert.equal(names.length,18);assert.equal(new Set(names).size,18);
+run("hangar.claimed=[]");assert(!run("sectorOpen('city')"));run("hangar.claimed=['win']");assert(run("sectorOpen('city')"));
+for(let tier=0;tier<3;tier++){
+ fresh();run(`s.sector='city';s.dev.test=true;s.bossIndex=${tier};spawnBoss();target=s.enemies[0];target.arrival=0;target.fireCD=0`);assert.equal(run('target.sectorBoss'),'city');run('cityBossAttack(target,.1)');let count=run('target.cityPlan.rays.length');assert.equal(count,[3,6,12][tier]);assert.equal(run('s.hostile.length'),0);run('cityBossAttack(target,1.6)');assert.equal(run('s.hostile.length'),count);
+ run('target.fireCD=0;cityBossAttack(target,.1)');assert.equal(run('target.cityPlan.lanes.length'),[1,2,4][tier]);run('cityBossAttack(target,1.6)');assert.equal(run('s.sectorHazards.length'),[1,2,4][tier]);assert(run('s.sectorHazards.every(h=>h.warning===1.8&&h.kind==="lockdown"&&h.bossOwner===target)'));
+ if(tier>0)assert(run('s.sectorHazards.every(h=>!frontierHazardContains(h,s.p))'));
+ let before=run('JSON.stringify(s)'),random=c.Math.random;c.Math.random=()=>{throw Error('Render consumed RNG')};for(let q of ['low','medium','high','auto'])for(let reduced of [false,true]){run(`graphics.preset='${q}';refreshGraphicsVisual();reducedMotion=${reduced};draw()`);assert.equal(depth,0)}c.Math.random=random;assert.equal(run('JSON.stringify(s)'),before);
+ if(tier===2){run("s.bossKills=2;hit(target,1e9,'bolt')");assert(run('s.finalClearPending'));run('resolveFinalClear()');assert(run("state==='mutation'||state==='end'"))}
+}
+fresh();run("s.sector='city';s.sectorClock=0;updateExpansion(.1)");assert.equal(run('s.sectorHazards.length'),1);assert.equal(run('s.sectorHazards[0].kind'),'lockdown');run('s.sectorHazards=[];addCityLane(0,0,Math.PI/2)');assert(run('frontierHazardContains(s.sectorHazards[0],{x:0,y:100})'));assert(!run('frontierHazardContains(s.sectorHazards[0],{x:100,y:0})'));let hp=run('s.p.hp');run('updateExpansion(.1)');assert.equal(run('s.p.hp'),hp);run('s.sectorHazards[0].warning=0;s.p.inv=0;updateExpansion(.1)');assert(run('s.p.hp')<hp);
+run("s.sectorHazards=[];addCityLane(0,0,0);spawnBoss();s.sectorClock=4;updateExpansion(.5)");assert.equal(run('s.sectorClock'),4);assert.equal(run('s.sectorHazards[0].warning'),1.8);
+fresh();run("s.sector='city';spawn(0);spawn(0);spawn(0)");assert.equal(run("s.enemies.filter(e=>e.sectorHull==='city').length"),2);assert.equal(run('cleanRun(snapshotRun("abandoned")).sector'),'city');assert.equal(run('musicScene()'),'grid');run('s.sectorHazards=[];for(let i=0;i<100;i++)addCityLane(0,0,0)');assert.equal(run('s.sectorHazards.length'),24);
+fresh();run("s.sector='city';s.dev.test=true;s.dev.god=true;s.items={bolt:3,echoRing:2,shield:2};s.need=Infinity;s.nextBreach=9999;s.t=240;s.spawn=999;for(let i=0;i<180;i++)spawn(0)");for(let i=0;i<300;i++)run('update(.016)');assert(run('s.enemies.length<=240&&s.sectorHazards.length<=24'));assert(run('Number.isFinite(s.p.x+s.p.y+s.p.hp)'));
+console.log('PASS six sector rosters/18 unique bosses, three distinct city plans, escape gaps, lockdown warning/collision, boss holds, endings, archive/music/fleets and bounded pure rendering/updates');

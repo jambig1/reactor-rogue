@@ -11,7 +11,7 @@ function setup(id,path='',evolved=false){fresh();run(`Math.random=()=>.99;s.item
 
 
 
-assert.equal(run('sectors.length'),5);
+assert.equal(run('sectors.length'),6);
 run("hangar.claimed=[]");assert(!run("sectorOpen('foundry')"));assert(!run("sectorOpen('cryo')"));run("hangar.claimed=['win']");assert(run("sectorOpen('foundry')&&sectorOpen('cryo')"));assert(!run("sectorOpen('invalid')"));
 for(let id of ['foundry','cryo']){
  fresh();run(`s.sector='${id}';s.dev.test=true;s.sectorClock=0;updateExpansion(.1)`);assert.equal(run('s.sectorHazards.length'),1);assert.equal(run('s.sectorHazards[0].kind'),id==='foundry'?'vent':'fracture');assert(run('s.sectorHazards[0].warning>=1.5'));
@@ -21,7 +21,7 @@ for(let id of ['foundry','cryo']){
  // Ordinary hazard clock/lifetime and damage held during boss, boss-owned lanes continue.
  fresh();run(`s.sector='${id}';s.sectorClock=4;addFrontierHazard('vent',0,0);s.sectorHazards[0].warning=0;spawnBoss();s.p.inv=0`);hp=run('s.p.hp');run('updateExpansion(.5)');assert.equal(run('s.sectorClock'),4);assert.equal(run('s.sectorHazards[0].life'),1.2);assert.equal(run('s.p.hp'),hp);
  for(let tier=0;tier<3;tier++){
-  fresh();run(`s.sector='${id}';s.dev.test=true;s.bossIndex=${tier};s.t=180;spawnBoss();target=s.enemies[0];target.arrival=0;target.fireCD=0`);assert.equal(run('target.sectorBoss'),id);assert.equal(run('target.routeIndex'),tier);run('bossAttack(target,.1)');assert.equal(run('target.charge'),1.5);run('bossAttack(target,1.6)');assert.equal(run('s.hostile.length'),5+tier*2);
+  fresh();run(`s.sector='${id}';s.dev.test=true;s.bossIndex=${tier};s.t=180;spawnBoss();target=s.enemies[0];target.arrival=0;target.fireCD=0`);assert.equal(run('target.sectorBoss'),id);assert.equal(run('target.routeIndex'),tier);run('bossAttack(target,.1)');assert.equal(run('target.charge'),1.5);run('bossAttack(target,1.6)');assert.equal(run('s.hostile.length'),id==='cryo'?6+tier*2:5+tier*2);
   run('target.fireCD=0;bossAttack(target,.1)');assert.equal(run('target.frontierTargets.length'),2+tier);run('bossAttack(target,1.6)');assert.equal(run('s.sectorHazards.length'),2+tier);assert(run('s.sectorHazards.every(h=>h.warning===1.5&&h.bossOwner===target)'));
   let before=run('JSON.stringify(s,(k,v)=>k==="bossOwner"?undefined:v)'),random=c.Math.random;c.Math.random=()=>{throw Error('Rendering used gameplay RNG')};for(let quality of ['low','high','auto']){run(`graphics.preset='${quality}';refreshGraphicsVisual();draw()`);assert.equal(depth,0)}c.Math.random=random;assert.equal(run('JSON.stringify(s,(k,v)=>k==="bossOwner"?undefined:v)'),before);
   if(tier===2){run("s.bossKills=2;hit(target,1e9,'bolt')");assert(run('s.finalClearPending'));run('resolveFinalClear()');assert(run("state==='mutation'||state==='end'"))}

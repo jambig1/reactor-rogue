@@ -941,3 +941,14 @@ TEST-FRONTIER-SECTORS covers first-clear gating, six boss routes/ending, warning
 
 
 Live QA: d4535d3 published via Pages run67(41512756572), Success1m21s. DEV Foundry and Cryo launches,25fighters and first boss each rendered without application-origin console errors. No permanent progression. Screenshots in task workspace. Phone390×844 selector check found existing auto-grid rows compressing sector card contents; set max-content rows and card minimums, and corrected missing sectorPreview insertion. Follow-up polish publication retains v0.31.0. All native checks above passed, including music worker/transport; these short live checks do not establish phone FPS or full-run balance.
+
+
+# v0.32.0 — Neon Undercity / boss identity
+
+city in sector catalogue/unlock(first clear)/archive/DEV/2-of-3 hull mix/music(grid DnB). drawCityArena:340world-unit roads,4 roof blocks/tile, windows, roof equipment, signs and2 light streaks/tile; viewport bounded, no RNG, reduced motion static. Roofs explicitly decorative below ship. Existing cover/station/conduit cycle and specialist interceptor/rail weighting within same quotas. City security hull has twin light bars; boss tiers add side banks and chassis.
+
+City roster Interdictor/Enforcer/Overlord all unique;18 names across6maps tested. CityPlan snapshots ray origins/angles and lane rectangles during1.5s telegraph; warning and execution consume exact same plan. Tier0:3shot tight fan/one260×30 lane. Tier1:6shots from two emitters/two310×30 parallel avenues around central corridor. Tier2:12shot partial ring with forward escape wedge/four340×30 lanes centred±105 around safe central pocket. Phase2 speed/cooldown acceleration; existing180hostile and24hazard bounds. Placed lanes warn1.8s, active.9s, inherit20damage/.7tick and rectangular player padding. Ambient lane12sec cadence, existing initial12sec; boss holds ambient clock/life/damage. Original3/6/10min route/clear/reward pipeline used.
+
+Cryo differentiated: paired side emitter pincer(6/8/10shots), radial fracture placement170units from lock-on centre; Foundry retains5/7/9heavy fan and parallel rows. Warning geometry matches emitters. Existing tier health/reward/movement retained. Original3sector behaviours unchanged. Selector now shows actual boss roster under preview; min-content card sizes/scroll remain.
+
+TEST-CITY-SECTOR asserts6catalogue/18unique names, unlocks, three plan shapes/counts/safe gaps, warning no-damage then collision, ambient holds, finalclear, mixedfleet/archive/music,24hazard cap, low/high/auto/reduced RNG-free pure draws and180enemy real updates. Updated frontier volley counts. Native menus/saves/frontier/runstructure pass. Live release smoke follows publication; native/CSS tests do not establish phone FPS/human balance.

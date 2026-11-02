@@ -102,3 +102,7 @@ Authorised original drum & bass/jungle/techno soundtrack implemented: six adapti
 
 ## More sectors — v0.31.0
 James authorised more maps/sectors. Added Cinder Foundry and Cryo Reach, six bosses, distinct scenery/fleets, rectangular hazards, existing terrain mixes and five-sector selector previews. First-clear unlock; no currency cost. Original three sectors unchanged. Account backend, Reactor Protocols and difficulty tiers remain deferred.
+
+
+## City sector and separate bosses — v0.32.0
+James requested a city-looking map and different bosses for every map. Neon Undercity adds rooftop/road scenery, security hulls, lockdown lanes and three distinct city attack plans. All6 sectors list separate rosters(18 unique names). Cryo attacks separated from Foundry via split emitter pincers/radial fractures. First-clear unlock and existing run/budget/save rules retained.

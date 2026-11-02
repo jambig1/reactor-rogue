@@ -2,13 +2,13 @@
 
 [Play Reactor Rogue](https://jambig1.github.io/reactor-rogue/)
 
-A neon spaceship survivor game with twelve pilots, distinct movement abilities, 48 weapons and evolutions, weapon combinations, five sectors and a persistent Hangar.
+A neon spaceship survivor game with twelve pilots, distinct movement abilities, 48 weapons and evolutions, weapon combinations, six sectors and a persistent Hangar.
 
 Open `index.html` in a full browser to play offline. No installation, dependencies, API keys or build step are required. Keyboard/mouse and touch controls are supported. Progress stays in each browser.
 
 ## Development
 
-Current version: 0.31.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.32.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -261,3 +261,10 @@ Two new selectable sectors unlock with Rogue operator (first sector clear); exis
 Each route has three bosses at3:00/6:00/10:00: Slag Harvester/Furnace Warden/The World Forge and Rime Stalker/Glass Empress/Absolute Zero. Telegraphs precede aimed volleys and rectangular vent/fracture lanes; warm borders mark the real hazard boundaries. Ordinary environmental hazards hold during bosses. Cover/conduits/stations distinguish Foundry; cover/currents/stations distinguish Cryo. Existing techno and jungle tracks accompany the new sectors. Ten-minute clear, endless, equipment, rewards, profile backups and developer-test exclusions retain their rules. Original Sector trilogy contract still requires the original three sectors.
 
 `node TEST-FRONTIER-SECTORS.cjs` covers routes, six bosses, warning/damage geometry, hazard holds, mixed hulls, archive IDs, music mapping, render purity and bounded crowded updates. Native simulation and CSS viewport checks do not measure iPhone hardware FPS or establish human balance.
+
+
+## v0.32 — Neon Undercity and boss identity
+
+Six sectors now have18 uniquely named bosses; the selector lists each sector’s actual roster. Neon Undercity unlocks after the first sector clear: rooftops, service roads, neon signs and ambient traffic below the ship. Roofs are decorative; marked terrain cover remains physical. Security fleets mix with familiar enemies. Patrol Interdictor uses a tight triple volley and aimed lockdown lane; Skyline Enforcer has twin cannon banks and paired avenues; Metroplex Overlord uses a ring with an escape wedge and a four-lane blockade with a safe central pocket. Warm dashed/solid rectangles show warning/active damage boundaries. Boss times remain3/6/10minutes. Existing drum & bass accompanies city combat.
+
+Cryo bosses now fire split pincer volleys from two emitters and place radial fractures with a safe centre; Foundry retains heavy cannon fans and parallel furnace rows. Existing three sector rosters remain separate. TEST-CITY-SECTOR validates all18 unique names, city plans, gaps, warnings/collision, holds, ending, archive/music/fleet integration, render purity and bounded crowded updates. Browser smoke and CSS viewport checks are not hardware FPS or full-run balance measurements.
