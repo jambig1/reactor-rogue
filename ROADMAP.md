@@ -90,3 +90,6 @@ Authorised by James, expanded on request after Vampire Survivors weapon research
 ## Approved visual follow-up — complete combat art (v0.29.0)
 
 James approved the second, restrained attack study, then explicitly broadened scope to all attacks, defensive weapons and enemy attacks.48 weapon families/base+evolved, shields/devices, ship ability fields, threat shots/rails/charge/hazard cues updated. Combat values and progression unchanged. These visuals do not start the later sectors/music/account work; Protocols and difficulty tiers remain deferred.
+
+
+Scope clarified: redesign includes item artwork, not just attack effects. All80 usable items (48 weapon +32 passive/defensive) now have individual illustrations shared across equipment UI; gallery includes the full passive catalogue. Item mechanics and progression remain unchanged.

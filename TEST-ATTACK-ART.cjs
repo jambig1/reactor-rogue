@@ -25,3 +25,11 @@ fresh();run("s.shots=[{x:0,y:0,vx:100,vy:0,r:4,weapon:'rocket',life:2}];graphics
 // Invalid/dead and distant rendering does not create extra state.
 run("drawWeaponProjectile({x:99999,y:0,r:3,vx:20,vy:0,weapon:'bolt',life:1},0);drawEnemyProjectileArt({x:0,y:0,r:3,vx:20,vy:0,life:0},0)");assert.equal(depth,0);
 console.log('PASS all48 weapons/base+evolved across 4 quality presets and motion options; render/RNG purity, defensive layers, enemy shots/beams/hazards, bounded trails/impacts and resets');
+
+// Repair feedback follows real healing, is rate-limited and does not create healing.
+fresh();run("s.p.hp=50;healPlayer(1)");assert.equal(run('s.p.hp'),51);assert(run('attackArt.repairLife>0'));run('updateAttackArt(1)');assert.equal(run('attackArt.repairLife'),0);fresh();assert.equal(run('attackArt.repairLife'),0);
+
+// Every usable weapon/support has individual art in all item surfaces.
+assert.equal(run('Object.keys(passiveArtPaths).length'),32);assert.equal(run('new Set(Object.values(passiveArtPaths)).size'),32);assert.equal(run('Object.keys(weaponArtPaths).length'),48);assert(run(`defs.every(d=>equipmentIcon(d.id).includes('data-gear-id="'+d.id+'"'))`));
+fresh();run("s.items={bolt:2,power:2};choices=[defs.find(d=>d.id==='power')];renderUpgradeChoices();hud()");assert(map.choices.innerHTML.includes('data-gear-id="power"'));assert(map.passives.innerHTML.includes('data-gear-id="power"'));assert(run("buildInventory('support').includes('data-gear-id=\"power\"')"));run("s.items={bolt:5,clock:1};evoFilter='all'");assert(run("recipes().includes('data-gear-id=\"clock\"')"));assert(run("equipmentIcon('bolt',true).includes('gear-evolved')"));
+console.log('PASS individual artwork for all80 usable items,32 distinct passive designs, evolved variants and upgrade/HUD/build/recipe integration');
