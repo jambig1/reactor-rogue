@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.20.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.21.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -168,3 +168,8 @@ Upgrade cards show a short weapon role and actual volley-count milestones; exist
 ## v0.20.0 — build clarity
 
 Pause → Build shows current weapons and passives/defence with levels, specialisations, active combinations and evolution next steps, including cache readiness, banished supports and full-slot blockers. Upgrade choices include a collapsed current-loadout summary with slot counts. Everything derives from current run state; no permanent recipe discovery or combat changes. Existing missing-component-only card hints remain. Run `node TEST-BUILD-CLARITY.cjs` for recipe, slot, synergy and reset checks.
+
+
+## v0.21.0 — sector route and ending
+
+Compact reactor countdown replaces the arbitrary wave number in the combat HUD. Pause Overview maps the actual sector bosses at3:00,6:00,10:00, with engaged/defeated states. A15-second approach warning names the next reactor. Final boss death secures the clear immediately; a safe final mutation selection leads to a sector-clear debrief. Explicit endless continuation retains the win, with no duplicate banking. No extra boss health, spawn budget, currency rewards or longer run requirement. `node TEST-RUN-STRUCTURE.cjs` checks routes, warnings, final-hit protection, mutation exhaustion and endless banking.

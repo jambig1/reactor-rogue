@@ -45,3 +45,8 @@ All36 weapons measured; focused volleys/lead aim, weaker niche weapons, overlap 
 ### Foundation3 — build clarity, v0.20.0
 
 Authorised by James after foundation2. Dedicated Pause Build page adds current equipment/levels/specialisations, active combinations and explicit evolution next steps. Upgrade choices gain a collapsed current-run loadout with slot counts. No persistent discovery; no combat or balance changes. Foundation4 (run structure/ending) remains unstarted. Difficulty tiers and Reactor Protocols remain deferred.
+
+
+### Foundation4 — run structure / ending, v0.21.0
+
+Authorised by James. Clear three-reactor route, compact countdown/engagement objective,15s approach cues, Pause route timeline and sector-clear debrief. Final kill protects the clear before next reward; exhausted mutation pool cannot block victory. Endless remains optional and preserves win without duplicate banking. Foundation5 combat readability not started. Difficulty tiers and Reactor Protocols remain deferred.
