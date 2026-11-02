@@ -9,4 +9,6 @@ let corrupt=boot({...legacy,rr_profiles_v1:'{invalid'});assert.equal(corrupt.run
 let records=boot({...legacy,ns_archive:JSON.stringify({runs:[{id:'sov-run',pilot:'sovereign',status:'victory',build:[],evolved:[],mutations:[]}],board:[],pilots:{sovereign:{wins:4}}})});assert.equal(records.run('archive.runs[0].pilot'),'sovereign');assert.equal(records.run('archive.pilots.sovereign.wins'),4);
 // Active tests cannot leak run-only credits into a banked-progress export.
 a=boot(legacy);a.run("start();s.dev.test=true;s.kills=99999;var saved=createSaveBackup()");assert.equal(a.run('saved.progress.rr_hangar.credits'),123);assert(!a.run("Object.hasOwn(saved.progress,'run')"));
+// A stale open tab reloads the latest manifest before adding a profile.
+let stale=boot(legacy);stale.run("state='settings';settingsReturn='menu'");stale.store.rr_profiles_v1=JSON.stringify({version:1,active:'default',profiles:[{id:'default',name:'Commander'},{id:'pother-tab',name:'Other tab'}]});stale.run("createLocalProfile('New tab')");assert(stale.run("profileManifest.profiles.some(p=>p.id==='pother-tab')"));
 console.log('PASS legacy migration, profile isolation/reload, shared settings, backup round-trip, non-overwriting import, validation, quota rollback, active-run guard, modern ship records and banked-only export');
