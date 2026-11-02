@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.25.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.26.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -193,3 +193,10 @@ Round credits, hex supplies and square gold evolution caches now use dark-backed
 ## v0.25.0 — local profiles and save backups
 
 Settings → Profiles & saves supports up to8 named local profiles, fresh-profile creation, rename and launch-only switching. Existing progress remains Commander with unchanged legacy storage keys. Other profiles isolate Hangar, banked credits/unlocks/tools, scores, records and selected ship; device settings stay shared. Download JSON backups and preview/import them as separate profiles on another browser/device. Imports validate format/version/size/content and never overwrite another profile. Storage failures leave the old manifest/progress intact. Unfinished runs are not saved; account login and automatic cloud sync require a future backend and are not connected. TEST-SAVES.cjs covers persistence/validation/rollback; TEST-SAVES.html isolates browser QA from normal progress.
+
+
+## v0.26.0 — honest caches and sector fleets
+
+Cyan supply caches and gold evolution caches now retain separate reward kinds from drop to collection. Evolution caches require a ready recipe; only one evolution cache may wait on the floor/in the reward queue. Supply caches offer supplies even if a recipe becomes ready later. Evolution screens offer evolutions only; Cache Decoder supplies its spare benefit as a reroll when no fourth evolution is available. Header, hint, icon and ground label agree.
+
+Shattered Belt mixes rugged Scrap Marauder hulls into the ordinary fleet; Storm Relay adds crystalline Relay Sentinel hulls. Two of every three ordinary spawns use the sector hull, retaining familiar ships alongside them. Neon Expanse and specialists remain familiar. No extra population, RNG draws, stats, hitboxes or rewards. TEST-CACHES-SECTORS.cjs covers cache promises, readiness, decoder, mixed fleets and unchanged spawn sequences.

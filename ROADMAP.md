@@ -70,3 +70,8 @@ Implemented stronger pickup shapes, labels, layers, expiry visibility and bounde
 ### James's notes — priority2 local profiles / backups, v0.25.0
 
 Authorised next priority. Named local profiles and export/import transfer implemented, preserving current default save and using non-overwriting imports. Current run resume is not included. Account-based automatic cross-device sync remains pending a backend/service choice; no fake sign-in provided. Other noted content/music/contract/sector priorities remain unstarted.
+
+
+### Follow-up — cache honesty and sector enemy looks, v0.26.0
+
+James requested after interrupted profile polish: separate supplies/evolutions, evolution drop only when ready, and distinct sector enemies mixed with usual fleet. Implemented typed cache promises and sector hull variants without changing enemy stats/population. Other feature priorities remain unstarted.
