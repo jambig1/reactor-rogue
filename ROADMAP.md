@@ -98,3 +98,7 @@ Scope clarified: redesign includes item artwork, not just attack effects. All80 
 ## Notes — music (v0.30.0)
 
 Authorised original drum & bass/jungle/techno soundtrack implemented: six adaptive menu/sector/boss/transmission loops, crossfades, manual selection, preview and independent saved audio levels. Worker synthesis and bounded caches avoid per-note work during combat. New sectors/account backend remain later; Reactor Protocols and difficulty tiers remain deferred.
+
+
+## More sectors — v0.31.0
+James authorised more maps/sectors. Added Cinder Foundry and Cryo Reach, six bosses, distinct scenery/fleets, rectangular hazards, existing terrain mixes and five-sector selector previews. First-clear unlock; no currency cost. Original three sectors unchanged. Account backend, Reactor Protocols and difficulty tiers remain deferred.

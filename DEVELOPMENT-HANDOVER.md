@@ -925,3 +925,16 @@ TEST-MUSIC covers deterministic finite bounded/seam-faded PCM, worker isolation,
 
 ## v0.30.1 — stable weapon silhouettes and touch selection
 Atlas weapon silhouettes no longer depend on Auto/Low detail or the frame-order72-sprite allowance, which could swap a live projectile/device between PNG and procedural shapes. Existing projectile/device population bounds remain; trails/glow/field decorations still simplify. Missing/unloaded atlas retains procedural safety fallback. Page selection, iOS touch callouts and tap highlight disabled; input/textarea/contenteditable retain text selection. Noneditable selectstart/context menus suppressed; native menu scrolling/control gestures unchanged. Native attack-art and menu regressions checked; physical iPhone long-press behaviour requires user verification.
+
+
+# v0.31.0 — two frontier sectors
+
+foundry/cryo added to sectors, sectorOpen(first clear contract), DEV choices and cleanRun archive IDs. Existing profile validator uses sector catalogue. Original trilogy win mask deliberately remains original3 IDs; value masks with7. Selection previews are inline SVG, no image requests. Native tests check existing profile round-trip plus new archive IDs.
+
+World-anchored procedural320-unit platform/ice tiles and24 ambient motes; deterministic draw math, no gameplay RNG; reduced motion freezes ambience. Existing2/3 hull mix extended; drawFrontierHull creates foundry slab/vent and cryo crystalline silhouettes with role colours, no stat changes. Weighted eligible rail/minelayer or interceptor/hunter roles borrow the same specialist cadence/quota. Terrain cycles foundry cover/conduit/station, cryo cover/current/station; ice cover custom shape.
+
+Ordinary hazards every10/11sec after initial12sec,1.8s warning. Vent180×38 active1.2s; fracture155×28 active0.8s. Oriented rectangular collision with12-unit player padding; broadphase radius half-diagonal. Warm dashed/solid exact lane border in final threat layer, never generic circle. Uses existing per-hazard0.7s damage tick and20damage. Max24 hazards; boss holds ambient clocks/lifetime/damage as existing.
+
+Each new route uses existing3/6/10minute progression, boss health tier curve similar to preceding sectors and existing effective damage/rewards. Dedicated attack alternates aimed fan volleys(5/7/9) and2/3/4 rectangular lanes;1.5s volley/placement telegraph, then each placed hazard warns1.5s. Phase2 faster volleys/cooldown; boss-owned lanes continue while ambient held. Boss silhouettes gain tier cores/arcs. Uses common hostile bullet limits. Foundry maps to techno soundtrack, Cryo to jungle; avoids missing music track crash. Existing sectors untouched except shared rectangle collision dispatch defaults to original circular rule.
+
+TEST-FRONTIER-SECTORS covers first-clear gating, six boss routes/ending, warning no-damage, oriented collision, ordinary boss holds, themed/familiar mix, archive IDs, soundtrack map,24hazard cap, RNG/state-pure draw across quality, bounded180-enemy real updates. Existing saves/menus/caches/run structure checks passed. These are native stability checks, not device FPS/human balance. Browser release QA follows publication.

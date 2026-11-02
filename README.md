@@ -2,13 +2,13 @@
 
 [Play Reactor Rogue](https://jambig1.github.io/reactor-rogue/)
 
-A neon spaceship survivor game with twelve pilots, distinct movement abilities, 48 weapons and evolutions, weapon combinations, three sectors and a persistent Hangar.
+A neon spaceship survivor game with twelve pilots, distinct movement abilities, 48 weapons and evolutions, weapon combinations, five sectors and a persistent Hangar.
 
 Open `index.html` in a full browser to play offline. No installation, dependencies, API keys or build step are required. Keyboard/mouse and touch controls are supported. Progress stays in each browser.
 
 ## Development
 
-Current version: 0.30.1. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.31.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -252,3 +252,12 @@ Full item scope: every usable equipment entry now has individual mechanical SVG 
 Six original synthesized soundtrack loops: Aurora Drift (ambient breaks,112 BPM), Neon Breaker (drum & bass,170), Scrapyard Circuit (jungle,174), Relay Pressure (techno,138), Critical Mass (boss drum & bass,176) and Lost Carrier (transmission ambience,104). Adaptive mode follows menus, sectors, bosses and merchant transmissions with crossfades. Settings → Audio offers manual track selection, a20-second preview, separate effects/music/master levels and optional music during pauses. Hidden tabs go silent. Audio starts after a user gesture.
 
 Loops render in a worker, cache at most four mono buffers and use looping sources outside the effects voice budget. A cooperative fallback covers browsers without workers. No recordings, downloads or gameplay RNG are used. `node TEST-MUSIC.cjs` checks synthesis, isolated worker execution, transport, preferences and background/pause handling; this does not establish device FPS or listening quality.
+
+
+## v0.31 — Cinder Foundry and Cryo Reach
+
+Two new selectable sectors unlock with Rogue operator (first sector clear); existing earned unlocks apply immediately. Hangar → Sectors now includes scenery previews. Cinder Foundry has industrial platforms, furnace fleet silhouettes, heat vents and a stronger rail/minelayer mix. Cryo Reach has fractured ice shelves, crystal hulls, frost fractures and more interceptors/hunters. Two in every three ordinary arrivals use the themed hull; familiar enemies remain. Existing enemy stats, spawn cadence and population limits stay unchanged.
+
+Each route has three bosses at3:00/6:00/10:00: Slag Harvester/Furnace Warden/The World Forge and Rime Stalker/Glass Empress/Absolute Zero. Telegraphs precede aimed volleys and rectangular vent/fracture lanes; warm borders mark the real hazard boundaries. Ordinary environmental hazards hold during bosses. Cover/conduits/stations distinguish Foundry; cover/currents/stations distinguish Cryo. Existing techno and jungle tracks accompany the new sectors. Ten-minute clear, endless, equipment, rewards, profile backups and developer-test exclusions retain their rules. Original Sector trilogy contract still requires the original three sectors.
+
+`node TEST-FRONTIER-SECTORS.cjs` covers routes, six bosses, warning/damage geometry, hazard holds, mixed hulls, archive IDs, music mapping, render purity and bounded crowded updates. Native simulation and CSS viewport checks do not measure iPhone hardware FPS or establish human balance.
