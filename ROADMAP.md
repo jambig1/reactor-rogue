@@ -40,3 +40,8 @@ James deferred difficulty tiers to review the core game first. Foundation1, enem
 ### Foundation2 — v0.19.0 weapon pass
 
 All36 weapons measured; focused volleys/lead aim, weaker niche weapons, overlap limits and mortar prediction adjusted. Weapon role labels/tips and accurate count milestones added to existing UI. See BALANCE-NOTES.md and raw benchmark. Human mixed-build feedback remains useful. Do not automatically begin foundation3 or original step6; wait for James's next choice.
+
+
+### Foundation3 — build clarity, v0.20.0
+
+Authorised by James after foundation2. Dedicated Pause Build page adds current equipment/levels/specialisations, active combinations and explicit evolution next steps. Upgrade choices gain a collapsed current-run loadout with slot counts. No persistent discovery; no combat or balance changes. Foundation4 (run structure/ending) remains unstarted. Difficulty tiers and Reactor Protocols remain deferred.

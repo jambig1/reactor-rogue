@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.19.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.20.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -163,3 +163,8 @@ Run `node TEST-FORMATIONS.cjs` for six-pattern/four-viewport, gaps, warning timi
 A controlled576-scene before/after pass reviews all36 weapons at levels1/3/5/evolved5. Focused Neon Bolt and evolved Crescent volleys retain their extra shots on target; Arc Discs aim a lead spoke. Rail gains modest base damage and30% inherent armour penetration (Needle60%); Leech, Chain Lightning and flank-focused Solar Sails improve. Stacked Ember trails and evolved torpedo rifts now have per-target damage limits. Mortar leads ordinary moving targets, with a70m cap and no prediction for frozen/stationary targets. Utility and distinct coverage roles remain; this is not an equal-DPS redesign.
 
 Upgrade cards show a short weapon role and actual volley-count milestones; existing weapon reports explain each role. Current-run synergy hint rules, six-slot limits, recipes, saves and enemy formations remain. See BALANCE-NOTES.md for exact changes, method and limitations; BALANCE-V019.json contains every matched result. `node TEST-WEAPON-BALANCE.cjs` runs targeted regressions; `node BENCHMARK-WEAPONS.cjs index.html result.json` reproduces the current controlled matrix. Roadmap remains on the core-foundation review; difficulty tiers and Reactor Protocols are deferred.
+
+
+## v0.20.0 — build clarity
+
+Pause → Build shows current weapons and passives/defence with levels, specialisations, active combinations and evolution next steps, including cache readiness, banished supports and full-slot blockers. Upgrade choices include a collapsed current-loadout summary with slot counts. Everything derives from current run state; no permanent recipe discovery or combat changes. Existing missing-component-only card hints remain. Run `node TEST-BUILD-CLARITY.cjs` for recipe, slot, synergy and reset checks.
