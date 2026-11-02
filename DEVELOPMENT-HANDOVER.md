@@ -806,3 +806,8 @@ James authorised next foundation. Removed original early hostile-shot drawing an
 ### v0.22.0 deployment checkpoint
 
 Code f6944dabfde7d159c5b4f792005ee02679a794b4 committed; Pages run41429672700 build33s passed, deploy failed transient OIDC token fetch (Failed to get ID Token / socket hang up; generic permission suggestion also printed). Re-run only deploy through UI, attempt2 queued without runner/job allocated at checkpoint. No permissions changed. Live content stillv0.21.0; final crowded/phone visual check pending deployment. All native checks listed above plus WeaponBalance,Menu061 andGraphics pass. Next action verify deployment, use normaldevpanel spawn crowds/boss and capture v022readability screenshots. No foundation6 work authorised or started.
+
+
+### v0.22.0 live verification complete
+
+Fresh checkpoint commit911dddc triggered Pages run41430325971: Success, build32s/deploy13s. Live titlev0.22.0 verified at?v=0220. Original run49 attempt2 remained queued; no permission changes made. Desktop Developer normal controls: god+4speed, two yellow elites+first boss,100fighters, Nova5/Cannon5, claimed ordinary specialisations and earned upgrades. Actual fight reached101kills/10s; screenshot shows player brackets amid pickups/enemies and outlined pink hostile diamonds distinct from cyan XP. Phone390×844 normal launch verified player locator and compact HUD. Native bounded draw tests cover threat ordering, hazard outlines and Low/reduced-motion persistence; browser checks are visual, not physical Safari/FPS claims. Saved reactor-rogue-v022-combat.jpg and reactor-rogue-v022-phone.jpg. Foundation5 complete. Foundation6 progression pacing remains unstarted.
