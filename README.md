@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.26.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.27.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -200,3 +200,8 @@ Settings → Profiles & saves supports up to8 named local profiles, fresh-profil
 Cyan supply caches and gold evolution caches now retain separate reward kinds from drop to collection. Evolution caches require a ready recipe; only one evolution cache may wait on the floor/in the reward queue. Supply caches offer supplies even if a recipe becomes ready later. Evolution screens offer evolutions only; Cache Decoder supplies its spare benefit as a reroll when no fourth evolution is available. Header, hint, icon and ground label agree.
 
 Shattered Belt mixes rugged Scrap Marauder hulls into the ordinary fleet; Storm Relay adds crystalline Relay Sentinel hulls. Two of every three ordinary spawns use the sector hull, retaining familiar ships alongside them. Neon Expanse and specialists remain familiar. No extra population, RNG draws, stats, hitboxes or rewards. TEST-CACHES-SECTORS.cjs covers cache promises, readiness, decoder, mixed fleets and unchanged spawn sequences.
+
+
+## v0.27.0 — achievements and contracts
+
+24 new achievements join the7 existing blueprint contracts:31 total. Milestones, combat, mastery and exploration include three evolutions in one run, four specialisations, eight merchant modifications, different pilot/sector wins, weapon-family goals, freezes, ignitions and clean bosses. New goals offer545 one-off credits in total. Existing ship challenges and blueprint unlocks remain. Hangar → Contracts has status/category filters, earned badges, readable progress and claim buttons for ready historical goals. Normal run banking still pays rewards automatically; results show newly paid goals and existing notice UI announces new completions. Developer tests are excluded. New progress persists per profile and transfers in backups; available recorded history seeds new counters once. `node TEST-CONTRACTS.cjs` covers thresholds, rewards, banking, migration, filters and profile transfer. `node TEST-MENUS.cjs` is the portable menu regression suite updated for the new two-minute reward.

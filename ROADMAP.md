@@ -75,3 +75,8 @@ Authorised next priority. Named local profiles and export/import transfer implem
 ### Follow-up — cache honesty and sector enemy looks, v0.26.0
 
 James requested after interrupted profile polish: separate supplies/evolutions, evolution drop only when ready, and distinct sector enemies mixed with usual fleet. Implemented typed cache promises and sector hull variants without changing enemy stats/population. Other feature priorities remain unstarted.
+
+
+### James's notes — achievements / contracts, v0.27.0
+
+Authorised next goal.24new achievements/31total, one-off credit rewards, status/category board, completed badges, in-run notices and result summary. Per-profile counters/migration and reward deduplication included. Other content/music/new-sector/account-backend priorities remain unstarted.
