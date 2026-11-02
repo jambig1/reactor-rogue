@@ -971,3 +971,7 @@ Live v033 QA: initial Pages73(41522998443)47s Success; polish Pages74(4152348995
 
 ## v0.33.1 — neon traffic lights
 Traffic now uses two cached96×20 light sprites with fading coloured tails, layered soft halos and paired bright headlights/taillights, rotated along roads. No per-frame shadow blur or particles; Low uses reduced intensity/count, reduced motion still freezes positions. Original simple-line fallback only when offscreen canvas is unavailable.
+
+
+## v0.33.2 — centred touch ability labels
+The circular ability control now removes inherited menu padding and uses explicit flex centring, unit line height, zero letter spacing and native-appearance reset. Dash counts, boost/phase labels and recharge times share the same centre at both 64px and 72px sizes.
