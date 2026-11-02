@@ -967,3 +967,7 @@ Approved cloud/neon concept implemented as live procedural scenery: small varied
 
 
 Live v033 QA: initial Pages73(41522998443)47s Success; polish Pages74(41523489958)1m12s Success. Live check caught correlated coordinate hash; added avalanche mixing so neighbouring lots/roofs differ and reduced highrise frequency to18%. Strengthened neon and cloud texture modestly. Final live code hash marker verified after cache-busting reload. DEV25fighter+boss scene ran to11seconds/4kills, lockdown lane readable over city; no app-origin console errors, no permanent progression. Refreshed city preview from exact960×540 gameplay crop, never generated concept art. These are short control/render checks, not physical phone FPS/full-run balance.
+
+
+## v0.33.1 — neon traffic lights
+Traffic now uses two cached96×20 light sprites with fading coloured tails, layered soft halos and paired bright headlights/taillights, rotated along roads. No per-frame shadow blur or particles; Low uses reduced intensity/count, reduced motion still freezes positions. Original simple-line fallback only when offscreen canvas is unavailable.
