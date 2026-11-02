@@ -7,10 +7,10 @@ let c={console,Math,Date,Set,Map,JSON,Number,String,Array,Object,Infinity,perfor
 
 
 
-assert.equal(run('pilots.length'),12);assert.equal(run('Object.keys(shipTraits).length'),12);assert.equal(run('shipChallenges.sovereign.cost'),600);assert.equal(run('Math.max(...Object.values(shipChallenges).filter(c=>c!==shipChallenges.sovereign).map(c=>c.cost))'),180);
-assert(!run("shipOwned('sovereign')"));run('hangar.credits=600;hangar.bosses=19');run("buyProgression('ship','sovereign')");assert(!run("shipOwned('sovereign')"));assert.equal(run('hangar.credits'),600);
-run('hangar.bosses=20;hangar.credits=599');run("buyProgression('ship','sovereign')");assert(!run("shipOwned('sovereign')"));assert.equal(run('hangar.credits'),599);
-run('hangar.credits=600');run("buyProgression('ship','sovereign')");assert(run("shipOwned('sovereign')"));assert.equal(run('hangar.credits'),0);assert.equal(run('selectedPilot'),'sovereign');run("buyProgression('ship','sovereign')");assert.equal(run('hangar.credits'),0);assert(run("loadHangar().ships.includes('sovereign')"));
+assert.equal(run('pilots.length'),12);assert.equal(run('Object.keys(shipTraits).length'),12);assert.equal(run('shipChallenges.sovereign.cost'),1500);assert.equal(run('Math.max(...Object.values(shipChallenges).filter(c=>c!==shipChallenges.sovereign).map(c=>c.cost))'),500);
+assert(!run("shipOwned('sovereign')"));run('hangar.credits=1500;hangar.bosses=19');run("buyProgression('ship','sovereign')");assert(!run("shipOwned('sovereign')"));assert.equal(run('hangar.credits'),1500);
+run('hangar.bosses=20;hangar.credits=1499');run("buyProgression('ship','sovereign')");assert(!run("shipOwned('sovereign')"));assert.equal(run('hangar.credits'),1499);
+run('hangar.credits=1500');run("buyProgression('ship','sovereign')");assert(run("shipOwned('sovereign')"));assert.equal(run('hangar.credits'),0);assert.equal(run('selectedPilot'),'sovereign');run("buyProgression('ship','sovereign')");assert.equal(run('hangar.credits'),0);assert(run("loadHangar().ships.includes('sovereign')"));
 function fresh(){run("state='menu';selectedPilot='sovereign';start();s.debris=[];s.terrain=[];s.enemies=[];s.need=Infinity;s.spawn=9999;s.elite=9999")}
 fresh();assert.equal(run('s.p.hp'),125);assert.equal(run('s.pilot.armour'),1);assert.equal(run('s.items.voidSeed'),1);assert.equal(run('s.riftWake'),null);
 assert.equal(run("traitDamage({x:0,y:0},'voidSeed')"),1);run('s.evolved={bolt:true,rapid:true}');assert.equal(run("traitDamage({x:0,y:0},'voidSeed')"),1.08);run('s.evolved={bolt:true,rapid:true,rail:true,laser:true,chain:true,nova:true,extra:true}');assert.equal(run("traitDamage({x:0,y:0},'voidSeed')"),1.24);assert.equal(run("traitDamage({x:0,y:0},'riftDrive')"),1);

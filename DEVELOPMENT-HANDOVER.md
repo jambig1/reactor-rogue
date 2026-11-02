@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.35.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.35.1. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -23,7 +23,7 @@ No application build step is required. The website expects these files to be ser
 
 ## Current gameplay
 
-The catalogue contains twelve ships, six sectors, eighteen named sector bosses, 48 weapon/evolution entries, 32 passive/defensive items and 31 contracts. Equipment uses six weapon slots and six support slots.
+The catalogue contains twelve ships, six sectors, eighteen named sector bosses, 48 weapon/evolution entries, 32 passive/defensive items and 31 contracts. Equipment uses six weapon slots and six support slots. Achievement rewards range from 50 to 400 credits; ship licences range from 125 to 500, with Sovereign at 1,500 and Vanguard free. Existing paid achievements receive the payout difference once per profile, tracked by contractRewardVersion. Owned ships and challenge requirements are retained.
 
 Sector bosses are scheduled at 3, 6 and 10 game minutes. Defeating all three secures a sector clear, followed by an explicit choice to finish or continue into endless. Endless health and damage scale continuously from the opt-in time; sector bosses rotate every two game minutes. Population and projectile caps remain. Pause and reward screens suspend combat. Optional encounters, terrain and merchant systems have their own boss-hold rules.
 

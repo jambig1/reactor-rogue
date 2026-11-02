@@ -2,6 +2,12 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.35.1
+
+- Rebalance achievement payouts to 50-400 credits and ship licences to 125-500 credits, with Sovereign at 1,500 and Vanguard free.
+- Pay existing profiles the difference for previously completed achievements once, preserving owned ships, challenges, tools and banked progress.
+- Show the achievement top-up on the Contracts board and preserve its migration version through profile backups.
+
 ## 0.35.0
 
 - Steeper XP requirements after the early levels, with leftover XP retained.
