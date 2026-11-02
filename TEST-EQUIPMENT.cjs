@@ -75,3 +75,5 @@ console.log('PASS all12 new weapons/evolutions, 24 paths, 6 support items, 12 sy
 
 for(let id of run('equipmentWeaponIds')){let path=run(`equipmentSpecChoices['${id}'][0]`);assert.equal(run(`cleanRun({id:'test',pilot:'vanguard',specialisations:{'${id}':'${path}'}}).specialisations['${id}']`),path);assert(run(`equipmentSpecChoices['${id}'].every(p=>specialisations['${id}'].some(x=>x.id===p))`));}
 assert(run('newSupports.every(w=>defs.find(d=>d.id===w[0]).rarity===w[4])'));
+
+assert(html.includes('All '+run('evolutions.length')+' recipes'));
