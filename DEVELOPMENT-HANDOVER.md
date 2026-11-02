@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.34.3. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.35.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -25,7 +25,7 @@ No application build step is required. The website expects these files to be ser
 
 The catalogue contains twelve ships, six sectors, eighteen named sector bosses, 48 weapon/evolution entries, 32 passive/defensive items and 31 contracts. Equipment uses six weapon slots and six support slots.
 
-Sector bosses are scheduled at 3, 6 and 10 game minutes. Defeating all three secures a sector clear, followed by an explicit choice to finish or continue into endless. Pause and reward screens suspend combat. Optional encounters, terrain and merchant systems have their own boss-hold rules.
+Sector bosses are scheduled at 3, 6 and 10 game minutes. Defeating all three secures a sector clear, followed by an explicit choice to finish or continue into endless. Endless health and damage scale continuously from the opt-in time; sector bosses rotate every two game minutes. Population and projectile caps remain. Pause and reward screens suspend combat. Optional encounters, terrain and merchant systems have their own boss-hold rules.
 
 Evolution hints use equipment from the current run and appear on the missing component. Evolution caches require a ready recipe when they drop. Supply caches retain their supply identity.
 

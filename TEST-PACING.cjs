@@ -10,9 +10,13 @@ let c={console,Math,Date,Set,Map,JSON,Number,String,Array,Object,Infinity,perfor
 
 
 
-run("state='menu';start()");assert.equal(run('s.need'),5);for(let l=2;l<=20;l++)assert.equal(run('levelXPRequirement('+l+')'),Math.floor(6+l*3+Math.pow(l,1.32)));for(let l of [21,40,60])assert.equal(run('levelXPRequirement('+l+')'),Math.floor(6+l*3+Math.pow(l,1.32)+(l-20)*2));
+run("state='menu';start()");assert.equal(run('s.need'),5);for(let l=2;l<=500;l++)assert(run('levelXPRequirement('+l+')')>run('levelXPRequirement('+(l-1)+')'));
+for(let l of [10,20,40,80])assert(run('levelXPRequirement('+l+')')>Math.floor(6+l*3+Math.pow(l,1.32)+Math.max(0,l-20)*2));
+// Carry surplus XP through chained rewards; each reward charges the next threshold.
+run('s.xp=100;s.items={};levelUp()');assert.equal(run('s.lv'),2);assert.equal(run('s.xp'),95);let second=run('s.need');run('choose(0)');assert.equal(run('s.lv'),3);assert.equal(run('s.xp'),95-second);
+run("state='menu';start()");
 // Recovery is created by an actual boss kill and pauses with game time.
 run("s.t=180;spawnBoss();s.enemies[0].arrival=0;hit(s.enemies[0],1e9,'bolt')");assert.equal(run('s.bossRecoveryUntil'),188);assert.equal(run('bossRecoveryMultiplier()'),1.75);assert.equal(run('runObjective()'),'RECOVERY · 8s');run("state='pause';hud();renderPauseOverview()");assert.equal(run('s.bossRecoveryUntil-s.t'),8);run("state='play';s.t=188");assert.equal(run('bossRecoveryMultiplier()'),1);
 // A newly active boss takes priority; recovery never postpones the scheduled boss.
 run('s.bossRecoveryUntil=999;spawnBoss()');assert.equal(run('bossRecoveryMultiplier()'),1);assert.equal(run('runObjective()'),'REACTOR 2 · ENGAGED');run("state='menu';start()");assert.equal(run('s.bossRecoveryUntil'),0);assert.equal(run('bossRecoveryMultiplier()'),1);
-console.log('PASS first upgrade threshold, unchanged levels2–20, gentler late XP rate, real boss recovery/pause/reset and active-boss priority');
+console.log('PASS first upgrade threshold, strictly increasing XP through level500, steeper later curve, surplus carryover, real boss recovery/pause/reset and active-boss priority');

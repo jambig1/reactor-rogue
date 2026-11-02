@@ -2,6 +2,12 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.35.0
+
+- Steeper XP requirements after the early levels, with leftover XP retained.
+- Endless survival now increases enemy health and damage continuously, raises spawn frequency within existing population caps, and rotates sector bosses every two game minutes.
+- Endless HUD and pause overview show the current cycle and pressure. Sector clears stay banked and fresh runs reset endless progression.
+
 ## 0.34.3
 
 - Simplified the website sector-gallery caption.
