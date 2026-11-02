@@ -60,3 +60,8 @@ Authorised by James. Critical threat drawing moved above decorative effects; hos
 ### Foundation6 — normal-run playtest / progression pacing, v0.23.0
 
 James authorised full normal-run testing and pacing pass. Five fresh-Vanguard normal-rules automated clears measured, including phone movement-facing. Small opening/late XP adjustments plus8s ordinary-spawn boss recovery implemented; exact data and limits in PACING-NOTES.md/PACING-V023.json. Foundation7 movement/collection not started. Difficulty tiers and Reactor Protocols deferred.
+
+
+### James's notes — priority1 pickup visibility, v0.24.0
+
+Implemented stronger pickup shapes, labels, layers, expiry visibility and bounded important edge markers. This addresses pickup readability within foundation7; broader movement/collection mechanics remain unchanged. New notes retained: profiles/local saves/export-import then account sync; achievements/contracts; music DnB/jungle/techno; more equipment; distinct new sectors. Only pickup visibility authorised this turn.

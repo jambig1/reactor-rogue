@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.23.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.24.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -183,3 +183,8 @@ Hostile bullets gain a consistent warm diamond outline, bright centre and dark c
 ## v0.23.0 — measured normal-run pacing
 
 Five complete fresh-Vanguard automated normal-rules runs cover desktop baseline/repeat seeds and a phone movement-facing sample. First level costs5XP; levels2–20 unchanged; later requirements grow gently to reduce repeated upgrade pauses. Boss defeats give8game seconds of reduced ordinary reinforcements, with a RECOVERY objective cue. Boss schedule, health, rewards and currency unchanged. See PACING-NOTES.md for results/limits and PACING-V023.json for raw logs. PLAYTEST-NORMAL-RUN.cjs reproduces the driver; TEST-PACING.cjs covers regressions.
+
+
+## v0.24.0 — pickup visibility
+
+Round credits, hex supplies and square gold evolution caches now use dark-backed high-contrast glyphs; important drops have larger labels and sit above decorative explosions, below hostile threats. Drops remain visible during expiry, with a last-five-second timer. Important-only edge markers prioritise caches/needed repair, avoid overlap and cap at4phone/6desktop. Scrap and XP gain contrast outlines. Rates, rewards, pickup ranges and lifetimes unchanged. TEST-PICKUPS.cjs covers rendering/markers/preferences.
