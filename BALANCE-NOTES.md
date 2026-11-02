@@ -1,3 +1,7 @@
+# Historical balance measurements
+
+These measurements describe versions 0.19.0 and 0.7. They are retained for reproducibility, not as current equipment counts, licence prices, player win rates or device-performance claims. The current game includes later content and balance changes.
+
 # v0.19.0 weapon balance and identity pass
 
 First core-foundation weapon pass after formations. All36 weapons reviewed across four deliberately different controlled scenes: one150-range target with35% armour; twelve frontal targets; twelve80-range surrounding targets; and twelve targets trailing a ship moving at100/s.20s each,60 simulation steps/s, seed12345, levels1/3/5 and evolved5:576 scenarios before and576 after. Full attack/projectile/field/hit code, no support items, chosen specialisations, merchant modifiers or ship damage traits. Target HP is effectively unlimited, positions held relative to the player; scenery and normal spawning disabled. The harness bypasses specialisation UI so level3/5 simulations remain active. This is not a human win-rate test or a universal weapon ranking. It under-represents utility and kill-triggered evolutions, and planted-zone results benefit from held targets.

@@ -1,24 +1,50 @@
-# Activate online accounts and saves
+# Optional cloud saves
 
-The website, feedback flow and mobile installation work without this. Online accounts remain visibly unavailable until the owner configures a Supabase project. This is an integration prepared for activation, not a verified live cloud service.
+## Current status
 
-1. Create a Supabase account and project at https://supabase.com/dashboard . The account owner must accept the provider terms and choose any plan/payment options themselves.
-2. In the SQL editor run `CLOUD-SAVES.sql` once. Row Level Security is enabled; anonymous clients have no table access. Each authenticated account can read/write only its own checkpoint. The save RPC uses the caller's permissions and a revision check.
-3. In Authentication → Email templates, configure the Magic Link template to show `{{ .Token }}` as the sign-in code. Enable email sign-ups. Configure a production email sender before inviting the public; the provider's default test email service is not a public-launch mail system. Enable provider rate limits/CAPTCHA as appropriate before launch; the current client does not implement CAPTCHA, so keep sign-up restricted until this is reviewed.
-4. Supply the project's HTTPS URL and **publishable** key in `cloud-config.js`. Set `enabled: true` only after the database/auth checks pass. These are intentionally public. Never publish a secret key or service-role key.
-5. Test with two real test accounts: A must not read/update B's row (including with a forged user_id), anonymous access must fail, and two devices editing the same revision must yield one success and one conflict. Test sign-in email delivery, refresh/expiry, offline failures, profile limits and separate-profile import before enabling for players.
-6. Publish config, bump the service-worker cache version and test the deployed service. Until then cloud forms stay disabled and local saves remain intact.
+Online accounts and automatic cross-device saves are **not available to players yet**. Local profiles and export/import backups are the supported save options.
 
-Sign-in uses email codes, not game-managed passwords. Tokens are kept in the current tab's session storage, not save backups; closing the tab ends its remembered session. One cloud checkpoint per account. Upload is explicit initially, and automatic upload is opt-in for one local profile while the launch profile page is open. Only banked progression is transferred; active runs, device settings and developer tests are excluded. Newer remote revisions stop uploads; cloud downloads go through the existing validation and separate-profile import. No automatic local overwrite or silent cross-device merge.
+The cloud checkpoint table, owner-only access policies and revision checks have been created and tested. Email delivery and real-account browser tests are unfinished, so `cloud-config.js` keeps `enabled: false`.
 
-Future work after activation: sync outside the profile page at explicit banking boundaries, account deletion/export and production abuse monitoring. Don't claim continuous background sync or in-progress run recovery.
+The website feedback form is a separate, working service. It does not require an account, email delivery or cloud-save activation.
 
-Official references: https://supabase.com/docs/guides/auth and https://supabase.com/docs/guides/database/postgres/row-level-security .
+## Integration files
 
+| File | Purpose |
+| --- | --- |
+| `cloud-config.js` | Public project URL, public publishable key and activation flag. |
+| `cloud-save.js` | Email-code sign-in, checkpoint transfer and separate-profile import. |
+| `CLOUD-SAVES.sql` | Schema, RLS ownership policies and compare-and-swap save function. |
+| `TEST-CLOUD-SECURITY.sql` | Transactional checks for ownership, anonymous denial and revision conflicts. |
 
-## Project setup checkpoint - 2026-11-02
-Project kykieqonuxpvvtwjnlfd now has rr_cloud_saves, RLS owner policies and security-invoker rr_save_checkpoint. Applied via signed-in dashboard SQL Editor after Supabase connector returned Unknown tool. TEST-CLOUD-SECURITY.sql passed against the database: own insert/update, reciprocal read denial, cross-user update denial, forged owner insert/reassignment denial, stale revision/first-upload conflicts and anonymous table/RPC denial. Transaction rolled back the temporary auth users and saves. Live publishable-only REST requests to table and RPC both return 401/42501 (expected). No real player sign-in or delivery test has been completed.
+Only publishable connection details belong in browser code. Never commit database passwords, service-role keys, SMTP credentials or other server secrets.
 
-Dashboard Emails explicitly requires custom SMTP to edit templates on this project. Default sender is not a public-launch sender. Owner selected help setting up a sender; Brevo is the proposed next step. Create/verify a sender, enable transactional sending, configure SMTP securely, then use the {{ .Token }} email template and perform real account tests. Dashboard control timed out during SMTP navigation; no SMTP credentials or email templates were changed.
+## Activation checklist
 
-Local cloud-config.js includes the owner-supplied public project URL/key and enabled:false. The explicit enable gate in cloud-save.js is local, not yet published. Keep disabled until sender and end-to-end tests pass. GitHub connector writes return 403; browser publication was not possible after the dashboard-control timeout.
+1. Confirm that the intended project's schema matches `CLOUD-SAVES.sql`. That file is initial provisioning SQL, not a script to rerun blindly against an existing project.
+2. Configure a production email sender in Supabase Auth. Use a verified sender and configure the email template to include `{{ .Token }}` for the code-entry flow.
+3. Check the deployed client URL, Auth settings, provider limits and abuse controls. The current client does not render a CAPTCHA challenge.
+4. Test with two separate real accounts. Verify email delivery, code expiry, session refresh, own-save access, cross-account denial, concurrent save conflicts, offline failures and validated import.
+5. Confirm local profiles, developer-test isolation and backups still work when the service is unavailable.
+6. Enable the client only after these checks pass, then release and verify both fresh and returning browsers.
+
+Supabase's default email sender is intended for limited testing, not public account sign-in. Custom email delivery must be configured before inviting players to use this flow.
+
+## Save behaviour and limits
+
+- One cloud checkpoint per account.
+- Only banked progression is transferred; active runs and device settings are excluded.
+- The initial upload is explicit.
+- Optional automatic uploads currently apply to one local profile while the launch profile page is open.
+- A newer remote revision stops a stale upload instead of silently overwriting it.
+- Downloads are validated and imported as a separate profile.
+- Sign-in tokens are kept in the current tab's session storage, not save backup files.
+
+Continuous background sync, live-run recovery and automatic merging are not implemented. Account lifecycle and production abuse handling also need review before a wider launch.
+
+## References
+
+- [Supabase Auth](https://supabase.com/docs/guides/auth)
+- [Passwordless email sign-in](https://supabase.com/docs/guides/auth/auth-email-passwordless)
+- [Custom SMTP](https://supabase.com/docs/guides/auth/auth-smtp)
+- [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)

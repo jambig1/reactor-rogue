@@ -1,3 +1,7 @@
+# Historical pacing measurements
+
+These measurements describe version 0.23.0. They are retained as evidence for that pacing pass, not as a current clear-time target, player win-rate estimate or phone hardware benchmark.
+
 # Normal-run playtest and pacing pass - v0.23.0
 
 Five complete automated runs used the actual combat, enemy, pickup, XP, boss and reward systems. All started with a fresh Vanguard in Neon Expanse; developer flags stayed false.
