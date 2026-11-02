@@ -93,3 +93,8 @@ James approved the second, restrained attack study, then explicitly broadened sc
 
 
 Scope clarified: redesign includes item artwork, not just attack effects. All80 usable items (48 weapon +32 passive/defensive) now have individual illustrations shared across equipment UI; gallery includes the full passive catalogue. Item mechanics and progression remain unchanged.
+
+
+## Notes — music (v0.30.0)
+
+Authorised original drum & bass/jungle/techno soundtrack implemented: six adaptive menu/sector/boss/transmission loops, crossfades, manual selection, preview and independent saved audio levels. Worker synthesis and bounded caches avoid per-note work during combat. New sectors/account backend remain later; Reactor Protocols and difficulty tiers remain deferred.

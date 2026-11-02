@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.29.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.30.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -245,3 +245,10 @@ One transparent approved-style atlas is embedded for offline play and retained a
 
 
 Full item scope: every usable equipment entry now has individual mechanical SVG artwork (48 weapons +32 passive/defensive items), including evolved weapon variants. Upgrade cards, HUD slots, build summaries, weapon reports, specialisation cards and evolution recipes share these illustrations; passive art includes distinct reactors, chips, thrusters, repair kits, armour plates, shield couplers and targeting devices. HUD SVG markup is cached until item level/ownership/evolution changes. The isolated gallery also has a32-item passive catalogue, with descriptions and the actual live ship preview. Real healing gives a restrained rate-limited repair cue; no healing or stats are created by artwork.
+
+
+## v0.30 — original adaptive music
+
+Six original synthesized soundtrack loops: Aurora Drift (ambient breaks,112 BPM), Neon Breaker (drum & bass,170), Scrapyard Circuit (jungle,174), Relay Pressure (techno,138), Critical Mass (boss drum & bass,176) and Lost Carrier (transmission ambience,104). Adaptive mode follows menus, sectors, bosses and merchant transmissions with crossfades. Settings → Audio offers manual track selection, a20-second preview, separate effects/music/master levels and optional music during pauses. Hidden tabs go silent. Audio starts after a user gesture.
+
+Loops render in a worker, cache at most four mono buffers and use looping sources outside the effects voice budget. A cooperative fallback covers browsers without workers. No recordings, downloads or gameplay RNG are used. `node TEST-MUSIC.cjs` checks synthesis, isolated worker execution, transport, preferences and background/pause handling; this does not establish device FPS or listening quality.
