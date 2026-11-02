@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.32.2. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.33.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -276,3 +276,7 @@ Replaced schematic symbols with six detailed16:9 illustrated miniatures using ea
 
 ## v0.32.2 — actual gameplay stills
 Replaces all illustrated previews with six real960×540 screenshots captured from in-game DEV test combat, one per sector. The captures use the real renderer/scenery/ships/bosses; cropped to the playfield to exclude HUD. Original JPEG files retained as sector-ID.jpg and embedded for offline use. Compact side-by-side picture/details cards replace oversized posters. No gameplay/progression change.
+
+
+## v0.33.0 — high-altitude Neon Undercity
+Approved cloud/neon concept implemented as live procedural scenery: small varied rooftops, L/circular footprints, stepped high-rise crowns, pink/cyan roof lights, analytic street traffic trails, trains and translucent cloud wisps below combat. City uses0.55 camera parallax for distance. Scenery does not alter enemies, damage, collisions, hazards, rewards or saves. Reduced motion freezes traffic/trains/clouds; Low/crowded Auto reduces traffic lanes and cloud count. Static320px tiles cache in a32-entry LRU; one512×96 cloud sprite is reused, no per-frame shadow blur, particles or global RNG. At most100 visible traffic cells processed. TEST-CITY-SCENERY verifies cache reuse/bounds, render purity/RNG independence and reduced-motion time invariance. Existing city/menu/readability tests pass. Device FPS is not established by native checks. Actual gameplay sector still refreshed after deployment.
