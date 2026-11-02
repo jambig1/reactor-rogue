@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.32.1. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.32.2. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -272,3 +272,7 @@ Cryo bosses now fire split pincer volleys from two emitters and place radial fra
 
 ## v0.32.1 — sector scene previews
 Replaced schematic symbols with six detailed16:9 illustrated miniatures using each map’s actual visual motifs: grid/docks, wreckage and rocks, relay station, furnace platforms, fractured ice and rooftop city. Static cached SVG scenes, no network assets or animation cost. Wider cards and full-contrast locked previews preserve visibility; explicit unlock labels retain disabled selection. Gameplay unchanged.
+
+
+## v0.32.2 — actual gameplay stills
+Replaces all illustrated previews with six real960×540 screenshots captured from in-game DEV test combat, one per sector. The captures use the real renderer/scenery/ships/bosses; cropped to the playfield to exclude HUD. Original JPEG files retained as sector-ID.jpg and embedded for offline use. Compact side-by-side picture/details cards replace oversized posters. No gameplay/progression change.

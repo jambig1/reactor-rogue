@@ -956,3 +956,7 @@ TEST-CITY-SECTOR asserts6catalogue/18unique names, unlocks, three plan shapes/co
 
 ## v0.32.1 — preview correction
 James rejected the schematic sector previews. Replaced sectorPreview with cached detailed SVG scenes(320×180), shared restrained palette and miniature ship/terrain motifs. Static illustrative previews rather than literal screenshots. Sector-specific class and grid(min265px) create3-column desktop /1phone, edge-to-edge16:9 image; existing scrolling/content-height rows retained. Locked sector cards stay full opacity and use explicit unlock status; disabled selection unchanged. No new canvas, timer, RNG or network. Native menu/city regression checks passed; browser visual QA follows publication.
+
+
+## v0.32.2 — requested gameplay screenshots
+User clarified literal gameplay stills. Captured all6maps from livev0321 via ordinary DEV controls(Vanguard,25fighters,firstsectorboss; no permanent progression). CUA screenshot clip x202 y200 w960 h540 excludes HUD and includes actual scenery/ship/boss. No illustration generation or rendering replacements. Saved6sector-ID.jpg originals and embedded JPEG bytes into sectorGameplayStills; sectorPreview outputs image only. Removed SVG illustration generator/cache. Compact two-column desktop grid with horizontal image/details cards; one-column below800px, phone preserves complete row content and scrolling. Version0322. Native menu/city checks and image signature/dimension checks, followed by live screenshot/UI verification.
