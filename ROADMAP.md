@@ -85,3 +85,8 @@ Authorised next goal.24new achievements/31total, one-off credit rewards, status/
 ## Notes priority5 — more equipment (v0.28.0)
 
 Authorised by James, expanded on request after Vampire Survivors weapon research:12 new weapons/evolutions,24 paths,6 supports,12 synergies.48 total weapons and32 supports. Existing six-slot rules, missing-part-only hints, run resets, caches and save compatibility remain. Enemy/sectors/music/account backend are separate later tasks. Reactor Protocols and difficulty tiers remain deferred.
+
+
+## Approved visual follow-up — complete combat art (v0.29.0)
+
+James approved the second, restrained attack study, then explicitly broadened scope to all attacks, defensive weapons and enemy attacks.48 weapon families/base+evolved, shields/devices, ship ability fields, threat shots/rails/charge/hazard cues updated. Combat values and progression unchanged. These visuals do not start the later sectors/music/account work; Protocols and difficulty tiers remain deferred.

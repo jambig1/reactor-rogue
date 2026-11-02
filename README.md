@@ -8,7 +8,7 @@ Open `index.html` in a full browser to play offline. No installation, dependenci
 
 ## Development
 
-Current version: 0.28.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
+Current version: 0.29.0. `index.html` is the self-contained game. See `DEVELOPMENT-HANDOVER.md` for mechanics, decisions and testing limits.
 
 GitHub Pages publishes the root of `main` automatically. Update the complete game file and verify the deployment before reporting a live update.
 
@@ -231,3 +231,14 @@ Six new support items: Manoeuvre Jets (+5% ability recovery/level), Shield Coupl
 Inspirations: Vampire Survivors’ orbit/zone/bounce/arc/column/aura/sweep/circling-bombardment coverage patterns, adapted to the original Reactor Rogue names, art, values and run rules. Research reference: https://vampire.survivors.wiki/w/Weapons . No game assets or source code copied.
 
 `node TEST-EQUIPMENT.cjs` checks all new attacks, evolutions, paths, supports, targeting/delays, conditional combinations, slot/banish/hint rules, archived path validation and bounded240-enemy simulations. Existing save, contract, developer, cache, UI and weapon regressions remain. Simulation checks are not a device FPS measurement or human win-rate study.
+
+
+## v0.29.0 — complete attack and defence art
+
+Applies the approved restrained Reactor Rogue attack direction across all48 weapon identities, base/evolved forms, defensive devices and enemy threats. Tapered energy needles, finned missiles, faceted crystals, mechanical drones and blades replace placeholder projectiles. Short motion trails, compact muzzle/hull-impact details, branching electrical arcs, flowing field contours, planted devices, artillery markers and layered energy paths establish different weapon families. Shield segments reflect remaining charge; plates, armour, spikes, decoys, interception and phase effects have mechanical/holographic cues. Ship defence beacons, singularity wakes and plasma breath use the same visual language.
+
+Enemy shots retain a bright warm core and dark outline, with faceted heads and short trails. Hostile beam edges and hazard rings keep their actual warning/damage boundaries; boss charge colours use the hostile palette. Threats still render after decorative player effects. Existing purge/freeze and combat explosion treatments remain.
+
+One transparent approved-style atlas is embedded for offline play and retained as `reactor-rogue-attack-atlas.png`; procedural silhouettes are immediate fallbacks and the Low presentation. Trails retain at most6 points per live object using WeakMap keys. Caps:48 impact marks,18 emitter flashes,72 atlas draws,24 detailed fields and100 detailed devices per frame. Offscreen culling, crowded Auto simplification and reduced motion remain. No damage, collision, firing schedule, drop rate or progression changes.
+
+`TEST-ATTACKS.html` is an isolated gallery using release drawing helpers:48 weapons, defensive/ability samples and enemy attacks, quality/evolution/motion toggles; no combat/save access. `node TEST-ATTACK-ART.cjs` checks all48 base/evolved weapons across quality and motion modes, render-state/RNG purity, defensive/hostile layers and bounded effects. `node TEST-ATTACK-PARITY.cjs /path/to/v028/index.html` compares96 matched combat scenes against the preceding release. Native verification does not establish phone hardware FPS.
