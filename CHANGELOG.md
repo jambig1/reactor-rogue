@@ -2,6 +2,13 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.38.0
+
+- Added sector-specific distant structures and layered atmosphere to all six maps, including orbital ribs, rock strata, relay foundations, furnace shafts, ice fissures and high-rise crowns.
+- Added slow parallax and subtle ambient motes, with cached mist textures and bounded drawing budgets.
+- Varied Foundry platforms and Cryo shelves to reduce repeated scenery.
+- All scenery draws before gameplay objects and warnings. Reduced motion freezes ambient movement; low detail reduces extra scenery effects.
+
 ## 0.37.0
 
 - Refined all twelve player hull silhouettes with shared panel, canopy and engine details.
