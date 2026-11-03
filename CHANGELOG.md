@@ -2,6 +2,12 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.36.2
+
+- Show touch movement controls on phones and iPads, hiding keyboard and mouse mode choices on those devices.
+- Use touch-specific firing instructions and ignore an older saved desktop movement mode on mobile.
+- Retain desktop control choices, including narrow browser windows and touch-capable Windows computers.
+
 ## 0.36.1
 
 - Keep Play and Launch text readable when buttons are hovered or focused.
