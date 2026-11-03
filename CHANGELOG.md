@@ -1,3 +1,11 @@
+# v0.41.0 — plasma beam and Iron Halo artwork
+
+- Added layered energy sheaths, animated filaments, bright cores and compact contact flares to every player beam family, including evolved forms, Ion Curtain, Plasma Lash and Rupture Drill.
+- Gave Solar Lance its own amber-white coronal ribbons and a matching persistent burn corridor.
+- Replaced Iron Halo’s reused blade sprite with curved steel vanes, heated edges and short segmented orbital trails.
+- Retained Plasma Fences’ existing artwork. Hostile beams retain their warm warning colour and full danger boundaries.
+- Kept damage, hit geometry, timings, evolution recipes and progression unchanged. Low detail and reduced-motion variants remain available.
+
 # v0.40.0 — sharper continuous sector scenery
 
 - Refreshed all six menu and website previews with separate live gameplay captures using the new scenery.
