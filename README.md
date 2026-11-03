@@ -57,7 +57,7 @@ Core game assets are embedded in `index.html`. The hosted site also has an offli
 - [Cloud save setup](CLOUD-SETUP.md): the optional account integration and its current limits.
 - [Balance measurements](BALANCE-NOTES.md) and [pacing measurements](PACING-NOTES.md): historical test methods and results.
 
-Current playable version: **0.41.1**.
+Current playable version: **0.42.0**.
 
 ## Font attribution
 

@@ -1,15 +1,28 @@
-# Sector backgrounds, v0.40.0
+# Sector artwork, v0.42.0
 
-Each sector now uses an independent full-resolution texture, embedded in index.html and supplied as a sector-background-*-v0400.jpg file. The six images were generated individually to preserve the dark painterly sci-fi style while increasing usable detail over the former 512 by 512 atlas cells. They are not upscaled atlas crops.
+The six sector textures follow the approved Neon Expanse study and the actual production ship artwork. This is a deliberately illustrated arcade style: broad shaded forms, crisp controlled edges, slate-blue mechanical fills, limited neon rim accents and organic layered clouds. Avoid photographic smoke microtexture, coarse pixel blocks, checkerboard dithering and wireframe environments.
 
-The renderer constructs a periodic surface once per selected sector and quality level. Smooth complementary alpha weights blend an 18% overlap on opposite edges, then additive wrapping combines all four corner contributions. The result is flattened to opaque navy to prevent quantisation from revealing translucent seams. A single repeating Canvas pattern draws the surface; no mirrored neighbours or separate image rectangles are used.
+Each sector has an independent 1254-pixel square texture supplied as sector-background-*-v0420.jpg and embedded in index.html. Neon Expanse uses the approved study directly. The other five images were generated individually using that approved background and the ship artwork as style references, with distinct scenes and material identities:
 
-Texture scale is fixed in world space rather than stretched to viewport size. A larger monitor reveals more scenery. Low quality uses a smaller cached surface with the same world scale. At most two sectors remain decoded and each keeps one surface. Reduced motion freezes ambient drift and particles. Renderers do not consume gameplay RNG or alter collision geometry.
+| Sector | Identity |
+| --- | --- |
+| Neon Expanse | Navy space, teal/violet cloud banks, designed orbital wreckage |
+| Shattered Belt | Faceted amber/copper rocks, broken cargo hulls, salvage plates |
+| Storm Relay | Indigo ion clouds, damaged relay masts, restrained electrical accents |
+| Cinder Foundry | Dark furnace platforms, thick pipes, cooling towers, ember slits |
+| Cryo Reach | Layered blue ice shelves, small frozen fragments, cyan fissures |
+| Neon Undercity | Varied small shaded rooftops, stepped silhouettes, curving roads, sparse windows |
 
-The generation brief for each texture requested overhead orthographic artwork, rich fine detail, restrained local light and dark readable combat space, without ships, UI, text, borders, wireframes or panel divisions. Sector themes are teal/violet nebula, amber asteroid wreckage, indigo ion storm, ember industrial foundry, blue glacial shelves and violet/teal distant city rooftops.
+Background objects are decorative and add no collision. Keep scenery darker and quieter than ships, pickups and threat warnings.
 
-TEST-ENVIRONMENTS.cjs checks state/RNG isolation, cache bounds, render order and reduced motion. TEST-TEXTURE-SEAMS.cjs uses the optional @napi-rs/canvas package to inspect actual pixel joins and resolution in all six textures. Synthetic review scenes are not advertised as captured gameplay.
+## Rendering and ambient life
 
-## v0.41.1 material and ambience
+The renderer builds each periodic surface once, blending an 18% overlap on opposite edges with complementary smooth alpha weights. Four wrapped contributions make the corners continuous. A single repeating Canvas pattern avoids mirrored neighbours and subpixel tile cracks. Texture scale stays fixed in world space across viewports. Low quality uses a smaller cached surface at the same scale; at most two sectors remain decoded, with one surface each.
 
-A one-time colour treatment adds restrained two-pixel clustered dithering, broken colour and fine grain to each cached periodic surface. It does not lower the texture resolution. Scenery lights are sampled from bright points in the actual surface and blink in place. Their 18/64 point budgets remain available in Low/crowded Auto instead of depending on explosion detail. Dust, embers and snow follow particle settings; reduced motion freezes every ambient phase and drift. These layers render below gameplay and do not alter simulation state.
+The existing restrained material treatment is retained because it was present in the approved in-engine study. Fine clustered dithering and grain do not lower the texture resolution. Scenery-aligned sampled lights blink in place, with 18/64 point budgets that remain available in Low/crowded Auto. Dust, Foundry embers, Cryo snow and Storm filaments follow particle settings. Reduced motion freezes ambient animation. These layers render below gameplay and never consume simulation RNG.
+
+## Validation and previews
+
+TEST-ENVIRONMENTS.cjs checks rendering order, state/RNG isolation, cache bounds, motion and light budgets. TEST-TEXTURE-SEAMS.cjs checks all actual image edges, opaque corners, embedded/file parity and material/light candidates using optional @napi-rs/canvas. TEST-ENVIRONMENT-GALLERY.cjs executes the standalone scenery review with actual native canvases. Synthetic review scenes are not presented as captured gameplay.
+
+Menu and website previews must use separate real gameplay captures from their corresponding sectors. Keep them consistent with the shipped art and use versioned filenames and offline-cache updates.

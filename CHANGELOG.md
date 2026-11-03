@@ -1,3 +1,10 @@
+# v0.42.0 — illustrated sector artwork
+
+- Applied the approved Neon Expanse direction to all six maps, matching the ships’ shaded illustrated forms, controlled edges and restrained neon lighting.
+- Kept every sector distinct in layout, materials and colour. No coarse pixel treatment or photographic background noise.
+- Retained seamless scrolling, sharp desktop rendering, scenery lights, dust, embers, snow and reduced-motion support.
+- Refreshed the sector previews from separate real gameplay runs.
+
 # v0.41.1 — worn scenery and ambient life
 
 - Kept the sharp six-sector textures and seamless scrolling, with a restrained cached dither, broken colour and fine grain treatment.
