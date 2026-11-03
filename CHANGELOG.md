@@ -2,6 +2,13 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.38.1
+
+- Replaced live wireframe sector scenery with cached shaded surface artwork across all six maps.
+- Added irregular rock and ice forms, crater and mineral shading, rounded industrial housings, furnace light, soft relay surfaces and illuminated city rooftops.
+- Retained city light trails, slow parallax, reduced motion and scenery below gameplay objects.
+- Bounded the new shared tile cache to 24 surfaces and reduced live scenery work to cached image draws.
+
 ## 0.38.0
 
 - Added sector-specific distant structures and layered atmosphere to all six maps, including orbital ribs, rock strata, relay foundations, furnace shafts, ice fissures and high-rise crowns.
