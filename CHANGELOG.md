@@ -2,6 +2,10 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.38.2
+
+- Paint neighbouring world cells into cached surfaces so rocks, shading and colour fields continue across tile joins.
+
 ## 0.38.1
 
 - Replaced live wireframe sector scenery with cached shaded surface artwork across all six maps.
