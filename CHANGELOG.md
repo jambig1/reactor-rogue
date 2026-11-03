@@ -2,6 +2,13 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.37.0
+
+- Refined all twelve player hull silhouettes with shared panel, canopy and engine details.
+- Added distinct cannon, twin-barrel, fork and energy weapon mounts by ship family.
+- Refined enemy class outlines, dorsal armour, engine apertures, specialist fittings and damaged hull details across sector fleets.
+- Menu ship previews use the same geometry as gameplay. Combat, collision sizes, progression and spawn rates are unchanged.
+
 ## 0.36.2
 
 - Show touch movement controls on phones and iPads, hiding keyboard and mouse mode choices on those devices.
