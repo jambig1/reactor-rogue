@@ -2,6 +2,13 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.39.0
+
+- Replaced the live sector backgrounds with six distinct textured environments inspired by nebula clouds, dark wreckage silhouettes and atmospheric lighting.
+- Added open teal/violet space, amber wreck fields, ion storm clouds, furnace smoke, glacial shelves and a distant neon city, using one embedded background atlas.
+- Added slow background parallax, seamless mirrored edges, restrained ambient motes and city traffic. Reduced motion freezes ambient movement, and low detail reduces decorative work.
+- Retained all physical terrain, enemy, pickup and hazard rendering above the scenery. Combat, progression and collisions are unchanged.
+
 ## 0.38.3
 
 - Keep atmospheric colour fields fully inside their transparent texture margins to remove rectangular mist edges.
