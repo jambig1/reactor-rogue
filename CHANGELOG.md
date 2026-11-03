@@ -1,3 +1,10 @@
+# v0.41.1 — worn scenery and ambient life
+
+- Kept the sharp six-sector textures and seamless scrolling, with a restrained cached dither, broken colour and fine grain treatment.
+- Added scenery-aligned twinkling lights that remain visible in Low quality and crowded Auto scenes, independently of combat effect detail.
+- Restored slow drifting dust, rising Foundry embers, Cryo snow and faint Storm filaments. Reduced motion freezes the ambient animation.
+- Ambient effects stay behind all ships, pickups and threat markers and never consume simulation RNG.
+
 # v0.41.0 — plasma beam and Iron Halo artwork
 
 - Added layered energy sheaths, animated filaments, bright cores and compact contact flares to every player beam family, including evolved forms, Ion Curtain, Plasma Lash and Rupture Drill.

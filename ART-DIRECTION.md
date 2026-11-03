@@ -9,3 +9,7 @@ Texture scale is fixed in world space rather than stretched to viewport size. A 
 The generation brief for each texture requested overhead orthographic artwork, rich fine detail, restrained local light and dark readable combat space, without ships, UI, text, borders, wireframes or panel divisions. Sector themes are teal/violet nebula, amber asteroid wreckage, indigo ion storm, ember industrial foundry, blue glacial shelves and violet/teal distant city rooftops.
 
 TEST-ENVIRONMENTS.cjs checks state/RNG isolation, cache bounds, render order and reduced motion. TEST-TEXTURE-SEAMS.cjs uses the optional @napi-rs/canvas package to inspect actual pixel joins and resolution in all six textures. Synthetic review scenes are not advertised as captured gameplay.
+
+## v0.41.1 material and ambience
+
+A one-time colour treatment adds restrained two-pixel clustered dithering, broken colour and fine grain to each cached periodic surface. It does not lower the texture resolution. Scenery lights are sampled from bright points in the actual surface and blink in place. Their 18/64 point budgets remain available in Low/crowded Auto instead of depending on explosion detail. Dust, embers and snow follow particle settings; reduced motion freezes every ambient phase and drift. These layers render below gameplay and do not alter simulation state.
