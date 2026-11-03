@@ -2,6 +2,11 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.36.1
+
+- Keep Play and Launch text readable when buttons are hovered or focused.
+- Verify ship and sector navigation at phone, small-phone, landscape, tablet and desktop viewport sizes.
+
 ## 0.36.0
 
 - Add separate ship and sector selection before launching, with gameplay previews, boss rosters and unlock requirements.
