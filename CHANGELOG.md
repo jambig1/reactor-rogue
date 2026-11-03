@@ -1,5 +1,7 @@
 # v0.40.0 — sharper continuous sector scenery
 
+- Refreshed all six menu and website previews with separate live gameplay captures using the new scenery.
+
 - Replaced the six atlas cells with six independently generated high-resolution sector textures.
 - Removed mirrored background neighbours. Smooth periodic edge blending and a single repeating pattern eliminate reflection joins and subpixel tile cracks.
 - Kept scenery at a fixed world scale so desktop viewports reveal more detail instead of stretching the background.
