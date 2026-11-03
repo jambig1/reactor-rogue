@@ -2,6 +2,12 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.39.1
+
+- Replaced all six embedded sector previews with separate live gameplay captures of the new environments.
+- Updated the website hero, sector gallery and README gameplay image to the current capture set.
+- Used versioned image filenames to avoid older cached screenshots. Each sector has its own ship, encounter and still.
+
 ## 0.39.0
 
 - Replaced the live sector backgrounds with six distinct textured environments inspired by nebula clouds, dark wreckage silhouettes and atmospheric lighting.

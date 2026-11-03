@@ -4,7 +4,7 @@ A free browser-based space survival game. Choose a ship, build your arsenal and 
 
 **[Play Reactor Rogue](https://jambig1.github.io/reactor-rogue/)**
 
-![Neon Undercity gameplay](sector-city-v0343.jpg)
+![Neon Undercity gameplay](sector-city-v0391.jpg)
 
 ## The game
 
@@ -57,7 +57,7 @@ Core game assets are embedded in `index.html`. The hosted site also has an offli
 - [Cloud save setup](CLOUD-SETUP.md): the optional account integration and its current limits.
 - [Balance measurements](BALANCE-NOTES.md) and [pacing measurements](PACING-NOTES.md): historical test methods and results.
 
-Current playable version: **0.39.0**.
+Current playable version: **0.39.1**.
 
 ## Font attribution
 
