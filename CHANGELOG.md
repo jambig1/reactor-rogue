@@ -2,6 +2,10 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.38.3
+
+- Keep atmospheric colour fields fully inside their transparent texture margins to remove rectangular mist edges.
+
 ## 0.38.2
 
 - Paint neighbouring world cells into cached surfaces so rocks, shading and colour fields continue across tile joins.
