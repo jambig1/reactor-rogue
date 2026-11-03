@@ -2,6 +2,12 @@
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
 
+## 0.36.0
+
+- Add separate ship and sector selection before launching, with gameplay previews, boss rosters and unlock requirements.
+- Remember ship and sector choices; keep licences, upgrades, contracts and loadouts in the Hangar.
+- Support backing out, inspecting locked ships and returning from licence purchases without starting or abandoning a run.
+
 ## 0.35.2
 
 - Auto-start optional events after three continuous game seconds in their marked area, with a visible countdown and reset on leaving.

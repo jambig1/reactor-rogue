@@ -18,6 +18,8 @@ A free browser-based space survival game. Choose a ship, build your arsenal and 
 
 The game is in active development. Balance, content and presentation may change between updates.
 
+Choose **Play**, select your ship, then choose a sector and launch. Your last ship and sector are remembered. Buy licences and permanent upgrades in the Hangar.
+
 ## Controls
 
 | Action | Keyboard and mouse | Phone and tablet |
@@ -55,7 +57,7 @@ Core game assets are embedded in `index.html`. The hosted site also has an offli
 - [Cloud save setup](CLOUD-SETUP.md): the optional account integration and its current limits.
 - [Balance measurements](BALANCE-NOTES.md) and [pacing measurements](PACING-NOTES.md): historical test methods and results.
 
-Current playable version: **0.35.2**.
+Current playable version: **0.36.0**.
 
 ## Font attribution
 

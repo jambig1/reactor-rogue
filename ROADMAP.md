@@ -7,6 +7,7 @@ This is a status overview, not a release schedule. Future items may change as th
 | Area | Current systems |
 | --- | --- |
 | Combat | Automatic weapons, evolutions, branching specialisations, equipment combinations and defensive/passive items. |
+| Launch flow | Separate ship selection, sector selection and final launch; remembered choices and locked-content previews. |
 | Ships and progression | Twelve ships, individual unlock challenges, credit licences, contracts and permanent upgrade tools. |
 | Enemies | Mixed fleets, specialist roles, formations, attack warnings and population controls. |
 | Sectors | Six environments with distinct scenery, hazards, themed ships and three named bosses each. |
@@ -21,16 +22,22 @@ This is a status overview, not a release schedule. Future items may change as th
 
 **Online accounts and cloud saves.** Database ownership policies and save-conflict handling have been tested. Email sender configuration and real-account sign-in/restore tests remain before public activation. Existing local saves and backup transfer remain available.
 
-## Deferred or proposed
+## Agreed gameplay priorities
 
-| Idea | Status |
-| --- | --- |
-| Reactor Protocols | Deferred. A separate set of build-shaping cards; not currently part of the game. |
-| Difficulty tiers | Deferred. Additional rules and encounter changes, rather than health increases alone. |
-| Expanded mastery rewards | Proposed. More ship and weapon goals beyond the current challenges and contracts. |
-| Secrets and exploration rewards | Proposed. Sector discoveries, unusual transmissions and hidden wrecks. |
-| A larger final encounter | Proposed. A flagship with destructible systems and additional phases. |
-| Daily seeded challenges | Proposed. Shared starting conditions and reproducible runs. |
+The launch-menu change comes before this list. These priorities are proposals for future implementation, not shipped features.
+
+1. Equipment unlock progression through weapon blueprints and challenges, retaining equipment access for existing players.
+2. Secrets and exploration rewards, including hidden wrecks, research stations and unusual transmissions.
+3. Weapon Overclocking after normal equipment upgrades are complete.
+4. A unified discovery Archive for equipment, enemies, bosses and secrets.
+5. Sector difficulty tiers with encounter changes and matching rewards.
+6. Capped permanent Hangar research upgrades.
+7. Limited equipment exclusions before a run.
+8. Reactor Protocols, still deferred as previously agreed; build on existing mutations carefully.
+9. Structured special-operation missions using existing sectors and systems.
+10. Co-op, a later substantial project.
+
+Other proposed ideas include expanded mastery rewards, a larger final encounter with destructible systems, and daily seeded challenges.
 
 ## Ongoing review
 
