@@ -1,3 +1,10 @@
+# v0.40.0 — sharper continuous sector scenery
+
+- Replaced the six atlas cells with six independently generated high-resolution sector textures.
+- Removed mirrored background neighbours. Smooth periodic edge blending and a single repeating pattern eliminate reflection joins and subpixel tile cracks.
+- Kept scenery at a fixed world scale so desktop viewports reveal more detail instead of stretching the background.
+- Limited decoded textures to two sectors, with a smaller Low-quality surface and frozen ambient animation under reduced motion.
+
 # v0.39.2 — sector cover polish
 
 - Removed ambient fracture lanes in Cryo Reach and lockdown lanes in Neon Undercity. Boss attack telegraphs and Cinder Foundry vents remain.

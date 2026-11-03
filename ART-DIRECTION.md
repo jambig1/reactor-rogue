@@ -1,11 +1,11 @@
-# Environment artwork
+# Sector backgrounds, v0.40.0
 
-The six-sector background atlas is `sector-atmosphere-atlas-v0390.jpg`. It is also embedded in `index.html` so the core game does not depend on an extra image request. The production atlas was created with the built-in image generation tool using a player-provided visual reference for atmosphere, then encoded as JPEG without changing its composition.
+Each sector now uses an independent full-resolution texture, embedded in index.html and supplied as a sector-background-*-v0400.jpg file. The six images were generated individually to preserve the dark painterly sci-fi style while increasing usable detail over the former 512 by 512 atlas cells. They are not upscaled atlas crops.
 
-The layout is three columns and two rows: Neon Expanse, Shattered Belt, Storm Relay, Cinder Foundry, Cryo Reach, Neon Undercity.
+The renderer constructs a periodic surface once per selected sector and quality level. Smooth complementary alpha weights blend an 18% overlap on opposite edges, then additive wrapping combines all four corner contributions. The result is flattened to opaque navy to prevent quantisation from revealing translucent seams. A single repeating Canvas pattern draws the surface; no mirrored neighbours or separate image rectangles are used.
 
-Generation brief: a cohesive overhead 2D neon space background atlas with six distinct environments, rich turbulent nebula and surface textures, dark silhouettes, soft local light and clear dark space for combat. The sectors use open teal/violet cosmic space, amber asteroid wreckage, indigo ion storms, orange furnace smoke, cyan glacial shelves and a violet neon city. No characters, ships, interface, text, wireframes or outlined polygon scenery.
+Texture scale is fixed in world space rather than stretched to viewport size. A larger monitor reveals more scenery. Low quality uses a smaller cached surface with the same world scale. At most two sectors remain decoded and each keeps one surface. Reduced motion freezes ambient drift and particles. Renderers do not consume gameplay RNG or alter collision geometry.
 
-Runtime rendering samples each sector's own atlas region. Mirrored neighbouring regions match edge pixels. Slow parallax and sparse ambient motes add motion without changing simulation state. Reduced motion freezes ambient animation. Physical terrain, ships, pickups, attacks and hazard warnings draw above the background. The source texture is decorative and adds no collision boundaries.
+The generation brief for each texture requested overhead orthographic artwork, rich fine detail, restrained local light and dark readable combat space, without ships, UI, text, borders, wireframes or panel divisions. Sector themes are teal/violet nebula, amber asteroid wreckage, indigo ion storm, ember industrial foundry, blue glacial shelves and violet/teal distant city rooftops.
 
-The background remains an art pass in an actively developed game. `TEST-ENVIRONMENTS.html` shows representative ships and contrast markers using the actual scenery renderers, rather than a captured run. `TEST-ENVIRONMENTS.cjs` checks the loaded-atlas and fallback paths.
+TEST-ENVIRONMENTS.cjs checks state/RNG isolation, cache bounds, render order and reduced motion. TEST-TEXTURE-SEAMS.cjs uses the optional @napi-rs/canvas package to inspect actual pixel joins and resolution in all six textures. Synthetic review scenes are not advertised as captured gameplay.
