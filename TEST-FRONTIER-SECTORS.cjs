@@ -14,7 +14,7 @@ function setup(id,path='',evolved=false){fresh();run(`Math.random=()=>.99;s.item
 assert.equal(run('sectors.length'),6);
 run("hangar.claimed=[]");assert(!run("sectorOpen('foundry')"));assert(!run("sectorOpen('cryo')"));run("hangar.claimed=['win']");assert(run("sectorOpen('foundry')&&sectorOpen('cryo')"));assert(!run("sectorOpen('invalid')"));
 for(let id of ['foundry','cryo']){
- fresh();run(`s.sector='${id}';s.dev.test=true;s.sectorClock=0;updateExpansion(.1)`);assert.equal(run('s.sectorHazards.length'),1);assert.equal(run('s.sectorHazards[0].kind'),id==='foundry'?'vent':'fracture');assert(run('s.sectorHazards[0].warning>=1.5'));
+ fresh();run(`s.sector='${id}';s.dev.test=true;s.sectorClock=0;updateExpansion(.1)`);assert.equal(run('s.sectorHazards.length'),id==='foundry'?1:0);if(id==='foundry'){assert.equal(run('s.sectorHazards[0].kind'),'vent');assert(run('s.sectorHazards[0].warning>=1.5'))}else{run('updateFrontierHazards(120,false)');assert.equal(run('s.sectorHazards.length'),0)};
  // Real oriented rectangle collision, including player-radius tolerance.
  run("s.sectorHazards=[];addFrontierHazard('vent',0,0,Math.PI/2)");assert(run('frontierHazardContains(s.sectorHazards[0],{x:0,y:80})'));assert(!run('frontierHazardContains(s.sectorHazards[0],{x:80,y:0})'));
  let hp=run('s.p.hp');run('s.p.x=0;s.p.y=0;updateExpansion(.1)');assert.equal(run('s.p.hp'),hp);run('s.sectorHazards[0].warning=0;s.p.inv=0;updateExpansion(.1)');assert(run('s.p.hp')<hp);

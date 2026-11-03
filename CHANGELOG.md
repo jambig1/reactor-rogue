@@ -1,3 +1,9 @@
+# v0.39.2 — sector cover polish
+
+- Removed ambient fracture lanes in Cryo Reach and lockdown lanes in Neon Undercity. Boss attack telegraphs and Cinder Foundry vents remain.
+- Replaced flat cover outlines with shaded sector materials, stable surface detail, impact flashes and progressive damage cracks. Cover collision, durability and shot blocking are unchanged.
+- Matched destruction colour to sector material and refreshed sector descriptions and offline cache.
+
 # Recent changes
 
 This is a concise summary of recent releases. Older implementation history is available in Git history.
