@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.50.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.51.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -118,3 +118,5 @@ Arsenal discovery is a Records tab with direct launch/pause/result actions. `arc
 `weapon-atlas-0-v0500.png` through `weapon-atlas-3-v0500.png` contain 96 painted sprites. `weaponAtlasOrder`, `weaponAtlasSizes` and `weaponAtlasCell` define exact source rectangles. These external assets must be shipped beside the game and are listed in the offline cache. They are no longer embedded core icons in a standalone HTML download. The canvas and DOM icons share these files.
 
 `EVOLUTION-TRANSFORMATIONS.md` / `.json` list every cycle. Run `TEST-EVOLUTION-SIGNATURES.cjs`, `TEST-DISCOVERY.cjs` and the base-only combat comparison. Optional `REVIEW-EVOLUTIONS.cjs` needs @napi-rs/canvas and produces labelled isolated simulation review scenes.
+
+Support art v0.51: `support-atlas-0-v0510.png` and `support-atlas-1-v0510.png` contain all 32 supports in 4×4 grids. `supportAtlasOrder`, `supportAtlasSizes` and `supportAtlasCell` define crops. `equipmentIcon` routes all support surfaces through these shared sprites, independently of evolved weapon state. Ship both files alongside the game and in the offline cache.

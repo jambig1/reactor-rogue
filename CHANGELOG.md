@@ -1,3 +1,9 @@
+# v0.51.0 — painted support upgrades
+
+- Replace all 32 outlined support icons with individual painted ship modules, including Overclock, shields, armour, drives and chips. Match the slate metal and restrained energy of the weapon arsenal.
+- Share the artwork across upgrade offers, HUD racks, build inventories, specialisations, synergy combinations and evolution recipes. No stat, save, recipe or combat changes.
+- Cache both support atlases for offline play and add a production support artwork gallery.
+
 # v0.50.0 — evolution transformations and painted arsenal
 
 - Replaced the rejected vector attack miniatures with 96 painted base/evolved sprites across four transparent atlases, following the approved slate-armour ship study. All weapon surfaces share the new sprites.

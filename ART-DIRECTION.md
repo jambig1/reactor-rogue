@@ -72,3 +72,7 @@ All 48 attacks use dedicated SVG miniatures in `illustratedWeaponIcon`, shared t
 The v0.49 vector weapon illustrations were rejected. The replacement uses four image-generated transparent atlases following the approved weapon study and real production ship/scenery references. Broad, worn slate armour facets, fine highlights, inset cores and restrained emissive effects belong to the same fleet material family. Evolutions have distinct large mechanisms and silhouettes rather than colour swaps. `weaponAtlasOrder` maps base/evolved pairs across four columns and six rows in each sheet.
 
 Gameplay reuses painted hardware together with simulated moving rings, linked pylons, beam lanes, pressure walls, missiles and impact stages. Signature colour palettes follow the painted assets. Keep actual collision fronts and interception nodes visible in Low and reduced motion; simplify only decorative layers.
+
+## Painted support hardware, v0.51.0
+
+All 32 support upgrades now use individual painted modules with the same slate armour, worn bevels, inset energy and chunky readable silhouettes as the arsenal. Overclock is an exposed orange flywheel reactor; shields, medical tools, scanners and chips each depict physical hardware. Two transparent 4×4 atlases feed the existing shared `equipmentIcon` route. Generate the production gallery with `SUPPORT_GALLERY=1 node TEST-DISCOVERY.cjs`.
