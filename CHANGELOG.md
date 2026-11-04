@@ -1,3 +1,7 @@
+# v0.44.1 — boss display spacing
+
+- Move notifications below the boss display during encounters so arrival and wave messages do not overlap the name, health or charge state.
+
 # v0.44.0 — boss presentation
 
 - Rebuilt all eighteen sector bosses with individual silhouettes, shaded armour and sector-specific reactors, weapons and machinery.
