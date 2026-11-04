@@ -1,3 +1,7 @@
+# v0.51.1 — upgrade card spacing
+
+- Reserve the real 64px/48px painted-icon column in compact upgrade and reward cards. Keep text outside the artwork at phone and tablet widths; give support icons the same visual size as weapons.
+
 # v0.51.0 — painted support upgrades
 
 - Replace all 32 outlined support icons with individual painted ship modules, including Overclock, shields, armour, drives and chips. Match the slate metal and restrained energy of the weapon arsenal.

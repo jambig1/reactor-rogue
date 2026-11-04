@@ -61,7 +61,7 @@ Core game assets are embedded in `index.html`, with the painted weapon and suppo
 
 Run variety includes shuffled fleet operations, regular recovery windows and optional Relay Circuits. Complete a circuit to choose one run-only field protocol for close-range, long-range, cold-target or siege damage. Protocols replace one another and do not use equipment slots.
 
-Current playable version: **0.51.0**.
+Current playable version: **0.51.1**.
 
 ## Font attribution
 
