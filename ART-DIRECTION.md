@@ -26,3 +26,11 @@ The existing restrained material treatment is retained because it was present in
 TEST-ENVIRONMENTS.cjs checks rendering order, state/RNG isolation, cache bounds, motion and light budgets. TEST-TEXTURE-SEAMS.cjs checks all actual image edges, opaque corners, embedded/file parity and material/light candidates using optional @napi-rs/canvas. TEST-ENVIRONMENT-GALLERY.cjs executes the standalone scenery review with actual native canvases. Synthetic review scenes are not presented as captured gameplay.
 
 Menu and website previews must use separate real gameplay captures from their corresponding sectors. Keep them consistent with the shipped art and use versioned filenames and offline-cache updates.
+
+## Enemy fleets, v0.43.0
+
+Standard enemies use the same code-native illustrated construction as the player ships: a dark cut edge, broad slate armour planes, lighter top faces, shaded undersides, small cockpit apertures and restrained engine lights. Do not stack the older generic fleet finish over these hulls. Boss artwork remains on its existing renderer.
+
+The four regular classes retain compact scout, swept interceptor, twin-pod gunship and broad cruiser profiles. Sector fittings use salvaged copper plates, relay fins, furnace vent slats, ice facets and security runners. Eight specialist profiles carry distinct equipment. All geometry is cosmetic and consumes no combat RNG. Essential warning and shield layers remain separate from hulls.
+
+`TEST-ENEMY-ART.cjs` checks every fleet/class/role/status in Low/High and reduced motion, including state/RNG isolation. `ENEMY_GALLERY=1 node TEST-ENEMY-ART.cjs` regenerates `TEST-ENEMY-ART.html` directly from the production painter; this enlarged static reference is not a gameplay capture.

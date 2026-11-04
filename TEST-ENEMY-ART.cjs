@@ -1,0 +1,31 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');const file=require('path').join(__dirname,'index.html');let html=fs.readFileSync(file,'utf8'),js=html.match(/<script>([\s\S]*?)<\/script>/)[1],map={},storage={},events={},depth=0;
+const ctx=new Proxy({save(){depth++},restore(){depth--;assert(depth>=0)},createRadialGradient:()=>({addColorStop(){}}),createLinearGradient:()=>({addColorStop(){}}),measureText:t=>({width:t.length*8})},{get:(o,k)=>k in o?o[k]:(()=>{})});
+function element(id){return map[id]||(map[id]={style:{setProperty(){}},classList:{add(){},remove(){},toggle(){}},dataset:{},getContext:()=>ctx,addEventListener(){},setAttribute(){},setPointerCapture(){},querySelectorAll:()=>[],querySelector:()=>element('q'),textContent:'',innerHTML:'',value:1,checked:false})}
+let c={console,Math:Object.create(Math),Date,Set,Map,JSON,Number,String,Array,Object,Infinity,performance:{now:()=>0},document:{getElementById:element,querySelector:element,querySelectorAll:()=>[],addEventListener(){},hidden:false},localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v},matchMedia:()=>({matches:false}),innerWidth:1024,innerHeight:768,devicePixelRatio:1,addEventListener:(name,cb)=>{(events[name]??=[]).push(cb)},requestAnimationFrame(){},setTimeout(){},clearTimeout(){}};c.window=c;vm.createContext(c);vm.runInContext(js,c);let run=code=>vm.runInContext(code,c);
+
+
+
+
+// Render every faction/class/specialist through the production painter without mutating combat.
+run("start();s.t=180");
+const before=run('JSON.stringify(s)');
+run("Math.random=()=>{throw Error('enemy art consumed gameplay RNG')}");
+for(const mode of ['low','high'])for(const motion of [false,true]){
+ run('graphics.preset='+JSON.stringify(mode)+';refreshGraphicsVisual();reducedMotion='+motion);
+ run("for(let sectorHull of Object.keys(enemyFleetPaint))for(let type=0;type<4;type++)for(let role of [null,...Object.keys(enemyRoleProfiles)])for(let status of ['normal','frozen','hit','damaged']){let e={x:100,y:90,r:20,hp:status==='damaged'?20:100,max:100,c:'#ff8aa2',type,role,sectorHull,freeze:status==='frozen'?1:0,glow:status==='hit'?1:0};let before=JSON.stringify(e);enemyDesign(e,12);if(JSON.stringify(e)!==before)throw Error('enemy mutated')}");
+ assert.equal(depth,0);assert.equal(run('JSON.stringify(s)'),before);
+}
+const cards=run(`Object.entries(enemyFleetPaint).flatMap(([sectorHull,f])=>[0,1,2,3].map(type=>{let q=shipSVGContext();drawIllustratedEnemyHull({sectorHull,type,c:f.trim,hp:100,max:100},0,shipPainter(q));return {sector:sectorHull,name:['Scout','Interceptor','Gunship','Cruiser'][type],svg:'<svg viewBox="-34 -29 68 58" role="img" aria-label="'+sectorHull+' '+type+'">'+q.markup()+'</svg>'}}))`);
+assert.equal(new Set(cards.map(x=>x.svg)).size,24);
+const specialists=run(`Object.keys(enemyRoleProfiles).map(role=>{let q=shipSVGContext();drawIllustratedEnemyHull({role,type:2,sectorHull:'grid',c:roleInfo[role].c,hp:100,max:100},0,shipPainter(q));return {sector:'specialist',name:roleInfo[role].name,svg:'<svg viewBox="-34 -29 68 58" role="img" aria-label="'+role+'">'+q.markup()+'</svg>'}})`);
+assert.equal(new Set(specialists.map(x=>x.svg)).size,8);
+for(const card of [...cards,...specialists])assert(!/NaN|undefined/.test(card.svg));
+assert(!html.includes('drawEnemyShip(e,t);drawFleetEnemyFinish(e,t)'));
+console.log('PASS 3,456 faction/class/role/status renders, pure state/RNG, balanced canvas in Low/High and reduced motion; 24 distinct fleet hulls and eight specialist loadouts');
+if(process.env.ENEMY_GALLERY){
+ const names={grid:'Neon Expanse',belt:'Shattered Belt',storm:'Storm Relay',foundry:'Cinder Foundry',cryo:'Cryo Reach',city:'Neon Undercity'};
+ let content=Object.keys(names).map(sector=>'<section><h2>'+names[sector]+'</h2><div class="fleet">'+cards.filter(x=>x.sector===sector).map(x=>'<article>'+x.svg+'<p>'+x.name+'</p></article>').join('')+'</div></section>').join('');
+ content+='<section><h2>Specialist equipment</h2><div class="fleet">'+specialists.map(x=>'<article>'+x.svg+'<p>'+x.name+'</p></article>').join('')+'</div></section>';
+ fs.writeFileSync('TEST-ENEMY-ART.html','<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reactor Rogue enemy fleets</title><style>body{background:#080f1e;color:#dce8f1;font:15px Arial,sans-serif;margin:0;padding:32px}main,header{max-width:1100px;margin:auto}h1{font-size:30px}h2{font-size:18px;color:#8cc6d2;margin:28px 0 12px}header p{color:#a3b3c5;max-width:720px;line-height:1.6}.fleet{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}article{background:#172334;border:1px solid #34465a;border-radius:8px;text-align:center;padding:12px}svg{width:150px;max-width:100%;height:120px}article p{font-size:12px;letter-spacing:1px} @media(max-width:650px){body{padding:18px}.fleet{grid-template-columns:repeat(2,1fr)}svg{height:100px}}</style><header><p>REACTOR ROGUE / V0.43.0</p><h1>Sector fleets</h1><p>Exact production hull geometry, enlarged for inspection. Four class silhouettes share shaded armour and visible machinery. Sector fittings and specialist equipment change the profiles. Static artwork review, not gameplay screenshots.</p></header><main>'+content+'</main></html>');
+ if(process.env.ENEMY_RENDER){const {createCanvas,loadImage}=require('@napi-rs/canvas');(async()=>{let out=createCanvas(1320,1440),p=out.getContext('2d');p.fillStyle='#080f1e';p.fillRect(0,0,1320,1440);p.font='bold 30px sans-serif';p.fillStyle='#edf5ff';p.fillText('REACTOR ROGUE / ENEMY FLEETS',35,48);for(let i=0;i<cards.length;i++){let x=35+i%4*320,y=90+Math.floor(i/4)*174;let img=await loadImage(Buffer.from(cards[i].svg));p.fillStyle='#172334';p.fillRect(x,y,300,158);p.drawImage(img,x+65,y+5,170,115);p.font='15px sans-serif';p.fillStyle='#b6cada';p.fillText(names[cards[i].sector]+' / '+cards[i].name,x+12,y+141)}for(let i=0;i<specialists.length;i++){let x=35+i%4*320,y=1150+Math.floor(i/4)*130;let img=await loadImage(Buffer.from(specialists[i].svg));p.drawImage(img,x+80,y,140,100);p.font='13px sans-serif';p.fillStyle='#b6cada';p.fillText(specialists[i].name,x+60,y+114)}fs.writeFileSync('/workspace/scratch/reactor-rogue-enemy-fleets-v043.png',out.toBuffer('image/png'))})().catch(e=>{console.error(e);process.exitCode=1})}
+}

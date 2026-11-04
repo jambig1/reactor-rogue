@@ -1,3 +1,10 @@
+# v0.43.0 — illustrated enemy fleets
+
+- Rebuilt standard enemies with shaded armour, controlled steel edges and compact engine lights to match the player ships.
+- Gave scouts, interceptors, gunships and cruisers distinct silhouettes, with separate salvage, relay, furnace, ice and security fittings across the six fleets.
+- Added eight specialist hulls and equipment: hunter blades, swept interceptor wings, rail channels, shield emitters, fighter bays, mine racks, volatile tanks and repair arms.
+- Kept combat statistics, collision radii, spawns, progression and attack warnings unchanged. Artwork remains readable in Low quality and reduced motion.
+
 # v0.42.0 — illustrated sector artwork
 
 - Applied the approved Neon Expanse direction to all six maps, matching the ships’ shaded illustrated forms, controlled edges and restrained neon lighting.
