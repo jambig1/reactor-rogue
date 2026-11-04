@@ -76,3 +76,8 @@ Gameplay reuses painted hardware together with simulated moving rings, linked py
 ## Painted support hardware, v0.51.0
 
 All 32 support upgrades now use individual painted modules with the same slate armour, worn bevels, inset energy and chunky readable silhouettes as the arsenal. Overclock is an exposed orange flywheel reactor; shields, medical tools, scanners and chips each depict physical hardware. Two transparent 4×4 atlases feed the existing shared `equipmentIcon` route. Generate the production gallery with `SUPPORT_GALLERY=1 node TEST-DISCOVERY.cjs`.
+
+## Physical shield and equipment surfaces, v0.53.0
+
+Energy Shield is a persistent translucent cyan honeycomb shell around the hull, with three slate-metal emitter anchors. Local cells and the rim pulse on actual absorption; depletion dissolves the surface, and recharge reforms it. Keep the ship and nearby projectiles legible through the shell. Low and reduced-motion modes retain essential coverage and hit direction, without extra strobing.
+Reuse painted hardware for older deployables and small hull-mounted supports. Avoid turning passive stat modules into extra orbiting weapons. Feather atlas crop edges in both DOM icons and cached gameplay sprites so emissive tails do not end in a hard rectangular cut.

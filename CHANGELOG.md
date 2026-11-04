@@ -1,3 +1,11 @@
+# v0.53.0 — physical shields and combat materials
+
+- Give Energy Shield a curved honeycomb shell with shaded metal emitters. Brighten nearby hex cells on actual absorbed hits, show directional rim impacts and a short collapse on depletion; show a reform pulse when charge returns. Reactive Screen uses a lighter outer shell. Respect Low effects, reduced motion and flash settings.
+- Review production painters across all 48 base/evolved weapons and 32 supports. Replace older mine, cryo-charge, satellite, pylon, drone, crescent, scythe and decoy hardware with the shared painted materials; add a physical gravity core and softer cloud/plasma material. Preserve enemy mine warning art.
+- Fit owned support modules to the hull in bounded mount positions, with modest thruster accents. Retain existing armour, interception, repair and reactive effects.
+- Feather painted icon crop edges and use a bounded sprite cache for the same soft edges in gameplay. Discovery, upgrade and build icons share the treatment.
+- Preserve damage, cooldowns, hitboxes, shield capacity, saves and recipes. Add shield event/painter regression checks and an optional 128-case native artwork review tool.
+
 # v0.52.1 — align every painted crop
 
 - Align column and row boundaries to actual artwork across all four weapon sheets, removing remaining neighbouring hardware fragments. Keep exact source clipping for every DOM icon.

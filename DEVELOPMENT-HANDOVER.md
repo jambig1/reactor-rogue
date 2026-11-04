@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.52.1. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.53.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -122,3 +122,6 @@ Arsenal discovery is a Records tab with direct launch/pause/result actions. `arc
 Support art v0.51: `support-atlas-0-v0510.png` and `support-atlas-1-v0510.png` contain all 32 supports in 4×4 grids. `supportAtlasOrder`, `supportAtlasSizes` and `supportAtlasCell` define crops. `equipmentIcon` routes all support surfaces through these shared sprites, independently of evolved weapon state. Ship both files alongside the game and in the offline cache.
 
 Arsenal layout v0.52: selected-entry headings use an image/title flex row, recipe inputs are stacked named hardware rows, and the mobile browser is a bounded two-column list above the detail. `paintedAtlasIcon` uses a nested source viewport matching the crop aspect ratio; clipping only the square outer SVG allows adjacent atlas rows to leak into letterboxing. The first weapon sheet has hand-aligned column edges.
+
+Combat art v0.53: `drawHoneycombShield` is visual only. `recordShieldImpact` records actual absorbed damage with a finite source angle; `attackArt.shieldHits` caps at six, expires in `updateAttackArt` and resets with a run. Recharge appearance is also visual state. Shield collision/capacity remains unchanged. `paintedSpriteCache` caps at 80 cropped, feathered canvases; it does not hold combat actors. `drawSupportModules` paints at most six hull fittings. Passive modules do not become extra attacking or colliding objects.
+Run `TEST-SHIELD-ART.cjs`, `TEST-ATTACK-ART.cjs`, `TEST-COMBAT-FEEL.cjs` and the combat parity comparison. Optional `REVIEW-COMBAT-ART.cjs /output/path` requires @napi-rs/canvas and creates 48 base/evolved weapon cases, 32 support cases and shield-state scenes; these are simulated production-painter reviews, not browser gameplay recordings.
