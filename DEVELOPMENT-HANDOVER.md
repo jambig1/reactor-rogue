@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.51.1. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.52.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -120,3 +120,5 @@ Arsenal discovery is a Records tab with direct launch/pause/result actions. `arc
 `EVOLUTION-TRANSFORMATIONS.md` / `.json` list every cycle. Run `TEST-EVOLUTION-SIGNATURES.cjs`, `TEST-DISCOVERY.cjs` and the base-only combat comparison. Optional `REVIEW-EVOLUTIONS.cjs` needs @napi-rs/canvas and produces labelled isolated simulation review scenes.
 
 Support art v0.51: `support-atlas-0-v0510.png` and `support-atlas-1-v0510.png` contain all 32 supports in 4×4 grids. `supportAtlasOrder`, `supportAtlasSizes` and `supportAtlasCell` define crops. `equipmentIcon` routes all support surfaces through these shared sprites, independently of evolved weapon state. Ship both files alongside the game and in the offline cache.
+
+Arsenal layout v0.52: selected-entry headings use an image/title flex row, recipe inputs are stacked named hardware rows, and the mobile browser is a bounded two-column list above the detail. `paintedAtlasIcon` uses a nested source viewport matching the crop aspect ratio; clipping only the square outer SVG allows adjacent atlas rows to leak into letterboxing. The first weapon sheet has hand-aligned column edges.

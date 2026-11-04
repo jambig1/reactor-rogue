@@ -1,3 +1,10 @@
+# v0.52.0 — readable Arsenal discovery
+
+- Tighten the archive header, simplify discovery wording and align saved counts. Widen the detail column, make recipe requirements separate readable rows and give names, levels and descriptions a consistent hierarchy.
+- Use two readable icon columns and a bounded browsing list on phones. Place the selected detail after the list, with selection focus moving to the entry. Keep descriptions clear of the artwork and the Back action.
+- Clip each painted source rectangle inside an exact-aspect nested SVG before fitting the outer icon. This stops neighbouring atlas images appearing in letterbox space. Refine first-sheet column boundaries around the actual artwork. Shared icon surfaces and artwork galleries use the fix.
+- Preserve saved discoveries, filters, tracking, recipes and combat.
+
 # v0.51.1 — upgrade card spacing
 
 - Reserve the real 64px/48px painted-icon column in compact upgrade and reward cards. Keep text outside the artwork at phone and tablet widths; give support icons the same visual size as weapons.
