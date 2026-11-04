@@ -1,3 +1,7 @@
+# v0.47.1 — ability meter spacing
+
+- Keep the ability meter above weapon-rack labels at desktop, tablet, phone and small-phone widths.
+
 # v0.47.0 — flight controls and ability polish
 
 - Unified movement and ability direction across keyboard, hybrid, mouse-only and touch controls. Mouse-only abilities use the current cursor immediately; touch steering has a radial dead zone and proportional speed.
