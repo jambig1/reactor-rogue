@@ -1,3 +1,11 @@
+# v0.46.0 — run variety
+
+- Replaced the fixed encounter loop with shuffled patrol, assault and specialist operation decks. Fleet composition and specialist emphasis vary; every fourth operation remains a recovery window. Specialist unlock timing and boss, formation and population budgets are retained.
+- Added optional Relay Circuits to the signal rotation, within the first two signal opportunities. Hold each of three nodes for 1.25 continuous seconds within 45 seconds. Existing bosses suspend the event.
+- Relay rewards offer three field protocols: choose a close-range, long-range, cold-target or siege damage bonus for the current run. Only one protocol can be active; choosing another replaces it and uses no equipment slot.
+- Show the current operation and field protocol in the pause route report, explain them in How to Play, and retain the chosen protocol in run history. New runs start without a protocol.
+- Added test-only relay controls and checks for operation diversity, safe early fleets, node progress/expiry, interruption, rewards, damage boundaries, records and full simulation completion.
+
 # v0.45.0 — combat contact and destruction
 
 - Added directional kinetic sparks, energy splashes, armour chips, heavier pressure arcs and gold critical-hit marks at the target surface. Sustained weapons use smaller contact effects.

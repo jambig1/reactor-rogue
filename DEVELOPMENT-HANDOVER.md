@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.45.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.46.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -25,7 +25,9 @@ No application build step is required. The website expects these files to be ser
 
 The catalogue contains twelve ships, six sectors, eighteen named sector bosses, 48 weapon/evolution entries, 32 passive/defensive items and 31 contracts. The launch flow is Play, ship selection, sector selection, then launch. Sectors are selected in preflight rather than the Hangar. The Hangar retains licences, tools, contracts and loadouts. Equipment uses six weapon slots and six support slots. Achievement rewards range from 50 to 400 credits; ship licences range from 125 to 500, with Sovereign at 1,500 and Vanguard free. Existing paid achievements receive the payout difference once per profile, tracked by contractRewardVersion. Owned ships and challenge requirements are retained.
 
-Sector bosses are scheduled at 3, 6 and 10 game minutes. Defeating all three secures a sector clear, followed by an explicit choice to finish or continue into endless. Endless health and damage scale continuously from the opt-in time; sector bosses rotate every two game minutes. Population and projectile caps remain. Pause and reward screens suspend combat. Optional events auto-start after three continuous game seconds inside their marked area; leaving resets entry progress. Standard breaches retain optional risk selection. Merchant transmissions open automatically at a safe play-state boundary and suspend combat immediately. Bosses hold both systems.
+Sector bosses are scheduled at 3, 6 and 10 game minutes. Defeating all three secures a sector clear, followed by an explicit choice to finish or continue into endless. Endless health and damage scale continuously from the opt-in time; sector bosses rotate every two game minutes. Population and projectile caps remain. Pause and reward screens suspend combat. Fleet operations use three shuffled decks (patrol, assault and specialist) with a recovery window every fourth 40-second operation. Early operations respect specialist unlock times. Relay Circuits ask the pilot to hold three nodes in any order for 1.25 continuous seconds each before a 45-second timer expires. Relay rewards choose one conditional damage protocol for the run; replacement is explicit, no equipment slot is consumed and fresh runs reset it. The selected protocol is retained as run-history metadata.
+
+Optional events auto-start after three continuous game seconds inside their marked area; leaving resets entry progress. Standard breaches retain optional risk selection. Merchant transmissions open automatically at a safe play-state boundary and suspend combat immediately. Bosses hold both systems.
 
 Evolution hints use equipment from the current run and appear on the missing component. Evolution caches require a ready recipe when they drop. Supply caches retain their supply identity.
 
