@@ -1,0 +1,2430 @@
+{
+  "baselineCommit": "7c9e3c0657eeb970ce07b419c50684e7f8456a9c",
+  "version": "0.48.0",
+  "campaign": {
+    "beforeMethod": {
+      "sourceSHA256": "a6d4e4e40641b19f1f8b7d21763f099c3773b7dedd2fa47bb0fcd8e99ff5c894",
+      "driverSHA256": "95d68c6d8286e25474896fdbdc85b5678d3c6e58ca517fdf5d6dfc3c8978709b",
+      "step": 0.016666666666666666,
+      "limitSeconds": 900,
+      "startingStats": "Normal health, XP, loot, cooldowns and gear; selection gates bypassed only to choose requested test sectors/ships in isolated memory.",
+      "controller": "Resource collection, local enemy/projectile/ground avoidance, visible charge-ray avoidance, boss engagement, offered-upgrade choices; merchant skipped. Signals route pursues Relay Circuits.",
+      "limits": "Scripted viability/regression evidence, not human win rates, final difficulty or device FPS."
+    },
+    "afterMethod": {
+      "sourceSHA256": "234d53e70dfaaad40800a9225ac99dba3ddea7277853769a018fbe219eb518d7",
+      "driverSHA256": "95d68c6d8286e25474896fdbdc85b5678d3c6e58ca517fdf5d6dfc3c8978709b",
+      "step": 0.016666666666666666,
+      "limitSeconds": 900,
+      "startingStats": "Normal health, XP, loot, cooldowns and gear; selection gates bypassed only to choose requested test sectors/ships in isolated memory.",
+      "controller": "Resource collection, local enemy/projectile/ground avoidance, visible charge-ray avoidance, boss engagement, offered-upgrade choices; merchant skipped. Signals route pursues Relay Circuits.",
+      "limits": "Scripted viability/regression evidence, not human win rates, final difficulty or device FPS."
+    },
+    "clearsBefore": 13,
+    "clearsAfter": 15,
+    "cases": [
+      {
+        "index": 0,
+        "sector": "grid",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 684.53,
+          "level": 44,
+          "kills": 3055,
+          "bosses": 3,
+          "damageTaken": 120,
+          "minHP": 91.99999999999909,
+          "peakEnemies": 86,
+          "dev": false,
+          "credits": {
+            "base": 190,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5000,
+              "defeated": 260.38
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 8760,
+              "defeated": 472.23
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 12920,
+              "defeated": 684.53
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "sonic": 5,
+            "armour": 3,
+            "hull": 5,
+            "magnet": 5,
+            "regen": 5,
+            "blade": 5,
+            "cometAxe": 5,
+            "thorns": 1,
+            "speed": 3,
+            "mortar": 1,
+            "prism": 1
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 684.53,
+          "level": 44,
+          "kills": 3055,
+          "bosses": 3,
+          "damageTaken": 120,
+          "minHP": 91.99999999999909,
+          "peakEnemies": 86,
+          "dev": false,
+          "credits": {
+            "base": 190,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5000,
+              "defeated": 260.38
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 8760,
+              "defeated": 472.23
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 12920,
+              "defeated": 684.53
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "sonic": 5,
+            "armour": 3,
+            "hull": 5,
+            "magnet": 5,
+            "regen": 5,
+            "blade": 5,
+            "cometAxe": 5,
+            "thorns": 1,
+            "speed": 3,
+            "mortar": 1,
+            "prism": 1
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "firstUpgrade": 24.97
+      },
+      {
+        "index": 1,
+        "sector": "grid",
+        "profile": "touch",
+        "seed": 67890,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": false,
+          "time": 900.02,
+          "level": 46,
+          "kills": 3829,
+          "bosses": 2,
+          "damageTaken": 270,
+          "minHP": 69.84000000000708,
+          "peakEnemies": 80,
+          "dev": false,
+          "credits": {
+            "base": 247,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5240,
+              "defeated": 468.48
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 468.48,
+              "level": 30,
+              "hp": 9000,
+              "defeated": 820.55
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 820.57,
+              "level": 43,
+              "hp": 13160
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "magnet": 5,
+            "armour": 5,
+            "cometAxe": 2,
+            "regen": 5,
+            "blade": 5,
+            "ionCurtain": 1,
+            "hull": 5,
+            "baffles": 2,
+            "frost": 1,
+            "longBurn": 5,
+            "chain": 5
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "after": {
+          "completed": false,
+          "time": 900.02,
+          "level": 46,
+          "kills": 3829,
+          "bosses": 2,
+          "damageTaken": 270,
+          "minHP": 69.84000000000708,
+          "peakEnemies": 80,
+          "dev": false,
+          "credits": {
+            "base": 247,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5240,
+              "defeated": 468.48
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 468.48,
+              "level": 30,
+              "hp": 9000,
+              "defeated": 820.55
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 820.57,
+              "level": 43,
+              "hp": 13160
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "magnet": 5,
+            "armour": 5,
+            "cometAxe": 2,
+            "regen": 5,
+            "blade": 5,
+            "ionCurtain": 1,
+            "hull": 5,
+            "baffles": 2,
+            "frost": 1,
+            "longBurn": 5,
+            "chain": 5
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "firstUpgrade": 11.57
+      },
+      {
+        "index": 2,
+        "sector": "belt",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 656.6,
+          "level": 43,
+          "kills": 2859,
+          "bosses": 3,
+          "damageTaken": 191,
+          "minHP": 70.37600000000009,
+          "peakEnemies": 87,
+          "dev": false,
+          "credits": {
+            "base": 183,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "GRAPPLE CORSAIR",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5440,
+              "defeated": 220.42
+            },
+            {
+              "name": "SCRAP CRUSHER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 9060,
+              "defeated": 423.17
+            },
+            {
+              "name": "SALVAGE DREADNOUGHT",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 13420,
+              "defeated": 656.6
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "corona": 5,
+            "regen": 5,
+            "ionCurtain": 2,
+            "repairAmp": 3,
+            "clock": 4,
+            "magnet": 5,
+            "area": 1,
+            "gravity": 5,
+            "armour": 5,
+            "toxic": 1,
+            "nanite": 3
+          },
+          "evolved": {
+            "bolt": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 656.6,
+          "level": 43,
+          "kills": 2859,
+          "bosses": 3,
+          "damageTaken": 191,
+          "minHP": 70.37600000000009,
+          "peakEnemies": 87,
+          "dev": false,
+          "credits": {
+            "base": 183,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "GRAPPLE CORSAIR",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5440,
+              "defeated": 220.42
+            },
+            {
+              "name": "SCRAP CRUSHER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 9060,
+              "defeated": 423.17
+            },
+            {
+              "name": "SALVAGE DREADNOUGHT",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 13420,
+              "defeated": 656.6
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "corona": 5,
+            "regen": 5,
+            "ionCurtain": 2,
+            "repairAmp": 3,
+            "clock": 4,
+            "magnet": 5,
+            "area": 1,
+            "gravity": 5,
+            "armour": 5,
+            "toxic": 1,
+            "nanite": 3
+          },
+          "evolved": {
+            "bolt": true
+          }
+        },
+        "firstUpgrade": 30.07
+      },
+      {
+        "index": 3,
+        "sector": "belt",
+        "profile": "touch",
+        "seed": 67890,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 798.33,
+          "level": 43,
+          "kills": 3257,
+          "bosses": 3,
+          "damageTaken": 4,
+          "minHP": 100,
+          "peakEnemies": 83,
+          "dev": false,
+          "credits": {
+            "base": 250,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "GRAPPLE CORSAIR",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5200,
+              "defeated": 451.07
+            },
+            {
+              "name": "SCRAP CRUSHER",
+              "spawn": 451.07,
+              "level": 29,
+              "hp": 9180,
+              "defeated": 796.23
+            },
+            {
+              "name": "SALVAGE DREADNOUGHT",
+              "spawn": 796.25,
+              "level": 43,
+              "hp": 13660,
+              "defeated": 798.33
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "shield": 5,
+            "crescent": 4,
+            "magnet": 5,
+            "hull": 5,
+            "armour": 5,
+            "regen": 5,
+            "speed": 1,
+            "blade": 5,
+            "prismTrace": 1,
+            "plasmaWhip": 1,
+            "ember": 1
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 798.33,
+          "level": 43,
+          "kills": 3257,
+          "bosses": 3,
+          "damageTaken": 4,
+          "minHP": 100,
+          "peakEnemies": 83,
+          "dev": false,
+          "credits": {
+            "base": 250,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "GRAPPLE CORSAIR",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5200,
+              "defeated": 451.07
+            },
+            {
+              "name": "SCRAP CRUSHER",
+              "spawn": 451.07,
+              "level": 29,
+              "hp": 9180,
+              "defeated": 796.23
+            },
+            {
+              "name": "SALVAGE DREADNOUGHT",
+              "spawn": 796.25,
+              "level": 43,
+              "hp": 13660,
+              "defeated": 798.33
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "shield": 5,
+            "crescent": 4,
+            "magnet": 5,
+            "hull": 5,
+            "armour": 5,
+            "regen": 5,
+            "speed": 1,
+            "blade": 5,
+            "prismTrace": 1,
+            "plasmaWhip": 1,
+            "ember": 1
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "firstUpgrade": 11.57
+      },
+      {
+        "index": 4,
+        "sector": "storm",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": false,
+          "time": 900.02,
+          "level": 30,
+          "kills": 930,
+          "bosses": 1,
+          "damageTaken": 25,
+          "minHP": 82,
+          "peakEnemies": 240,
+          "dev": false,
+          "credits": {
+            "base": 80,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "RELAY KEEPER",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5340,
+              "defeated": 220.9
+            },
+            {
+              "name": "ARC CONDUCTOR",
+              "spawn": 360,
+              "level": 30,
+              "hp": 9200
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "regen": 5,
+            "shield": 3,
+            "magnet": 1,
+            "coupler": 2,
+            "scholar": 1,
+            "clock": 3,
+            "blade": 2,
+            "laser": 4,
+            "corona": 1,
+            "ionCurtain": 2,
+            "fence": 1
+          },
+          "evolved": {
+            "bolt": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 680.92,
+          "level": 46,
+          "kills": 3047,
+          "bosses": 3,
+          "damageTaken": 25,
+          "minHP": 82,
+          "peakEnemies": 98,
+          "dev": false,
+          "credits": {
+            "base": 186,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "RELAY KEEPER",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5340,
+              "defeated": 220.9
+            },
+            {
+              "name": "ARC CONDUCTOR",
+              "spawn": 360,
+              "level": 30,
+              "hp": 9200,
+              "defeated": 435.98
+            },
+            {
+              "name": "TEMPEST CITADEL",
+              "spawn": 600.02,
+              "level": 43,
+              "hp": 13460,
+              "defeated": 680.92
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "regen": 5,
+            "shield": 5,
+            "magnet": 5,
+            "coupler": 5,
+            "scholar": 1,
+            "clock": 5,
+            "blade": 4,
+            "laser": 5,
+            "corona": 1,
+            "ionCurtain": 2,
+            "fence": 3
+          },
+          "evolved": {
+            "bolt": true
+          }
+        },
+        "firstUpgrade": 30.2
+      },
+      {
+        "index": 5,
+        "sector": "storm",
+        "profile": "touch",
+        "seed": 67890,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": false,
+          "time": 900.02,
+          "level": 27,
+          "kills": 871,
+          "bosses": 1,
+          "damageTaken": 14,
+          "minHP": 88,
+          "peakEnemies": 240,
+          "dev": false,
+          "credits": {
+            "base": 83,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "RELAY KEEPER",
+              "spawn": 180,
+              "level": 16,
+              "hp": 5220,
+              "defeated": 283.65
+            },
+            {
+              "name": "ARC CONDUCTOR",
+              "spawn": 360,
+              "level": 27,
+              "hp": 8840
+            }
+          ],
+          "items": {
+            "bolt": 3,
+            "tractor": 1,
+            "crescent": 1,
+            "magnet": 2,
+            "armour": 4,
+            "regen": 3,
+            "shield": 3,
+            "clock": 2,
+            "blade": 5,
+            "chain": 2,
+            "rocket": 1
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 672.25,
+          "level": 44,
+          "kills": 2998,
+          "bosses": 3,
+          "damageTaken": 14,
+          "minHP": 88,
+          "peakEnemies": 85,
+          "dev": false,
+          "credits": {
+            "base": 237,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "RELAY KEEPER",
+              "spawn": 180,
+              "level": 16,
+              "hp": 5220,
+              "defeated": 283.65
+            },
+            {
+              "name": "ARC CONDUCTOR",
+              "spawn": 360,
+              "level": 27,
+              "hp": 8840,
+              "defeated": 376.02
+            },
+            {
+              "name": "TEMPEST CITADEL",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 13220,
+              "defeated": 672.25
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "tractor": 1,
+            "crescent": 2,
+            "magnet": 4,
+            "armour": 5,
+            "regen": 3,
+            "shield": 4,
+            "clock": 5,
+            "blade": 5,
+            "chain": 5,
+            "rocket": 4,
+            "ionCurtain": 1
+          },
+          "evolved": {
+            "blade": true,
+            "bolt": true
+          }
+        },
+        "firstUpgrade": 11.57
+      },
+      {
+        "index": 6,
+        "sector": "foundry",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 644.73,
+          "level": 41,
+          "kills": 2804,
+          "bosses": 3,
+          "damageTaken": 192,
+          "minHP": 12,
+          "peakEnemies": 164,
+          "dev": false,
+          "credits": {
+            "base": 183,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "SLAG HARVESTER",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5440,
+              "defeated": 208.2
+            },
+            {
+              "name": "FURNACE WARDEN",
+              "spawn": 360,
+              "level": 28,
+              "hp": 9060,
+              "defeated": 394.73
+            },
+            {
+              "name": "THE WORLD FORGE",
+              "spawn": 600.02,
+              "level": 40,
+              "hp": 13300,
+              "defeated": 644.73
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "mortar": 5,
+            "decoy": 1,
+            "armour": 4,
+            "regen": 5,
+            "scrap": 5,
+            "clock": 2,
+            "medics": 3,
+            "rapid": 5,
+            "speed": 1,
+            "echoRing": 4,
+            "blade": 1
+          },
+          "evolved": {
+            "bolt": true,
+            "scrap": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 644.73,
+          "level": 41,
+          "kills": 2804,
+          "bosses": 3,
+          "damageTaken": 192,
+          "minHP": 12,
+          "peakEnemies": 164,
+          "dev": false,
+          "credits": {
+            "base": 183,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "SLAG HARVESTER",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5440,
+              "defeated": 208.2
+            },
+            {
+              "name": "FURNACE WARDEN",
+              "spawn": 360,
+              "level": 28,
+              "hp": 9060,
+              "defeated": 394.73
+            },
+            {
+              "name": "THE WORLD FORGE",
+              "spawn": 600.02,
+              "level": 40,
+              "hp": 13300,
+              "defeated": 644.73
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "mortar": 5,
+            "decoy": 1,
+            "armour": 4,
+            "regen": 5,
+            "scrap": 5,
+            "clock": 2,
+            "medics": 3,
+            "rapid": 5,
+            "speed": 1,
+            "echoRing": 4,
+            "blade": 1
+          },
+          "evolved": {
+            "bolt": true,
+            "scrap": true
+          }
+        },
+        "firstUpgrade": 29.52
+      },
+      {
+        "index": 7,
+        "sector": "foundry",
+        "profile": "touch",
+        "seed": 67890,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 813.68,
+          "level": 44,
+          "kills": 3337,
+          "bosses": 3,
+          "damageTaken": 277,
+          "minHP": 77.14999999999965,
+          "peakEnemies": 161,
+          "dev": false,
+          "credits": {
+            "base": 312,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "SLAG HARVESTER",
+              "spawn": 180,
+              "level": 12,
+              "hp": 4840,
+              "defeated": 547.6
+            },
+            {
+              "name": "FURNACE WARDEN",
+              "spawn": 547.62,
+              "level": 33,
+              "hp": 9660,
+              "defeated": 683.62
+            },
+            {
+              "name": "THE WORLD FORGE",
+              "spawn": 683.63,
+              "level": 40,
+              "hp": 13300,
+              "defeated": 813.68
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "area": 2,
+            "regen": 5,
+            "flak": 5,
+            "armour": 5,
+            "ionCurtain": 5,
+            "magnet": 5,
+            "hull": 4,
+            "clock": 2,
+            "rapid": 5,
+            "twinWisps": 1,
+            "cannon": 1
+          },
+          "evolved": {
+            "bolt": true,
+            "flak": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 813.68,
+          "level": 44,
+          "kills": 3337,
+          "bosses": 3,
+          "damageTaken": 277,
+          "minHP": 77.14999999999965,
+          "peakEnemies": 161,
+          "dev": false,
+          "credits": {
+            "base": 312,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "SLAG HARVESTER",
+              "spawn": 180,
+              "level": 12,
+              "hp": 4840,
+              "defeated": 547.6
+            },
+            {
+              "name": "FURNACE WARDEN",
+              "spawn": 547.62,
+              "level": 33,
+              "hp": 9660,
+              "defeated": 683.62
+            },
+            {
+              "name": "THE WORLD FORGE",
+              "spawn": 683.63,
+              "level": 40,
+              "hp": 13300,
+              "defeated": 813.68
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "area": 2,
+            "regen": 5,
+            "flak": 5,
+            "armour": 5,
+            "ionCurtain": 5,
+            "magnet": 5,
+            "hull": 4,
+            "clock": 2,
+            "rapid": 5,
+            "twinWisps": 1,
+            "cannon": 1
+          },
+          "evolved": {
+            "bolt": true,
+            "flak": true
+          }
+        },
+        "firstUpgrade": 11.57
+      },
+      {
+        "index": 8,
+        "sector": "cryo",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 645.98,
+          "level": 39,
+          "kills": 2751,
+          "bosses": 3,
+          "damageTaken": 40,
+          "minHP": 72.61000000000645,
+          "peakEnemies": 110,
+          "dev": false,
+          "credits": {
+            "base": 176,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "RIME STALKER",
+              "spawn": 180,
+              "level": 16,
+              "hp": 5220,
+              "defeated": 223.53
+            },
+            {
+              "name": "GLASS EMPRESS",
+              "spawn": 360,
+              "level": 27,
+              "hp": 8840,
+              "defeated": 436.25
+            },
+            {
+              "name": "ABSOLUTE ZERO",
+              "spawn": 600.02,
+              "level": 38,
+              "hp": 12860,
+              "defeated": 645.98
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "scatter": 5,
+            "regen": 5,
+            "armour": 5,
+            "clock": 5,
+            "plates": 2,
+            "hull": 3,
+            "maneuver": 2,
+            "prism": 3,
+            "scrap": 1,
+            "mines": 2,
+            "plasmaWhip": 1
+          },
+          "evolved": {
+            "bolt": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 645.98,
+          "level": 39,
+          "kills": 2751,
+          "bosses": 3,
+          "damageTaken": 40,
+          "minHP": 72.61000000000645,
+          "peakEnemies": 110,
+          "dev": false,
+          "credits": {
+            "base": 176,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "RIME STALKER",
+              "spawn": 180,
+              "level": 16,
+              "hp": 5220,
+              "defeated": 223.53
+            },
+            {
+              "name": "GLASS EMPRESS",
+              "spawn": 360,
+              "level": 27,
+              "hp": 8840,
+              "defeated": 436.25
+            },
+            {
+              "name": "ABSOLUTE ZERO",
+              "spawn": 600.02,
+              "level": 38,
+              "hp": 12860,
+              "defeated": 645.98
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "scatter": 5,
+            "regen": 5,
+            "armour": 5,
+            "clock": 5,
+            "plates": 2,
+            "hull": 3,
+            "maneuver": 2,
+            "prism": 3,
+            "scrap": 1,
+            "mines": 2,
+            "plasmaWhip": 1
+          },
+          "evolved": {
+            "bolt": true
+          }
+        },
+        "firstUpgrade": 22.85
+      },
+      {
+        "index": 9,
+        "sector": "cryo",
+        "profile": "touch",
+        "seed": 67890,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": false,
+          "time": 900.02,
+          "level": 46,
+          "kills": 3819,
+          "bosses": 2,
+          "damageTaken": 103,
+          "minHP": 56.80000000000348,
+          "peakEnemies": 123,
+          "dev": false,
+          "credits": {
+            "base": 224,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "RIME STALKER",
+              "spawn": 180,
+              "level": 16,
+              "hp": 5220,
+              "defeated": 466.67
+            },
+            {
+              "name": "GLASS EMPRESS",
+              "spawn": 466.68,
+              "level": 31,
+              "hp": 9320,
+              "defeated": 721.53
+            },
+            {
+              "name": "ABSOLUTE ZERO",
+              "spawn": 721.53,
+              "level": 41,
+              "hp": 13220
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "armour": 5,
+            "regen": 5,
+            "plasmaWhip": 5,
+            "area": 5,
+            "velocity": 5,
+            "magnet": 5,
+            "ionGuard": 2,
+            "crit": 5,
+            "ram": 1,
+            "prismTrace": 3,
+            "flak": 1
+          },
+          "evolved": {}
+        },
+        "after": {
+          "completed": false,
+          "time": 900.02,
+          "level": 46,
+          "kills": 3819,
+          "bosses": 2,
+          "damageTaken": 103,
+          "minHP": 56.80000000000348,
+          "peakEnemies": 123,
+          "dev": false,
+          "credits": {
+            "base": 224,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "RIME STALKER",
+              "spawn": 180,
+              "level": 16,
+              "hp": 5220,
+              "defeated": 466.67
+            },
+            {
+              "name": "GLASS EMPRESS",
+              "spawn": 466.68,
+              "level": 31,
+              "hp": 9320,
+              "defeated": 721.53
+            },
+            {
+              "name": "ABSOLUTE ZERO",
+              "spawn": 721.53,
+              "level": 41,
+              "hp": 13220
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "armour": 5,
+            "regen": 5,
+            "plasmaWhip": 5,
+            "area": 5,
+            "velocity": 5,
+            "magnet": 5,
+            "ionGuard": 2,
+            "crit": 5,
+            "ram": 1,
+            "prismTrace": 3,
+            "flak": 1
+          },
+          "evolved": {}
+        },
+        "firstUpgrade": 11.57
+      },
+      {
+        "index": 10,
+        "sector": "city",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 702.38,
+          "level": 44,
+          "kills": 3152,
+          "bosses": 3,
+          "damageTaken": 0,
+          "minHP": 100,
+          "peakEnemies": 130,
+          "dev": false,
+          "credits": {
+            "base": 182,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PATROL INTERDICTOR",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5390,
+              "defeated": 228.18
+            },
+            {
+              "name": "SKYLINE ENFORCER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 9010,
+              "defeated": 464.65
+            },
+            {
+              "name": "METROPLEX OVERLORD",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 13320,
+              "defeated": 702.38
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "regen": 5,
+            "shield": 5,
+            "scatter": 1,
+            "cannon": 5,
+            "magnet": 5,
+            "velocity": 5,
+            "ram": 1,
+            "voidSeed": 5,
+            "speed": 1,
+            "armour": 5,
+            "sails": 1
+          },
+          "evolved": {}
+        },
+        "after": {
+          "completed": true,
+          "time": 702.38,
+          "level": 44,
+          "kills": 3152,
+          "bosses": 3,
+          "damageTaken": 0,
+          "minHP": 100,
+          "peakEnemies": 130,
+          "dev": false,
+          "credits": {
+            "base": 182,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PATROL INTERDICTOR",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5390,
+              "defeated": 228.18
+            },
+            {
+              "name": "SKYLINE ENFORCER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 9010,
+              "defeated": 464.65
+            },
+            {
+              "name": "METROPLEX OVERLORD",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 13320,
+              "defeated": 702.38
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "regen": 5,
+            "shield": 5,
+            "scatter": 1,
+            "cannon": 5,
+            "magnet": 5,
+            "velocity": 5,
+            "ram": 1,
+            "voidSeed": 5,
+            "speed": 1,
+            "armour": 5,
+            "sails": 1
+          },
+          "evolved": {}
+        },
+        "firstUpgrade": 22.85
+      },
+      {
+        "index": 11,
+        "sector": "city",
+        "profile": "touch",
+        "seed": 67890,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": false,
+          "time": 900.02,
+          "level": 42,
+          "kills": 3811,
+          "bosses": 1,
+          "damageTaken": 4,
+          "minHP": 96,
+          "peakEnemies": 105,
+          "dev": false,
+          "credits": {
+            "base": 284,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PATROL INTERDICTOR",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5150,
+              "defeated": 590.93
+            },
+            {
+              "name": "SKYLINE ENFORCER",
+              "spawn": 590.95,
+              "level": 35,
+              "hp": 9850
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "armour": 5,
+            "regen": 5,
+            "chain": 5,
+            "rapid": 3,
+            "shield": 4,
+            "harpoon": 1,
+            "velocity": 1,
+            "reach": 1,
+            "baffles": 5,
+            "blade": 5,
+            "prism": 3
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "after": {
+          "completed": false,
+          "time": 900.02,
+          "level": 42,
+          "kills": 3811,
+          "bosses": 1,
+          "damageTaken": 4,
+          "minHP": 96,
+          "peakEnemies": 105,
+          "dev": false,
+          "credits": {
+            "base": 284,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PATROL INTERDICTOR",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5150,
+              "defeated": 590.93
+            },
+            {
+              "name": "SKYLINE ENFORCER",
+              "spawn": 590.95,
+              "level": 35,
+              "hp": 9850
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "armour": 5,
+            "regen": 5,
+            "chain": 5,
+            "rapid": 3,
+            "shield": 4,
+            "harpoon": 1,
+            "velocity": 1,
+            "reach": 1,
+            "baffles": 5,
+            "blade": 5,
+            "prism": 3
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "firstUpgrade": 11.57
+      },
+      {
+        "index": 12,
+        "sector": "grid",
+        "profile": "desktop",
+        "seed": 67890,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": false,
+          "time": 900.02,
+          "level": 45,
+          "kills": 3801,
+          "bosses": 2,
+          "damageTaken": 215,
+          "minHP": 84,
+          "peakEnemies": 83,
+          "dev": false,
+          "credits": {
+            "base": 242,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 16,
+              "hp": 5120,
+              "defeated": 506.5
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 506.52,
+              "level": 32,
+              "hp": 9240,
+              "defeated": 892.2
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 892.22,
+              "level": 45,
+              "hp": 13400
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "regen": 5,
+            "magnet": 5,
+            "armour": 5,
+            "laser": 5,
+            "prism": 1,
+            "speed": 3,
+            "guidance": 2,
+            "hull": 5,
+            "nanite": 1,
+            "scatter": 5,
+            "blade": 3
+          },
+          "evolved": {}
+        },
+        "after": {
+          "completed": false,
+          "time": 900.02,
+          "level": 45,
+          "kills": 3801,
+          "bosses": 2,
+          "damageTaken": 215,
+          "minHP": 84,
+          "peakEnemies": 83,
+          "dev": false,
+          "credits": {
+            "base": 242,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 16,
+              "hp": 5120,
+              "defeated": 506.5
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 506.52,
+              "level": 32,
+              "hp": 9240,
+              "defeated": 892.2
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 892.22,
+              "level": 45,
+              "hp": 13400
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "regen": 5,
+            "magnet": 5,
+            "armour": 5,
+            "laser": 5,
+            "prism": 1,
+            "speed": 3,
+            "guidance": 2,
+            "hull": 5,
+            "nanite": 1,
+            "scatter": 5,
+            "blade": 3
+          },
+          "evolved": {}
+        },
+        "firstUpgrade": 13.42
+      },
+      {
+        "index": 13,
+        "sector": "grid",
+        "profile": "touch",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 646.78,
+          "level": 43,
+          "kills": 2771,
+          "bosses": 3,
+          "damageTaken": 212,
+          "minHP": 76.13999999999878,
+          "peakEnemies": 72,
+          "dev": false,
+          "credits": {
+            "base": 235,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5240,
+              "defeated": 297
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 8760,
+              "defeated": 458.92
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 12920,
+              "defeated": 646.78
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "regen": 5,
+            "blade": 5,
+            "prismTrace": 4,
+            "magnet": 5,
+            "clock": 5,
+            "rupture": 3,
+            "armour": 3,
+            "hull": 5,
+            "phase": 1,
+            "prism": 1,
+            "twinWisps": 1
+          },
+          "evolved": {
+            "blade": true,
+            "bolt": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 646.78,
+          "level": 43,
+          "kills": 2771,
+          "bosses": 3,
+          "damageTaken": 212,
+          "minHP": 76.13999999999878,
+          "peakEnemies": 72,
+          "dev": false,
+          "credits": {
+            "base": 235,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5240,
+              "defeated": 297
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 8760,
+              "defeated": 458.92
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 12920,
+              "defeated": 646.78
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "regen": 5,
+            "blade": 5,
+            "prismTrace": 4,
+            "magnet": 5,
+            "clock": 5,
+            "rupture": 3,
+            "armour": 3,
+            "hull": 5,
+            "phase": 1,
+            "prism": 1,
+            "twinWisps": 1
+          },
+          "evolved": {
+            "blade": true,
+            "bolt": true
+          }
+        },
+        "firstUpgrade": 10.85
+      },
+      {
+        "index": 14,
+        "sector": "grid",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "close",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 653.4,
+          "level": 42,
+          "kills": 2820,
+          "bosses": 3,
+          "damageTaken": 212,
+          "minHP": 80.43000000000077,
+          "peakEnemies": 147,
+          "dev": false,
+          "credits": {
+            "base": 239,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5000,
+              "defeated": 257.62
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 8760,
+              "defeated": 421.07
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 600.02,
+              "level": 40,
+              "hp": 12800,
+              "defeated": 653.4
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "sonic": 2,
+            "armour": 5,
+            "hull": 2,
+            "magnet": 5,
+            "regen": 5,
+            "blade": 4,
+            "corona": 4,
+            "ram": 4,
+            "tractor": 2,
+            "clock": 3,
+            "gravity": 1
+          },
+          "evolved": {
+            "bolt": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 653.4,
+          "level": 42,
+          "kills": 2820,
+          "bosses": 3,
+          "damageTaken": 212,
+          "minHP": 80.43000000000077,
+          "peakEnemies": 147,
+          "dev": false,
+          "credits": {
+            "base": 239,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5000,
+              "defeated": 257.62
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 8760,
+              "defeated": 421.07
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 600.02,
+              "level": 40,
+              "hp": 12800,
+              "defeated": 653.4
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "sonic": 2,
+            "armour": 5,
+            "hull": 2,
+            "magnet": 5,
+            "regen": 5,
+            "blade": 4,
+            "corona": 4,
+            "ram": 4,
+            "tractor": 2,
+            "clock": 3,
+            "gravity": 1
+          },
+          "evolved": {
+            "bolt": true
+          }
+        },
+        "firstUpgrade": 24.97
+      },
+      {
+        "index": 15,
+        "sector": "grid",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "long",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 845.55,
+          "level": 45,
+          "kills": 3517,
+          "bosses": 3,
+          "damageTaken": 533,
+          "minHP": 100,
+          "peakEnemies": 75,
+          "dev": false,
+          "credits": {
+            "base": 230,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5000,
+              "defeated": 431.22
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 431.23,
+              "level": 29,
+              "hp": 8880,
+              "defeated": 622.27
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 622.28,
+              "level": 37,
+              "hp": 12440,
+              "defeated": 845.55
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "sonic": 3,
+            "armour": 5,
+            "hull": 5,
+            "magnet": 5,
+            "regen": 5,
+            "blade": 5,
+            "speed": 4,
+            "medics": 1,
+            "frost": 3,
+            "rail": 3,
+            "plasmaWhip": 1
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 845.55,
+          "level": 45,
+          "kills": 3517,
+          "bosses": 3,
+          "damageTaken": 533,
+          "minHP": 100,
+          "peakEnemies": 75,
+          "dev": false,
+          "credits": {
+            "base": 230,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5000,
+              "defeated": 431.22
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 431.23,
+              "level": 29,
+              "hp": 8880,
+              "defeated": 622.27
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 622.28,
+              "level": 37,
+              "hp": 12440,
+              "defeated": 845.55
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "sonic": 3,
+            "armour": 5,
+            "hull": 5,
+            "magnet": 5,
+            "regen": 5,
+            "blade": 5,
+            "speed": 4,
+            "medics": 1,
+            "frost": 3,
+            "rail": 3,
+            "plasmaWhip": 1
+          },
+          "evolved": {
+            "blade": true
+          }
+        },
+        "firstUpgrade": 24.97
+      },
+      {
+        "index": 16,
+        "sector": "grid",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "control",
+        "route": "survival",
+        "before": {
+          "completed": true,
+          "time": 745.32,
+          "level": 45,
+          "kills": 3213,
+          "bosses": 3,
+          "damageTaken": 12,
+          "minHP": 94,
+          "peakEnemies": 89,
+          "dev": false,
+          "credits": {
+            "base": 216,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5240,
+              "defeated": 253.83
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 8760,
+              "defeated": 527.73
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 600.02,
+              "level": 40,
+              "hp": 12800,
+              "defeated": 745.32
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "sonic": 3,
+            "velocity": 5,
+            "magnet": 5,
+            "cometAxe": 4,
+            "rapid": 1,
+            "frost": 5,
+            "coupler": 5,
+            "reach": 1,
+            "plates": 1,
+            "regen": 5,
+            "spire": 5
+          },
+          "evolved": {}
+        },
+        "after": {
+          "completed": true,
+          "time": 745.32,
+          "level": 45,
+          "kills": 3213,
+          "bosses": 3,
+          "damageTaken": 12,
+          "minHP": 94,
+          "peakEnemies": 89,
+          "dev": false,
+          "credits": {
+            "base": 216,
+            "bonus": 0
+          },
+          "protocol": "",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5240,
+              "defeated": 253.83
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 8760,
+              "defeated": 527.73
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 600.02,
+              "level": 40,
+              "hp": 12800,
+              "defeated": 745.32
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "sonic": 3,
+            "velocity": 5,
+            "magnet": 5,
+            "cometAxe": 4,
+            "rapid": 1,
+            "frost": 5,
+            "coupler": 5,
+            "reach": 1,
+            "plates": 1,
+            "regen": 5,
+            "spire": 5
+          },
+          "evolved": {}
+        },
+        "firstUpgrade": 24.97
+      },
+      {
+        "index": 17,
+        "sector": "grid",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "signals",
+        "before": {
+          "completed": true,
+          "time": 631.28,
+          "level": 42,
+          "kills": 2653,
+          "bosses": 3,
+          "damageTaken": 129.75000000000114,
+          "minHP": 91.99999999999909,
+          "peakEnemies": 86,
+          "dev": false,
+          "credits": {
+            "base": 153,
+            "bonus": 0
+          },
+          "protocol": "close",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5000,
+              "defeated": 260.38
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 8760,
+              "defeated": 442.72
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 600.02,
+              "level": 40,
+              "hp": 12800,
+              "defeated": 631.28
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "sonic": 4,
+            "armour": 5,
+            "hull": 2,
+            "magnet": 5,
+            "regen": 5,
+            "blade": 5,
+            "cometAxe": 1,
+            "thorns": 1,
+            "clock": 5,
+            "toxic": 3,
+            "echoRing": 1
+          },
+          "evolved": {
+            "bolt": true,
+            "blade": true
+          }
+        },
+        "after": {
+          "completed": true,
+          "time": 631.28,
+          "level": 42,
+          "kills": 2653,
+          "bosses": 3,
+          "damageTaken": 129.75000000000114,
+          "minHP": 91.99999999999909,
+          "peakEnemies": 86,
+          "dev": false,
+          "credits": {
+            "base": 153,
+            "bonus": 0
+          },
+          "protocol": "close",
+          "bossLog": [
+            {
+              "name": "PRISM WARDEN",
+              "spawn": 180,
+              "level": 15,
+              "hp": 5000,
+              "defeated": 260.38
+            },
+            {
+              "name": "RAIL REAPER",
+              "spawn": 360,
+              "level": 28,
+              "hp": 8760,
+              "defeated": 442.72
+            },
+            {
+              "name": "SINGULARITY ENGINE",
+              "spawn": 600.02,
+              "level": 40,
+              "hp": 12800,
+              "defeated": 631.28
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "sonic": 4,
+            "armour": 5,
+            "hull": 2,
+            "magnet": 5,
+            "regen": 5,
+            "blade": 5,
+            "cometAxe": 1,
+            "thorns": 1,
+            "clock": 5,
+            "toxic": 3,
+            "echoRing": 1
+          },
+          "evolved": {
+            "bolt": true,
+            "blade": true
+          }
+        },
+        "firstUpgrade": 24.97
+      },
+      {
+        "index": 18,
+        "sector": "city",
+        "profile": "desktop",
+        "seed": 12345,
+        "pilot": "vanguard",
+        "build": "balanced",
+        "route": "signals",
+        "before": {
+          "completed": true,
+          "time": 738.97,
+          "level": 45,
+          "kills": 3344,
+          "bosses": 3,
+          "damageTaken": 0,
+          "minHP": 100,
+          "peakEnemies": 115,
+          "dev": false,
+          "credits": {
+            "base": 196,
+            "bonus": 0
+          },
+          "protocol": "long",
+          "bossLog": [
+            {
+              "name": "PATROL INTERDICTOR",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5390,
+              "defeated": 228.18
+            },
+            {
+              "name": "SKYLINE ENFORCER",
+              "spawn": 360,
+              "level": 29,
+              "hp": 9130,
+              "defeated": 463.45
+            },
+            {
+              "name": "METROPLEX OVERLORD",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 13320,
+              "defeated": 738.97
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "regen": 5,
+            "shield": 5,
+            "scatter": 1,
+            "cannon": 5,
+            "magnet": 5,
+            "velocity": 5,
+            "ram": 1,
+            "voidSeed": 3,
+            "speed": 5,
+            "armour": 5,
+            "sails": 1
+          },
+          "evolved": {}
+        },
+        "after": {
+          "completed": true,
+          "time": 738.97,
+          "level": 45,
+          "kills": 3344,
+          "bosses": 3,
+          "damageTaken": 0,
+          "minHP": 100,
+          "peakEnemies": 115,
+          "dev": false,
+          "credits": {
+            "base": 196,
+            "bonus": 0
+          },
+          "protocol": "long",
+          "bossLog": [
+            {
+              "name": "PATROL INTERDICTOR",
+              "spawn": 180,
+              "level": 17,
+              "hp": 5390,
+              "defeated": 228.18
+            },
+            {
+              "name": "SKYLINE ENFORCER",
+              "spawn": 360,
+              "level": 29,
+              "hp": 9130,
+              "defeated": 463.45
+            },
+            {
+              "name": "METROPLEX OVERLORD",
+              "spawn": 600.02,
+              "level": 41,
+              "hp": 13320,
+              "defeated": 738.97
+            }
+          ],
+          "items": {
+            "bolt": 5,
+            "regen": 5,
+            "shield": 5,
+            "scatter": 1,
+            "cannon": 5,
+            "magnet": 5,
+            "velocity": 5,
+            "ram": 1,
+            "voidSeed": 3,
+            "speed": 5,
+            "armour": 5,
+            "sails": 1
+          },
+          "evolved": {}
+        },
+        "firstUpgrade": 22.85
+      }
+    ]
+  },
+  "weapons": {
+    "seconds": 20,
+    "seed": 12345,
+    "scenes": [
+      "armoured",
+      "front",
+      "surround",
+      "trail"
+    ],
+    "scenarios": 768,
+    "unchanged": 762,
+    "changes": [
+      {
+        "before": {
+          "id": "cometAxe",
+          "name": "Comet Scythes",
+          "level": 5,
+          "evolved": true,
+          "scene": "front",
+          "dps": 166.8,
+          "hits": 29
+        },
+        "after": {
+          "id": "cometAxe",
+          "name": "Comet Scythes",
+          "level": 5,
+          "evolved": true,
+          "scene": "front",
+          "dps": 345,
+          "hits": 57
+        }
+      },
+      {
+        "before": {
+          "id": "cometAxe",
+          "name": "Comet Scythes",
+          "level": 5,
+          "evolved": true,
+          "scene": "surround",
+          "dps": 281.8,
+          "hits": 48
+        },
+        "after": {
+          "id": "cometAxe",
+          "name": "Comet Scythes",
+          "level": 5,
+          "evolved": true,
+          "scene": "surround",
+          "dps": 385.3,
+          "hits": 64
+        }
+      },
+      {
+        "before": {
+          "id": "twinWisps",
+          "name": "Binary Wisps",
+          "level": 5,
+          "evolved": true,
+          "scene": "armoured",
+          "dps": 20,
+          "hits": 7
+        },
+        "after": {
+          "id": "twinWisps",
+          "name": "Binary Wisps",
+          "level": 5,
+          "evolved": true,
+          "scene": "armoured",
+          "dps": 25.7,
+          "hits": 9
+        }
+      },
+      {
+        "before": {
+          "id": "twinWisps",
+          "name": "Binary Wisps",
+          "level": 5,
+          "evolved": true,
+          "scene": "front",
+          "dps": 334.4,
+          "hits": 74
+        },
+        "after": {
+          "id": "twinWisps",
+          "name": "Binary Wisps",
+          "level": 5,
+          "evolved": true,
+          "scene": "front",
+          "dps": 466.4,
+          "hits": 101
+        }
+      },
+      {
+        "before": {
+          "id": "twinWisps",
+          "name": "Binary Wisps",
+          "level": 5,
+          "evolved": true,
+          "scene": "surround",
+          "dps": 0,
+          "hits": 0
+        },
+        "after": {
+          "id": "twinWisps",
+          "name": "Binary Wisps",
+          "level": 5,
+          "evolved": true,
+          "scene": "surround",
+          "dps": 378.4,
+          "hits": 84
+        }
+      },
+      {
+        "before": {
+          "id": "twinWisps",
+          "name": "Binary Wisps",
+          "level": 5,
+          "evolved": true,
+          "scene": "trail",
+          "dps": 0.7,
+          "hits": 1
+        },
+        "after": {
+          "id": "twinWisps",
+          "name": "Binary Wisps",
+          "level": 5,
+          "evolved": true,
+          "scene": "trail",
+          "dps": 118.8,
+          "hits": 27
+        }
+      }
+    ]
+  }
+}

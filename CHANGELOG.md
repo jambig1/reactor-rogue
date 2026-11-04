@@ -1,3 +1,10 @@
+# v0.48.0 — campaign and evolution balance pass
+
+- Fixed stationary Power Relays receiving an invalid orbital heading during Storm Relay boss fights. Relays now stay finite, targetable and destructible; destroying them correctly removes the boss armour bonus.
+- Binary Supercluster now enlarges its bombardment zones as their orbit widens, retaining the close coverage of Binary Wisps, including its Wide specialisation.
+- Orbital Reaping retains Comet Scythes’ original three forward lanes and adds three rearward arcs. Damage, cooldown and six-scythe count are unchanged.
+- Added repeatable normal-stat campaign comparisons across all six sectors, build preferences and optional signal routes, plus focused relay and evolution regression checks. See `BALANCE-V048.md` for methods and results. Existing prices, payouts, upgrade probabilities and boss health are retained.
+
 # v0.47.1 — ability meter spacing
 
 - Keep the ability meter above weapon-rack labels at desktop, tablet, phone and small-phone widths.

@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.47.1. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.48.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -100,3 +100,7 @@ The balance and pacing reports are measurements of specific earlier builds. Auto
 6. Verify the GitHub Pages deployment succeeds before describing the update as live.
 
 Use real gameplay stills for sector previews. Keep third-party font licensing intact. Do not include private development conversations, personal account details or workstation paths in public documentation.
+
+## v0.48 balance evidence
+
+`BALANCE-V048.md` and `BALANCE-V048-RESULTS.json` document the matched campaign and coverage tests. Run `TEST-BALANCE-V048.cjs` for the stationary-relay and evolution regressions. `BENCHMARK-CAMPAIGN.cjs` accepts source/output paths; optional `CAMPAIGN_CASES` is a JSON array of sector, seed, profile, pilot, build and route settings. Its normal-stat controller is a regression tool, not a human difficulty or FPS measurement.

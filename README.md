@@ -59,7 +59,7 @@ Core game assets are embedded in `index.html`. The hosted site also has an offli
 
 Run variety includes shuffled fleet operations, regular recovery windows and optional Relay Circuits. Complete a circuit to choose one run-only field protocol for close-range, long-range, cold-target or siege damage. Protocols replace one another and do not use equipment slots.
 
-Current playable version: **0.47.1**.
+Current playable version: **0.48.0**.
 
 ## Font attribution
 
