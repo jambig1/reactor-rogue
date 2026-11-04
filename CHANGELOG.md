@@ -1,3 +1,11 @@
+# v0.45.0 — combat contact and destruction
+
+- Added directional kinetic sparks, energy splashes, armour chips, heavier pressure arcs and gold critical-hit marks at the target surface. Sustained weapons use smaller contact effects.
+- Added brief cosmetic target recoil and a small, throttled heavy-hit camera kick. No hit-stop, aim changes, physical knockback or timing changes.
+- Added quiet contact sounds for kinetic, energy, armour, heavy and critical hits, plus short metallic transients in ship destruction sounds. Contact sounds share a rate limit and retain the existing mute, effects-volume and voice caps.
+- Added bounded shaded hull fragments to ship detonations. Reduced motion freezes recoil and fragment travel; shake, flash and particle preferences control the corresponding effects.
+- Verified identical combat outcomes for all 48 weapons and their evolutions over 150 simulation frames each against v0.44.1.
+
 # v0.44.1 — boss display spacing
 
 - Move notifications below the boss display during encounters so arrival and wave messages do not overlap the name, health or charge state.

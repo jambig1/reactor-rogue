@@ -44,3 +44,13 @@ Arrival brackets remain compact around the hull. Reactor charging reads the real
 Boss detonations draw six deterministic plate fragments from the existing blast lifetime, including Low quality; reduced motion uses fixed fragment positions. No added particle pools, combat RNG, drops or collision bodies. The boss HUD keeps its existing footprint with a 50% health marker and a small status/charge row.
 
 `BOSS_GALLERY=1 node TEST-BOSS-PRESENTATION.cjs` regenerates the static production-geometry review. The test checks all eighteen hulls and warnings across arrival, idle, charge, overdrive, critical damage, hit and frozen states, in Low/High and reduced motion. It verifies finite coordinates, bounded geometry, state/RNG isolation and HUD charge timing.
+
+## Combat contact, v0.45.0
+
+Directional contact effects sit at the near surface of a struck hull. Kinetic sparks, energy splashes, armour chips, heavy pressure arcs and gold critical brackets convey the hit without widening beams or obscuring threat geometry. Continuous damage uses small glyphs. Impacts coalesce per target and retain the 48-effect cap.
+
+Hit reactions use a WeakMap outside simulation state and offset only the painted hull for 0.14 seconds (at most 2.3 world pixels; bosses 0.45). Threats, shield boundaries, collision and aiming remain world-anchored. Heavy-hit camera kick is capped at 1.8 pixels, throttled to 0.16 seconds and decays exponentially. Both stop with reduced motion; camera kick also follows the shake setting. Reduced/off flash settings avoid full-hull white flashes. Ship fragments follow particle settings and use fixed positions under reduced motion.
+
+Contact audio is shared-rate-limited to at most one event per 0.095 seconds (0.18 for sustained hits), skips lethal-hit layering and uses the existing audio bus, mute and voice limits. Existing destruction sounds carry the kill. No new gameplay RNG, hit-stop or simulation timing changes.
+
+`TEST-COMBAT-FEEL.cjs` checks event coalescing/caps, pure finite rendering, recoil/kick lifetime/reset, audio gating and visual preferences. `TEST-ATTACK-PARITY.cjs` compares complete combat outcomes with the previous build for every normal/evolved weapon.
