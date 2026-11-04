@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.49.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.50.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -110,3 +110,11 @@ Use real gameplay stills for sector previews. Keep third-party font licensing in
 Arsenal discovery is a Records tab with direct launch/pause/result actions. `archive.discovery` stores known weapon maximum levels, evolved weapon IDs, stable combination keys and one tracked recipe. Existing cleaned history/board builds contribute discoveries; future records bank into the bounded collection before history pruning. Normal in-flight gear is shown provisionally. Developer runs never bank discoveries. Tracking can be changed from the guide without banking live gear, changing random offers or touching combat stats. All data stays in the existing profile-specific archive and travels with backups. Older backups remain valid.
 
 `TEST-DISCOVERY.cjs` checks banking, legacy migration, pruning, profile isolation/import, developer exclusion, filters, recipe states, tracking and 96 weapon icon variants. `TEST-WEAPON-ICONS.html` reviews the exact generated artwork.
+
+## Evolution transformations, v0.50
+
+`evolutionSignatures` defines a real timed signature cycle for every evolved weapon. `updateEvolutionSignatures` owns actors and damage; `drawEvolutionSignatures` is a pure painter. Signatures supplement existing mechanisms, except Iron Halo replaces legacy blade contacts/interception while its new cutting rings are active. Global limits are 12 fields and 96 signature shots, with at most ten nodes per field. Split missiles have one child generation. Ordinary signature projectiles share cover blocking; phase torpedoes retain their exception.
+
+`weapon-atlas-0-v0500.png` through `weapon-atlas-3-v0500.png` contain 96 painted sprites. `weaponAtlasOrder`, `weaponAtlasSizes` and `weaponAtlasCell` define exact source rectangles. These external assets must be shipped beside the game and are listed in the offline cache. They are no longer embedded core icons in a standalone HTML download. The canvas and DOM icons share these files.
+
+`EVOLUTION-TRANSFORMATIONS.md` / `.json` list every cycle. Run `TEST-EVOLUTION-SIGNATURES.cjs`, `TEST-DISCOVERY.cjs` and the base-only combat comparison. Optional `REVIEW-EVOLUTIONS.cjs` needs @napi-rs/canvas and produces labelled isolated simulation review scenes.

@@ -11,6 +11,7 @@ A free browser-based space survival game. Choose a ship, build your arsenal and 
 - Twelve playable ships with different starting weapons, passives and movement abilities.
 - Six sectors with distinct scenery, hazards and boss encounters.
 - Weapons, evolutions, defensive equipment and passive items to combine into different builds.
+- Every evolution adds a distinct signature attack, from missile carriers and cutting rings to fusion lattices and collapsing vortices.
 - An Arsenal discovery guide with illustrated equipment, saved discoveries and tracked evolution recipes.
 - Ship unlock challenges, credits, contracts and permanent upgrade tools.
 - Optional distress signals, interactive sector features and an alien merchant.
@@ -48,7 +49,7 @@ Include what happened, what you expected and your device/browser. Please leave o
 
 The game uses plain HTML, CSS and JavaScript, with no package installation or build step. Serve this repository with a local static web server and open `home.html` for the website or `index.html?play=1` for the game.
 
-Core game assets are embedded in `index.html`. The hosted site also has an offline cache; feedback submission needs an internet connection.
+Core game assets are embedded in `index.html`, with the painted weapon atlases shipped alongside it. The hosted site also has an offline cache; feedback submission needs an internet connection.
 
 ## Project documentation
 
@@ -60,7 +61,7 @@ Core game assets are embedded in `index.html`. The hosted site also has an offli
 
 Run variety includes shuffled fleet operations, regular recovery windows and optional Relay Circuits. Complete a circuit to choose one run-only field protocol for close-range, long-range, cold-target or siege damage. Protocols replace one another and do not use equipment slots.
 
-Current playable version: **0.49.0**.
+Current playable version: **0.50.0**.
 
 ## Font attribution
 

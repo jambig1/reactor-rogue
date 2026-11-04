@@ -66,3 +66,9 @@ Ability UI uses per-charge progress bars and a shared circular button on desktop
 All 48 attacks use dedicated SVG miniatures in `illustratedWeaponIcon`, shared through `equipmentIcon`. Broad shaded armour, dark cut edges, small highlights and restrained energy echo the production ships. Weapons depict their emitters, projectiles, drones or fields rather than framed line glyphs. Evolved forms add hardware, additional projectiles or expanded energy silhouettes. Cached templates use unique instance gradient IDs so repeated and hidden menus cannot share conflicting paint servers. No animation or combat RNG is used.
 
 `ICON_GALLERY=1 node TEST-DISCOVERY.cjs` regenerates `TEST-WEAPON-ICONS.html` from the production templates. It is a static artwork reference, not gameplay. The existing passive icon family is retained.
+
+## Painted arsenal and evolved hardware, v0.50.0
+
+The v0.49 vector weapon illustrations were rejected. The replacement uses four image-generated transparent atlases following the approved weapon study and real production ship/scenery references. Broad, worn slate armour facets, fine highlights, inset cores and restrained emissive effects belong to the same fleet material family. Evolutions have distinct large mechanisms and silhouettes rather than colour swaps. `weaponAtlasOrder` maps base/evolved pairs across four columns and six rows in each sheet.
+
+Gameplay reuses painted hardware together with simulated moving rings, linked pylons, beam lanes, pressure walls, missiles and impact stages. Signature colour palettes follow the painted assets. Keep actual collision fronts and interception nodes visible in Low and reduced motion; simplify only decorative layers.

@@ -1,3 +1,11 @@
+# v0.50.0 — evolution transformations and painted arsenal
+
+- Replaced the rejected vector attack miniatures with 96 painted base/evolved sprites across four transparent atlases, following the approved slate-armour ship study. All weapon surfaces share the new sprites.
+- Added a distinct real signature cycle to every evolution: deployable batteries, missile carriers, cutting rings, converging lances, linked defences, collapsing vortices, staged bombardments, spreading clouds and moving formations. See `EVOLUTION-TRANSFORMATIONS.md` for all 48 identities.
+- Share painted hardware between icons and gameplay. Keep actual damage, interception, pulling, freezing, homing and impacts in simulation; rendering remains pure. Iron Halo’s new active rings replace its legacy blade contacts and interception while visible.
+- Add individual signature audio accents and use the existing evolution reveal to describe the new cycle. Preserve all base attacks, recipes, discoveries, slots and banked progression.
+- Bound signature fields, nodes, shots, missile generations and visual impact histories. Ordinary signature shots respect cover; phase torpedoes pass through. Include all four atlas files in offline caching.
+
 # v0.49.0 — arsenal discovery and illustrated weapon icons
 
 - Added Arsenal discovery from launch, pause, results and Records. Search weapons, evolutions and combinations; filter discovered, undiscovered or current-build entries; inspect roles and exact evolution requirements.
