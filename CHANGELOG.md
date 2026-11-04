@@ -1,3 +1,7 @@
+# v0.52.1 — align every painted crop
+
+- Align column and row boundaries to actual artwork across all four weapon sheets, removing remaining neighbouring hardware fragments. Keep exact source clipping for every DOM icon.
+
 # v0.52.0 — readable Arsenal discovery
 
 - Tighten the archive header, simplify discovery wording and align saved counts. Widen the detail column, make recipe requirements separate readable rows and give names, levels and descriptions a consistent hierarchy.
