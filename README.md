@@ -11,6 +11,7 @@ A free browser-based space survival game. Choose a ship, build your arsenal and 
 - Twelve playable ships with different starting weapons, passives and movement abilities.
 - Six sectors with distinct scenery, hazards and boss encounters.
 - Weapons, evolutions, defensive equipment and passive items to combine into different builds.
+- An Arsenal discovery guide with illustrated equipment, saved discoveries and tracked evolution recipes.
 - Ship unlock challenges, credits, contracts and permanent upgrade tools.
 - Optional distress signals, interactive sector features and an alien merchant.
 - Three scheduled sector bosses, a clear ending and optional endless continuation.
@@ -59,7 +60,7 @@ Core game assets are embedded in `index.html`. The hosted site also has an offli
 
 Run variety includes shuffled fleet operations, regular recovery windows and optional Relay Circuits. Complete a circuit to choose one run-only field protocol for close-range, long-range, cold-target or siege damage. Protocols replace one another and do not use equipment slots.
 
-Current playable version: **0.48.0**.
+Current playable version: **0.49.0**.
 
 ## Font attribution
 

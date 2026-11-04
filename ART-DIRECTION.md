@@ -60,3 +60,9 @@ Contact audio is shared-rate-limited to at most one event per 0.095 seconds (0.1
 Hull turn response is cosmetic and stored separately from physical direction and weapon aim. Light fighters settle rapidly; heavy frames turn more steadily. Burst activation aligns the hull with actual travel. Exhaust follows movement intent; reduced motion removes turn lag. Small steering chevrons indicate a ready directional ability during movement, while blink landings use short fading brackets. No long projected lanes or new screen flashes.
 
 Ability UI uses per-charge progress bars and a shared circular button on desktop and touch. Active effects show their own remaining time, including phase, beacon and rift durations. A quiet charge-ready cue uses the existing effects bus. Clicking the HUD button while stationary uses the last flight heading so the cursor position over the HUD cannot redirect a dash; movement/drag takes priority. Shift and middle-click retain current world aim when stationary.
+
+## Illustrated weapon icons, v0.49.0
+
+All 48 attacks use dedicated SVG miniatures in `illustratedWeaponIcon`, shared through `equipmentIcon`. Broad shaded armour, dark cut edges, small highlights and restrained energy echo the production ships. Weapons depict their emitters, projectiles, drones or fields rather than framed line glyphs. Evolved forms add hardware, additional projectiles or expanded energy silhouettes. Cached templates use unique instance gradient IDs so repeated and hidden menus cannot share conflicting paint servers. No animation or combat RNG is used.
+
+`ICON_GALLERY=1 node TEST-DISCOVERY.cjs` regenerates `TEST-WEAPON-ICONS.html` from the production templates. It is a static artwork reference, not gameplay. The existing passive icon family is retained.

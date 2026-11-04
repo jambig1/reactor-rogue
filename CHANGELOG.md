@@ -1,3 +1,10 @@
+# v0.49.0 — arsenal discovery and illustrated weapon icons
+
+- Added Arsenal discovery from launch, pause, results and Records. Search weapons, evolutions and combinations; filter discovered, undiscovered or current-build entries; inspect roles and exact evolution requirements.
+- Track one evolution recipe per pilot profile. Matching upgrade cards and the paused Build page show the tracked recipe without altering offers or combat.
+- Bank discoveries from normal runs, migrate existing run/leaderboard builds and retain discovery after history pruning. Discoveries and tracking travel with existing profile backups/imports. Live gear is provisional; developer tests add no discoveries.
+- Replaced all 48 geometric attack symbols with shaded hardware and energy illustrations, plus 48 evolved variants, shared across upgrade cards, the weapon rack, recipes, reports and the collection. Passive icons remain distinct. SVG templates are cached and each rendered instance has isolated gradient IDs.
+
 # v0.48.0 — campaign and evolution balance pass
 
 - Fixed stationary Power Relays receiving an invalid orbital heading during Storm Relay boss fights. Relays now stay finite, targetable and destructible; destroying them correctly removes the boss armour bonus.
