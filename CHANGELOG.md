@@ -1,3 +1,12 @@
+# v0.47.0 — flight controls and ability polish
+
+- Unified movement and ability direction across keyboard, hybrid, mouse-only and touch controls. Mouse-only abilities use the current cursor immediately; touch steering has a radial dead zone and proportional speed.
+- Integrated partial dash, phase and boost steps so burst travel remains consistent at 30/60/120 simulation Hz. Normal steering still responds immediately, stops on release and retains existing ship speeds.
+- Added cosmetic hull turn response for all twelve ships, with quicker light fighters and steadier heavy craft. Weapon aim and physical steering stay immediate; reduced motion removes visual lag.
+- Added per-charge recharge meters, active-duration states, a quiet recharge cue, directional steering chevrons and compact blink landing marks. The ability button is also available on desktop and supports keyboard activation.
+- Added a short single-input buffer for imminent recharge/burst endings. Pause, menu changes, focus loss and resize discard pending input. Secondary touch activation does not steal the steering finger.
+- Replaced generic ability descriptions with concrete information for every ship. Existing damage, cooldown values, charge counts and progression are retained.
+
 # v0.46.0 — run variety
 
 - Replaced the fixed encounter loop with shuffled patrol, assault and specialist operation decks. Fleet composition and specialist emphasis vary; every fourth operation remains a recovery window. Specialist unlock timing and boss, formation and population budgets are retained.

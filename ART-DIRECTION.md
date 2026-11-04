@@ -54,3 +54,9 @@ Hit reactions use a WeakMap outside simulation state and offset only the painted
 Contact audio is shared-rate-limited to at most one event per 0.095 seconds (0.18 for sustained hits), skips lethal-hit layering and uses the existing audio bus, mute and voice limits. Existing destruction sounds carry the kill. No new gameplay RNG, hit-stop or simulation timing changes.
 
 `TEST-COMBAT-FEEL.cjs` checks event coalescing/caps, pure finite rendering, recoil/kick lifetime/reset, audio gating and visual preferences. `TEST-ATTACK-PARITY.cjs` compares complete combat outcomes with the previous build for every normal/evolved weapon.
+
+## Flight presentation, v0.47.0
+
+Hull turn response is cosmetic and stored separately from physical direction and weapon aim. Light fighters settle rapidly; heavy frames turn more steadily. Burst activation aligns the hull with actual travel. Exhaust follows movement intent; reduced motion removes turn lag. Small steering chevrons indicate a ready directional ability during movement, while blink landings use short fading brackets. No long projected lanes or new screen flashes.
+
+Ability UI uses per-charge progress bars and a shared circular button on desktop and touch. Active effects show their own remaining time, including phase, beacon and rift durations. A quiet charge-ready cue uses the existing effects bus. Clicking the HUD button while stationary uses the last flight heading so the cursor position over the HUD cannot redirect a dash; movement/drag takes priority. Shift and middle-click retain current world aim when stationary.

@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.46.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.47.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -30,6 +30,8 @@ Sector bosses are scheduled at 3, 6 and 10 game minutes. Defeating all three sec
 Optional events auto-start after three continuous game seconds inside their marked area; leaving resets entry progress. Standard breaches retain optional risk selection. Merchant transmissions open automatically at a safe play-state boundary and suspend combat immediately. Bosses hold both systems.
 
 Evolution hints use equipment from the current run and appear on the missing component. Evolution caches require a ready recipe when they drop. Supply caches retain their supply identity.
+
+Flight input uses a shared normalised intent for movement and ability direction. Touch has a six-pixel radial dead zone and reaches full speed at 50 pixels of drag. A press in the last 120ms of recharge/burst blocking can be queued once, with a 200ms expiry to tolerate simulation-step boundaries; input reset discards it. Fractional burst integration keeps base dash/boost travel consistent across frame rates. Per-charge full recharge durations are captured when spent so meters do not jump when a support changes. Cosmetic hull heading is separate from physical steering and aim; reduced motion uses immediate heading. `TEST-FLIGHT-CONTROLS.cjs` covers all twelve ships, multi-touch, buffering, frame rates, pause and crowded simulation. These checks do not measure physical-device FPS or replace real iPad/iPhone handling feedback.
 
 Keep simulation and rendering separate. Cosmetic changes must not consume gameplay RNG, change damage or collision boundaries, or alter progression. Reduced-motion and low-detail modes must retain readable threats and essential UI.
 
