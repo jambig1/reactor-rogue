@@ -1,3 +1,11 @@
+# v0.44.0 — boss presentation
+
+- Rebuilt all eighteen sector bosses with individual silhouettes, shaded armour and sector-specific reactors, weapons and machinery.
+- Added arrival brackets, reactor charge readouts and exposed overdrive cooling seams. Reduced motion freezes rotating assemblies; charge still reflects the actual attack timer.
+- Refined the boss HUD with a half-health marker, reactor identity and explicit inbound, charging, frozen and overdrive states.
+- Added six bounded metal fragments to boss detonations. Existing blast duration and combat rules are retained.
+- No changes to boss health, damage, collision, spawn schedules, attack plans, warning footprints, drops or progression.
+
 # v0.43.0 — illustrated enemy fleets
 
 - Rebuilt standard enemies with shaded armour, controlled steel edges and compact engine lights to match the player ships.

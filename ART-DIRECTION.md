@@ -34,3 +34,13 @@ Standard enemies use the same code-native illustrated construction as the player
 The four regular classes retain compact scout, swept interceptor, twin-pod gunship and broad cruiser profiles. Sector fittings use salvaged copper plates, relay fins, furnace vent slats, ice facets and security runners. Eight specialist profiles carry distinct equipment. All geometry is cosmetic and consumes no combat RNG. Essential warning and shield layers remain separate from hulls.
 
 `TEST-ENEMY-ART.cjs` checks every fleet/class/role/status in Low/High and reduced motion, including state/RNG isolation. `ENEMY_GALLERY=1 node TEST-ENEMY-ART.cjs` regenerates `TEST-ENEMY-ART.html` directly from the production painter; this enlarged static reference is not a gameplay capture.
+
+## Boss presentation, v0.44.0
+
+Each of the eighteen reactors has a dedicated normalized profile and articulated assemblies in `bossPresentations` / `drawIllustratedBossHull`. The production painter also generates the static `TEST-BOSS-PRESENTATION.html` review. Shapes use the player fleet's dark cut edges, broad shaded armour and restrained emissive machinery. Sector cores include faceted prisms, salvage cells, relay coils, furnace grilles, cryo crystals and security optics.
+
+Arrival brackets remain compact around the hull. Reactor charging reads the real 1.2/1.5-second attack timer; no separate animation timer can drift from an attack. Below half health, exposed cooling seams indicate overdrive. Reduced motion and freeze stop cosmetic rotation while preserving essential state information. Existing final-layer warning geometry remains authoritative.
+
+Boss detonations draw six deterministic plate fragments from the existing blast lifetime, including Low quality; reduced motion uses fixed fragment positions. No added particle pools, combat RNG, drops or collision bodies. The boss HUD keeps its existing footprint with a 50% health marker and a small status/charge row.
+
+`BOSS_GALLERY=1 node TEST-BOSS-PRESENTATION.cjs` regenerates the static production-geometry review. The test checks all eighteen hulls and warnings across arrival, idle, charge, overdrive, critical damage, hit and frozen states, in Low/High and reduced motion. It verifies finite coordinates, bounded geometry, state/RNG isolation and HUD charge timing.
