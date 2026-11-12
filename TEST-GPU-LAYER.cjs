@@ -27,10 +27,10 @@ let colour=v=>[0,1,2].map(c=>Math.round(v*(1-.2196)+[4,10,20][c]*.2196));
 let tile=makeTile(200),modes=[];layer.onModeChange=m=>modes.push(m);readValue=colour(200);
 layer.render({background:{tile,span:900,originX:1,originY:2},camX:5,camY:6,time:1});layer.render({background:{tile,span:900,originX:1,originY:2}});
 assert.equal(layer.mode,'gpu','matching readback keeps the GPU background');assert.equal(calls.filter(c=>c==='render').length,3,'one extra self-check render per new tile');
-layer.render({background:{tile:makeTile(120),span:900,originX:1,originY:2}});readValue=colour(120);
+readValue=colour(120);layer.render({background:{tile:makeTile(120),span:900,originX:1,originY:2}});
 assert.equal(calls.filter(c=>/^texture /.test(c)).length,2,'texture uploads only when the sector tile changes');assert(calls.includes('renderer true'),'transparent-capable context');assert(calls.includes('dispose texture'));assert(calls.includes('ratio 2')&&calls.includes('size 800x600'));
 // A black readback (the iOS failure) switches to overlay mode instead of a black playfield.
-readValue=[0,0,0];layer.render({background:{tile:makeTile(90),span:900,originX:1,originY:2}});assert.equal(layer.mode,'overlay');assert.deepEqual(modes,['overlay']);
+readValue=[0,0,0];let before=calls.filter(c=>/^texture /.test(c)).length;layer.render({background:{tile:makeTile(90),span:900,originX:1,originY:2}});assert.equal(layer.mode,'overlay');assert(calls.filter(c=>/^texture /.test(c)).length-before>=2&&/nomip: 0\/5/.test(layer.diagnostics),'alternative upload strategies tried before overlay');assert(/data: 0\/5 got 0,0,0/.test(layer.diagnostics),layer.diagnostics);assert.deepEqual(modes,['overlay']);
 let unreadable={width:4,height:4,getContext:()=>({getImageData:()=>{throw Error('tainted')}})};
 const layer2=await mod.createGpuLayer({style:{},addEventListener(){}},async()=>T);layer2.resize(800,600,2);layer2.render({background:{tile:unreadable,span:900,originX:0,originY:0}});assert.equal(layer2.mode,'overlay','unreadable tile uses overlay mode');
 let lost=0;layer.onLost=()=>lost++;listeners.webglcontextlost();assert.equal(lost,1);assert(layer.lost);let renders=calls.filter(c=>c==='render').length;layer.render({});assert.equal(calls.filter(c=>c==='render').length,renders,'no rendering after context loss');
@@ -39,5 +39,5 @@ assert.equal(await mod.createGpuLayer(canvas,async()=>({...T,WebGLRenderer:class
 const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8'),sw=fs.readFileSync(path.join(__dirname,'sw.js'),'utf8');
 for(let needle of ['<canvas id="gpuLayer" aria-hidden="true"></canvas><canvas id="game"',"gpu:['on','off']","gpu:'on'",'id="gfx-gpu" data-graphics="gpu"','function gpuFail(','.catch(gpuFail)','function applyGpuMode(mode)',"if(gpuFrame.on&&!gpuFrame.overlay)ctx.clearRect(0,0,W,H)","if(gpuFrame.on&&!gpuFrame.overlay)ctx.clearRect(0,0,W,H);else{ctx.fillStyle='#07101f';ctx.fillRect(0,0,W,H)}",'if(graphicsParticles()>0&&!gpuFrame.on)','startGpuLayer();',"var gpuLayer=null,gpuState='idle'"])assert(html.includes(needle),needle);
 assert(sw.includes('"gpu-layer-v0552.js"'));assert(sw.includes('"vendor/three-0.187.0/three.module.js","vendor/three-0.187.0/three.core.js"'),'bundled Three.js precached');assert(!/jsdelivr/i.test(sw+html),'no CDN dependency');
-console.log('PASS GPU layer exports, colour parsing, GLSL sources, stubbed Three.js lifecycle/bounds/pixel-upload reuse/self-check and overlay fallback/context loss, renderer-failure fallback, game wiring and bundled offline Three.js');
+console.log('PASS GPU layer exports, colour parsing, GLSL sources, stubbed Three.js lifecycle/bounds/pixel-upload reuse/self-check, strategy retries and overlay fallback/context loss, renderer-failure fallback, game wiring and bundled offline Three.js');
 })().catch(e=>{console.error(e);process.exitCode=1});

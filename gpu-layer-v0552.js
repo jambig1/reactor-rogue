@@ -117,7 +117,12 @@ export function parseColour(text) {
   return hit;
 }
 
-export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)) {
+// Upload strategies tried in order until the self-check passes: full-size mipmapped, power-of-two
+// resampled (for drivers that mishandle non-power-of-two repeat), then each without mipmaps.
+export const TILE_STRATEGIES = ['data', 'pot', 'nomip', 'pot-nomip'];
+
+export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL), options = {}) {
+  const selfCheck = options.selfCheck !== false;
   if (!canvas) return null;
   const T = await loadThree();
   let renderer;
@@ -162,25 +167,34 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
   let count = 0, tile = null, texture = null, lost = false, width = 1, height = 1, ratio = 1;
   // Background modes: 'gpu' paints the sector tile here; 'overlay' means the 2D canvas paints the
   // background and this canvas sits above it, adding only glow and particles (CSS plus-lighter).
-  let mode = 'gpu', pendingCheck = null;
+  let mode = 'gpu', pendingCheck = null, diag = [];
 
   // Raw pixel upload: the most portable path. Uploading the 2D tile canvas directly produced a
   // black texture in Safari/WebKit (all iOS browsers), so the tile is read back once per sector.
-  function tileTexture(source) {
-    let w = source.width, h = source.height, data;
-    try { data = source.getContext('2d').getImageData(0, 0, w, h).data; } catch (e) { return null; }
+  function tileTexture(source, strategy = 'data') {
+    let w = source.width, h = source.height, data, mip = !strategy.includes('nomip');
+    try {
+      let read = source;
+      if (strategy.startsWith('pot')) {
+        let n = 256; while (n * 2 <= Math.min(w, h)) n *= 2;
+        let cv = (source.ownerDocument || document).createElement('canvas'); cv.width = cv.height = n;
+        let g = cv.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.drawImage(source, 0, 0, n, n);
+        read = cv; w = h = n;
+      }
+      data = read.getContext('2d').getImageData(0, 0, w, h).data;
+    } catch (e) { diag.push(strategy + ': unreadable (' + (e && e.name || e) + ')'); return null; }
     let tex = new T.DataTexture(new Uint8Array(data.buffer, data.byteOffset, data.byteLength), w, h, T.RGBAFormat, T.UnsignedByteType);
     tex.flipY = false; tex.wrapS = tex.wrapT = T.RepeatWrapping; tex.colorSpace = T.NoColorSpace;
-    tex.magFilter = T.LinearFilter; tex.minFilter = T.LinearMipmapLinearFilter; tex.generateMipmaps = true;
+    tex.magFilter = T.LinearFilter; tex.minFilter = mip ? T.LinearMipmapLinearFilter : T.LinearFilter; tex.generateMipmaps = mip;
     tex.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-    tex.needsUpdate = true; tex.userData.pixels = data; tex.userData.w = w; tex.userData.h = h;
+    tex.needsUpdate = true; tex.userData.pixels = data; tex.userData.w = w; tex.userData.h = h; tex.userData.strategy = strategy;
     return tex;
   }
 
   // Compare a few rendered background pixels (stars and sprites hidden) with the tile they should
   // show. Any mismatch on a device switches to overlay mode instead of showing a black playfield.
   function backgroundMatches(bg) {
-    let px = texture.userData.pixels, tw = texture.userData.w, th = texture.userData.h, good = 0, tested = 0, out = new Uint8Array(4);
+    let px = texture.userData.pixels, tw = texture.userData.w, th = texture.userData.h, good = 0, tested = 0, out = new Uint8Array(4), note = '';
     let bw = gl.drawingBufferWidth, bh = gl.drawingBufferHeight;
     for (let [fx, fy] of [[0.5, 0.5], [0.3, 0.35], [0.7, 0.35], [0.3, 0.7], [0.7, 0.7]]) {
       let sx = fx * width, sy = fy * height;
@@ -190,10 +204,15 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
       gl.readPixels(Math.floor(fx * bw), Math.floor((1 - fy) * bh), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, out);
       let diff = Math.abs(out[0] - expected[0]) + Math.abs(out[1] - expected[1]) + Math.abs(out[2] - expected[2]);
       tested++; if (diff <= 60) good++;
+      if (!note) note = ' got ' + [out[0], out[1], out[2]].join(',') + ' want ' + expected.map(Math.round).join(',');
     }
+    diag.push(texture.userData.strategy + ': ' + good + '/' + tested + note);
     return good * 2 > tested;
   }
 
+  function gpuName() {
+    try { let ext = gl.getExtension('WEBGL_debug_renderer_info'); return String(ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER)).slice(0, 60); } catch (e) { return 'GPU unknown'; }
+  }
   function setMode(next) {
     if (mode === next) return;
     mode = next;
@@ -207,6 +226,7 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
     onModeChange: null,
     get lost() { return lost; },
     get mode() { return mode; },
+    get diagnostics() { return gpuName() + ' · ' + (diag.slice(-6).join(' | ') || 'no checks yet'); },
     forceOverlay() { setMode('overlay'); },
     resize(w, h, r) {
       width = Math.max(1, w); height = Math.max(1, h); ratio = r || 1;
@@ -231,9 +251,10 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
       if (mode === 'gpu' && bg && bg.tile) {
         if (bg.tile !== tile) {
           if (texture) texture.dispose();
-          tile = bg.tile; texture = tileTexture(tile); bgUniforms.uTex.value = texture;
+          tile = bg.tile; diag = []; texture = tileTexture(tile, TILE_STRATEGIES[0]); bgUniforms.uTex.value = texture;
           if (!texture) { setMode('overlay'); return; }
-          pendingCheck = true;
+          pendingCheck = selfCheck;
+          if (!selfCheck) diag.push(texture.userData.strategy + ': self-check skipped');
         }
         bgUniforms.uHasTex.value = 1; bgUniforms.uOrigin.value.set(bg.originX, bg.originY); bgUniforms.uSpan.value = bg.span;
       } else bgUniforms.uHasTex.value = 0;
@@ -254,7 +275,14 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
         pendingCheck = false;
         let stars = bgUniforms.uStars.value, spritesOn = sprites.visible, ok = false;
         bgUniforms.uStars.value = 0; sprites.visible = false;
-        try { renderer.render(scene, camera); ok = backgroundMatches(bg); } catch (e) { ok = false; }
+        for (let k = 0; k < TILE_STRATEGIES.length && !ok; k++) {
+          if (k > 0) {
+            if (texture) texture.dispose();
+            texture = tileTexture(tile, TILE_STRATEGIES[k]); bgUniforms.uTex.value = texture;
+            if (!texture) continue;
+          }
+          try { renderer.render(scene, camera); ok = backgroundMatches(bg); } catch (e) { diag.push(TILE_STRATEGIES[k] + ': error ' + (e && e.message || e)); ok = false; }
+        }
         bgUniforms.uStars.value = stars; sprites.visible = spritesOn;
         if (!ok) { setMode('overlay'); return; }
       }

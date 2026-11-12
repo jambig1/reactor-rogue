@@ -3,6 +3,7 @@
 - Fix black sector backgrounds with GPU effects on iPhone and iPad (Safari's engine, used by every iOS browser). The sector artwork now reaches the GPU as raw pixels instead of a canvas upload.
 - Add a background self-check: on each new sector the GPU layer compares a few rendered pixels with the artwork. If they differ on any device, it switches to compatibility mode: the classic background with GPU glow and particles added on top. Settings shows which mode is active.
 - Use portable shader edge maths so stars and spark cores render the same on Apple graphics chips.
+- If the first upload fails the check, try three alternatives (power-of-two resampled, and both without mipmaps) before using compatibility mode. Add `&gpudebug=1` to show the GPU name and per-method check results in Settings, and `&gpucheck=0` to skip the check for testing.
 
 # v0.55.1 — bundled Three.js
 
