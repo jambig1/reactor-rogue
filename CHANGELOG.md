@@ -1,3 +1,16 @@
+# v0.55.1 — bundled Three.js
+
+- Ship Three.js 0.187.0 with the game (`vendor/three-0.187.0/`, MIT licence) instead of loading it from a CDN. GPU effects no longer depend on a third-party site and work offline from the first visit.
+- Verified the GPU layer against the real library: shaders compile, the background matches the classic renderer, and glow, particles, settings and fallback behave as in v0.55.0.
+
+# v0.55.0 — GPU layer (Three.js)
+
+- Add an optional Three.js renderer beneath the playfield. It draws the sector background at the same position and scale as before, adds two parallax star layers for depth, and adds soft additive glow around shots, hostile fire, explosions, gems, enemies and the player ship.
+- Render particles on the GPU as glowing sparks. At High glow, the costly 2D shadow blur is reduced because the GPU supplies the glow.
+- Add Settings → Graphics → GPU effects (on by default) with a live status line. Glow, particle, Low preset, crowd and reduced-motion settings still apply.
+- Fall back automatically to the classic renderer if Three.js cannot load, WebGL2 is unavailable or the GPU context is lost. 
+- No gameplay, damage, hitbox, save or recipe changes; all 48 weapons match v0.54 in the combat parity check.
+
 # v0.54.0 — lighter downloads
 
 - Convert all painted weapon and support atlases, the wordmark, sector backgrounds and sector previews to WebP. Transparency and crop sizes are unchanged. First-visit download falls from about 20MB to about 5MB.
