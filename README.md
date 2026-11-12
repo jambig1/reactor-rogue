@@ -49,7 +49,7 @@ Include what happened, what you expected and your device/browser. Please leave o
 
 The game uses plain HTML, CSS and JavaScript, with no package installation or build step. Serve this repository with a local static web server and open `home.html` for the website or `index.html?play=1` for the game.
 
-Core game assets are embedded in `index.html`, with the painted weapon and support atlases shipped alongside it. The hosted site also has an offline cache; feedback submission needs an internet connection.
+Game art and the font are versioned WebP/WOFF files served beside `index.html`. Optional GPU effects use Three.js 0.187.0, bundled in `vendor/` under its MIT licence; without WebGL2 the game uses the classic 2D renderer. The hosted site also has an offline cache; feedback submission needs an internet connection.
 
 ## Project documentation
 
@@ -61,7 +61,7 @@ Core game assets are embedded in `index.html`, with the painted weapon and suppo
 
 Run variety includes shuffled fleet operations, regular recovery windows and optional Relay Circuits. Complete a circuit to choose one run-only field protocol for close-range, long-range, cold-target or siege damage. Protocols replace one another and do not use equipment slots.
 
-Current playable version: **0.53.0**.
+Current playable version: **0.55.2**.
 
 ## Font attribution
 

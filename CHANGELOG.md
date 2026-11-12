@@ -1,3 +1,31 @@
+# v0.55.2 — iPhone and iPad backgrounds
+
+- Root cause: Safari marked the sector artwork as unreadable, so the GPU could not receive it. Sector images now load with `crossOrigin` set, which also restores the material finish and scenery lights that iOS had been silently skipping.
+- Fix black sector backgrounds with GPU effects on iPhone and iPad (Safari's engine, used by every iOS browser). The sector artwork now reaches the GPU as raw pixels instead of a canvas upload.
+- Add a background self-check: on each new sector the GPU layer compares a few rendered pixels with the artwork. If they differ on any device, it switches to compatibility mode: the classic background with GPU glow and particles added on top. Settings shows which mode is active.
+- Use portable shader edge maths so stars and spark cores render the same on Apple graphics chips.
+- If the first upload fails the check, try three alternatives (power-of-two resampled, and both without mipmaps) before using compatibility mode. Add `&gpudebug=1` to show the GPU name and per-method check results in Settings, and `&gpucheck=0` to skip the check for testing.
+
+# v0.55.1 — bundled Three.js
+
+- Ship Three.js 0.187.0 with the game (`vendor/three-0.187.0/`, MIT licence) instead of loading it from a CDN. GPU effects no longer depend on a third-party site and work offline from the first visit.
+- Verified the GPU layer against the real library: shaders compile, the background matches the classic renderer, and glow, particles, settings and fallback behave as in v0.55.0.
+
+# v0.55.0 — GPU layer (Three.js)
+
+- Add an optional Three.js renderer beneath the playfield. It draws the sector background at the same position and scale as before, adds two parallax star layers for depth, and adds soft additive glow around shots, hostile fire, explosions, gems, enemies and the player ship.
+- Render particles on the GPU as glowing sparks. At High glow, the costly 2D shadow blur is reduced because the GPU supplies the glow.
+- Add Settings → Graphics → GPU effects (on by default) with a live status line. Glow, particle, Low preset, crowd and reduced-motion settings still apply.
+- Fall back automatically to the classic renderer if Three.js cannot load, WebGL2 is unavailable or the GPU context is lost. 
+- No gameplay, damage, hitbox, save or recipe changes; all 48 weapons match v0.54 in the combat parity check.
+
+# v0.54.0 — lighter downloads
+
+- Convert all painted weapon and support atlases, the wordmark, sector backgrounds and sector previews to WebP. Transparency and crop sizes are unchanged. First-visit download falls from about 20MB to about 5MB.
+- Stop embedding images and the font in `index.html` (6.1MB → 0.75MB), so the menu appears sooner. Each asset now loads once from its own cached file instead of twice.
+- Serve Exo 2 as WOFF (296KB → 133KB). Start loading the selected sector's background during ship and sector selection.
+- Update the offline cache list and cache version. Remove superseded PNG/JPEG copies. No gameplay, balance, save or recipe changes.
+
 # v0.53.0 — physical shields and combat materials
 
 - Give Energy Shield a curved honeycomb shell with shaded metal emitters. Brighten nearby hex cells on actual absorbed hits, show directional rim impacts and a short collapse on depletion; show a reform pulse when charge returns. Reactive Screen uses a lighter outer shell. Respect Low effects, reduced motion and flash settings.

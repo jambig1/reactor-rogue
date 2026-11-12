@@ -18,8 +18,8 @@ for(let id of ids){fresh(id);run("for(let x of [-260,-180,-100,-40,40,100,180,26
 }
 // Counter-rotating rings contain eight unique blades, rather than duplicate contacts.
 fresh('blade');run("spawn(0);s.enemies[0].x=100;castEvolutionSignature('blade')");assert.equal(run("new Set(signaturePoints(s.signature.fields[0]).map(n=>n.x.toFixed(3)+':'+n.y.toFixed(3))).size"),8);
-// The crop map matches every shipped PNG, including real RGBA transparency.
-for(let i=0;i<4;i++){let file=run('weaponAtlasFiles['+i+']'),data=fs.readFileSync(require('path').join(__dirname,file));assert.equal(data.toString('ascii',1,4),'PNG');assert.equal(data.readUInt32BE(16),run('weaponAtlasSizes['+i+'][0]'));assert.equal(data.readUInt32BE(20),run('weaponAtlasSizes['+i+'][1]'));assert.equal(data[25],6)}
+// The crop map matches every shipped WebP atlas, including real alpha transparency.
+for(let i=0;i<4;i++){let file=run('weaponAtlasFiles['+i+']'),data=fs.readFileSync(require('path').join(__dirname,file));assert.equal(data.toString('ascii',8,16),'WEBPVP8X');assert.equal(1+data.readUIntLE(24,3),run('weaponAtlasSizes['+i+'][0]'));assert.equal(1+data.readUIntLE(27,3),run('weaponAtlasSizes['+i+'][1]'));assert(data[20]&16,'WebP alpha')}
 // Split warheads stop after one generation, with explicit global limits.
 fresh('rocket');run("spawn(0);s.enemies[0].x=400;s.enemies[0].y=0;s.enemies[0].hp=s.enemies[0].max=1e8;castEvolutionSignature('rocket');for(let i=0;i<180;i++)updateEvolutionSignatures(1/60)");assert(run('s.signature.shots.length<=96'));assert(run('s.signature.shots.every(b=>!b.split||b.split===2)'));
 // Collision follows the swept projectile segment, including large simulation steps.
