@@ -1,5 +1,7 @@
-/* Reactor Rogue GPU layer, v0.55.2.
-   An optional Three.js renderer drawn on its own canvas beneath the 2D playfield canvas.
+/* Reactor Rogue GPU layers, v0.56.
+   createGpuLayer: Three.js canvas beneath the 2D playfield (sector background, parallax stars, lighting,
+   glow sprites). createBloomLayer: Three.js canvas above it, composited with plus-lighter, adding
+   thresholded bloom from a small copy of the frame, glow sprites, sparks and light pools.
    Purely cosmetic: it receives screen-space data from draw() and never reads or changes
    simulation state, RNG, collision or progression. Any failure returns null or reports a
    loss, and the game keeps using the existing 2D renderer. */
@@ -32,6 +34,9 @@ uniform float uTime;
 uniform float uMotion;
 uniform float uStars;
 uniform vec3 uTint;
+uniform vec4 uLight[12];
+uniform vec3 uLightCol[12];
+uniform float uLightCount;
 varying vec2 vScreen;
 float hash(vec2 p){
   p = fract(p * vec2(123.34, 456.21));
@@ -55,6 +60,14 @@ void main(){
   vec3 col = vec3(0.027, 0.063, 0.122);
   if (uHasTex > 0.5) col = texture2D(uTex, (vScreen - uOrigin) / uSpan).rgb;
   col = mix(col, vec3(0.0157, 0.0392, 0.0784), 0.2196);
+  // Point lights brighten the scenery in proportion to its own colour, plus a faint coloured haze.
+  for (int i = 0; i < 12; i++) {
+    if (float(i) >= uLightCount) break;
+    vec4 L = uLight[i];
+    float f = max(0.0, 1.0 - length(vScreen - L.xy) / L.z);
+    f *= f;
+    col += (col * 1.3 + 0.025) * uLightCol[i] * (L.w * f);
+  }
   col += starLayer(vScreen + uCam * 0.55, 96.0, 0.20, 1.3, 0.0) * 0.30 * uStars;
   col += starLayer(vScreen + uCam * 0.82, 150.0, 0.12, 1.9, 17.0) * 0.45 * uStars;
   gl_FragColor = vec4(col, 1.0);
@@ -140,7 +153,8 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
   const bgUniforms = {
     uTex: { value: null }, uHasTex: { value: 0 }, uOrigin: { value: new T.Vector2() }, uSpan: { value: 1 },
     uRes: { value: new T.Vector2(1, 1) }, uCam: { value: new T.Vector2() }, uTime: { value: 0 }, uMotion: { value: 1 },
-    uStars: { value: 1 }, uTint: { value: new T.Vector3(0.5, 0.75, 0.75) }
+    uStars: { value: 1 }, uTint: { value: new T.Vector3(0.5, 0.75, 0.75) },
+    uLight: { value: Array.from({ length: 12 }, () => new T.Vector4()) }, uLightCol: { value: Array.from({ length: 12 }, () => new T.Vector3()) }, uLightCount: { value: 0 }
   };
   const bgMaterial = new T.RawShaderMaterial({ uniforms: bgUniforms, vertexShader: BACKGROUND_VERTEX, fragmentShader: BACKGROUND_FRAGMENT, depthTest: false, depthWrite: false });
   const background = new T.Mesh(bgGeometry, bgMaterial);
@@ -262,6 +276,9 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
       bgUniforms.uTime.value = frame.time || 0;
       bgUniforms.uMotion.value = frame.reducedMotion ? 0 : 1;
       bgUniforms.uStars.value = frame.stars ?? 1;
+      let lights = frame.lights || [], n = Math.min(12, lights.length);
+      for (let i = 0; i < n; i++) { let l = lights[i], c = parseColour(l.c); bgUniforms.uLight.value[i].set(l.x, l.y, l.r, l.i); bgUniforms.uLightCol.value[i].set(c[0], c[1], c[2]); }
+      bgUniforms.uLightCount.value = n;
       let tint = parseColour(frame.tint || '#7cbbb9');
       bgUniforms.uTint.value.set(tint[0], tint[1], tint[2]);
       spriteGeometry.instanceCount = count; sprites.visible = count > 0;
@@ -291,6 +308,177 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
     dispose() {
       if (texture) texture.dispose();
       bgGeometry.dispose(); bgMaterial.dispose(); spriteGeometry.dispose(); spriteMaterial.dispose(); renderer.dispose();
+    }
+  };
+  canvas.addEventListener('webglcontextlost', () => { lost = true; if (layer.onLost) layer.onLost(); });
+  return layer;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Bloom layer. Pipeline per frame, all in CSS-pixel space:
+//   capture (small copy of the 2D frame, optional) -> prefilter threshold into A (1/4 size)
+//   + glow sprites added into A -> blur A (H, V) -> downsample to C (1/8) -> blur C (H, V)
+//   -> screen: A*near + C*wide, then sparks and light pools drawn additively at full resolution.
+// Output is premultiplied (alpha = brightest channel) for plus-lighter compositing over the page.
+
+const QUAD_VERTEX = `precision highp float;
+attribute vec3 position;
+varying vec2 vUv;
+void main(){ vUv = position.xy * 0.5 + 0.5; gl_Position = vec4(position.xy, 0.0, 1.0); }`;
+
+export const PREFILTER_FRAGMENT = `precision mediump float;
+uniform sampler2D uTex;
+uniform vec2 uTexel;
+uniform float uThreshold;
+uniform float uKnee;
+varying vec2 vUv;
+void main(){
+  // The copy is uploaded straight (not premultiplied), so weight colour by coverage: faint smoke and
+  // fading flares on the transparent 2D canvas must not count as fully bright.
+  vec4 a = texture2D(uTex, vUv + uTexel * vec2(-0.5, -0.5)), b = texture2D(uTex, vUv + uTexel * vec2(0.5, -0.5));
+  vec4 d = texture2D(uTex, vUv + uTexel * vec2(-0.5, 0.5)), e = texture2D(uTex, vUv + uTexel * vec2(0.5, 0.5));
+  vec3 c = (a.rgb * a.a + b.rgb * b.a + d.rgb * d.a + e.rgb * e.a) * 0.25;
+  float luma = max(c.r, max(c.g, c.b));
+  gl_FragColor = vec4(c * smoothstep(uThreshold, uThreshold + uKnee, luma), 1.0);
+}`;
+
+export const BLUR_FRAGMENT = `precision mediump float;
+uniform sampler2D uTex;
+uniform vec2 uStep;
+varying vec2 vUv;
+void main(){
+  vec3 c = texture2D(uTex, vUv).rgb * 0.227027;
+  c += (texture2D(uTex, vUv + uStep * 1.3846153).rgb + texture2D(uTex, vUv - uStep * 1.3846153).rgb) * 0.3162162;
+  c += (texture2D(uTex, vUv + uStep * 3.2307692).rgb + texture2D(uTex, vUv - uStep * 3.2307692).rgb) * 0.0702703;
+  gl_FragColor = vec4(c, 1.0);
+}`;
+
+export const COMPOSITE_FRAGMENT = `precision mediump float;
+uniform sampler2D uNear;
+uniform sampler2D uWide;
+uniform float uNearStrength;
+uniform float uWideStrength;
+varying vec2 vUv;
+void main(){
+  vec3 c = min(vec3(1.0), texture2D(uNear, vUv).rgb * uNearStrength + texture2D(uWide, vUv).rgb * uWideStrength);
+  gl_FragColor = vec4(c, max(c.r, max(c.g, c.b)));
+}`;
+
+function spriteBatch(T, uniforms) {
+  const geometry = new T.InstancedBufferGeometry();
+  geometry.setAttribute('position', new T.BufferAttribute(new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0]), 3));
+  geometry.setIndex([0, 1, 2, 0, 2, 3]);
+  const sprite = new Float32Array(SPRITE_CAP * 4), colour = new Float32Array(SPRITE_CAP * 4);
+  const aSprite = new T.InstancedBufferAttribute(sprite, 4), aColor = new T.InstancedBufferAttribute(colour, 4);
+  aSprite.setUsage(T.DynamicDrawUsage); aColor.setUsage(T.DynamicDrawUsage);
+  geometry.setAttribute('aSprite', aSprite); geometry.setAttribute('aColor', aColor); geometry.instanceCount = 0;
+  const material = new T.RawShaderMaterial({ uniforms, vertexShader: SPRITE_VERTEX, fragmentShader: SPRITE_FRAGMENT, transparent: true, depthTest: false, depthWrite: false,
+    blending: T.CustomBlending, blendEquation: T.AddEquation, blendSrc: T.OneFactor, blendDst: T.OneFactor });
+  const mesh = new T.Mesh(geometry, material); mesh.frustumCulled = false;
+  let count = 0, width = 1, height = 1;
+  return {
+    mesh,
+    size(w, h) { width = w; height = h; },
+    clear() { count = 0; },
+    get count() { return count; },
+    add(x, y, radius, tint, alpha = 1, hard = 0) {
+      if (count >= SPRITE_CAP || !(radius > 0) || !(alpha > 0.002)) return;
+      if (x < -radius || y < -radius || x > width + radius || y > height + radius) return;
+      let c = parseColour(tint), i = count * 4;
+      sprite[i] = x; sprite[i + 1] = y; sprite[i + 2] = radius; sprite[i + 3] = hard;
+      colour[i] = c[0]; colour[i + 1] = c[1]; colour[i + 2] = c[2]; colour[i + 3] = c[3] * Math.min(1, alpha);
+      count++;
+    },
+    commit() {
+      geometry.instanceCount = count; mesh.visible = count > 0;
+      if (count) for (let attr of [aSprite, aColor]) { if (attr.clearUpdateRanges) { attr.clearUpdateRanges(); attr.addUpdateRange(0, count * 4); } attr.needsUpdate = true; }
+    },
+    dispose() { geometry.dispose(); material.dispose(); }
+  };
+}
+
+export async function createBloomLayer(canvas, loadThree = () => import(THREE_URL)) {
+  if (!canvas) return null;
+  const T = await loadThree();
+  let renderer;
+  try {
+    renderer = new T.WebGLRenderer({ canvas, antialias: false, alpha: true, premultipliedAlpha: true, depth: false, stencil: false, powerPreference: 'high-performance' });
+  } catch (e) { return null; }
+  renderer.autoClear = false;
+  renderer.setClearColor(0x000000, 0);
+  const camera = new T.Camera(), res = { value: new T.Vector2(1, 1) };
+  const quadGeometry = new T.BufferGeometry();
+  quadGeometry.setAttribute('position', new T.BufferAttribute(new Float32Array([-1, -1, 0, 3, -1, 0, -1, 3, 0]), 3));
+  const raw = (fragmentShader, uniforms, additive) => new T.RawShaderMaterial({ uniforms, vertexShader: QUAD_VERTEX, fragmentShader, depthTest: false, depthWrite: false,
+    transparent: !!additive, blending: additive ? T.CustomBlending : T.NoBlending, blendEquation: T.AddEquation, blendSrc: T.OneFactor, blendDst: T.OneFactor });
+  const prefilter = raw(PREFILTER_FRAGMENT, { uTex: { value: null }, uTexel: { value: new T.Vector2() }, uThreshold: { value: 0.5 }, uKnee: { value: 0.3 } });
+  const blur = raw(BLUR_FRAGMENT, { uTex: { value: null }, uStep: { value: new T.Vector2() } });
+  const copy = raw(BLUR_FRAGMENT, { uTex: { value: null }, uStep: { value: new T.Vector2() } });
+  const composite = raw(COMPOSITE_FRAGMENT, { uNear: { value: null }, uWide: { value: null }, uNearStrength: { value: 1 }, uWideStrength: { value: 1 } }, true);
+  const quad = new T.Mesh(quadGeometry, prefilter); quad.frustumCulled = false;
+  const quadScene = new T.Scene(); quadScene.add(quad);
+  const glow = spriteBatch(T, { uRes: res }), screen = spriteBatch(T, { uRes: res });
+  const glowScene = new T.Scene(); glowScene.add(glow.mesh);
+  const screenScene = new T.Scene(); screenScene.add(screen.mesh);
+  const target = (w, h) => new T.WebGLRenderTarget(w, h, { depthBuffer: false, stencilBuffer: false, type: T.UnsignedByteType, magFilter: T.LinearFilter, minFilter: T.LinearFilter, generateMipmaps: false });
+  let A = target(1, 1), B = target(1, 1), C = target(1, 1), D = target(1, 1);
+  let width = 1, height = 1, lost = false, captureTexture = null, captureSource = null;
+
+  function run(material, out, clear = true) {
+    quad.material = material; renderer.setRenderTarget(out);
+    if (clear) renderer.clear(true, false, false);
+    renderer.render(quadScene, camera);
+  }
+
+  const layer = {
+    onLost: null,
+    get lost() { return lost; },
+    resize(w, h, ratio) {
+      width = Math.max(1, w); height = Math.max(1, h); res.value.set(width, height);
+      renderer.setPixelRatio(ratio || 1); renderer.setSize(width, height, false);
+      let qw = Math.max(1, Math.ceil(width / 4)), qh = Math.max(1, Math.ceil(height / 4)), ew = Math.max(1, Math.ceil(width / 8)), eh = Math.max(1, Math.ceil(height / 8));
+      A.setSize(qw, qh); B.setSize(qw, qh); C.setSize(ew, eh); D.setSize(ew, eh);
+      glow.size(width, height); screen.size(width, height);
+    },
+    setVisible(on) { canvas.style.display = on ? 'block' : 'none'; },
+    begin() { glow.clear(); screen.clear(); },
+    // Blurred into the bloom (halos). Screen-space CSS pixels.
+    glow(x, y, r, c, a = 1, hard = 0) { glow.add(x, y, r, c, a, hard); },
+    // Drawn sharp at full resolution on top (sparks, light pools).
+    screen(x, y, r, c, a = 1, hard = 0) { screen.add(x, y, r, c, a, hard); },
+    get spriteCount() { return glow.count + screen.count; },
+    // frame: {capture: canvas|null, threshold, near, wide}
+    render(frame) {
+      if (lost) return;
+      glow.commit(); screen.commit();
+      let src = frame.capture || null;
+      // Prefilter the captured frame into A, or start A empty.
+      if (src) {
+        if (src !== captureSource) { if (captureTexture) captureTexture.dispose(); captureSource = src; captureTexture = new T.CanvasTexture(src); captureTexture.colorSpace = T.NoColorSpace; captureTexture.generateMipmaps = false; captureTexture.minFilter = captureTexture.magFilter = T.LinearFilter; }
+        captureTexture.needsUpdate = true;
+        prefilter.uniforms.uTex.value = captureTexture; prefilter.uniforms.uTexel.value.set(1 / src.width, 1 / src.height);
+        prefilter.uniforms.uThreshold.value = frame.threshold ?? 0.5; prefilter.uniforms.uKnee.value = 0.3;
+        run(prefilter, A);
+      } else { renderer.setRenderTarget(A); renderer.clear(true, false, false); }
+      if (glow.count) { renderer.setRenderTarget(A); renderer.render(glowScene, camera); }
+      // Two blur levels.
+      blur.uniforms.uTex.value = A.texture; blur.uniforms.uStep.value.set(1 / A.width, 0); run(blur, B);
+      blur.uniforms.uTex.value = B.texture; blur.uniforms.uStep.value.set(0, 1 / A.height); run(blur, A);
+      copy.uniforms.uTex.value = A.texture; copy.uniforms.uStep.value.set(0.5 / A.width, 0.5 / A.height); run(copy, C);
+      blur.uniforms.uTex.value = C.texture; blur.uniforms.uStep.value.set(1 / C.width, 0); run(blur, D);
+      blur.uniforms.uTex.value = D.texture; blur.uniforms.uStep.value.set(0, 1 / C.height); run(blur, C);
+      // Screen.
+      renderer.setRenderTarget(null); renderer.clear(true, false, false);
+      composite.uniforms.uNear.value = A.texture; composite.uniforms.uWide.value = C.texture;
+      composite.uniforms.uNearStrength.value = frame.near ?? 1; composite.uniforms.uWideStrength.value = frame.wide ?? 1;
+      quad.material = composite; renderer.render(quadScene, camera);
+      if (screen.count) renderer.render(screenScene, camera);
+    },
+    dispose() {
+      for (let t of [A, B, C, D]) t.dispose();
+      if (captureTexture) captureTexture.dispose();
+      for (let m of [prefilter, blur, copy, composite]) m.dispose();
+      quadGeometry.dispose(); glow.dispose(); screen.dispose(); renderer.dispose();
     }
   };
   canvas.addEventListener('webglcontextlost', () => { lost = true; if (layer.onLost) layer.onLost(); });
