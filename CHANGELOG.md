@@ -1,3 +1,11 @@
+# v0.56.0 — bloom and lighting
+
+- Add real bloom: a second GPU canvas above the playfield blurs the bright parts of each frame (shots, explosions, engines, pickups, damage numbers) at two sizes and adds them back with additive blending.
+- Add dynamic lighting: explosions, blast effects, bosses and the player's ship light up the sector artwork around them in proportion to its colour, with a soft light pool over nearby ships.
+- Add Settings → Graphics → Bloom & lighting (Off, Subtle, Full). Low turns it off, Medium uses Subtle and High uses Full; Auto follows its current level. Lighting is gentler with flashes reduced or off, or with reduced motion. Sparks now draw crisp on top with their own glow.
+- Load every image drawn into the playfield as trusted, so bloom can read the frame on iOS. If a frame can't be read, bloom falls back to effect glow for the session; if the bloom canvas can't start, v0.55 visuals remain.
+- No gameplay, damage, hitbox or save changes; combat parity matches v0.54 for all 48 weapons.
+
 # v0.55.2 — iPhone and iPad backgrounds
 
 - Root cause: Safari marked the sector artwork as unreadable, so the GPU could not receive it. Sector images now load with `crossOrigin` set, which also restores the material finish and scenery lights that iOS had been silently skipping.
