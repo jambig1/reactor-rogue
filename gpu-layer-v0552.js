@@ -1,4 +1,4 @@
-/* Reactor Rogue GPU layer, v0.55.
+/* Reactor Rogue GPU layer, v0.55.2.
    An optional Three.js renderer drawn on its own canvas beneath the 2D playfield canvas.
    Purely cosmetic: it receives screen-space data from draw() and never reads or changes
    simulation state, RNG, collision or progression. Any failure returns null or reports a
@@ -46,8 +46,8 @@ vec3 starLayer(vec2 pos, float cell, float density, float size, float seed){
   vec2 centre = vec2(hash(g + seed + 3.1), hash(g + seed + 7.7)) * 0.8 + 0.1;
   float d = length((f - centre) * cell);
   float twinkle = 0.7 + 0.3 * sin(uTime * (0.8 + h * 2.0) * uMotion + h * 40.0);
-  float core = smoothstep(size, 0.0, d);
-  float halo = smoothstep(size * 4.0, 0.0, d) * 0.18;
+  float core = 1.0 - smoothstep(0.0, size, d);
+  float halo = (1.0 - smoothstep(0.0, size * 4.0, d)) * 0.18;
   vec3 colour = mix(vec3(0.78, 0.88, 1.0), uTint, hash(g + seed + 1.3));
   return colour * (core + halo) * twinkle;
 }
@@ -87,7 +87,7 @@ void main(){
   float d = length(vUv);
   if (d >= 1.0) discard;
   float glow = pow(1.0 - d, 2.4);
-  float core = smoothstep(0.55, 0.25, d);
+  float core = 1.0 - smoothstep(0.25, 0.55, d);
   float a = mix(glow, max(glow * 0.5, core), vHard) * vColor.a;
   gl_FragColor = vec4(vColor.rgb * a, a);
 }`;
@@ -122,11 +122,12 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
   const T = await loadThree();
   let renderer;
   try {
-    renderer = new T.WebGLRenderer({ canvas, antialias: false, alpha: false, depth: false, stencil: false, powerPreference: 'high-performance' });
+    renderer = new T.WebGLRenderer({ canvas, antialias: false, alpha: true, premultipliedAlpha: true, depth: false, stencil: false, powerPreference: 'high-performance' });
   } catch (e) {
     return null;
   }
   renderer.setClearColor(0x07101f, 1);
+  const gl = renderer.getContext();
   const scene = new T.Scene(), camera = new T.Camera();
 
   const bgGeometry = new T.BufferGeometry();
@@ -158,13 +159,58 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
   sprites.frustumCulled = false; sprites.renderOrder = 1;
   scene.add(sprites);
 
-  let count = 0, tile = null, texture = null, lost = false, width = 1, height = 1;
+  let count = 0, tile = null, texture = null, lost = false, width = 1, height = 1, ratio = 1;
+  // Background modes: 'gpu' paints the sector tile here; 'overlay' means the 2D canvas paints the
+  // background and this canvas sits above it, adding only glow and particles (CSS plus-lighter).
+  let mode = 'gpu', pendingCheck = null;
+
+  // Raw pixel upload: the most portable path. Uploading the 2D tile canvas directly produced a
+  // black texture in Safari/WebKit (all iOS browsers), so the tile is read back once per sector.
+  function tileTexture(source) {
+    let w = source.width, h = source.height, data;
+    try { data = source.getContext('2d').getImageData(0, 0, w, h).data; } catch (e) { return null; }
+    let tex = new T.DataTexture(new Uint8Array(data.buffer, data.byteOffset, data.byteLength), w, h, T.RGBAFormat, T.UnsignedByteType);
+    tex.flipY = false; tex.wrapS = tex.wrapT = T.RepeatWrapping; tex.colorSpace = T.NoColorSpace;
+    tex.magFilter = T.LinearFilter; tex.minFilter = T.LinearMipmapLinearFilter; tex.generateMipmaps = true;
+    tex.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
+    tex.needsUpdate = true; tex.userData.pixels = data; tex.userData.w = w; tex.userData.h = h;
+    return tex;
+  }
+
+  // Compare a few rendered background pixels (stars and sprites hidden) with the tile they should
+  // show. Any mismatch on a device switches to overlay mode instead of showing a black playfield.
+  function backgroundMatches(bg) {
+    let px = texture.userData.pixels, tw = texture.userData.w, th = texture.userData.h, good = 0, tested = 0, out = new Uint8Array(4);
+    let bw = gl.drawingBufferWidth, bh = gl.drawingBufferHeight;
+    for (let [fx, fy] of [[0.5, 0.5], [0.3, 0.35], [0.7, 0.35], [0.3, 0.7], [0.7, 0.7]]) {
+      let sx = fx * width, sy = fy * height;
+      let u = ((sx - bg.originX) / bg.span % 1 + 1) % 1, v = ((sy - bg.originY) / bg.span % 1 + 1) % 1;
+      let i = (Math.floor(v * th) * tw + Math.floor(u * tw)) * 4;
+      let expected = [0, 1, 2].map(c => px[i + c] * (1 - 0.2196) + [4, 10, 20][c] * 0.2196);
+      gl.readPixels(Math.floor(fx * bw), Math.floor((1 - fy) * bh), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, out);
+      let diff = Math.abs(out[0] - expected[0]) + Math.abs(out[1] - expected[1]) + Math.abs(out[2] - expected[2]);
+      tested++; if (diff <= 60) good++;
+    }
+    return good * 2 > tested;
+  }
+
+  function setMode(next) {
+    if (mode === next) return;
+    mode = next;
+    background.visible = mode === 'gpu';
+    renderer.setClearColor(mode === 'gpu' ? 0x07101f : 0x000000, mode === 'gpu' ? 1 : 0);
+    if (layer.onModeChange) layer.onModeChange(mode);
+  }
+
   const layer = {
     onLost: null,
+    onModeChange: null,
     get lost() { return lost; },
-    resize(w, h, ratio) {
-      width = Math.max(1, w); height = Math.max(1, h);
-      renderer.setPixelRatio(ratio || 1); renderer.setSize(width, height, false);
+    get mode() { return mode; },
+    forceOverlay() { setMode('overlay'); },
+    resize(w, h, r) {
+      width = Math.max(1, w); height = Math.max(1, h); ratio = r || 1;
+      renderer.setPixelRatio(ratio); renderer.setSize(width, height, false);
       bgUniforms.uRes.value.set(width, height);
     },
     setVisible(on) { canvas.style.display = on ? 'block' : 'none'; },
@@ -182,14 +228,12 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
     render(frame) {
       if (lost) return;
       let bg = frame.background;
-      if (bg && bg.tile) {
+      if (mode === 'gpu' && bg && bg.tile) {
         if (bg.tile !== tile) {
           if (texture) texture.dispose();
-          tile = bg.tile; texture = new T.CanvasTexture(tile);
-          texture.flipY = false; texture.wrapS = texture.wrapT = T.RepeatWrapping; texture.colorSpace = T.NoColorSpace;
-          texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-          texture.needsUpdate = true;
-          bgUniforms.uTex.value = texture;
+          tile = bg.tile; texture = tileTexture(tile); bgUniforms.uTex.value = texture;
+          if (!texture) { setMode('overlay'); return; }
+          pendingCheck = true;
         }
         bgUniforms.uHasTex.value = 1; bgUniforms.uOrigin.value.set(bg.originX, bg.originY); bgUniforms.uSpan.value = bg.span;
       } else bgUniforms.uHasTex.value = 0;
@@ -205,6 +249,14 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
           if (attr.clearUpdateRanges) { attr.clearUpdateRanges(); attr.addUpdateRange(0, count * 4); }
           attr.needsUpdate = true;
         }
+      }
+      if (pendingCheck && mode === 'gpu' && bg && bg.tile) {
+        pendingCheck = false;
+        let stars = bgUniforms.uStars.value, spritesOn = sprites.visible, ok = false;
+        bgUniforms.uStars.value = 0; sprites.visible = false;
+        try { renderer.render(scene, camera); ok = backgroundMatches(bg); } catch (e) { ok = false; }
+        bgUniforms.uStars.value = stars; sprites.visible = spritesOn;
+        if (!ok) { setMode('overlay'); return; }
       }
       renderer.render(scene, camera);
     },

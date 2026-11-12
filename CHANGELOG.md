@@ -1,3 +1,9 @@
+# v0.55.2 — iPhone and iPad backgrounds
+
+- Fix black sector backgrounds with GPU effects on iPhone and iPad (Safari's engine, used by every iOS browser). The sector artwork now reaches the GPU as raw pixels instead of a canvas upload.
+- Add a background self-check: on each new sector the GPU layer compares a few rendered pixels with the artwork. If they differ on any device, it switches to compatibility mode: the classic background with GPU glow and particles added on top. Settings shows which mode is active.
+- Use portable shader edge maths so stars and spark cores render the same on Apple graphics chips.
+
 # v0.55.1 — bundled Three.js
 
 - Ship Three.js 0.187.0 with the game (`vendor/three-0.187.0/`, MIT licence) instead of loading it from a CDN. GPU effects no longer depend on a third-party site and work offline from the first visit.
