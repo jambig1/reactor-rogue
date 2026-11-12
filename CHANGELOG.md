@@ -1,3 +1,10 @@
+# v0.57.0 — smooth in big fights
+
+- Shots now check only enemies in nearby grid cells instead of every enemy, in the same order as before. Identical combat results in all 48-weapon parity scenes and four seeded 200-enemy fights.
+- Reactive gas does no work when no gas is visible and no longer allocates per ship each step. Blade orbits and debris collisions avoid repeated maths and temporary lists.
+- Simulation is about 20–30% faster in crowded fights in the new `BENCHMARK-CROWD.cjs`.
+- Bloom adapts to the device: if the frame rate stays below about 85% of the target, it eases from Full to Subtle, then pauses, and returns after ten smooth seconds. Your saved setting is unchanged; Settings shows when it has been eased.
+
 # v0.56.0 — bloom and lighting
 
 - Add real bloom: a second GPU canvas above the playfield blurs the bright parts of each frame (shots, explosions, engines, pickups, damage numbers) at two sizes and adds them back with additive blending.

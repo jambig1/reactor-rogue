@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.56.0**.
+Current version: **0.57.0**.
 
 ## Where the game is now
 
@@ -16,7 +16,7 @@ Current version: **0.56.0**.
 
 ## Now
 
-### 0.57 — Smooth in big fights
+### 0.57 — Smooth in big fights (done)
 - Collision grid so shots, beams and targeting only check nearby enemies instead of every enemy.
 - Bloom adapts to the device: drops from Full to Subtle, then Off, when the frame rate stays low, and comes back when there is headroom.
 - Goal: steady 60 FPS in late-run crowds on iPhone.
