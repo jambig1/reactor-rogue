@@ -1,12 +1,12 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.53.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.54.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Game runtime, menus, equipment, progression, rendering and embedded core assets. |
+| `index.html` | Game runtime, menus, equipment, progression and rendering. Art and the font load from versioned files beside it. |
 | `home.html` | Public landing page, controls, sector gallery and feedback form. |
 | `website.css` | Landing-page layout and presentation. |
 | `feedback-v0341.js` | Currently shipped website feedback client. |
@@ -115,13 +115,15 @@ Arsenal discovery is a Records tab with direct launch/pause/result actions. `arc
 
 `evolutionSignatures` defines a real timed signature cycle for every evolved weapon. `updateEvolutionSignatures` owns actors and damage; `drawEvolutionSignatures` is a pure painter. Signatures supplement existing mechanisms, except Iron Halo replaces legacy blade contacts/interception while its new cutting rings are active. Global limits are 12 fields and 96 signature shots, with at most ten nodes per field. Split missiles have one child generation. Ordinary signature projectiles share cover blocking; phase torpedoes retain their exception.
 
-`weapon-atlas-0-v0500.png` through `weapon-atlas-3-v0500.png` contain 96 painted sprites. `weaponAtlasOrder`, `weaponAtlasSizes` and `weaponAtlasCell` define exact source rectangles. These external assets must be shipped beside the game and are listed in the offline cache. They are no longer embedded core icons in a standalone HTML download. The canvas and DOM icons share these files.
+`weapon-atlas-0-v0540.webp` through `weapon-atlas-3-v0540.webp` contain 96 painted sprites. `weaponAtlasOrder`, `weaponAtlasSizes` and `weaponAtlasCell` define exact source rectangles. These external assets must be shipped beside the game and are listed in the offline cache. They are no longer embedded core icons in a standalone HTML download. The canvas and DOM icons share these files.
 
 `EVOLUTION-TRANSFORMATIONS.md` / `.json` list every cycle. Run `TEST-EVOLUTION-SIGNATURES.cjs`, `TEST-DISCOVERY.cjs` and the base-only combat comparison. Optional `REVIEW-EVOLUTIONS.cjs` needs @napi-rs/canvas and produces labelled isolated simulation review scenes.
 
-Support art v0.51: `support-atlas-0-v0510.png` and `support-atlas-1-v0510.png` contain all 32 supports in 4×4 grids. `supportAtlasOrder`, `supportAtlasSizes` and `supportAtlasCell` define crops. `equipmentIcon` routes all support surfaces through these shared sprites, independently of evolved weapon state. Ship both files alongside the game and in the offline cache.
+Support art v0.51: `support-atlas-0-v0540.webp` and `support-atlas-1-v0540.webp` contain all 32 supports in 4×4 grids. `supportAtlasOrder`, `supportAtlasSizes` and `supportAtlasCell` define crops. `equipmentIcon` routes all support surfaces through these shared sprites, independently of evolved weapon state. Ship both files alongside the game and in the offline cache.
 
 Arsenal layout v0.52: selected-entry headings use an image/title flex row, recipe inputs are stacked named hardware rows, and the mobile browser is a bounded two-column list above the detail. `paintedAtlasIcon` uses a nested source viewport matching the crop aspect ratio; clipping only the square outer SVG allows adjacent atlas rows to leak into letterboxing. The first weapon sheet has hand-aligned column edges.
 
 Combat art v0.53: `drawHoneycombShield` is visual only. `recordShieldImpact` records actual absorbed damage with a finite source angle; `attackArt.shieldHits` caps at six, expires in `updateAttackArt` and resets with a run. Recharge appearance is also visual state. Shield collision/capacity remains unchanged. `paintedSpriteCache` caps at 80 cropped, feathered canvases; it does not hold combat actors. `drawSupportModules` paints at most six hull fittings. Passive modules do not become extra attacking or colliding objects.
 Run `TEST-SHIELD-ART.cjs`, `TEST-ATTACK-ART.cjs`, `TEST-COMBAT-FEEL.cjs` and the combat parity comparison. Optional `REVIEW-COMBAT-ART.cjs /output/path` requires @napi-rs/canvas and creates 48 base/evolved weapon cases, 32 support cases and shield-state scenes; these are simulated production-painter reviews, not browser gameplay recordings.
+
+Asset delivery v0.54: `index.html` contains no embedded images or fonts. The wordmark, legacy attack atlas, six sector backgrounds, six sector stills, four weapon atlases, two support atlases and the Exo 2 font are separate versioned files (`*-v0540.webp`, `exo2-v0540.woff`) listed in `sw.js`. Atlases are lossy WebP (quality 90) with lossless alpha, so crop rectangles and transparency are unchanged; pixel sizes are identical to the v0.50/v0.51 PNG sheets. The wordmark is 1000×500, double its largest display size. Preflight starts decoding the selected sector background before launch. `exo2.ttf` stays as the licensed source font for native review tools; browsers load the WOFF copy. `sector-city-v0420.jpg` is kept for the README and `og:image`, where WebP support is inconsistent. When changing art, export a new versioned WebP and update the source array, `sw.js` and the related tests together.

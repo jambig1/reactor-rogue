@@ -1,3 +1,10 @@
+# v0.54.0 — lighter downloads
+
+- Convert all painted weapon and support atlases, the wordmark, sector backgrounds and sector previews to WebP. Transparency and crop sizes are unchanged. First-visit download falls from about 20MB to about 5MB.
+- Stop embedding images and the font in `index.html` (6.1MB → 0.75MB), so the menu appears sooner. Each asset now loads once from its own cached file instead of twice.
+- Serve Exo 2 as WOFF (296KB → 133KB). Start loading the selected sector's background during ship and sector selection.
+- Update the offline cache list and cache version. Remove superseded PNG/JPEG copies. No gameplay, balance, save or recipe changes.
+
 # v0.53.0 — physical shields and combat materials
 
 - Give Energy Shield a curved honeycomb shell with shaded metal emitters. Brighten nearby hex cells on actual absorbed hits, show directional rim impacts and a short collapse on depletion; show a reform pulse when charge returns. Reactive Screen uses a lighter outer shell. Respect Low effects, reduced motion and flash settings.
