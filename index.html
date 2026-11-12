@@ -2455,9 +2455,11 @@ let mist=environmentMist(id);if(mist){for(let i=0;i<(detail?3:1);i++){let span=W
 if(detail){ctx.save();ctx.fillStyle=environmentPalettes[id][0];for(let i=0;i<16;i++){let x=px-W/2+((i*193.7-px*.17+clock*.7)%W+W)%W,y=py-H/2+((i*137.3-py*.17-clock*(id==='foundry'?6:1))%H+H)%H;ctx.globalAlpha=.12;ctx.beginPath();ctx.arc(x,y,i%4===0?1.1:.6,0,TAU);ctx.fill()}ctx.restore()}}
 
 // Independent high-resolution sector art, loaded from cached WebP files. Decode and retain only the two most recent sectors.
+// crossOrigin keeps the tile readable: Safari otherwise taints it, which silently skipped the material
+// finish and scenery lights on iOS and blocked the GPU background upload (SecurityError).
 const sectorTextureSources={"grid":"sector-background-grid-v0540.webp","belt":"sector-background-belt-v0540.webp","storm":"sector-background-storm-v0540.webp","foundry":"sector-background-foundry-v0540.webp","cryo":"sector-background-cryo-v0540.webp","city":"sector-background-city-v0540.webp"};
 const sectorTextureCache=new Map();
-function sectorTexture(id){let row=sectorTextureCache.get(id);if(row){sectorTextureCache.delete(id);sectorTextureCache.set(id,row);return row}if(typeof Image!=='function'||!sectorTextureSources[id])return null;row={image:new Image,tiles:new Map};sectorTextureCache.set(id,row);row.image.src=sectorTextureSources[id];while(sectorTextureCache.size>2){let key=sectorTextureCache.keys().next().value;sectorTextureCache.delete(key)}return row}
+function sectorTexture(id){let row=sectorTextureCache.get(id);if(row){sectorTextureCache.delete(id);sectorTextureCache.set(id,row);return row}if(typeof Image!=='function'||!sectorTextureSources[id])return null;row={image:new Image,tiles:new Map};sectorTextureCache.set(id,row);row.image.crossOrigin='anonymous';row.image.src=sectorTextureSources[id];while(sectorTextureCache.size>2){let key=sectorTextureCache.keys().next().value;sectorTextureCache.delete(key)}return row}
 function seamlessSectorTile(image,limit){if(!image.complete||!image.naturalWidth||!image.naturalHeight||!document.createElement)return null;
  let size=Math.min(limit,image.naturalWidth,image.naturalHeight),overlap=Math.round(size*.18),period=size-overlap,layer=document.createElement('canvas');layer.width=layer.height=size;let g=layer.getContext('2d');if(!g)return null;g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(image,0,0,size,size);
  // Smooth, complementary weights merge opposite edges in both axes, without reflection.

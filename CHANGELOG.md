@@ -1,5 +1,6 @@
 # v0.55.2 — iPhone and iPad backgrounds
 
+- Root cause: Safari marked the sector artwork as unreadable, so the GPU could not receive it. Sector images now load with `crossOrigin` set, which also restores the material finish and scenery lights that iOS had been silently skipping.
 - Fix black sector backgrounds with GPU effects on iPhone and iPad (Safari's engine, used by every iOS browser). The sector artwork now reaches the GPU as raw pixels instead of a canvas upload.
 - Add a background self-check: on each new sector the GPU layer compares a few rendered pixels with the artwork. If they differ on any device, it switches to compatibility mode: the classic background with GPU glow and particles added on top. Settings shows which mode is active.
 - Use portable shader edge maths so stars and spark cores render the same on Apple graphics chips.
