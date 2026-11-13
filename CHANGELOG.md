@@ -1,3 +1,11 @@
+# v0.64.0 — animated menu
+
+- New animated menu scene in place of the flat aurora ribbons: drifting nebula clouds in your selected sector's colours, three layers of parallax stars with shooting stars, and a large showcase boss that cycles through the sector's three reactors and its final boss.
+- Your selected ship flies in the scene with engine glow and fires at small enemy waves crossing the screen, which break apart in explosions. Glows pick up bloom.
+- The menu panel is narrower on wide screens and lightly see-through with a blur, so the scene shows around and behind it.
+- Fix the menu's edge shading being drawn off-centre (a dark block in the lower right).
+- Menu-only: its own state and random stream, bounded counts, and still under reduced motion. Runs, saves and combat are unchanged.
+
 # v0.63.0 — deeper endless
 
 - Each endless cycle (every two minutes) adds one new threat, announced on screen, until all seven are active: Armoured Fleet (+15% armour on ordinary ships), Swift Hulls (enemies 20% faster), Swarm Surge (25% more arrivals), Shielded Reactors (endless reactors bring two shield systems that cut damage by 60% until destroyed), Barrage (enemy shots 25% faster), Elite Escorts (elites twice as often) and Self-Repair (damaged ships repair 2% per second). Enemy health and damage keep rising as before.

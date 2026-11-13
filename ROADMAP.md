@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.63.0**.
+Current version: **0.64.0**.
 
 ## Where the game is now
 
@@ -42,6 +42,9 @@ Current version: **0.63.0**.
 
 ### 0.63 — Deeper endless (done)
 - A new threat each endless cycle (seven in all), stacking Overcharge rewards once mutations run out, credits per cycle and an endless record per sector.
+
+### 0.64 — Animated menu (done)
+- Nebula, parallax stars, a showcase boss and your ship fighting small waves behind a lighter glass menu panel.
 
 ## Next
 
