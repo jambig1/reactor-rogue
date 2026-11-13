@@ -1,3 +1,9 @@
+# v0.68.0 — boss entrances
+
+- Every boss now arrives with a title card: letterbox bars with moving hazard stripes in the boss colour, a light streak, the boss name with a short subtitle (Reactor 1 of 3, Final encounter or Endless reactor) and its class, plus a warning siren. The final boss gets a longer, deeper version. Combat carries on underneath; the boss is still arriving while the card shows.
+- Evolved weapons whose signature rides with your ship (such as Salvage Swarm, Solar Lance and Resonance) no longer draw a large weapon sprite under the ship; a small spinning emblem ring in the weapon colour marks them instead, like Constellation Salvo.
+- Cosmetic only.
+
 # v0.67.0 — enemy ships in the new style
 
 - Enemy ships now share the player-ship look: darker armour tinted per sector, a bright neon outline in each ship's colour (pink fighters, green interceptors, violet brutes and specialists, gold elites) and neon detail lines on their plating, instead of grey hulls.

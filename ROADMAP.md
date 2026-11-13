@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.67.0**.
+Current version: **0.68.0**.
 
 ## Where the game is now
 
@@ -55,9 +55,11 @@ Current version: **0.67.0**.
 ### 0.67 — Enemy ships in the new style (done)
 - Neon outlines and tinted armour for every enemy ship.
 
+### 0.68 — Boss entrances (done)
+- Title cards and sirens for every boss; on-ship signature sprites replaced by emblem rings.
+
 ## Next
 
-- 0.68 Boss entrances
 - 0.69 Final boss music
 
 
