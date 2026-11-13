@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.68.0**.
+Current version: **0.69.0**.
 
 ## Where the game is now
 
@@ -58,14 +58,20 @@ Current version: **0.68.0**.
 ### 0.68 — Boss entrances (done)
 - Title cards and sirens for every boss; on-ship signature sprites replaced by emblem rings.
 
+### 0.69 — Solar Corona (done)
+- Seventh sector: solar flares, satellite cover and three new bosses.
+
 ## Next
 
-- 0.69 Final boss music
+- 0.70 Abyssal Rift: gravity currents, blinking void fleet, three bosses.
+- 0.71 Hive Nebula: spore pods, splitting organic fleet, three bosses.
+- 0.72 Ghost Fleet Graveyard: wrecks, waking turrets, three bosses.
 
 
 ## Later
 
 - **New sector and enemy family:** a seventh environment with its own fleet and three bosses.
+- **Final boss music:** a more intense variant of the boss track for the final encounter.
 - **Cross-device saves:** switch on the cloud saves that are already built, so progress carries between iPhone, iPad and desktop.
 - **Daily seeded run:** the same set-up each day as a personal challenge.
 - **Before sharing the game more widely:** a guided first run, a clearer end-of-run screen, optional anonymous run reports and online leaderboards.

@@ -1,3 +1,11 @@
+# v0.69.0 — Solar Corona
+
+- New seventh sector, Solar Corona (unlocked by clearing any sector): skim the surface of a star with a generated sun-surface background, orange weather embers and its own fleet with gold mirror plating.
+- Solar flares: every 16 seconds a flare warns for 2.6 seconds (an edge glow, a countdown and an arrow showing its direction) then sweeps across the arena. It burns your ship for 26 unless you shelter in the shadow behind a drifting satellite (shadow zones are marked SAFE during the warning). Flares also blast ordinary enemies caught in the open. No flares during boss fights.
+- Satellites are the sector's cover: destructible solar arrays that also block shots. More appear when a flare is coming if none are nearby.
+- Three new bosses: Prism Sentinel (cross beams and mirror volleys), Flare Engine (a sweeping lighthouse beam and ring bursts) and The Dying Star (expanding rings, corona strikes and double rings in overdrive), plus the Solar Throne final encounter.
+- Built on a new add-on system so the next three sectors plug in the same way.
+
 # v0.68.0 — boss entrances
 
 - Every boss now arrives with a title card: letterbox bars with moving hazard stripes in the boss colour, a light streak, the boss name with a short subtitle (Reactor 1 of 3, Final encounter or Endless reactor) and its class, plus a warning siren. The final boss gets a longer, deeper version. Combat carries on underneath; the boss is still arriving while the card shows.

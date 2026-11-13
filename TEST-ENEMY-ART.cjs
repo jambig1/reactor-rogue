@@ -16,7 +16,7 @@ for(const mode of ['low','high'])for(const motion of [false,true]){
  assert.equal(depth,0);assert.equal(run('JSON.stringify(s)'),before);
 }
 const cards=run(`Object.entries(enemyFleetPaint).flatMap(([sectorHull,f])=>[0,1,2,3].map(type=>{let q=shipSVGContext();drawIllustratedEnemyHull({sectorHull,type,c:f.trim,hp:100,max:100},0,shipPainter(q));return {sector:sectorHull,name:['Scout','Interceptor','Gunship','Cruiser'][type],svg:'<svg viewBox="-34 -29 68 58" role="img" aria-label="'+sectorHull+' '+type+'">'+q.markup()+'</svg>'}}))`);
-assert.equal(new Set(cards.map(x=>x.svg)).size,24);
+assert.equal(new Set(cards.map(x=>x.svg)).size,cards.length);
 const specialists=run(`Object.keys(enemyRoleProfiles).map(role=>{let q=shipSVGContext();drawIllustratedEnemyHull({role,type:2,sectorHull:'grid',c:roleInfo[role].c,hp:100,max:100},0,shipPainter(q));return {sector:'specialist',name:roleInfo[role].name,svg:'<svg viewBox="-34 -29 68 58" role="img" aria-label="'+role+'">'+q.markup()+'</svg>'}})`);
 assert.equal(new Set(specialists.map(x=>x.svg)).size,8);
 for(const card of [...cards,...specialists])assert(!/NaN|undefined/.test(card.svg));
