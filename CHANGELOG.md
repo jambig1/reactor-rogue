@@ -1,8 +1,9 @@
-# v0.80.0 — layered background for Neon Expanse
+# v0.80.0 — layered backgrounds for every sector
 
 - Neon Expanse now uses a layered background: a seamless cloud layer with no structures in it, plus painted top-down structures (rings, platforms, relay stations, antenna arrays, panels and debris) scattered across the map on a deeper, slower layer.
 - Structures never repeat in a grid: their placement, size, angle and slow drift come from map position, so every stretch of space looks different, and you get a real sense of depth as you fly.
-- Structures scale down on small screens so they don't crowd a phone. The other nine sectors are unchanged for now.
+- Structures scale down on small screens so they don't crowd a phone.
+- All ten sectors now use layered backgrounds, each with its own cloud layer and nine painted structures: asteroids and mining rigs (Belt), relay towers and dishes (Storm), smokestacks, pipes and furnace grates (Foundry), ice shelves and crystals (Cryo), rooftops and highways (City), ring stations and satellites (Solar), rune monoliths and arches (Rift), hive growths and egg sacs (Hive), and wrecked warships and anchor chains (Ghost).
 
 # v0.79.0 — weapon visuals
 
