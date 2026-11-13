@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.59.0**.
+Current version: **0.60.0**.
 
 ## Where the game is now
 
@@ -29,16 +29,19 @@ Current version: **0.59.0**.
 - GPU weather and lighting per sector: lightning that lights the Storm Relay, snow in Cryo Reach, embers and furnace glows in Cinder Foundry, neon rain and sign flicker in the Undercity, dust in the Shattered Belt and light motes in the Neon Expanse.
 - Cosmetic only. Respects reduced motion, flash and quality settings.
 
-### 0.60 — Run history and tester tools
+### 0.60 — Weapon field effects (done)
+- Gravity wells, void rifts, toxic gas, plasma pools, Corona, nets, flame trails and storm hazards drawn by GPU shaders beneath the ships.
+
+### 0.61 — Run history and tester tools
 - A local run log in Records: ship, sector, time, level, build, damage by weapon and what defeated you. No data leaves the device.
 - Quick-test options in the Developer tab: start at a chosen boss, grant a build, jump to endless. Test runs still never count towards progress.
 
 ## Next
 
-### 0.61 — Final encounter
+### 0.62 — Final encounter
 - A larger last boss with destructible systems and phases, as a proper ending to a sector clear.
 
-### 0.62 — Cross-device saves
+### 0.63 — Cross-device saves
 - Switch on the cloud saves that are already built, so progress carries between iPhone, iPad and desktop.
 
 ## Later

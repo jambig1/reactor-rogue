@@ -1,3 +1,10 @@
+# v0.60.0 — weapon field effects
+
+- Redraw weapon fields with GPU shaders beneath the ships. Gravity Well is a black hole with a dark core, a spinning accretion ring and arms spiralling inward; void rifts (Phase Torpedoes, Void effects, Sovereign's rift) use a violet version.
+- Toxic Cloud billows as drifting gas; Plasma Rain pools swirl with a bright rim; Corona is a flickering ring of heat; Stasis Net and pylon beacons show a pulsing lattice; Ember and Slipstream trails burn as flame; storm hazards crackle.
+- Fields can now darken as well as glow. Gravity and void cores add to bloom.
+- Compatibility mode and the classic renderer keep the previous drawing. No gameplay, damage or hitbox changes.
+
 # v0.59.0 — sector weather
 
 - Add sector weather on the GPU: driving rain and lightning in the Storm Relay, snow in Cryo Reach, rising embers and furnace glows in Cinder Foundry, neon rain and sign flicker in the Neon Undercity, drifting dust in the Shattered Belt and light motes in the Neon Expanse. Particles drift at two depths with parallax.
