@@ -1,3 +1,9 @@
+# v0.79.0 — weapon visuals
+
+- Every player shot carries a soft glow in its weapon's colour and is drawn 20% larger (hit areas unchanged), so weapons are easy to tell apart at a glance and stand out on the painted backgrounds.
+- Every beam weapon (Sails, Fence, Leech, Prism, Crossfire, Ion Curtain, Rupture, Harpoon, lasers and more) has a two-layer glowing halo instead of reading as a thin line.
+- The glow follows the Glow graphics setting, so it is skipped on Low, and it eases off automatically during very crowded moments on Auto.
+
 # v0.78.0 — visual pass: final bosses, abilities, explosions, backgrounds
 
 - Every sector's final boss has its own design: Omega Reactor, The Scrap Monarch (crowned fortress with crane arms), Heart of the Storm (tesla cage with crawling arcs), The Prime Furnace (molten crucible with smokestacks), The Frozen Sun (ice-spear star), Metroplex Mind (floating district), Solar Throne (crescent throne with solar sails), The Singularity (black hole with an accretion disc), The Overmind (brain-hive with tendrils) and The Phantom Armada (spectral flagship).
