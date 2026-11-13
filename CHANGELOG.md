@@ -1,3 +1,9 @@
+# v0.71.0 — painted backgrounds and animated sector layers
+
+- Solar Corona, Abyssal Rift, Hive Nebula and Ghost Fleet Graveyard now use painted backgrounds in the same style as the original six (also shown on their sector cards), replacing the code-drawn ones, which remain only as a fallback.
+- New animated layers on the GPU over each of them: churning plasma and rising embers over the sun, bent starlight swirling around a drifting centre in the Rift, breathing green haze and drifting spores in the Hive, and rolling banks of pale fog through the Graveyard. They follow the Sector weather setting.
+- The new backgrounds are included in the offline cache. GPU module renamed to gpu-layer-v0700.js.
+
 # v0.70.0 — three more sectors and floating debris
 
 - Abyssal Rift: a black-hole trench. Gravity wells drift through the fight for 14 seconds, pulling your ship and the swarm toward a crushing core. Resist them or drag enemies in. Bosses: Rift Stalker (blinks to a marked spot and fires), Event Horizon (pulls you in, then a closing ring of shots with a gap to escape through) and The Devourer (spiral bursts and consume zones); final encounter The Singularity.
