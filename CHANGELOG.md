@@ -1,3 +1,11 @@
+# v0.73.0 — simpler menus
+
+- The launch menu is now Play plus four destinations: How to play, Hangar & contracts, Records and Settings. Profile and Website & feedback are small links underneath.
+- Arsenal discovery is no longer a separate button on the launch, pause and end screens; it is the Arsenal tab in Records.
+- Phones and tablets see touch controls on the launch menu; PCs see keyboard controls.
+- Pause buttons: Resume, Restart run and Settings, then Records, Hangar and Back to start.
+- End screen buttons on phones sit in a 2×2 grid.
+
 # v0.72.0 — menu polish
 
 - Menus scale up on large screens (PC monitors), so text and buttons are readable instead of a small card in the middle of the screen.
