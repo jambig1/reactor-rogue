@@ -425,6 +425,15 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 @keyframes jpCardIn{0%{opacity:0;transform:translateY(22px) scale(.92)}100%{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.jp-rays,#reward.jp-run .jp-box{animation:none!important}}
 #reward #rewardHint,#reward #rewardTitle,#reward #rewardLabel{position:relative;z-index:2}.jp-rays{width:220px!important;height:220px!important;margin:-110px 0 0 -110px!important;z-index:0}.jp-box,.jp-reel,.jp-bonus{position:relative;z-index:1}
+
+.jp-box.painted{width:132px;height:118px;margin-top:0}
+.jp-box.painted .jp-img{position:absolute;left:50%;bottom:0;transform:translateX(-50%);filter:drop-shadow(0 6px 10px #000a);transition:opacity .18s,transform .35s cubic-bezier(.2,1.6,.4,1)}
+.jp-box.painted .jp-closed{width:118px}
+.jp-box.painted .jp-open{width:122px;opacity:0;transform:translateX(-50%) scale(.9)}
+#reward.jp-open .jp-box.painted .jp-closed,#reward.jp-done .jp-box.painted .jp-closed{opacity:0}
+#reward.jp-open .jp-box.painted .jp-open,#reward.jp-done .jp-box.painted .jp-open{opacity:1;transform:translateX(-50%) scale(1)}
+.jp-box.painted .jp-core{top:46px}
+#reward .jp-rays{top:62px}
 </style><!-- Exo 2 font licence:
 Copyright 2013 The Exo 2 Project Authors (https://github.com/googlefonts/Exo-2.0)
 
@@ -2131,7 +2140,7 @@ function applyCacheJackpot(){let j=s.cacheJackpot;if(!j||j.applied)return;j.appl
 function clearJackpotTimers(){for(let id of jackpotTimers)clearTimeout(id);jackpotTimers=[];let el=$('reward');if(el?.classList)el.classList.remove('jp-run','jp-open')}
 function finishJackpotReveal(){let el=$('reward'),j=s?.cacheJackpot;clearJackpotTimers();if(!el?.classList||!j)return;el.classList.add('jp-done');let reel=(el.querySelector?el.querySelector('.jp-reel span'):null);if(reel)reel.textContent=jackpotTiers[j.tier].name;(el.querySelector?el.querySelector('.jp-stage-inner'):null)?.classList?.add('tier-'+jackpotTiers[j.tier].id)}
 function startJackpotReveal(){let el=$('reward'),j=s.cacheJackpot,evo=s.currentCacheKind==='evolution';if(!el?.classList||!j)return;clearJackpotTimers();el.classList.remove('jp-done');
- $('jackpotStage').innerHTML='<div class="jp-stage-inner '+(evo?'gold':'cyan')+'"><i class="jp-rays"></i><div class="jp-box"><i class="jp-lid"></i><i class="jp-body"></i><i class="jp-core"></i></div><div class="jp-reel"><span>'+(evo?'EVOLUTION':'SUPPLY')+'</span></div><div class="jp-bonus">'+jackpotSummary(j)+'</div></div>';
+ $('jackpotStage').innerHTML='<div class="jp-stage-inner '+(evo?'gold':'cyan')+'"><i class="jp-rays"></i><div class="jp-box painted"><img class="jp-img jp-closed" src="cache-'+(evo?'gold':'cyan')+'-closed-v0750.webp" alt="" draggable="false"><img class="jp-img jp-open" src="cache-'+(evo?'gold':'cyan')+'-open-v0750.webp" alt="" draggable="false"><i class="jp-core"></i></div><div class="jp-reel"><span>'+(evo?'EVOLUTION':'SUPPLY')+'</span></div><div class="jp-bonus">'+jackpotSummary(j)+'</div></div>';
  if(reducedMotion||typeof setTimeout!=='function'){finishJackpotReveal();if(j.tier)sound(j.tier===2?'jackpot':'jackpotBonus');return}
  el.classList.add('jp-run');let names=['CACHE','BONUS','JACKPOT'],spin=evo?1200:850,step=70,k=0;
  for(let ms=150;ms<spin;ms+=step+k*6,k++){let n=k;jackpotTimers.push(setTimeout(()=>{let r=(el.querySelector?el.querySelector('.jp-reel span'):null);if(r){r.textContent=names[n%3];sound('reelTick')}},ms))}
@@ -2826,7 +2835,14 @@ hex(r*.68,flash||'#282137',c,2);ctx.shadowBlur=graphicsShadow(0);ctx.rotate(-t*.
 }}
 function pickupInfo(d){return d.id==='chest'?(cacheKindOf(d)==='evolution'?{color:'#ffcf64',icon:'✦',name:'EVOLUTION CACHE'}:{color:'#8bdde8',icon:'▣',name:'SUPPLY CACHE'}):dropTypes.find(a=>a.id===d.id)}
 function importantPickup(d){return ['chest','repair','freeze','novaDrop','vacuum'].includes(d.id)}
-function drawDrop(d,t){let def=pickupInfo(d);if(!def||d.life<=0)return;let money=['coin','coinBag','richBag'].includes(d.id),r=d.id==='chest'&&cacheKindOf(d)==='evolution'?19:money?12:16;
+
+// v0.75 painted cache crates in the world (gold = evolution, cyan = supply); the old framed icon is the fallback.
+const cacheCrateArt={};
+function cacheCrateImage(kind){if(typeof Image!=='function')return null;let row=cacheCrateArt[kind];if(!row){let img=new Image();row=cacheCrateArt[kind]={img,ready:false};img.onload=()=>{row.ready=true};img.src='cache-'+kind+'-closed-v0750.webp'}return row.ready?row.img:null}
+function drawCacheCrate(d,t){let evo=cacheKindOf(d)==='evolution',img=cacheCrateImage(evo?'gold':'cyan');if(!img)return false;let bob=reducedMotion?0:Math.sin(t*3+d.x)*2,pulse=reducedMotion?.6:.5+.5*Math.sin(t*4+d.x),w=evo?50:42,h=w*img.naturalHeight/img.naturalWidth,c=evo?'#ffcf64':'#8bdde8';
+ ctx.save();ctx.translate(d.x,d.y+bob);ctx.shadowBlur=0;ctx.globalAlpha=.1+.14*pulse;circle(0,4,w*.5,c);ctx.globalAlpha=.45;ctx.save();ctx.translate(2,h*.42);ctx.scale(1,.35);circle(0,0,w*.48,'#000');ctx.restore();ctx.globalAlpha=1;
+ if(!reducedMotion)ctx.rotate(Math.sin(t*1.6+d.y)*.05);ctx.drawImage(img,-w/2,-h/2,w,h);ctx.restore();return true}
+function drawDrop(d,t){let def=pickupInfo(d);if(!def||d.life<=0)return;if(d.id==='chest'&&drawCacheCrate(d,t))return;let money=['coin','coinBag','richBag'].includes(d.id),r=d.id==='chest'&&cacheKindOf(d)==='evolution'?19:money?12:16;
 ctx.save();ctx.translate(d.x,d.y+(reducedMotion?0:Math.sin(t*3+d.x)*2));ctx.globalAlpha=1;ctx.shadowBlur=0;ctx.lineWidth=4;
 if(money){circle(0,0,r+2,'#06101f');circle(0,0,r,def.color,false);circle(0,0,r-3,'#263041');ctx.lineWidth=1;circle(0,0,r-3,def.color,false)}
 else if(d.id==='chest'&&cacheKindOf(d)==='evolution'){ctx.fillStyle='#091526';ctx.fillRect(-r-2,-r-2,(r+2)*2,(r+2)*2);ctx.lineWidth=2;ctx.strokeStyle=def.color;ctx.strokeRect(-r,-r,r*2,r*2);ctx.fillStyle=def.color;ctx.fillRect(-r,-r,5,5);ctx.fillRect(r-5,r-5,5,5)}
