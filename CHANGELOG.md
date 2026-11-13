@@ -5,6 +5,7 @@
 - Ship abilities hit harder visually: a launch flash, glowing filled shapes, afterimage trails along dashes, and a shockwave for abilities that don't move the ship (Harrier, Helios, Spectre, Scavenger and others).
 - New painted backgrounds for the original six sectors, matching the four newer ones; sector previews and the website use them too.
 - Dread Carrier (Ghost) and Skyline Enforcer (City) recoloured to fit their sectors.
+- Every sector's fleet has its own ship silhouettes (salvage boxes in Belt, forked prongs in Storm, heavy wedges in Foundry, crystal diamonds in Cryo, hover-cars in City, flame wings in Solar, obsidian crescents in Rift, beetle shells in Hive, ribbed wrecks in Ghost), scaled up through fighters, interceptors, brutes and elites. Neon Expanse keeps the originals; specialist ships keep their role shapes.
 
 # v0.77.0 — crash reports
 

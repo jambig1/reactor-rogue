@@ -3094,9 +3094,25 @@ const enemyRoleProfiles={
  volatileShip:[[21,0],[8,-7],[2,-15],[-17,-15],[-22,-8],[-17,0],[-22,8],[-17,15],[2,15],[8,7]],
  repair:[[16,0],[5,-8],[-3,-14],[-16,-11],[-20,-4],[-14,0],[-20,4],[-16,11],[-3,14],[5,8]]
 };
+
+// v0.78 sector fleet silhouettes: each sector's fleet gets its own outline family (half profiles, mirrored),
+// scaled per class. Neon Expanse keeps the original hulls; specialist roles keep their role shapes.
+const sectorHullHalves={
+ belt:[[20,0],[13,-6],[-3,-8],[-7,-12],[-18,-12],[-16,-5],[-21,-3]],
+ storm:[[24,0],[8,-4],[3,-12],[-5,-8],[-18,-13],[-13,-3],[-20,-2]],
+ foundry:[[18,0],[15,-8],[-2,-10],[-13,-10],[-20,-7],[-20,-2]],
+ cryo:[[25,0],[7,-6],[0,-14],[-6,-6],[-20,-5],[-16,-1]],
+ city:[[23,0],[18,-5],[0,-7],[-15,-10],[-21,-6],[-18,-1]],
+ solar:[[24,0],[6,-5],[-4,-16],[-10,-10],[-22,-15],[-14,-3],[-19,-1]],
+ rift:[[26,0],[1,-4],[-7,-18],[-14,-16],[-9,-5],[-20,-1]],
+ hive:[[20,0],[16,-8],[6,-12],[-6,-12],[-16,-9],[-20,-4],[-22,-1]],
+ ghost:[[20,0],[12,-4],[10,-10],[-4,-9],[-8,-13],[-18,-10],[-15,-4],[-21,-1]]};
+const sectorHullScale=[[1,1],[1.12,1.35],[1.02,1.55],[1.12,1.95]];
+const sectorHullCache={};
+function enemyShape(e){if(e.role&&enemyRoleProfiles[e.role])return enemyRoleProfiles[e.role];let kind=Math.min(3,e.type||0),half=sectorHullHalves[e.sectorHull];if(!half)return enemyHullProfiles[kind];let key=e.sectorHull+kind,hit=sectorHullCache[key];if(hit)return hit;let [sx,sy]=sectorHullScale[kind],top=half.map(([x,y])=>[x*sx,y*sy]),bottom=top.slice(1).reverse().map(([x,y])=>[x,-y]).filter(([x,y])=>y!==0);return sectorHullCache[key]=[...top,...bottom]}
 function drawIllustratedEnemyHull(e,t,paint=shipCanvasPainter){
  let {ctx,poly,circle,lineLocal}=paint,f=enemyFleetPaint[e.sectorHull]||enemyFleetPaint.grid;
- const role=e.role,kind=e.type||0,shape=enemyRoleProfiles[role]||enemyHullProfiles[Math.min(3,kind)];
+ const role=e.role,kind=e.type||0,shape=enemyShape(e);
  const c=e.freeze>0?'#cbf5ff':e.c||f.trim,hull=e.glow>0&&graphicsFlash()>.5?'#e5f4ff':e.freeze>0?'#7facc3':f.hull,heavy=kind>=2;
  f={...f,edge:c};
  ctx.save();ctx.lineJoin='round';ctx.shadowBlur=0;
@@ -3142,7 +3158,7 @@ function drawIllustratedEnemyHull(e,t,paint=shipCanvasPainter){
 function drawSectorEnemyShip(e,t){drawEnemyShip(e,t)}
 function drawEnemyShip(e,t){
  let a=e.role==='hunter'&&(e.huntWarning>0||e.huntDash>0)?e.roleAim:formationHeading(e,Math.atan2(s.p.y-e.y,s.p.x-e.x));
- ctx.save();ctx.translate(1.5,2.5);ctx.rotate(a);ctx.scale(e.r/20,e.r/20);ctx.globalAlpha=.38;poly(enemyRoleProfiles[e.role]||enemyHullProfiles[Math.min(3,e.type||0)],'#020711');ctx.restore();
+ ctx.save();ctx.translate(1.5,2.5);ctx.rotate(a);ctx.scale(e.r/20,e.r/20);ctx.globalAlpha=.38;poly(enemyShape(e),'#020711');ctx.restore();
  ctx.save();ctx.rotate(a);ctx.scale(e.r/20,e.r/20);drawIllustratedEnemyHull(e,t);ctx.restore();
 }
 // Presentation reads combat state; it never advances schedules, changes collision or consumes RNG.
