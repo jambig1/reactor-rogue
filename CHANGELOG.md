@@ -1,3 +1,9 @@
+# v0.66.0 — clearer end-of-run screen
+
+- The end screen now opens with a headline summary: sector, Run over or Sector clear, what destroyed you (and whether it was during a reactor fight or the final encounter) or how long the final encounter took, then survived time, level, kills and reactors defeated.
+- Highlight badges for a new best score, longest run, new endless record, mastery rank-up, blueprints found and credits earned, plus your top weapon with its share of damage and kills.
+- Blueprints, mastery, endless results, unlocks and achievements follow. Route, operation, full stats and weapon performance are folded into Run details.
+
 # v0.65.0 — fewer level-up pauses
 
 - Levels take longer from level 3 onwards (XP needed ×1.55), so a full run has about a fifth fewer level-up pauses: around level 40 at the end instead of 50. In simulated runs every route still clears, with a little more damage taken.

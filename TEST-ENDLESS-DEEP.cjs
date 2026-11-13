@@ -23,7 +23,7 @@ run("s.mutationPending=1;state='play';openMutation();claimMutation(mutationOptio
 // Credits and records.
 assert.equal(run('endlessCycleCredits()'),run('(endlessPressure().cycle-1)*15'));assert(run('endlessCycleCredits()')>0);
 run("hangar.endlessBest={};finish(false)");assert.equal(run('hangar.endlessBest[s.sector].cycle'),run('endlessPressure().cycle'));assert.equal(run('s.endlessRecordNew'),true);
-assert(run("$('runDebrief').innerHTML.includes('NEW SECTOR RECORD')"));assert(run("endlessBestLine(s.sector).includes('ENDLESS BEST')"));
+assert(run("($('runDebrief').innerHTML+$('endStats').innerHTML).includes('NEW SECTOR RECORD')"));assert(run("endlessBestLine(s.sector).includes('ENDLESS BEST')"));
 // Records load back from saves; junk is ignored.
 assert(run("JSON.stringify(hangar).includes('endlessBest')"));
 // Sector route untouched: no threats outside endless.

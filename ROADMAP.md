@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.65.0**.
+Current version: **0.66.0**.
 
 ## Where the game is now
 
@@ -49,9 +49,11 @@ Current version: **0.65.0**.
 ### 0.65 — Fewer level-up pauses (done)
 - Slower level curve and a Level-ups setting: immediate, banked or auto-pick.
 
+### 0.66 — Clearer end-of-run screen (done)
+- Headline summary first, with cause of defeat, highlight badges and top weapon; details folded away.
+
 ## Next
 
-- 0.66 Clearer end-of-run screen
 - 0.67 Enemy ships in the new style
 - 0.68 Boss entrances
 - 0.69 Final boss music
