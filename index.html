@@ -2396,12 +2396,8 @@ function finalSignal(e){if(e.arrival>0)return 'CONTACT INBOUND';let pods=s.enemi
 function finalObjective(){let f=s.finalEncounter;if(!f||f.stage==='done'||s.completed||s.endless)return '';if(f.stage==='approach')return 'FINAL ENCOUNTER · '+time(Math.max(0,f.at-s.t));let e=finalBoss();return 'FINAL ENCOUNTER · '+(e?finalPhaseLabel(e):'ENGAGED')}
 function finalRouteLine(){let f=s.finalEncounter,done=f?.stage==='done',active=f?.stage==='active';return '<li class="'+(done?'route-done':active?'route-active':'')+'"><b>'+(done?'✓ ':active?'◆ ':'○ ')+finalBossDef().name+'</b><span>'+(done?'Destroyed '+time(f.doneAt):active?'Engaged · '+(finalBoss()?finalPhaseLabel(finalBoss()):''):f?.stage==='approach'?'Arrives in '+time(Math.max(0,f.at-s.t)):'Final encounter · after the third reactor')+'</span></li>'}
 // Drawing: local coordinates (the enemy's position is already the origin).
-function drawFinalBoss(e,t){let clock=reducedMotion||e.freeze>0?0:t,c=e.freeze>0?'#d4f7ff':e.c,hot=e.phase===3,R=e.r;
- ctx.save();ctx.globalAlpha=.35;circle(4,8,R*1.05,'#020711');ctx.restore();
- ctx.save();ctx.rotate(clock*.18);for(let i=0;i<12;i++){ctx.save();ctx.rotate(i*TAU/12);poly([[R*.78,-R*.17],[R*1.02,-R*.12],[R*1.02,R*.12],[R*.78,R*.17]],i%3===0?'#203047':'#142236',c,1.5);if(i%3===0)circle(R*.92,0,3,hot?'#ffd09a':'#e8fffb');ctx.restore()}ctx.restore();
- ctx.save();ctx.rotate(-clock*.32);poly(Array.from({length:6},(_,i)=>[Math.cos(i*TAU/6)*R*.66,Math.sin(i*TAU/6)*R*.66]),'#0c1828',c,2);for(let i=0;i<6;i++){let a=i*TAU/6+TAU/12;lineLocal(Math.cos(a)*R*.3,Math.sin(a)*R*.3,Math.cos(a)*R*.6,Math.sin(a)*R*.6,c,1.5)}ctx.restore();
- let pulse=.5+.5*Math.sin(clock*(hot?9:3));ctx.save();ctx.shadowColor=hot?'#ffb26e':c;ctx.shadowBlur=graphicsShadow(hot?30:22);circle(0,0,R*.34,'#08111d');circle(0,0,R*(.22+.04*pulse),hot?'#ffb26e':c);circle(0,0,R*.11,'#ffffff');ctx.restore();
- if(hot){ctx.save();ctx.strokeStyle='#ffd8a8';ctx.lineWidth=1.5;for(let i=0;i<5;i++){let a=i*1.37;ctx.beginPath();ctx.moveTo(Math.cos(a)*R*.36,Math.sin(a)*R*.36);ctx.lineTo(Math.cos(a+.2)*R*.55,Math.sin(a+.2)*R*.55);ctx.lineTo(Math.cos(a-.1)*R*.72,Math.sin(a-.1)*R*.72);ctx.stroke()}ctx.restore()}
+function drawFinalBoss(e,t){let clock=reducedMotion||e.freeze>0?0:t,c=e.freeze>0?'#d4f7ff':e.c,hot=e.phase===3,R=e.r,pulse=.5+.5*Math.sin(clock*(hot?9:3));
+ drawFinalBossArt(e,clock);
  if(e.shielded){ctx.save();ctx.globalAlpha=.1+.06*pulse;circle(0,0,R+16,c);ctx.globalAlpha=.65;ctx.strokeStyle=c;ctx.lineWidth=2;ctx.setLineDash([10,6]);ctx.lineDashOffset=-clock*20;ctx.beginPath();ctx.arc(0,0,R+16,0,TAU);ctx.stroke();ctx.restore()}
  if(e.arrival>0){ctx.save();ctx.globalAlpha=.6;ctx.strokeStyle='#c5d9e8';ctx.lineWidth=1.5;let r=R+26;for(let i=0;i<4;i++){ctx.save();ctx.rotate(i*Math.PI/2);ctx.beginPath();ctx.moveTo(r-6,-10);ctx.lineTo(r,-10);ctx.lineTo(r,10);ctx.lineTo(r-6,10);ctx.stroke();ctx.restore()}ctx.restore()}}
 function drawFinalSystem(p,t){let c=p.freeze>0?'#d4f7ff':p.c,r=p.r,o=p.systemOwner,a=p.system==='shield'?(o?Math.atan2(p.y-o.y,p.x-o.x):0):(p.podCharge>0?p.podAim:Math.atan2(s.p.y-p.y,s.p.x-p.x));
@@ -2777,7 +2773,90 @@ function drawIllustratedBossHull(e,t,paint=shipCanvasPainter){
  if(e.hp/e.max<.3){poly([[-16,-7],[-6,-4],[-11,1],[-18,0]],'#070f1b');lineLocal(-15,-5,-9,-3,'#ffc18e',1)}
  ctx.restore();
 }
-function drawPresentedBoss(e,t){let design=bossPresentation(e),a=design.radial?(reducedMotion||e.freeze>0?0:t*.075):Number.isFinite(e.aim)&&e.charge>0?e.aim:Math.atan2(s.p.y-e.y,s.p.x-e.x);ctx.save();ctx.rotate(a);ctx.scale(e.r/50,e.r/50);drawIllustratedBossHull(e,t);ctx.restore();
+// v0.61 boss art: the Neon Expanse reactors and the final boss share the player's material language:
+// dark layered hull plates, a neon edge in the boss colour, lit vents, a glowing core and visible damage.
+// Drawn in local units (radius about 50) facing +x; drawPresentedBoss supplies rotation and scale. Cosmetic only.
+function bossArtV2(e){return !!e&&(e.finalBoss||!e.sectorBoss)}
+const bossArt={
+ hull(points,e,o={}){let a=bossArtPalette(e),xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  let g=ctx.createLinearGradient(x0,y0,x1*.3+x0*.7,y1);g.addColorStop(0,o.light||a.plateLight);g.addColorStop(1,o.dark||a.plateDark);
+  ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();
+  ctx.lineJoin='round';ctx.strokeStyle='#03070e';ctx.lineWidth=o.key??3.2;ctx.stroke();ctx.fillStyle=g;ctx.fill();
+  if(o.edge!==false){ctx.save();if(o.glow){ctx.shadowColor=a.c;ctx.shadowBlur=graphicsShadow(o.glow)}ctx.strokeStyle=o.edgeColor||a.c;ctx.globalAlpha*=o.edgeAlpha??.9;ctx.lineWidth=o.edgeWidth??1.3;ctx.stroke();ctx.restore()}
+  // Bevel: a faint lit inset towards the light.
+  let cx=xs.reduce((v,x)=>v+x,0)/xs.length,cy=ys.reduce((v,y)=>v+y,0)/ys.length;ctx.beginPath();points.forEach((p,i)=>{let x=cx+(p[0]-cx)*.82,y=cy+(p[1]-cy)*.82;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.strokeStyle='rgba(190,225,255,.10)';ctx.lineWidth=1;ctx.stroke()},
+ line(x,y,bx,by,c,w=1,alpha=1){ctx.save();ctx.globalAlpha*=alpha;ctx.strokeStyle=c;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(bx,by);ctx.stroke();ctx.restore()},
+ vent(x,y,w,h,n,e,heat=0){let a=bossArtPalette(e);ctx.fillStyle='#04080f';ctx.fillRect(x,y,w,h);for(let i=0;i<n;i++){let yy=y+(i+.5)*h/n;bossArt.line(x+1,yy,x+w-1,yy,heat>0?a.hot:a.c,Math.max(.8,h/n*.45),.45+.55*heat)}},
+ light(x,y,r,c,on=1){ctx.save();ctx.globalAlpha=.22*on;circle(x,y,r*2.4,c);ctx.restore();circle(x,y,r,'#04080f');ctx.save();ctx.globalAlpha=.4+.6*Math.max(0,Math.min(1,on));circle(x,y,r*.7,c);ctx.restore();circle(x-r*.2,y-r*.2,r*.28,'#ffffff')},
+ core(r,e,t,o={}){let a=bossArtPalette(e),pulse=.5+.5*Math.sin(t*(a.hot2?7:2.6)),charge=o.charge||0;
+  let g=ctx.createRadialGradient(0,0,0,0,0,r*2.2);g.addColorStop(0,'rgba(255,255,255,.55)');g.addColorStop(.25,a.c+'aa');g.addColorStop(1,a.c+'00');ctx.save();ctx.globalAlpha*=.5+.3*pulse+.4*charge;ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r*2.2,0,TAU);ctx.fill();ctx.restore();
+  circle(0,0,r+3,'#03070e');circle(0,0,r+1.5,a.plateDark);ctx.save();ctx.strokeStyle=a.c;ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r+1.5,0,TAU);ctx.stroke();ctx.restore();
+  let g2=ctx.createRadialGradient(-r*.2,-r*.2,0,0,0,r);g2.addColorStop(0,'#ffffff');g2.addColorStop(.35+.15*pulse,a.hot2?a.hot:a.c);g2.addColorStop(1,a.deep);ctx.fillStyle=g2;ctx.beginPath();ctx.arc(0,0,r*(.86+.08*pulse+.1*charge),0,TAU);ctx.fill()},
+ chargeRing(r,e,p){if(!(p>0))return;ctx.save();ctx.strokeStyle='#fff0c9';ctx.lineWidth=2.2;ctx.shadowColor='#fff0c9';ctx.shadowBlur=graphicsShadow(8);ctx.beginPath();ctx.arc(0,0,r,-Math.PI/2,-Math.PI/2+Math.max(.02,p*TAU));ctx.stroke();ctx.restore()},
+ damage(e,t,R){let ratio=e.hp/e.max;if(ratio>=.5)return;let a=bossArtPalette(e),flick=.6+.4*Math.sin(t*13+e.r);
+  ctx.save();ctx.lineCap='round';let cracks=ratio<.3?[[-.2,-.5,.15,-.25,.05,0],[.45,.1,.2,.3,.3,.55],[-.5,.3,-.25,.15,-.1,.35]]:[[-.2,-.5,.15,-.25,.05,0]];
+  for(let k of cracks){bossArt.line(k[0]*R,k[1]*R,k[2]*R,k[3]*R,'#03070e',3);bossArt.line(k[2]*R,k[3]*R,k[4]*R,k[5]*R,'#03070e',3);bossArt.line(k[0]*R,k[1]*R,k[2]*R,k[3]*R,a.hot,1.2,flick);bossArt.line(k[2]*R,k[3]*R,k[4]*R,k[5]*R,a.hot,1.2,flick)}
+  if(ratio<.3){ctx.globalAlpha=.18*flick;circle(R*.2,R*.35,R*.18,a.hot)}ctx.restore()},
+ flash(e,draw){if(!(e.glow>0&&graphicsFlash()>.5))return;ctx.save();ctx.globalAlpha=.35;ctx.globalCompositeOperation='lighter';draw();ctx.restore()}
+};
+function bossArtPalette(e){let frozen=e.freeze>0,c=frozen?'#d4f7ff':e.c;return {c,frozen,hot:'#ffcf8f',hot2:e.hp<e.max*.5,deep:frozen?'#4d7f99':bossArtDeep[e.kind]||'#2a3550',plateLight:frozen?'#4f6f86':'#2b3e57',plateDark:frozen?'#22384b':'#101a28'}}
+const bossArtDeep={warden:'#7a1f5b',reaper:'#145f87',engine:'#8a4416',final:'#173a52'};
+function drawBossArtV2(e,t){let clock=reducedMotion||e.freeze>0?0:t,charge=bossChargeProgress(e),a=bossArtPalette(e);ctx.save();ctx.lineJoin='round';ctx.shadowBlur=0;
+ // Soft cast shadow so the hull sits above the arena.
+ ctx.save();ctx.globalAlpha=.35;ctx.translate(4,7);if(e.kind!=='reaper')circle(0,0,46,'#01040a');ctx.restore();
+ if(e.kind==='reaper')drawRailReaperArt(e,clock,charge,a);else if(e.kind==='engine')drawSingularityEngineArt(e,clock,charge,a);else drawPrismWardenArt(e,clock,charge,a);
+ bossArt.damage(e,clock,40);ctx.restore()}
+function drawPrismWardenArt(e,t,charge,a){
+ // Eight prism pylons with a broken guard ring between them.
+ ctx.save();ctx.strokeStyle='#03070e';ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,40,0,TAU);ctx.stroke();ctx.strokeStyle=a.c;ctx.globalAlpha=.35;ctx.lineWidth=1.4;ctx.stroke();ctx.restore();
+ for(let i=0;i<8;i++){ctx.save();ctx.rotate(i*TAU/8);
+  bossArt.hull([[26,-8.5],[42,-6.5],[48,0],[42,6.5],[26,8.5]],e,{edgeAlpha:.75});bossArt.line(24,0,38,0,'#03070e',2.4);bossArt.line(25,0,37,0,a.c,1,.55+.45*charge);
+  let tip=.6+.4*Math.sin(t*3+i*.8)+charge*.6;ctx.save();ctx.shadowColor=a.c;ctx.shadowBlur=graphicsShadow(10*tip);poly([[44,0],[50,-4.5],[55,0],[50,4.5]],a.c,'#03070e',1.4);ctx.restore();poly([[50,-4.5],[55,0],[50,0]],'#ffffff');ctx.restore()}
+ let oct=Array.from({length:8},(_,i)=>[Math.cos(i*TAU/8+TAU/16)*33,Math.sin(i*TAU/8+TAU/16)*33]);bossArt.hull(oct,e,{glow:10,edgeWidth:1.6});
+ let inner=oct.map(p=>[p[0]*.72,p[1]*.72]);bossArt.hull(inner,e,{dark:'#0a121d',light:'#1b2a3d',edgeAlpha:.5});
+ for(let i=0;i<8;i++){ctx.save();ctx.rotate(i*TAU/8);bossArt.line(14,0,22,0,'#03070e',2.5);bossArt.line(15,0,22,0,a.c,.8,.5);ctx.restore()}
+ ctx.save();ctx.rotate(-t*.6);for(let i=0;i<8;i++){let on=.5+.5*Math.sin(t*4-i*.785);ctx.save();ctx.rotate(i*TAU/8);bossArt.light(27,0,1.6,a.c,on);ctx.restore()}ctx.restore();
+ bossArt.core(10,e,t,{charge});ctx.save();ctx.rotate(t*.4);poly([[0,-11],[7,0],[0,11],[-7,0]],'#ffe1f2','#03070e',1);poly([[0,-11],[-7,0],[0,2]],'#ffffff');poly([[0,2],[7,0],[0,11]],a.c);ctx.restore();
+ bossArt.chargeRing(16,e,charge)}
+function drawRailReaperArt(e,t,charge,a){
+ // Twin rail barrels flank an armoured carriage; the rails fill with light as a shot charges.
+ for(let side of [-1,1]){ctx.save();ctx.scale(1,side);
+  bossArt.hull([[-30,14],[-8,12],[4,18],[-4,22],[-30,22]],e,{edgeAlpha:.5});
+  bossArt.hull([[-40,19],[44,19],[52,23],[44,29],[-40,29],[-44,24]],e,{glow:6});
+  ctx.fillStyle='#03070e';ctx.fillRect(-34,22.5,74,3);let fill=charge>0?charge:.25+.1*Math.sin(t*3);let g=ctx.createLinearGradient(-34,0,40,0);g.addColorStop(0,a.c);g.addColorStop(1,'#ffffff');ctx.save();ctx.shadowColor=a.c;ctx.shadowBlur=graphicsShadow(8);ctx.fillStyle=g;ctx.globalAlpha=.5+.5*fill;ctx.fillRect(-34,23,74*Math.min(1,fill+.05),2);ctx.restore();
+  for(let j=0;j<5;j++)bossArt.line(-30+j*15,19.5,-30+j*15,21.5,'#03070e',1.4);
+  bossArt.light(50,24,2.2,a.c,.6+.4*charge);
+  bossArt.hull([[-42,8],[-32,6],[-30,14],[-46,16]],e,{edgeAlpha:.4,key:2.4});
+ ctx.restore()}
+ // Engines.
+ for(let y of [-9,0,9]){let f=.7+.3*Math.sin(t*23+y);ctx.save();let g=ctx.createLinearGradient(-44,0,-62,0);g.addColorStop(0,'#ffffff');g.addColorStop(.3,a.c);g.addColorStop(1,a.c+'00');ctx.fillStyle=g;ctx.globalAlpha=.85;ctx.beginPath();ctx.moveTo(-42,y-3.2);ctx.lineTo(-42-16*f,y);ctx.lineTo(-42,y+3.2);ctx.fill();ctx.restore();ctx.fillStyle='#03070e';ctx.fillRect(-44,y-3.5,5,7)}
+ bossArt.hull([[42,0],[24,-11],[18,-17],[-30,-17],[-41,-10],[-41,10],[-30,17],[18,17],[24,11]],e,{glow:10,edgeWidth:1.6});
+ bossArt.hull([[30,0],[16,-7],[-30,-8],[-34,0],[-30,8],[16,7]],e,{dark:'#0a121d',light:'#1e2f44',edgeAlpha:.55});
+ for(let x of [-24,-16,-8])bossArt.vent(x,-12.5,5,4,2,e,e.hp<e.max*.5?1:0),bossArt.vent(x,8.5,5,4,2,e,e.hp<e.max*.5?1:0);
+ ctx.save();ctx.shadowColor=a.c;ctx.shadowBlur=graphicsShadow(6);poly([[36,0],[27,-3],[22,0],[27,3]],a.c,'#03070e',1);ctx.restore();
+ ctx.save();ctx.translate(-6,0);bossArt.core(7,e,t,{charge});ctx.restore();bossArt.line(2,0,20,0,'#03070e',3);bossArt.line(3,0,20,0,a.c,1,.7);
+ ctx.save();ctx.translate(-6,0);bossArt.chargeRing(11,e,charge);ctx.restore()}
+function drawSingularityEngineArt(e,t,charge,a){
+ // A segmented torus carrying three nacelles around a black-hole core.
+ for(let i=0;i<12;i++){ctx.save();ctx.rotate(i*TAU/12);let w=TAU/12*.42;bossArt.hull([[Math.cos(-w)*36,Math.sin(-w)*36],[Math.cos(-w)*48,Math.sin(-w)*48],[Math.cos(w)*48,Math.sin(w)*48],[Math.cos(w)*36,Math.sin(w)*36]],e,{edgeAlpha:.55,key:2.6});bossArt.vent(39,-2,6,4,2,e,(e.hp<e.max*.5?.6:0)+.3*Math.max(0,Math.sin(t*2+i)));ctx.restore()}
+ for(let i=0;i<3;i++){ctx.save();ctx.rotate(i*TAU/3+TAU/6);bossArt.hull([[30,-9],[44,-13],[54,-6],[54,6],[44,13],[30,9]],e,{glow:6});bossArt.line(36,-5,50,-5,'#03070e',2);bossArt.line(36,5,50,5,'#03070e',2);bossArt.light(48,0,2.6,a.c,.6+.4*Math.sin(t*4+i));ctx.restore()}
+ let hex=Array.from({length:6},(_,i)=>[Math.cos(i*TAU/6)*30,Math.sin(i*TAU/6)*30]);bossArt.hull(hex,e,{glow:10,edgeWidth:1.6});
+ ctx.save();ctx.rotate(-t*.7);for(let i=0;i<6;i++){ctx.save();ctx.rotate(i*TAU/6);bossArt.hull([[15,-4],[25,-6],[25,6],[15,4]],e,{dark:'#0a121d',light:'#1e2f44',edgeAlpha:.45,key:2});ctx.restore()}ctx.restore();
+ // Singularity: dark centre with a bright accretion swirl.
+ let g=ctx.createRadialGradient(0,0,4,0,0,20);g.addColorStop(0,'#000000');g.addColorStop(.45,'#05070d');g.addColorStop(.62,a.c);g.addColorStop(.75,a.c+'55');g.addColorStop(1,a.c+'00');ctx.save();ctx.globalAlpha=.85+.15*charge;ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,20,0,TAU);ctx.fill();ctx.restore();
+ ctx.save();ctx.rotate(t*1.6);ctx.strokeStyle='#fff3dc';ctx.lineWidth=1.3;for(let i=0;i<3;i++){ctx.rotate(TAU/3);ctx.beginPath();ctx.arc(0,0,12.5,0,1.3);ctx.stroke()}ctx.restore();circle(0,0,7.5,'#000000');
+ bossArt.chargeRing(23,e,charge)}
+// Final boss: solid armour ring and inner citadel in the same material.
+function drawFinalBossArt(e,t){let a=bossArtPalette(e),R=e.r,s1=R/50,hot=e.phase===3;ctx.save();ctx.scale(s1,s1);ctx.lineJoin='round';
+ ctx.save();ctx.globalAlpha=.4;ctx.translate(5,9);circle(0,0,52,'#01040a');ctx.restore();
+ ctx.save();ctx.rotate(t*.18);for(let i=0;i<12;i++){ctx.save();ctx.rotate(i*TAU/12);let w=TAU/12*.4;bossArt.hull([[Math.cos(-w)*37,Math.sin(-w)*37],[Math.cos(-w*.8)*51,Math.sin(-w*.8)*51],[Math.cos(w*.8)*51,Math.sin(w*.8)*51],[Math.cos(w)*37,Math.sin(w)*37]],e,{glow:i%3===0?6:0,edgeAlpha:i%3===0?.95:.55});if(i%3===0)bossArt.light(45,0,2.4,hot?a.hot:a.c,.6+.4*Math.sin(t*3+i));else bossArt.vent(41,-2.5,6,5,2,e,hot?1:0);ctx.restore()}ctx.restore();
+ ctx.save();ctx.rotate(-t*.32);let hex=Array.from({length:6},(_,i)=>[Math.cos(i*TAU/6)*33,Math.sin(i*TAU/6)*33]);bossArt.hull(hex,e,{glow:12,edgeWidth:1.8});
+ for(let i=0;i<6;i++){ctx.save();ctx.rotate(i*TAU/6+TAU/12);bossArt.hull([[17,-5],[28,-7],[28,7],[17,5]],e,{dark:'#0a121d',light:'#1e2f44',edgeAlpha:.5,key:2});ctx.restore()}ctx.restore();
+ bossArt.core(13,{...e,hp:hot?0:e.hp},t,{charge:bossChargeProgress(e)});
+ if(hot){ctx.save();ctx.strokeStyle=a.hot;ctx.lineWidth=1.4;for(let i=0;i<5;i++){let q=i*1.37;ctx.globalAlpha=.6+.4*Math.sin(t*11+i);ctx.beginPath();ctx.moveTo(Math.cos(q)*15,Math.sin(q)*15);ctx.lineTo(Math.cos(q+.2)*25,Math.sin(q+.2)*25);ctx.lineTo(Math.cos(q-.1)*32,Math.sin(q-.1)*32);ctx.stroke()}ctx.restore()}
+ bossArt.chargeRing(19,e,bossChargeProgress(e));
+ ctx.restore()}
+function drawPresentedBoss(e,t){let design=bossPresentation(e),a=design.radial?(reducedMotion||e.freeze>0?0:t*.075):Number.isFinite(e.aim)&&e.charge>0?e.aim:Math.atan2(s.p.y-e.y,s.p.x-e.x);ctx.save();ctx.rotate(a);ctx.scale(e.r/50,e.r/50);if(bossArtV2(e))drawBossArtV2(e,t);else drawIllustratedBossHull(e,t);ctx.restore();
  if(e.arrival>0){ctx.save();ctx.shadowBlur=0;ctx.lineWidth=1.5;ctx.strokeStyle='#c5d9e8';let r=e.r+12;for(let i=0;i<4;i++){ctx.save();ctx.rotate(i*Math.PI/2);ctx.beginPath();ctx.moveTo(r-4,-7);ctx.lineTo(r,-7);ctx.lineTo(r,7);ctx.lineTo(r-4,7);ctx.stroke();ctx.restore()}ctx.restore()}}
 function enemyDesign(e,t){if(e.objectiveTarget)return;ctx.save();drawContactRecoil(e);if(e.finalBoss)drawFinalBoss(e,t);else if(e.systemOwner)drawFinalSystem(e,t);else if(e.boss)drawPresentedBoss(e,t);else drawEnemyShip(e,t);ctx.restore();if(!e.boss&&!e.systemOwner)drawSpecialist(e)}
 function pilotDesign(t,view=s,paint=shipCanvasPainter){
