@@ -1,3 +1,9 @@
+# v0.80.0 — layered background for Neon Expanse
+
+- Neon Expanse now uses a layered background: a seamless cloud layer with no structures in it, plus painted top-down structures (rings, platforms, relay stations, antenna arrays, panels and debris) scattered across the map on a deeper, slower layer.
+- Structures never repeat in a grid: their placement, size, angle and slow drift come from map position, so every stretch of space looks different, and you get a real sense of depth as you fly.
+- Structures scale down on small screens so they don't crowd a phone. The other nine sectors are unchanged for now.
+
 # v0.79.0 — weapon visuals
 
 - Every player shot carries a soft glow in its weapon's colour and is drawn 20% larger (hit areas unchanged), so weapons are easy to tell apart at a glance and stand out on the painted backgrounds.
