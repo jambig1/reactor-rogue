@@ -747,8 +747,10 @@ function drawEvolutionSignatures(t){let st=s.signature;if(!st)return;let detail=
    let r=p.r*Math.min(1,f.age/p.life);signatureHardware(f.id,f.x,f.y,75);for(let i=0;i<(k==='harmonic'?3:1);i++){let n=k==='harmonic'?{x:f.x+(points[i].x-f.x)*.22,y:f.y+(points[i].y-f.y)*.22}:f;drawPressureWave(n.x,n.y,r,c,fade*.65,'pressure')}
    if(k==='aegis')for(let n of points){let a=n.angle||0;signatureHardware('ionGuard',f.x+Math.cos(a)*r,f.y+Math.sin(a)*r,44,a,false)}
   }else if(['battery','needles','harvest','citadel','razors','tide','salvo','rift'].includes(k)){
-   if(['salvo','harvest','rift'].includes(k))signatureHardware(f.id,f.x,f.y,k==='salvo'?84:65,f.angle);
-   for(let n of points){if(k==='rift'){drawEnergyField(n.x,n.y,25,c,clock,'void',.8)}else signatureHardware(f.id,n.x,n.y,k==='citadel'?40:k==='razors'?36:26,(n.angle||f.angle),false)}
+   if(['harvest','rift'].includes(k))signatureHardware(f.id,f.x,f.y,65,f.angle);
+   // v0.61: Constellation Salvo launches from a star pattern instead of a carrier sprite under the ship.
+   if(k==='salvo')drawSalvoConstellation(points,c,clock,fade);
+   else for(let n of points){if(k==='rift'){drawEnergyField(n.x,n.y,25,c,clock,'void',.8)}else signatureHardware(f.id,n.x,n.y,k==='citadel'?40:k==='razors'?36:26,(n.angle||f.angle),false)}
    if(['battery','citadel'].includes(k))for(let i=0;i<points.length;i++){let n=points[i],next=points[(i+1)%points.length];ctx.strokeStyle=c;ctx.globalAlpha=fade*.25;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(next.x,next.y);ctx.stroke();ctx.globalAlpha=fade}
   }else if(k==='sanguine'){
    signatureHardware(f.id,f.x,f.y,80);for(let beam of f.beams||[])drawWeaponBeam({...beam,c},clock,'fence',6,c);
@@ -834,6 +836,10 @@ function signatureDamage(id){return weaponBase(id,s.items[id]||5)*specDamageMult
 function signatureHit(e,damage,id,p={}){if(e.hp<=0||e.arrival>0)return;hit(e,damage,id);if(p.freeze){if(e.boss)e.slow=Math.max(e.slow||0,.45);else e.freeze=Math.max(e.freeze||0,p.freeze)}if(p.slow)e.slow=Math.max(e.slow||0,p.slow);if(p.push&&!e.boss)knock(e,e.x-s.p.x,e.y-s.p.y,p.push)}
 function signatureBlast(f,x,y,r,mult=1){for(let e of signatureTargets({x,y},r+100))if(dist(e,{x,y})<r+e.r)signatureHit(e,f.damage*mult,f.id,f.p)}
 function signatureShot(f,x,y,a,options={}){let state=signatureState();if(state.shots.length>=signatureLimits.shots)return;state.shots.push({id:f.id,x,y,ox:x,oy:y,vx:Math.cos(a)*280*velocityMult(),vy:Math.sin(a)*280*velocityMult(),r:6,life:2.5,max:2.5,damage:f.damage,seen:new Set,pierce:2,age:0,...options})}
+function drawSalvoConstellation(points,c,clock,fade){ctx.save();ctx.lineCap='round';
+ for(let i=0;i<points.length;i++){let n=points[i],next=points[(i+2)%points.length];ctx.globalAlpha=fade*.22;ctx.strokeStyle=c;ctx.lineWidth=1;ctx.setLineDash([2,5]);ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(next.x,next.y);ctx.stroke()}ctx.setLineDash([]);
+ for(let [i,n] of points.entries()){let tw=.65+.35*Math.sin(clock*5+i*1.7),r=5+2*tw;ctx.globalAlpha=fade*.12*tw;circle(n.x,n.y,r*1.8,c);ctx.globalAlpha=fade;ctx.save();ctx.translate(n.x,n.y);ctx.rotate(clock*.6+i);ctx.shadowColor=c;ctx.shadowBlur=graphicsShadow(8);poly([[0,-r],[r*.22,-r*.22],[r,0],[r*.22,r*.22],[0,r],[-r*.22,r*.22],[-r,0],[-r*.22,-r*.22]],'#fff7e6',c,1);ctx.restore()}
+ ctx.restore()}
 function signaturePoints(f){let p=f.p,t=f.age,a=f.angle,pts=[];for(let i=0;i<p.count;i++){let angle=a+i*TAU/p.count,rr=p.kind==='helios'?70:p.r;if(['shredder'].includes(p.kind)){rr=i%2?p.r:p.r*.67;angle=a+(i%2?-1:1)*t*1.6+Math.floor(i/2)*TAU/Math.ceil(p.count/2)}else if(['citadel','battery','harvest','refraction','helios','eventlock','gyre','sunlets','horizon','eclipse','harvestwheel','reapers'].includes(p.kind)){angle+=t*(p.kind==='gyre'?1.2:.65);if(p.kind==='sunlets')rr*=.25+.75*Math.min(1,t/2);if(['reapers','harvestwheel','eclipse'].includes(p.kind))rr*=Math.sin(Math.min(1,t/p.life)*Math.PI)*.85+.15}
  if(p.kind==='tide'){pts.push({x:f.x+Math.cos(a)*t*65-Math.sin(a)*(i-(p.count-1)/2)*22,y:f.y+Math.sin(a)*t*65+Math.cos(a)*(i-(p.count-1)/2)*22});continue}
  if(p.kind==='needles'||p.kind==='gemini'){let side=i%2?1:-1,rank=Math.floor(i/2);pts.push({x:f.x-Math.sin(a)*side*(38+rank*20),y:f.y+Math.cos(a)*side*(38+rank*20)});continue}
@@ -2727,9 +2733,17 @@ function drawIllustratedBossHull(e,t,paint=shipCanvasPainter){
  const c=e.freeze>0?'#d4f7ff':e.c,hot=e.hp<e.max*.5,charge=bossChargeProgress(e),lit=e.charge>0,clock=reducedMotion||e.freeze>0?0:t;
  const metal=e.glow>0&&graphicsFlash()>.5?'#e7f4ff':e.freeze>0?'#90b5c9':f.hull;
  const half=(pts,y,upper)=>{let out=[];for(let i=0;i<pts.length;i++){let a=pts[i],b=pts[(i+1)%pts.length],inside=upper?a[1]<=y:a[1]>=y,next=upper?b[1]<=y:b[1]>=y;if(inside)out.push(a);if(inside!==next){let k=(y-a[1])/(b[1]-a[1]);out.push([a[0]+(b[0]-a[0])*k,y])}}return out};
- const panel=(points,fill=metal)=>{poly(points,fill,'#08111f',2.5);let x=points.reduce((v,p)=>v+p[0],0)/points.length,y=points.reduce((v,p)=>v+p[1],0)/points.length,inset=points.map(p=>[x+(p[0]-x)*.88,y+(p[1]-y)*.82]);poly(inset,fill);let top=half(inset,y-1,true),bottom=half(inset,y+2,false);if(top.length>2)poly(top,e.glow>0&&graphicsFlash()>.5?'#f3fbff':f.light);if(bottom.length>2)poly(bottom,f.shade);lineLocal(...points[0],...points[1],f.edge,.8)};
- const slot=(x,y,w=10)=>{lineLocal(x,y,x+w,y,'#0a1727',3.5);lineLocal(x+1,y,x+w-1,y,hot?'#ffce92':c,lit?2.1:1.2)};
+ const accentFill=fill=>fill!==metal&&fill!==f.shade&&fill!==f.hull;
+ const panel=(points,fill=metal)=>{if(bossArtV2(e)){let ac=accentFill(fill);bossArt.hull(points,e,{edgeAlpha:ac?.95:.7,light:ac?bossArtMix(fill,.55):undefined,dark:ac?bossArtMix(fill,.2):undefined});{let xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),w=Math.max(...xs)-Math.min(...xs),hh=Math.max(...ys)-Math.min(...ys);if(w*hh>180){let cx=xs.reduce((a,b)=>a+b,0)/xs.length,cy=ys.reduce((a,b)=>a+b,0)/ys.length,along=w>=hh;lineLocal(cx-(along?w*.28:0),cy-(along?0:hh*.28),cx+(along?w*.28:0),cy+(along?0:hh*.28),'#03070e',1.2);for(let k of [-1,1])circle(cx+(along?k*w*.36:0),cy+(along?0:k*hh*.36),.9,'rgba(200,230,255,.35)')}}if(e.glow>0&&graphicsFlash()>.5){ctx.save();ctx.globalAlpha=.3;poly(points,'#e7f4ff');ctx.restore()}return}poly(points,fill,'#08111f',2.5);let x=points.reduce((v,p)=>v+p[0],0)/points.length,y=points.reduce((v,p)=>v+p[1],0)/points.length,inset=points.map(p=>[x+(p[0]-x)*.88,y+(p[1]-y)*.82]);poly(inset,fill);let top=half(inset,y-1,true),bottom=half(inset,y+2,false);if(top.length>2)poly(top,e.glow>0&&graphicsFlash()>.5?'#f3fbff':f.light);if(bottom.length>2)poly(bottom,f.shade);lineLocal(...points[0],...points[1],f.edge,.8)};
+ const slot=(x,y,w=10)=>{if(bossArtV2(e)){lineLocal(x,y,x+w,y,'#03070e',3.6);ctx.save();ctx.shadowColor=c;ctx.shadowBlur=graphicsShadow(lit?8:4);lineLocal(x+1,y,x+w-1,y,hot?'#ffce92':c,lit?2.1:1.3);ctx.restore();return}lineLocal(x,y,x+w,y,'#0a1727',3.5);lineLocal(x+1,y,x+w-1,y,hot?'#ffce92':c,lit?2.1:1.2)};
  const core=(r=12)=>{
+  if(bossArtV2(e)){bossArt.core(r*.8,e,clock,{charge});ctx.save();ctx.globalAlpha=.85;
+   if(id==='belt'){for(let i=-1;i<=1;i++)lineLocal(i*r*.35,-r*.45,i*r*.35,r*.45,'#03070e',1.6)}
+   else if(id==='storm'){ctx.rotate(clock*.8);for(let i=0;i<4;i++){ctx.rotate(Math.PI/2);lineLocal(r*.3,0,r*.75,0,'#ffffff',1.2)}}
+   else if(id==='foundry'){for(let i=-1;i<=1;i++)lineLocal(-r*.5,i*r*.32,r*.5,i*r*.32,'#03070e',1.5)}
+   else if(id==='cryo'){poly([[0,-r*.75],[r*.5,0],[0,r*.75],[-r*.5,0]],'#ffffffcc','#03070e',1);poly([[0,-r*.75],[r*.5,0],[0,0]],c)}
+   else if(id==='city'){ctx.strokeStyle='#03070e';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(0,0,r*.45,0,TAU);ctx.stroke()}
+   ctx.restore();bossArt.chargeRing(r+5,e,charge);return}
   circle(0,0,r+4,f.shade);circle(0,0,r+2,f.edge,false);circle(0,0,r,'#081523');
   if(id==='cryo'||id==='grid'&&kind==='warden'){poly([[0,-r],[r*.7,0],[0,r],[-r*.7,0]],c,f.edge,.7);poly([[0,-r],[-r*.7,0],[0,r*.25]],'#d5edf5');poly([[0,r*.25],[r*.7,0],[0,r]],f.shade);poly([[0,-r*.4],[r*.25,0],[0,r*.2],[-r*.25,0]],lit?'#fff7dd':'#e1f4ff')}
   else if(id==='belt'){panel([[-r*.8,-r*.55],[r*.8,-r*.55],[r*.8,r*.55],[-r*.8,r*.55]]);for(let i=-1;i<=1;i++)lineLocal(i*r*.45,-r*.4,i*r*.45,r*.4,lit?'#fff0ca':c,2.5)}
@@ -2740,6 +2754,7 @@ function drawIllustratedBossHull(e,t,paint=shipCanvasPainter){
   if(lit){ctx.lineWidth=2;ctx.strokeStyle='#fff0c9';ctx.beginPath();ctx.arc(0,0,r+5,-Math.PI/2,-Math.PI/2+Math.max(.02,charge*TAU));ctx.stroke()}
  };
  ctx.save();ctx.lineJoin='round';ctx.shadowBlur=0;
+ if(bossArtV2(e)&&design.radial){ctx.save();ctx.globalAlpha=.35;ctx.translate(4,7);circle(0,0,46,'#01040a');ctx.restore()}
  // Large articulated assemblies establish identity before the central armour is painted.
  if(design.radial){let n=id==='grid'?(kind==='engine'?3:8):id==='storm'?(kind==='keeper'?4:kind==='conductor'?3:6):id==='foundry'?4:id==='cryo'?(kind==='empress'?4:6):4;
   for(let i=0;i<n;i++){ctx.save();ctx.rotate(i*TAU/n+(id==='cryo'?Math.PI/4:0));
@@ -2761,7 +2776,7 @@ function drawIllustratedBossHull(e,t,paint=shipCanvasPainter){
   else if(kind==='interdictor'){panel([[-29,18],[-9,25],[13,12],[-5,15]]);slot(-23,22,9);panel([[6,13],[32,12],[35,16],[25,19],[7,18]])}
   else{panel([[-31,19],[21,19],[44,28],[37,38],[-31,38]]);panel([[-15,23],[33,23],[43,27],[33,31],[-15,31]]);slot(-10,27,45)}
  ctx.restore()}}
- panel(design.body);
+ if(bossArtV2(e)){bossArt.hull(design.body,e,{glow:10,edgeWidth:1.6});bossArt.hull(design.body.map(p=>[p[0]*.68,p[1]*.68]),e,{dark:bossArtMix(bossArtPalette(e).plateDark,.7),light:bossArtPalette(e).plateDark,edgeAlpha:.4,key:2});let far=design.body.reduce((m,p)=>Math.hypot(...p)>Math.hypot(...m)?p:m,design.body[0]);for(let k of design.radial?[0,1,2,3]:[0]){ctx.save();ctx.rotate(k*Math.PI/2);bossArt.light(far[0]*.84,far[1]*.84,1.6,c,.55+.45*Math.sin(clock*3+k*1.6));ctx.restore()}}else panel(design.body);
  // Sector machinery sits in the open centre of each unique frame.
  if(id==='belt'){for(let side of [-1,1]){slot(-24,side*12,24);panel([[-27,side*7],[-12,side*7],[-8,side*11],[-27,side*11]])}for(let i=0;i<3;i++)lineLocal(-24+i*7,-6,-24+i*7,6,'#1a2330',2);core(kind==='dreadnought'?13:10)}
  else if(id==='foundry'){for(let side of [-1,1]){panel([[-21,side*9],[15,side*9],[20,side*16],[-22,side*16]]);for(let j=0;j<4;j++)slot(-16+j*8,side*13,5)}core(kind==='forge'?16:11)}
@@ -2770,13 +2785,13 @@ function drawIllustratedBossHull(e,t,paint=shipCanvasPainter){
  else{core(kind==='engine'?17:kind==='citadel'?15:12);if(kind==='reaper'){panel([[-19,-7],[24,-7],[34,-3],[34,3],[24,7],[-19,7]]);slot(-12,0,43);circle(-15,0,3,c)}}
  // Overdrive opens bright cooling seams; only the rotor motion obeys the animation clock.
  for(let i=0;i<4;i++){ctx.save();ctx.rotate(i*Math.PI/2);if(hot){panel([[13,-3],[22,-5],[25,-1],[18,2]],f.shade);slot(16,-1,6)}ctx.restore()}
- if(e.hp/e.max<.3){poly([[-16,-7],[-6,-4],[-11,1],[-18,0]],'#070f1b');lineLocal(-15,-5,-9,-3,'#ffc18e',1)}
+ if(bossArtV2(e))bossArt.damage(e,clock,36);else if(e.hp/e.max<.3){poly([[-16,-7],[-6,-4],[-11,1],[-18,0]],'#070f1b');lineLocal(-15,-5,-9,-3,'#ffc18e',1)}
  ctx.restore();
 }
 // v0.61 boss art: the Neon Expanse reactors and the final boss share the player's material language:
 // dark layered hull plates, a neon edge in the boss colour, lit vents, a glowing core and visible damage.
 // Drawn in local units (radius about 50) facing +x; drawPresentedBoss supplies rotation and scale. Cosmetic only.
-function bossArtV2(e){return !!e&&(e.finalBoss||!e.sectorBoss)}
+function bossArtV2(e){return !!e}
 const bossArt={
  hull(points,e,o={}){let a=bossArtPalette(e),xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
   let g=ctx.createLinearGradient(x0,y0,x1*.3+x0*.7,y1);g.addColorStop(0,o.light||a.plateLight);g.addColorStop(1,o.dark||a.plateDark);
@@ -2799,7 +2814,9 @@ const bossArt={
   if(ratio<.3){ctx.globalAlpha=.18*flick;circle(R*.2,R*.35,R*.18,a.hot)}ctx.restore()},
  flash(e,draw){if(!(e.glow>0&&graphicsFlash()>.5))return;ctx.save();ctx.globalAlpha=.35;ctx.globalCompositeOperation='lighter';draw();ctx.restore()}
 };
-function bossArtPalette(e){let frozen=e.freeze>0,c=frozen?'#d4f7ff':e.c;return {c,frozen,hot:'#ffcf8f',hot2:e.hp<e.max*.5,deep:frozen?'#4d7f99':bossArtDeep[e.kind]||'#2a3550',plateLight:frozen?'#4f6f86':'#2b3e57',plateDark:frozen?'#22384b':'#101a28'}}
+const bossArtPlates={grid:['#2b3e57','#101a28'],belt:['#5a4f43','#1d1a1c'],storm:['#46416b','#17162f'],foundry:['#5b443d','#1f171b'],cryo:['#3a5c75','#112437'],city:['#45476a','#16182e']};
+function bossArtMix(hex,k){let n=parseInt(hex.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return '#'+[r,g,b].map(v=>Math.round(v*k).toString(16).padStart(2,'0')).join('')}
+function bossArtPalette(e){let frozen=e.freeze>0,c=frozen?'#d4f7ff':e.c,pl=bossArtPlates[e.finalBoss?'grid':e.sectorBoss||'grid']||bossArtPlates.grid;return {c,frozen,hot:'#ffcf8f',hot2:e.hp<e.max*.5,deep:frozen?'#4d7f99':bossArtDeep[e.kind]||bossArtMix(c,.42),plateLight:frozen?'#4f6f86':pl[0],plateDark:frozen?'#22384b':pl[1]}}
 const bossArtDeep={warden:'#7a1f5b',reaper:'#145f87',engine:'#8a4416',final:'#173a52'};
 function drawBossArtV2(e,t){let clock=reducedMotion||e.freeze>0?0:t,charge=bossChargeProgress(e),a=bossArtPalette(e);ctx.save();ctx.lineJoin='round';ctx.shadowBlur=0;
  // Soft cast shadow so the hull sits above the arena.
@@ -2856,7 +2873,7 @@ function drawFinalBossArt(e,t){let a=bossArtPalette(e),R=e.r,s1=R/50,hot=e.phase
  if(hot){ctx.save();ctx.strokeStyle=a.hot;ctx.lineWidth=1.4;for(let i=0;i<5;i++){let q=i*1.37;ctx.globalAlpha=.6+.4*Math.sin(t*11+i);ctx.beginPath();ctx.moveTo(Math.cos(q)*15,Math.sin(q)*15);ctx.lineTo(Math.cos(q+.2)*25,Math.sin(q+.2)*25);ctx.lineTo(Math.cos(q-.1)*32,Math.sin(q-.1)*32);ctx.stroke()}ctx.restore()}
  bossArt.chargeRing(19,e,bossChargeProgress(e));
  ctx.restore()}
-function drawPresentedBoss(e,t){let design=bossPresentation(e),a=design.radial?(reducedMotion||e.freeze>0?0:t*.075):Number.isFinite(e.aim)&&e.charge>0?e.aim:Math.atan2(s.p.y-e.y,s.p.x-e.x);ctx.save();ctx.rotate(a);ctx.scale(e.r/50,e.r/50);if(bossArtV2(e))drawBossArtV2(e,t);else drawIllustratedBossHull(e,t);ctx.restore();
+function drawPresentedBoss(e,t){let design=bossPresentation(e),a=design.radial?(reducedMotion||e.freeze>0?0:t*.075):Number.isFinite(e.aim)&&e.charge>0?e.aim:Math.atan2(s.p.y-e.y,s.p.x-e.x);ctx.save();ctx.rotate(a);ctx.scale(e.r/50,e.r/50);if(!e.sectorBoss)drawBossArtV2(e,t);else drawIllustratedBossHull(e,t);ctx.restore();
  if(e.arrival>0){ctx.save();ctx.shadowBlur=0;ctx.lineWidth=1.5;ctx.strokeStyle='#c5d9e8';let r=e.r+12;for(let i=0;i<4;i++){ctx.save();ctx.rotate(i*Math.PI/2);ctx.beginPath();ctx.moveTo(r-4,-7);ctx.lineTo(r,-7);ctx.lineTo(r,7);ctx.lineTo(r-4,7);ctx.stroke();ctx.restore()}ctx.restore()}}
 function enemyDesign(e,t){if(e.objectiveTarget)return;ctx.save();drawContactRecoil(e);if(e.finalBoss)drawFinalBoss(e,t);else if(e.systemOwner)drawFinalSystem(e,t);else if(e.boss)drawPresentedBoss(e,t);else drawEnemyShip(e,t);ctx.restore();if(!e.boss&&!e.systemOwner)drawSpecialist(e)}
 function pilotDesign(t,view=s,paint=shipCanvasPainter){
