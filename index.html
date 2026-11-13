@@ -3314,7 +3314,7 @@ function damageNumberPosition(n){let dx=n.x-s.p.x,dy=n.y-s.p.y,halfWidth=Math.mi
 // v0.55 GPU layer. Three.js renders the sector background, parallax stars, glow halos and
 // particles on #gpuLayer beneath the 2D canvas. Cosmetic only: reads positions, never changes
 // simulation, RNG or collision. Any load, render or context failure falls back to 2D drawing.
-const gpuLayerModule='./gpu-layer-v0600.js',gpuSectorTints={grid:'#7cbbb9',belt:'#bca17d',storm:'#ac99d4',foundry:'#e6a16a',cryo:'#9ac8d7',city:'#99b7cf'};
+const gpuLayerModule='./gpu-layer-v0700.js',gpuSectorTints={grid:'#7cbbb9',belt:'#bca17d',storm:'#ac99d4',foundry:'#e6a16a',cryo:'#9ac8d7',city:'#99b7cf'};
 // var: resize() and graphicsShadow() can run before this point during start-up.
 var gpuModule=null,bloomLayer=null,bloomState='idle',bloomCapture=null,bloomCaptureOk=true,bloomCheckAt=0,gpuLayer=null,gpuState='idle',gpuFrame={on:false,overlay:false,ox:0,oy:0,background:null,tint:null};
 function gpuQuery(key,value){try{return new RegExp('[?&]'+key+'='+value+'(&|$)').test(location.search)}catch(e){return false}}
@@ -3543,7 +3543,7 @@ const solarDesigns={
   ctx.save();ctx.globalAlpha=.25;ctx.rotate(t*.5);for(let i=0;i<4;i++){ctx.rotate(TAU/4);ctx.fillStyle='#7a2a08';ctx.beginPath();ctx.ellipse(9,4,5,3,0,0,TAU);ctx.fill()}ctx.restore();bossArt.chargeRing(33,e,ch)}
 };
 registerExtraSector({id:'solar',seed:2026,name:'Solar Corona',color:'#ffb347',desc:'Skim the surface of a star. Solar flares sweep the arena every few seconds: shelter in the shadow of drifting satellites. Complete a sector to unlock.',
- fleet:{hull:'#3d2a1e',light:'#6a4a2a',shade:'#24170f',edge:'#e6b16a',trim:'#ffb347'},plates:['#7a5634','#3a2414'],nebula:['#ff8a2a','#ffcf5a','#c2410c'],tint:'#f0a860',mist:['#e0823a','#b8483a','#2c140c'],terrain:['#b88a4a','#6a4a2a','#2a1a10','#ffd27a'],weather:4,music:'storm',
+ fleet:{hull:'#3d2a1e',light:'#6a4a2a',shade:'#24170f',edge:'#e6b16a',trim:'#ffb347'},plates:['#7a5634','#3a2414'],nebula:['#ff8a2a','#ffcf5a','#c2410c'],tint:'#f0a860',mist:['#e0823a','#b8483a','#2c140c'],terrain:['#b88a4a','#6a4a2a','#2a1a10','#ffd27a'],weather:7,music:'storm',
  terrainKinds:['cover','station','cover'],texture:solarTexture,coverDraw:solarCoverDraw,fitting:solarFitting,hazardUpdate:solarHazardUpdate,hazardDraw:solarHazardDraw,hazardScreen:solarHazardScreen,bossAttack:solarBossAttack,bossWarning:solarBossWarning,bossToast:'WATCH THE BEAMS AND CORONA',
  bosses:[{name:'PRISM SENTINEL',kind:'sentinel',c:'#ffe08a',r:44,hp:3400,sectorBoss:'solar',tier:0},{name:'FLARE ENGINE',kind:'flare',c:'#ff9d5c',r:50,hp:5700,sectorBoss:'solar',tier:1},{name:'THE DYING STAR',kind:'star',c:'#ffcf6e',r:59,hp:8500,sectorBoss:'solar',tier:2}],
  finalBoss:{name:'SOLAR THRONE',c:'#ffd27a'},
@@ -3600,7 +3600,7 @@ const riftDesigns={
   riftVoid(20,e,t,ch)}
 };
 registerExtraSector({id:'rift',seed:1313,name:'Abyssal Rift',color:'#a87bff',desc:'A trench of bent starlight around a black hole. Gravity wells drift through the fight and pull everything in: resist them, or drag the swarm into the crush. Complete a sector to unlock.',
- fleet:{hull:'#1c1830',light:'#2e2650',shade:'#110e1f',edge:'#a58cff',trim:'#c9a8ff'},plates:['#3b3166','#16122a'],nebula:['#8a5cff','#ffcf7a','#4a2aa0'],tint:'#a58cff',mist:['#7a52d6','#c9a060','#120c24'],terrain:['#3b3166','#1e1930','#0c0a16','#c9a8ff'],weather:3,music:'storm',
+ fleet:{hull:'#1c1830',light:'#2e2650',shade:'#110e1f',edge:'#a58cff',trim:'#c9a8ff'},plates:['#3b3166','#16122a'],nebula:['#8a5cff','#ffcf7a','#4a2aa0'],tint:'#a58cff',mist:['#7a52d6','#c9a060','#120c24'],terrain:['#3b3166','#1e1930','#0c0a16','#c9a8ff'],weather:8,music:'storm',
  terrainKinds:['cover','current','station'],texture:riftTexture,coverDraw:riftCoverDraw,fitting:riftFitting,hazardUpdate:riftHazardUpdate,hazardDraw:riftHazardDraw,bossAttack:riftBossAttack,bossWarning:riftBossWarning,bossToast:'RESIST THE PULL',
  bosses:[{name:'RIFT STALKER',kind:'stalker',c:'#c9a8ff',r:44,hp:3400,sectorBoss:'rift',tier:0},{name:'EVENT HORIZON',kind:'horizon',c:'#9b7bff',r:52,hp:5700,sectorBoss:'rift',tier:1},{name:'THE DEVOURER',kind:'devourer',c:'#b58cff',r:59,hp:8500,sectorBoss:'rift',tier:2}],
  finalBoss:{name:'THE SINGULARITY',c:'#c9a8ff'},
@@ -3655,7 +3655,7 @@ const hiveDesigns={
   ctx.save();ctx.strokeStyle='#03070e';ctx.lineWidth=2;for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(Math.cos(i*1.3)*8,Math.sin(i*1.3)*8,9,i,i+2.2);ctx.stroke()}ctx.restore();bossArt.core(10,e,t,{charge:ch});bossArt.chargeRing(15,e,ch)}
 };
 registerExtraSector({id:'hive',seed:4545,name:'Hive Nebula',color:'#7fe08a',desc:'A living nebula. Spore pods ripen and burst into acid or healing clouds unless you shoot them first, and hive ships split in two when destroyed. Complete a sector to unlock.',
- fleet:{hull:'#1c3326',light:'#2c5238',shade:'#10201a',edge:'#9cff8a',trim:'#9cff8a'},plates:['#2f6a46','#12291c'],nebula:['#3fd6a0','#b6ff5a','#1a6a4a'],tint:'#8fe0a0',mist:['#4ac890','#a6e05a','#0c2016'],terrain:['#2f6a46','#1f4a32','#0c1a12','#c6ff6a'],weather:2,music:'belt',
+ fleet:{hull:'#1c3326',light:'#2c5238',shade:'#10201a',edge:'#9cff8a',trim:'#9cff8a'},plates:['#2f6a46','#12291c'],nebula:['#3fd6a0','#b6ff5a','#1a6a4a'],tint:'#8fe0a0',mist:['#4ac890','#a6e05a','#0c2016'],terrain:['#2f6a46','#1f4a32','#0c1a12','#c6ff6a'],weather:9,music:'belt',
  terrainKinds:['cover','station','salvage'],texture:hiveTexture,coverDraw:hiveCoverDraw,fitting:hiveFitting,hazardUpdate:hiveHazardUpdate,hazardDraw:hiveHazardDraw,onKill:hiveOnKill,bossAttack:hiveBossAttack,bossWarning:hiveBossWarning,bossToast:'SHOOT THE SPORES · BREAK THE LINKS',
  bosses:[{name:'BROOD MOTHER',kind:'brood',c:'#9cff8a',r:46,hp:3400,sectorBoss:'hive',tier:0},{name:'SPORE COLOSSUS',kind:'colossus',c:'#c6ff6a',r:52,hp:5700,sectorBoss:'hive',tier:1},{name:'THE HIVE MIND',kind:'mind',c:'#7fffc0',r:58,hp:8500,sectorBoss:'hive',tier:2}],
  finalBoss:{name:'THE OVERMIND',c:'#9cff8a'},
@@ -3704,7 +3704,7 @@ const ghostDesigns={
   ctx.save();ctx.translate(26,0);bossArt.core(7,e,t,{charge:ch});bossArt.chargeRing(11,e,ch);ctx.restore();for(let y of [-9,0,9])bossEngine(-54,y,3.5,a.c,t,18,y)}
 };
 registerExtraSector({id:'ghost',seed:8080,name:'Ghost Fleet Graveyard',color:'#8affc0',desc:'A silent battlefield of derelict warships in cold green fog. Old turrets on the wrecks wake up as you pass, and the dead fleet rebuilds itself. Complete a sector to unlock.',
- fleet:{hull:'#26302a',light:'#3b4740',shade:'#161c18',edge:'#9ab8a2',trim:'#8affc0'},plates:['#4b5a50','#1d2420'],nebula:['#5ad6a0','#2a8a6a','#9affc8'],tint:'#8fd0b0',mist:['#5ab890','#3a6a5a','#0a1612'],terrain:['#4b5a50','#2c3530','#121814','#8affc0'],weather:5,music:'grid',
+ fleet:{hull:'#26302a',light:'#3b4740',shade:'#161c18',edge:'#9ab8a2',trim:'#8affc0'},plates:['#4b5a50','#1d2420'],nebula:['#5ad6a0','#2a8a6a','#9affc8'],tint:'#8fd0b0',mist:['#5ab890','#3a6a5a','#0a1612'],terrain:['#4b5a50','#2c3530','#121814','#8affc0'],weather:10,music:'grid',
  terrainKinds:['cover','cover','station'],texture:ghostTexture,coverDraw:ghostCoverDraw,fitting:ghostFitting,hazardUpdate:ghostHazardUpdate,bossAttack:ghostBossAttack,bossWarning:ghostBossWarning,bossToast:'DESTROY THE GUN DECKS',
  bosses:[{name:'SALVAGE LICH',kind:'lich',c:'#8affc0',r:46,hp:3400,sectorBoss:'ghost',tier:0},{name:'DREAD CARRIER',kind:'carrier',c:'#ffb27a',r:52,hp:5700,sectorBoss:'ghost',tier:1},{name:'THE ADMIRAL',kind:'admiral',c:'#a8ffd0',r:60,hp:8500,sectorBoss:'ghost',tier:2}],
  finalBoss:{name:'THE PHANTOM ARMADA',c:'#8affc0'},
