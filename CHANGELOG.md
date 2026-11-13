@@ -1,3 +1,12 @@
+# v0.78.0 — visual pass: final bosses, abilities, explosions, backgrounds
+
+- Every sector's final boss has its own design: Omega Reactor, The Scrap Monarch (crowned fortress with crane arms), Heart of the Storm (tesla cage with crawling arcs), The Prime Furnace (molten crucible with smokestacks), The Frozen Sun (ice-spear star), Metroplex Mind (floating district), Solar Throne (crescent throne with solar sails), The Singularity (black hole with an accretion disc), The Overmind (brain-hive with tendrils) and The Phantom Armada (spectral flagship).
+- Explosions now leave a warm afterglow and drifting embers that fade in about six seconds, instead of black burn marks that looked like holes in space.
+- Ship abilities hit harder visually: a launch flash, glowing filled shapes, afterimage trails along dashes, and a shockwave for abilities that don't move the ship (Harrier, Helios, Spectre, Scavenger and others).
+- New painted backgrounds for the original six sectors, matching the four newer ones; sector previews and the website use them too.
+- Dread Carrier (Ghost) and Skyline Enforcer (City) recoloured to fit their sectors.
+- Every sector's fleet has its own ship silhouettes (salvage boxes in Belt, forked prongs in Storm, heavy wedges in Foundry, crystal diamonds in Cryo, hover-cars in City, flame wings in Solar, obsidian crescents in Rift, beetle shells in Hive, ribbed wrecks in Ghost), scaled up through fighters, interceptors, brutes and elites. Neon Expanse keeps the originals; specialist ships keep their role shapes.
+
 # v0.77.0 — crash reports
 
 - If the game closes unexpectedly (for example a phone running out of memory) or hits a script error, a crash report is saved. The next time you open the game, it shows the report with a Copy button (and Share on phones) so you can send it over.

@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.77.0**.
+Current version: **0.78.0**.
 
 ## Where the game is now
 
