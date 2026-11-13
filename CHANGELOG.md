@@ -1,3 +1,27 @@
+# v0.60.0 — final encounter, weapon field effects and faster testing
+
+## Final encounter
+- A sector route no longer ends at the third reactor. About 20 seconds after it falls (after your mutation pick), a final boss arrives: Omega Reactor, The Scrap Monarch, Heart of the Storm, The Prime Furnace, The Frozen Sun or Metroplex Mind, depending on the sector.
+- Phase I: four systems orbit the core. Two shield systems cut damage to the core by 60% until both are destroyed; two cannon systems fire aimed bursts. The core alternates ring and fan volleys.
+- Phase II (below 65%): the remaining systems blow and a new array deploys: one shield system and two lance systems that fire telegraphed beams. The core adds spiral bursts.
+- Phase III (below 30%): Core Meltdown. No systems or shields, the core moves faster and fires denser rings plus rotating cross beams through itself.
+- Every attack is telegraphed. Destroying the boss wipes the remaining fleet, adds 5,000 score and a blueprint, then clears the sector after a short pause. The merchant waits until it is over.
+- The boss bar shows the phase and how many systems are left; the route panel and objective show the final encounter; Recent runs record how long it took.
+- New quick test and test link: `test=final`. The Developer tab's boss button spawns it after the three reactors.
+
+## Faster testing
+- Add Quick tests to Settings → Developer: Weapon showcase (any weapon at level 5, base or evolved, invulnerable, with a ring of enemies), Boss fight (late-run build plus the next sector boss), Late-run swarm (evolved build, eight minutes in, 100 enemies, invulnerable) and Endless. They start playing immediately using the chosen ship and sector.
+- Add test links: `index.html?play=1&test=weapon:gravity:evo`, `test=boss`, `test=swarm` or `test=endless`, with optional `&ship=` and `&sector=`. The Developer tab shows the link for the current choice.
+- Developer unlock can be kept on this device until you lock the panel.
+- Recent runs now show what defeated you, blueprints recovered and mastery XP gained.
+- Quick tests and test links are developer test runs: no credits, unlocks, records, blueprints or mastery.
+
+## Weapon field effects
+- Redraw weapon fields with GPU shaders beneath the ships. Gravity Well is a black hole with a dark core, a spinning accretion ring and arms spiralling inward; void rifts (Phase Torpedoes, Void effects, Sovereign's rift) use a violet version.
+- Toxic Cloud billows as drifting gas; Plasma Rain pools swirl with a bright rim; Corona is a flickering ring of heat; Stasis Net and pylon beacons show a pulsing lattice; Ember and Slipstream trails burn as flame; storm hazards crackle.
+- Fields can now darken as well as glow. Gravity and void cores add to bloom.
+- Compatibility mode and the classic renderer keep the previous drawing. No gameplay, damage or hitbox changes.
+
 # v0.59.0 — sector weather
 
 - Add sector weather on the GPU: driving rain and lightning in the Storm Relay, snow in Cryo Reach, rising embers and furnace glows in Cinder Foundry, neon rain and sign flicker in the Neon Undercity, drifting dust in the Shattered Belt and light motes in the Neon Expanse. Particles drift at two depths with parallax.

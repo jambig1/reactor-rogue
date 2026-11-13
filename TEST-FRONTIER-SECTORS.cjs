@@ -24,7 +24,7 @@ for(let id of ['foundry','cryo']){
   fresh();run(`s.sector='${id}';s.dev.test=true;s.bossIndex=${tier};s.t=180;spawnBoss();target=s.enemies[0];target.arrival=0;target.fireCD=0`);assert.equal(run('target.sectorBoss'),id);assert.equal(run('target.routeIndex'),tier);run('bossAttack(target,.1)');assert.equal(run('target.charge'),1.5);run('bossAttack(target,1.6)');assert.equal(run('s.hostile.length'),id==='cryo'?6+tier*2:5+tier*2);
   run('target.fireCD=0;bossAttack(target,.1)');assert.equal(run('target.frontierTargets.length'),2+tier);run('bossAttack(target,1.6)');assert.equal(run('s.sectorHazards.length'),2+tier);assert(run('s.sectorHazards.every(h=>h.warning===1.5&&h.bossOwner===target)'));
   let before=run('JSON.stringify(s,(k,v)=>k==="bossOwner"?undefined:v)'),random=c.Math.random;c.Math.random=()=>{throw Error('Rendering used gameplay RNG')};for(let quality of ['low','high','auto']){run(`graphics.preset='${quality}';refreshGraphicsVisual();draw()`);assert.equal(depth,0)}c.Math.random=random;assert.equal(run('JSON.stringify(s,(k,v)=>k==="bossOwner"?undefined:v)'),before);
-  if(tier===2){run("s.bossKills=2;hit(target,1e9,'bolt')");assert(run('s.finalClearPending'));run('resolveFinalClear()');assert(run("state==='mutation'||state==='end'"))}
+  if(tier===2){run("s.bossKills=2;hit(target,1e9,'bolt')");assert.equal(run('s.finalEncounter.stage'),'approach');assert(!run('s.finalClearPending'))}
  }
  fresh();run(`s.sector='${id}';s.enemies=[];spawn(0);spawn(0);spawn(0)`);assert.equal(run('s.enemies.filter(e=>e.sectorHull===s.sector).length'),2);assert.equal(run('cleanRun({...snapshotRun("abandoned"),sector:s.sector}).sector'),id);
  run(`state='play'`);assert.equal(run('musicScene()'),id==='foundry'?'storm':'belt');

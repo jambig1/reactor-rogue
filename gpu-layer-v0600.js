@@ -1,4 +1,4 @@
-/* Reactor Rogue GPU layers, v0.59 (sector weather added to the top layer).
+/* Reactor Rogue GPU layers, v0.60 (shader weapon fields on the bottom layer; sector weather on the top).
    createGpuLayer: Three.js canvas beneath the 2D playfield (sector background, parallax stars, lighting,
    glow sprites). createBloomLayer: Three.js canvas above it, composited with plus-lighter, adding
    thresholded bloom from a small copy of the frame, glow sprites, sparks and light pools.
@@ -107,6 +107,99 @@ void main(){
   gl_FragColor = vec4(vColor.rgb * a, a);
 }`;
 
+// Weapon fields (v0.60): gravity wells, void rifts, toxic gas, plasma pools, corona, nets, flame
+// trails and storm hazards, drawn on the bottom layer between the scenery and the 2D ships. Output is
+// premultiplied (rgb glows, alpha darkens), so a gravity well can have a genuinely black core.
+// Kinds: 1 gravity, 2 void, 3 corrosion, 4 plasma, 5 aura, 6 net, 7 fire/wake, 8 storm.
+export const FIELD_KINDS = { gravity: 1, void: 2, corrosion: 3, toxic: 3, plasma: 4, aura: 5, net: 6, fire: 7, wake: 7, storm: 8 };
+const FIELD_CAP = 64;
+export const FIELD_VERTEX = `precision highp float;
+attribute vec3 position;
+attribute vec4 aField;
+attribute vec4 aFieldColor;
+uniform vec2 uRes;
+varying vec2 vUv;
+varying vec4 vCol;
+varying float vKind;
+void main(){
+  vUv = position.xy * 1.3;
+  vCol = aFieldColor;
+  vKind = aField.w;
+  vec2 p = aField.xy + position.xy * aField.z * 1.3;
+  vec2 c = p / uRes * 2.0 - 1.0;
+  gl_Position = vec4(c.x, -c.y, 0.0, 1.0);
+}`;
+export const FIELD_FRAGMENT = `precision highp float;
+uniform float uTime;
+uniform float uMotion;
+varying vec2 vUv;
+varying vec4 vCol;
+varying float vKind;
+float h21(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(h21(i), h21(i + vec2(1.0, 0.0)), f.x), mix(h21(i + vec2(0.0, 1.0)), h21(i + vec2(1.0, 1.0)), f.x), f.y); }
+float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 4; i++) { v += a * vnoise(p); p = p * 2.03 + vec2(1.7, 9.2); a *= 0.5; } return v; }
+float band(float x, float centre, float width){ float d = (x - centre) / width; return exp(-d * d); }
+void main(){
+  vec2 p = vUv;
+  float r = length(p);
+  if (r > 1.3) discard;
+  float t = uTime * uMotion + vKind * 3.7;
+  float ang = atan(p.y, p.x);
+  vec3 c = vCol.rgb;
+  float fade = vCol.a;
+  float inside = 1.0 - smoothstep(0.86, 1.0, r);
+  vec3 glow = vec3(0.0);
+  float dark = 0.0;
+  float k = vKind;
+  if (k < 2.5) {
+    // Gravity well / void: inward-spiralling arms, accretion ring, black core, lensing rim.
+    float sw = ang + 1.7 / (r + 0.22) - t * 1.3;
+    float arms = 0.5 + 0.5 * sin(sw * 3.0);
+    float flow = fbm(vec2(sw * 1.6, r * 5.0 + t * 2.0));
+    float body = inside * smoothstep(0.14, 0.36, r);
+    glow += c * (0.12 + 0.75 * arms * flow) * body * (1.0 - r * 0.55);
+    float dopp = 0.55 + 0.45 * sin(ang - t * 2.4);
+    glow += mix(c, vec3(1.0), 0.6) * band(r, 0.3, 0.04) * dopp * 1.4;
+    glow += c * band(r, 0.985, 0.03) * 0.45;
+    dark = (1.0 - smoothstep(0.15, 0.27, r)) * 0.95 + inside * 0.28 * (1.0 - smoothstep(0.3, 1.0, r));
+  } else if (k < 3.5) {
+    // Corrosive gas: two drifting noise layers, murky body with brighter wisps.
+    float n = fbm(p * 2.2 + vec2(t * 0.16, -t * 0.11));
+    float n2 = fbm(p * 4.2 - vec2(t * 0.22, t * 0.07));
+    float soft = 1.0 - smoothstep(0.55, 1.02, r + (n - 0.5) * 0.25);
+    float dens = smoothstep(0.32, 0.78, n * 0.7 + n2 * 0.45);
+    glow += c * (0.16 + 0.62 * dens) * soft + c * smoothstep(0.62, 0.85, n2) * soft * 0.35;
+    dark = dens * soft * 0.3;
+  } else if (k < 4.5) {
+    // Plasma pool: slow swirl with a bright rim.
+    float n = fbm(vec2(ang * 2.0 + t * 0.35, r * 3.2 - t * 0.6));
+    glow += c * (0.06 + 0.36 * n) * inside * (0.55 + 0.45 * r) + c * band(r, 0.95, 0.05) * 0.32;
+  } else if (k < 5.5) {
+    // Corona: a ring of flickering heat at the edge, faint inside.
+    float flames = fbm(vec2(ang * 4.0, r * 3.0 - t * 1.6));
+    glow += c * band(r, 0.9, 0.11) * (0.35 + 1.0 * flames) * 0.85 + c * 0.05 * inside;
+  } else if (k < 6.5) {
+    // Net: a pulsing triangular lattice with a bright boundary.
+    vec2 q = p * 5.5;
+    float l1 = abs(fract(q.x + 0.5) - 0.5), l2 = abs(fract(dot(q, vec2(0.5, 0.866)) + 0.5) - 0.5), l3 = abs(fract(dot(q, vec2(-0.5, 0.866)) + 0.5) - 0.5);
+    float lines = 1.0 - smoothstep(0.0, 0.07, min(l1, min(l2, l3)));
+    float pulse = 0.5 + 0.5 * sin(r * 10.0 - t * 3.0);
+    glow += c * (lines * 0.38 * (0.5 + 0.5 * pulse) * inside + band(r, 0.97, 0.04) * 0.85 + 0.04 * inside);
+  } else if (k < 7.5) {
+    // Flame: rising, flickering fire with a hot core.
+    float n = fbm(p * 3.0 + vec2(0.0, t * 1.4));
+    float dens = smoothstep(0.3, 0.8, n) * (1.0 - smoothstep(0.35, 1.0, r));
+    glow += mix(c * 1.15, vec3(1.0, 0.88, 0.6), dens * 0.45) * dens * 0.85;
+  } else {
+    // Storm: crackling filaments.
+    float n = fbm(p * 5.0 + vec2(t * 0.9, -t * 0.6));
+    float arc = 1.0 - smoothstep(0.0, 0.045, abs(n - 0.5));
+    glow += c * (arc * 1.1 + 0.07) * inside + c * band(r, 0.97, 0.04) * 0.5;
+  }
+  gl_FragColor = vec4(min(vec3(1.0), glow * fade), clamp(dark * fade, 0.0, 1.0));
+}`;
+
 const colourCache = new Map();
 export function parseColour(text) {
   let hit = colourCache.get(text);
@@ -180,6 +273,24 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
   sprites.frustumCulled = false; sprites.renderOrder = 1;
   scene.add(sprites);
 
+  const fieldGeometry = new T.InstancedBufferGeometry();
+  fieldGeometry.setAttribute('position', new T.BufferAttribute(new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0]), 3));
+  fieldGeometry.setIndex([0, 1, 2, 0, 2, 3]);
+  const fieldData = new Float32Array(FIELD_CAP * 4), fieldColour = new Float32Array(FIELD_CAP * 4);
+  const aField = new T.InstancedBufferAttribute(fieldData, 4), aFieldColor = new T.InstancedBufferAttribute(fieldColour, 4);
+  aField.setUsage(T.DynamicDrawUsage); aFieldColor.setUsage(T.DynamicDrawUsage);
+  fieldGeometry.setAttribute('aField', aField); fieldGeometry.setAttribute('aFieldColor', aFieldColor); fieldGeometry.instanceCount = 0;
+  const fieldUniforms = { uRes: bgUniforms.uRes, uTime: { value: 0 }, uMotion: { value: 1 } };
+  const fieldMaterial = new T.RawShaderMaterial({
+    uniforms: fieldUniforms, vertexShader: FIELD_VERTEX, fragmentShader: FIELD_FRAGMENT,
+    transparent: true, depthTest: false, depthWrite: false, side: T.DoubleSide,
+    blending: T.CustomBlending, blendEquation: T.AddEquation, blendSrc: T.OneFactor, blendDst: T.OneMinusSrcAlphaFactor
+  });
+  const fields = new T.Mesh(fieldGeometry, fieldMaterial);
+  fields.frustumCulled = false; fields.renderOrder = 0.5;
+  scene.add(fields);
+  let fieldCount = 0;
+
   let count = 0, tile = null, texture = null, lost = false, width = 1, height = 1, ratio = 1;
   // Background modes: 'gpu' paints the sector tile here; 'overlay' means the 2D canvas paints the
   // background and this canvas sits above it, adding only glow and particles (CSS plus-lighter).
@@ -250,7 +361,21 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
       bgUniforms.uRes.value.set(width, height);
     },
     setVisible(on) { canvas.style.display = on ? 'block' : 'none'; },
-    begin() { count = 0; },
+    begin() { count = 0; fieldCount = 0; },
+    // A weapon field in screen-space CSS pixels. Returns false when full or the kind is unknown,
+    // so the caller can draw it the classic way instead.
+    field(x, y, radius, kind, colour, fade = 1) {
+      let k = FIELD_KINDS[kind];
+      if (!k || fieldCount >= FIELD_CAP || !(radius > 0)) return false;
+      let reach = radius * 1.3;
+      if (x < -reach || y < -reach || x > width + reach || y > height + reach) return true;
+      let c = parseColour(colour), i = fieldCount * 4;
+      fieldData[i] = x; fieldData[i + 1] = y; fieldData[i + 2] = radius; fieldData[i + 3] = k;
+      fieldColour[i] = c[0]; fieldColour[i + 1] = c[1]; fieldColour[i + 2] = c[2]; fieldColour[i + 3] = Math.max(0, Math.min(1, fade));
+      fieldCount++;
+      return true;
+    },
+    get fieldCount() { return fieldCount; },
     // Screen-space CSS pixels. hard: 0 glow halo, 1 bright core.
     sprite(x, y, radius, colour, alpha = 1, hard = 0) {
       if (count >= SPRITE_CAP || !(radius > 0) || !(alpha > 0.002)) return;
@@ -283,6 +408,9 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
       bgUniforms.uLightCount.value = n;
       let tint = parseColour(frame.tint || '#7cbbb9');
       bgUniforms.uTint.value.set(tint[0], tint[1], tint[2]);
+      fieldGeometry.instanceCount = fieldCount; fields.visible = fieldCount > 0;
+      fieldUniforms.uTime.value = frame.time || 0; fieldUniforms.uMotion.value = frame.reducedMotion ? 0 : 1;
+      if (fieldCount) for (let attr of [aField, aFieldColor]) { if (attr.clearUpdateRanges) { attr.clearUpdateRanges(); attr.addUpdateRange(0, fieldCount * 4); } attr.needsUpdate = true; }
       spriteGeometry.instanceCount = count; sprites.visible = count > 0;
       if (count) {
         for (let attr of [aSprite, aColor]) {
@@ -292,8 +420,8 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
       }
       if (pendingCheck && mode === 'gpu' && bg && bg.tile) {
         pendingCheck = false;
-        let stars = bgUniforms.uStars.value, spritesOn = sprites.visible, ok = false;
-        bgUniforms.uStars.value = 0; sprites.visible = false;
+        let stars = bgUniforms.uStars.value, spritesOn = sprites.visible, fieldsOn = fields.visible, ok = false;
+        bgUniforms.uStars.value = 0; sprites.visible = false; fields.visible = false;
         for (let k = 0; k < TILE_STRATEGIES.length && !ok; k++) {
           if (k > 0) {
             if (texture) texture.dispose();
@@ -302,14 +430,14 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
           }
           try { renderer.render(scene, camera); ok = backgroundMatches(bg); } catch (e) { diag.push(TILE_STRATEGIES[k] + ': error ' + (e && e.message || e)); ok = false; }
         }
-        bgUniforms.uStars.value = stars; sprites.visible = spritesOn;
+        bgUniforms.uStars.value = stars; sprites.visible = spritesOn; fields.visible = fieldsOn;
         if (!ok) { setMode('overlay'); return; }
       }
       renderer.render(scene, camera);
     },
     dispose() {
       if (texture) texture.dispose();
-      bgGeometry.dispose(); bgMaterial.dispose(); spriteGeometry.dispose(); spriteMaterial.dispose(); renderer.dispose();
+      bgGeometry.dispose(); bgMaterial.dispose(); spriteGeometry.dispose(); spriteMaterial.dispose(); fieldGeometry.dispose(); fieldMaterial.dispose(); renderer.dispose();
     }
   };
   canvas.addEventListener('webglcontextlost', () => { lost = true; if (layer.onLost) layer.onLost(); });
