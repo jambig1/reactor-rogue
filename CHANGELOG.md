@@ -1,3 +1,12 @@
+# v0.70.0 — three more sectors and floating debris
+
+- Abyssal Rift: a black-hole trench. Gravity wells drift through the fight for 14 seconds, pulling your ship and the swarm toward a crushing core. Resist them or drag enemies in. Bosses: Rift Stalker (blinks to a marked spot and fires), Event Horizon (pulls you in, then a closing ring of shots with a gap to escape through) and The Devourer (spiral bursts and consume zones); final encounter The Singularity.
+- Hive Nebula: a living nebula. Spore pods grow near you and burst after five seconds into acid clouds (burns you) or healing blooms (heals enemies) unless you shoot them first. Hive ships split into two spawnlings when destroyed. Bosses: Brood Mother (launches spawnlings and acid spit), Spore Colossus (plants fast pods, spiral bursts) and The Hive Mind (links three synapse nodes that shield it until destroyed); final encounter The Overmind.
+- Ghost Fleet Graveyard: derelict warships in cold green fog. Every 13 seconds an old turret on a nearby wreck wakes up (with a warning ring) and fires aimed bursts until destroyed. Bosses: Salvage Lich (raises revenant ships), Dread Carrier (launches fighter squadrons, broadsides) and The Admiral (gun decks shield the bridge until destroyed); final encounter The Phantom Armada.
+- Each new sector has its own generated background, fleet styling, cover (void monoliths, hive growths, wreck sections), weather and menu colours, and unlocks after clearing any sector.
+- Drifting rocks now look different in every sector: tech scrap, cratered asteroids, violet crystal with electric veins, slag with molten cracks, ice, city rubble with lit windows, molten solar rock, void stone, organic pods and wreck plating.
+- Debris is now weightless: rocks drift slowly on their own and glide much further when pushed or hit before settling.
+
 # v0.69.0 — Solar Corona
 
 - New seventh sector, Solar Corona (unlocked by clearing any sector): skim the surface of a star with a generated sun-surface background, orange weather embers and its own fleet with gold mirror plating.

@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.69.0**.
+Current version: **0.70.0**.
 
 ## Where the game is now
 
@@ -61,11 +61,12 @@ Current version: **0.69.0**.
 ### 0.69 — Solar Corona (done)
 - Seventh sector: solar flares, satellite cover and three new bosses.
 
+### 0.70 — Three more sectors (done)
+- Abyssal Rift, Hive Nebula and Ghost Fleet Graveyard, each with a hazard, fleet, three bosses and a final encounter; per-sector debris and weightless drift.
+
 ## Next
 
-- 0.70 Abyssal Rift: gravity currents, blinking void fleet, three bosses.
-- 0.71 Hive Nebula: spore pods, splitting organic fleet, three bosses.
-- 0.72 Ghost Fleet Graveyard: wrecks, waking turrets, three bosses.
+To be chosen: pick from the list below.
 
 
 ## Later
