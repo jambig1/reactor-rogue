@@ -1,3 +1,23 @@
+# v0.74.0 — locked content, matching sector previews and tidier records
+
+- Locked ships show a lock badge, a greyed icon and a dashed outline, with a progress bar toward their unlock challenge. Ships you can buy glow gold.
+- Locked sectors have a greyed preview and a gold lock line saying exactly how to unlock them ("Defeat any boss" / "Win any run").
+- On phones, locked sectors shrink to compact rows, so sector select is far shorter to scroll.
+- The Launch button no longer wraps onto two lines; the ship and sector you picked show in the line above the cards instead.
+- Every sector preview is now a painted view of that sector's background, so the original six match the four new sectors (no more gameplay screenshots with icons). The website uses the same images.
+- Sector descriptions no longer say "Complete a sector to unlock" once the sector is open.
+- Statistics: brand-new pilots see a "No flights logged yet" card instead of a wall of zeros.
+- Multikill medals are badges: grey until earned, then lit in their own colour with how many times you have earned them.
+- Hangar ships on phones sit in a 3-column grid instead of a sideways-scrolling strip.
+
+# v0.73.0 — simpler menus
+
+- The launch menu is now Play plus four destinations: How to play, Hangar & contracts, Records and Settings. Profile and Website & feedback are small links underneath.
+- Arsenal discovery is no longer a separate button on the launch, pause and end screens; it is the Arsenal tab in Records.
+- Phones and tablets see touch controls on the launch menu; PCs see keyboard controls.
+- Pause buttons: Resume, Restart run and Settings, then Records, Hangar and Back to start.
+- End screen buttons on phones sit in a 2×2 grid.
+
 # v0.72.0 — menu polish
 
 - Menus scale up on large screens (PC monitors), so text and buttons are readable instead of a small card in the middle of the screen.
