@@ -1,3 +1,8 @@
+# v0.67.0 — enemy ships in the new style
+
+- Enemy ships now share the player-ship look: darker armour tinted per sector, a bright neon outline in each ship's colour (pink fighters, green interceptors, violet brutes and specialists, gold elites) and neon detail lines on their plating, instead of grey hulls.
+- Same shapes, sizes and hitboxes; drawing cost unchanged.
+
 # v0.66.0 — clearer end-of-run screen
 
 - The end screen now opens with a headline summary: sector, Run over or Sector clear, what destroyed you (and whether it was during a reactor fight or the final encounter) or how long the final encounter took, then survived time, level, kills and reactors defeated.
