@@ -1,3 +1,12 @@
+# v0.61.0 — boss redesign
+
+- Every boss now shares the player ship's look: dark layered armour plates tinted per sector, a neon edge in the boss colour, inset plates, lit vents and running lights, and a glowing core that picks up bloom.
+- Neon Expanse bosses are redrawn: Prism Warden (eight prism pylons on a guard ring, spinning crystal core), Rail Reaper (twin rails that fill with light as a shot charges, three engines) and Singularity Engine (segmented ring, three pods, black-hole core).
+- The final boss is a solid armoured ring and citadel instead of outlines.
+- Bosses show glowing cracks below half health and more damage below 30%. Frozen bosses turn icy.
+- Constellation Salvo no longer draws a carrier sprite under your ship. Its six launch points are twinkling stars joined into a constellation.
+- Cosmetic only: hitboxes, attacks and stats are unchanged; combat parity is identical.
+
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
 ## Final encounter
