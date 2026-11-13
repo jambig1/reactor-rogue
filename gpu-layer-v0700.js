@@ -506,7 +506,9 @@ uniform float uAmount;
 varying vec2 vUv;
 float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f); return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y); }
-float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 4; i++) { v += a * vnoise(p); p = p * 2.03 + vec2(17.1, 9.2); a *= 0.5; } return v; }
+// Each octave is rotated so value-noise lattice edges never line up into soft rectangles (v0.71.1).
+float fbm(vec2 p){ float v = 0.0, a = 0.5; mat2 rot = mat2(1.6, 1.2, -1.2, 1.6); for (int i = 0; i < 4; i++) { v += a * vnoise(p); p = rot * p + vec2(17.1, 9.2); a *= 0.5; } return v / 0.9375; }
+float cloud(vec2 p){ vec2 q = vec2(fbm(p), fbm(p + vec2(5.2, 1.3))); return fbm(p + 1.6 * q); }
 vec3 layer(vec2 screen, float par, float cell, vec2 vel, float density, float seed, vec2 size, vec3 a, vec3 b, float sway, float flick){
   vec2 pos = screen + uCam * par - vel * uTime;
   vec2 g = floor(pos / cell);
@@ -543,10 +545,10 @@ void main(){
     c += layer(sc, 1.3, 96.0, vec2(22.0, 70.0), 0.22, 15.0, vec2(3.2), vec3(0.9, 0.97, 1.0), vec3(0.8, 0.92, 1.0), 14.0, 0.1) * 0.8;
   } else if (uType > 6.5 && uType < 7.5) {
     // Solar Corona: slow churning plasma with rising embers.
-    vec2 w = (sc + uCam * 0.35) / 420.0;
-    float n = fbm(w + vec2(uTime * 0.03, -uTime * 0.02) + fbm(w * 1.7 - uTime * 0.025));
-    float plasma = smoothstep(0.52, 0.85, n);
-    c += vec3(1.0, 0.45, 0.12) * plasma * 0.3 + vec3(1.0, 0.8, 0.4) * smoothstep(0.78, 0.95, n) * 0.18;
+    vec2 w = (sc + uCam * 0.35) / 460.0;
+    float n = cloud(w + vec2(uTime * 0.03, -uTime * 0.02));
+    float plasma = smoothstep(0.5, 0.86, n);
+    c += vec3(1.0, 0.45, 0.12) * plasma * 0.22 + vec3(1.0, 0.8, 0.4) * smoothstep(0.8, 0.97, n) * 0.12;
     c += layer(sc, 1.0, 84.0, vec2(6.0, -46.0), 0.2, 21.0, vec2(1.8), vec3(1.0, 0.55, 0.15), vec3(1.0, 0.85, 0.4), 8.0, 1.0) * 1.4;
   } else if (uType > 7.5 && uType < 8.5) {
     // Abyssal Rift: bent starlight swirling round a drifting centre, motes falling inward.
@@ -559,18 +561,18 @@ void main(){
     c += layer(sc, 1.0, 90.0, normalize(-d) * 22.0, 0.14, 22.0, vec2(1.4), vec3(0.75, 0.6, 1.0), vec3(1.0, 0.85, 0.6), 3.0, 0.6) * 0.8;
   } else if (uType > 8.5 && uType < 9.5) {
     // Hive Nebula: breathing green haze and drifting spores.
-    vec2 w = (sc + uCam * 0.3) / 380.0;
-    float n = fbm(w + vec2(uTime * 0.02, uTime * 0.015));
+    vec2 w = (sc + uCam * 0.3) / 440.0;
+    float n = cloud(w + vec2(uTime * 0.02, uTime * 0.015));
     float breathe = 0.75 + 0.25 * sin(uTime * 0.6 + n * 6.0);
-    c += vec3(0.25, 0.95, 0.55) * smoothstep(0.55, 0.85, n) * 0.24 * breathe;
+    c += vec3(0.25, 0.95, 0.55) * smoothstep(0.52, 0.86, n) * 0.17 * breathe;
     c += layer(sc, 0.9, 76.0, vec2(9.0, -12.0), 0.22, 23.0, vec2(2.4), vec3(0.6, 1.0, 0.55), vec3(0.85, 1.0, 0.45), 14.0, 0.5) * 0.9;
     c += layer(sc, 1.25, 110.0, vec2(-6.0, -18.0), 0.14, 24.0, vec2(3.4), vec3(0.5, 1.0, 0.7), vec3(0.8, 1.0, 0.5), 18.0, 0.5) * 0.7;
   } else if (uType > 9.5) {
     // Ghost Fleet Graveyard: rolling banks of pale fog.
-    vec2 w = (sc + uCam * 0.45) / vec2(620.0, 300.0);
-    float n = fbm(w + vec2(uTime * 0.035, uTime * 0.006));
-    float bank = smoothstep(0.5, 0.82, n) * (0.65 + 0.35 * sin(sc.y * 0.004 + uTime * 0.08));
-    c += vec3(0.55, 0.85, 0.72) * bank * 0.3;
+    vec2 w = (sc + uCam * 0.45) / 520.0;
+    float n = cloud(w + vec2(uTime * 0.035, uTime * 0.006));
+    float bank = smoothstep(0.5, 0.84, n);
+    c += vec3(0.55, 0.85, 0.72) * bank * 0.2;
     c += layer(sc, 1.0, 110.0, vec2(-14.0, 2.0), 0.08, 25.0, vec2(1.5), vec3(0.6, 1.0, 0.8), vec3(0.8, 1.0, 0.9), 2.0, 0.9) * 0.6;
   } else {
     c += layer(sc, 1.0, 72.0, vec2(-55.0, 780.0), 0.4, 6.0, vec2(0.75, 13.0), vec3(1.0, 0.45, 0.85), vec3(0.4, 0.9, 1.0), 0.0, 0.0) * 0.6;
