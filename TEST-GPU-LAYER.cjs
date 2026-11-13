@@ -2,7 +2,7 @@
 // a stubbed Three.js run of createGpuLayer, 2D fallback wiring and offline caching.
 const fs=require('fs'),path=require('path'),assert=require('assert');
 (async()=>{
-const mod=await import(path.join(__dirname,'gpu-layer-v0600.js'));
+const mod=await import(path.join(__dirname,'gpu-layer-v0700.js'));
 assert(mod.THREE_URL.endsWith('/vendor/three-0.187.0/three.module.js'));for(let f of ['three.module.js','three.core.js','LICENSE'])assert(fs.existsSync(path.join(__dirname,'vendor/three-0.187.0',f)),f);assert(/REVISION = '187'/.test(fs.readFileSync(path.join(__dirname,'vendor/three-0.187.0/three.core.js'),'utf8')));
 assert.deepEqual(mod.parseColour('#ff8000'),[1,128/255,0,1]);assert.deepEqual(mod.parseColour('#fff'),[1,1,1,1]);
 assert.deepEqual(mod.parseColour('#ffffff80').map(v=>+v.toFixed(3)),[1,1,1,.502]);assert.deepEqual(mod.parseColour('rgba(255,0,0,.5)'),[1,0,0,.5]);assert.deepEqual(mod.parseColour('nonsense'),[1,1,1,1]);
@@ -59,12 +59,12 @@ const wx=await mod.createBloomLayer({style:{},addEventListener(){}},async()=>TB)
 passes.length=0;wx.begin();wx.render({bloom:false,weather:{type:5,amount:1,camX:0,camY:0,time:3}});assert.deepEqual(passes,['screen'],'weather only: one screen pass, no render targets');
 passes.length=0;wx.begin();wx.screen(10,10,2,'#fff',1,1);wx.render({bloom:false,weather:null});assert.deepEqual(passes,['screen'],'no weather: sprites only');
 passes.length=0;wx.begin();wx.render({capture:null,weather:{type:3,amount:1}});assert.deepEqual(passes.slice(-2),['screen','screen'],'bloom composite then weather');
-assert.equal((fs.readFileSync(path.join(__dirname,'gpu-layer-v0600.js'),'utf8').match(/side: T\.DoubleSide/g)||[]).length,3,'y-flipped sprite quads must be double-sided or Three.js culls them');assert(/uType < 5\.5/.test(mod.WEATHER_FRAGMENT)&&!/smoothstep\(\s*[0-9.]+\s*,\s*0\.0/.test(mod.WEATHER_FRAGMENT));
+assert.equal((fs.readFileSync(path.join(__dirname,'gpu-layer-v0700.js'),'utf8').match(/side: T\.DoubleSide/g)||[]).length,3,'y-flipped sprite quads must be double-sided or Three.js culls them');assert(/uType < 5\.5/.test(mod.WEATHER_FRAGMENT)&&!/smoothstep\(\s*[0-9.]+\s*,\s*0\.0/.test(mod.WEATHER_FRAGMENT));
 for(let src of [mod.PREFILTER_FRAGMENT,mod.BLUR_FRAGMENT,mod.COMPOSITE_FRAGMENT]){assert(/^precision mediump float;/.test(src));assert(!/smoothstep\(\s*[0-9.]+\s*,\s*0\.0/.test(src))}
 assert(/uLight\[12\]/.test(mod.BACKGROUND_FRAGMENT)&&/float\(i\) >= uLightCount/.test(mod.BACKGROUND_FRAGMENT));
 // Game wiring: optional start, fallback, setting, transparent 2D canvas only when active.
 const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8'),sw=fs.readFileSync(path.join(__dirname,'sw.js'),'utf8');
 for(let needle of ['<canvas id="gpuLayer" aria-hidden="true"></canvas><canvas id="game"','<canvas id="gpuBloom" aria-hidden="true"></canvas>',"bloom:['off','subtle','full']","low:{weather:'off',bloom:'off',","medium:{weather:'on',bloom:'subtle',","high:{weather:'on',bloom:'full',",'id="gfx-bloom" data-graphics="bloom"',"weaponArtAtlas.crossOrigin='anonymous'","let image=new Image;image.crossOrigin='anonymous';image.src=file",'function bloomFrameCopy(','function gpuFieldDraw(','if(gpuFieldDraw(x,y,r,c,kind,fade))return;','function collectGpuLights(','function weatherWanted(','function topActive(','function makeStrike(','id="gfx-weather" data-graphics="weather"',"weather:['off','on']","gpu:['on','off']","gpu:'on'",'id="gfx-gpu" data-graphics="gpu"','function gpuFail(','.catch(gpuFail)','function applyGpuMode(mode)',"if(gpuFrame.on&&!gpuFrame.overlay)ctx.clearRect(0,0,W,H)","if(gpuFrame.on&&!gpuFrame.overlay)ctx.clearRect(0,0,W,H);else{ctx.fillStyle='#07101f';ctx.fillRect(0,0,W,H)}",'if(graphicsParticles()>0&&!gpuFrame.on)','startGpuLayer();',"var gpuModule=null,bloomLayer=null,bloomState='idle'"])assert(html.includes(needle),needle);
-assert(sw.includes('"gpu-layer-v0600.js"'));assert(sw.includes('"vendor/three-0.187.0/three.module.js","vendor/three-0.187.0/three.core.js"'),'bundled Three.js precached');assert(!/jsdelivr/i.test(sw+html),'no CDN dependency');
+assert(sw.includes('"gpu-layer-v0700.js"'));assert(sw.includes('"vendor/three-0.187.0/three.module.js","vendor/three-0.187.0/three.core.js"'),'bundled Three.js precached');assert(!/jsdelivr/i.test(sw+html),'no CDN dependency');
 console.log('PASS GPU layer exports, colour parsing, GLSL sources, stubbed Three.js lifecycle/bounds/pixel-upload reuse/self-check, strategy retries and overlay fallback/context loss, renderer-failure fallback, background lighting, bloom pass chain/capture reuse/context loss, weather passes, game wiring and bundled offline Three.js');
 })().catch(e=>{console.error(e);process.exitCode=1});

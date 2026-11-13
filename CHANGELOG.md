@@ -1,3 +1,38 @@
+# v0.71.1 — painted sector objects and smoother haze
+
+- The animated haze in Solar Corona, Hive Nebula and Ghost Fleet Graveyard no longer forms soft light rectangles on wide screens. The noise behind it is now rotated and warped, so it reads as drifting cloud, and it is a little fainter.
+- Ghost fog is no longer stretched sideways into flat slabs.
+- Painted rocks, cover, turrets, spore pods, fuel canisters and salvage crystals/crates for Solar Corona, Abyssal Rift, Hive Nebula and Ghost Fleet Graveyard. Each sector has nine rock and nine cover designs; objects keep their spin and drift, flash when hit, crack as they take damage, and cast a soft shadow.
+
+# v0.71.0 — painted backgrounds and animated sector layers
+
+- Solar Corona, Abyssal Rift, Hive Nebula and Ghost Fleet Graveyard now use painted backgrounds in the same style as the original six (also shown on their sector cards), replacing the code-drawn ones, which remain only as a fallback.
+- New animated layers on the GPU over each of them: churning plasma and rising embers over the sun, bent starlight swirling around a drifting centre in the Rift, breathing green haze and drifting spores in the Hive, and rolling banks of pale fog through the Graveyard. They follow the Sector weather setting.
+- The new backgrounds are included in the offline cache. GPU module renamed to gpu-layer-v0700.js.
+
+# v0.70.0 — three more sectors and floating debris
+
+- Abyssal Rift: a black-hole trench. Gravity wells drift through the fight for 14 seconds, pulling your ship and the swarm toward a crushing core. Resist them or drag enemies in. Bosses: Rift Stalker (blinks to a marked spot and fires), Event Horizon (pulls you in, then a closing ring of shots with a gap to escape through) and The Devourer (spiral bursts and consume zones); final encounter The Singularity.
+- Hive Nebula: a living nebula. Spore pods grow near you and burst after five seconds into acid clouds (burns you) or healing blooms (heals enemies) unless you shoot them first. Hive ships split into two spawnlings when destroyed. Bosses: Brood Mother (launches spawnlings and acid spit), Spore Colossus (plants fast pods, spiral bursts) and The Hive Mind (links three synapse nodes that shield it until destroyed); final encounter The Overmind.
+- Ghost Fleet Graveyard: derelict warships in cold green fog. Every 13 seconds an old turret on a nearby wreck wakes up (with a warning ring) and fires aimed bursts until destroyed. Bosses: Salvage Lich (raises revenant ships), Dread Carrier (launches fighter squadrons, broadsides) and The Admiral (gun decks shield the bridge until destroyed); final encounter The Phantom Armada.
+- Each new sector has its own generated background, fleet styling, cover (void monoliths, hive growths, wreck sections), weather and menu colours, and unlocks after clearing any sector.
+- Drifting rocks now look different in every sector: tech scrap, cratered asteroids, violet crystal with electric veins, slag with molten cracks, ice, city rubble with lit windows, molten solar rock, void stone, organic pods and wreck plating.
+- Debris is now weightless: rocks drift slowly on their own and glide much further when pushed or hit before settling.
+
+# v0.69.0 — Solar Corona
+
+- New seventh sector, Solar Corona (unlocked by clearing any sector): skim the surface of a star with a generated sun-surface background, orange weather embers and its own fleet with gold mirror plating.
+- Solar flares: every 16 seconds a flare warns for 2.6 seconds (an edge glow, a countdown and an arrow showing its direction) then sweeps across the arena. It burns your ship for 26 unless you shelter in the shadow behind a drifting satellite (shadow zones are marked SAFE during the warning). Flares also blast ordinary enemies caught in the open. No flares during boss fights.
+- Satellites are the sector's cover: destructible solar arrays that also block shots. More appear when a flare is coming if none are nearby.
+- Three new bosses: Prism Sentinel (cross beams and mirror volleys), Flare Engine (a sweeping lighthouse beam and ring bursts) and The Dying Star (expanding rings, corona strikes and double rings in overdrive), plus the Solar Throne final encounter.
+- Built on a new add-on system so the next three sectors plug in the same way.
+
+# v0.68.0 — boss entrances
+
+- Every boss now arrives with a title card: letterbox bars with moving hazard stripes in the boss colour, a light streak, the boss name with a short subtitle (Reactor 1 of 3, Final encounter or Endless reactor) and its class, plus a warning siren. The final boss gets a longer, deeper version. Combat carries on underneath; the boss is still arriving while the card shows.
+- Evolved weapons whose signature rides with your ship (such as Salvage Swarm, Solar Lance and Resonance) no longer draw a large weapon sprite under the ship; a small spinning emblem ring in the weapon colour marks them instead, like Constellation Salvo.
+- Cosmetic only.
+
 # v0.67.0 — enemy ships in the new style
 
 - Enemy ships now share the player-ship look: darker armour tinted per sector, a bright neon outline in each ship's colour (pink fighters, green interceptors, violet brutes and specialists, gold elites) and neon detail lines on their plating, instead of grey hulls.

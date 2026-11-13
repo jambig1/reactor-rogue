@@ -10,7 +10,7 @@ let c={console,Math:Object.create(Math),Date,Set,Map,JSON,Number,String,Array,Ob
 run("start();s.t=240");let operations=[];
 for(const key of ['moveTo','lineTo','arc','translate','scale','rotate','fillRect','strokeRect'])ctx[key]=(...args)=>{for(const n of args)assert(typeof n==='number'&&Number.isFinite(n),key+' invalid coordinate: '+n);operations.push([key,...args])};
 run("Math.random=()=>{throw Error('boss render consumed combat RNG')}");
-const roster=run("[{id:'grid',defs:bossDefs},...Object.entries(sectorBossDefs).map(([id,defs])=>({id,defs}))]");assert.equal(roster.flatMap(x=>x.defs).length,18);
+const roster=run("[{id:'grid',defs:bossDefs},...Object.entries(sectorBossDefs).map(([id,defs])=>({id,defs}))]");assert.equal(roster.flatMap(x=>x.defs).length,3*roster.length);
 for(const profile of ['low','high'])for(const reduced of [false,true])for(const sector of roster)for(const def of sector.defs){
  c.testDef=def;run('graphics.preset='+JSON.stringify(profile)+';refreshGraphicsVisual();reducedMotion='+reduced+";var boss={...testDef,boss:true,x:100,y:90,type:4,hp:testDef.hp,max:testDef.hp,arrival:0,charge:0,pattern:0,aim:.3,freeze:0}");
  for(const state of ['arrival','idle','windup','overdrive','critical','frozen','hit']){
