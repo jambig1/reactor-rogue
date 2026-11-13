@@ -162,6 +162,10 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.81.0
+
+- Painted pickups: coins, coin bags, XP gems (4 tiers), repair, chrono stop, purge beacon, XP vacuum, plasma breath, fortune shard, reroll, salvage fever, reactor surge, size matrix, kinetic drive, afterburner, overcharge and aegis now use hand-painted art with a soft coloured glow. Old icons stay as a fallback while images load.
+
 ## Final encounter
 - A sector route no longer ends at the third reactor. About 20 seconds after it falls (after your mutation pick), a final boss arrives: Omega Reactor, The Scrap Monarch, Heart of the Storm, The Prime Furnace, The Frozen Sun or Metroplex Mind, depending on the sector.
 - Phase I: four systems orbit the core. Two shield systems cut damage to the core by 60% until both are destroyed; two cannon systems fire aimed bursts. The core alternates ring and fan volleys.
