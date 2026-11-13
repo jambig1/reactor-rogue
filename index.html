@@ -2798,7 +2798,14 @@ const bossArt={
   ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();
   ctx.lineJoin='round';ctx.strokeStyle='#03070e';ctx.lineWidth=(o.key??3.2)*1.15;ctx.stroke();ctx.fillStyle=g;ctx.fill();
   // Panel seams on large plates, like the player's plated hull.
-  {let w=x1-x0,hh=y1-y0;if(w*hh>260&&o.seams!==false){ctx.save();ctx.clip();let along=w>=hh,step=along?Math.max(7,w/5):Math.max(7,hh/5);for(let k=(along?x0:y0)+step;k<(along?x1:y1)-2;k+=step){let off=(Math.round(k*7)%3)*.25;ctx.strokeStyle='rgba(2,6,12,.55)';ctx.lineWidth=1;ctx.beginPath();if(along){ctx.moveTo(k,y0);ctx.lineTo(k+hh*off*.2,y1)}else{ctx.moveTo(x0,k);ctx.lineTo(x1,k+w*off*.2)}ctx.stroke();ctx.strokeStyle='rgba(215,236,255,.12)';ctx.beginPath();if(along){ctx.moveTo(k+1,y0);ctx.lineTo(k+1+hh*off*.2,y1)}else{ctx.moveTo(x0,k+1);ctx.lineTo(x1,k+1+w*off*.2)}ctx.stroke()}ctx.restore();ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath()}}
+  {let w=x1-x0,hh=y1-y0;if(w*hh>260&&o.seams!==false){ctx.save();ctx.clip();let along=w>=hh,step=along?Math.max(7,w/5):Math.max(7,hh/5);for(let k=(along?x0:y0)+step;k<(along?x1:y1)-2;k+=step){let off=(Math.round(k*7)%3)*.25;ctx.strokeStyle='rgba(2,6,12,.55)';ctx.lineWidth=1;ctx.beginPath();if(along){ctx.moveTo(k,y0);ctx.lineTo(k+hh*off*.2,y1)}else{ctx.moveTo(x0,k);ctx.lineTo(x1,k+w*off*.2)}ctx.stroke();ctx.strokeStyle='rgba(215,236,255,.12)';ctx.beginPath();if(along){ctx.moveTo(k+1,y0);ctx.lineTo(k+1+hh*off*.2,y1)}else{ctx.moveTo(x0,k+1);ctx.lineTo(x1,k+1+w*off*.2)}ctx.stroke()}ctx.restore();ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath()}
+  if(w*hh>380&&o.greeble!==false){let cx=(x0+x1)/2,cy=(y0+y1)/2,along=w>=hh,L=along?w:hh,S=along?hh:w,seed=Math.abs(Math.round(cx*3+cy*7));ctx.save();ctx.clip();
+   // raised sub-panel
+   let pw=along?L*.38:S*.5,ph=along?S*.5:L*.38,px=cx-pw/2+(along?-L*.12:0),py=cy-ph/2+(along?0:-L*.12);let g2=ctx.createLinearGradient(px,py,px,py+ph);g2.addColorStop(0,a.plateMid);g2.addColorStop(1,a.plateLight);ctx.fillStyle='#03070e';ctx.fillRect(px-.8,py-.8,pw+1.6,ph+1.6);ctx.fillStyle=g2;ctx.fillRect(px,py,pw,ph);ctx.fillStyle='rgba(255,255,255,.18)';ctx.fillRect(px,py,pw,1);
+   // accent strip and lights
+   let sx=along?cx+L*.16:cx-S*.3,sy=along?cy-S*.3:cy+L*.16;ctx.fillStyle='#03070e';ctx.fillRect(sx-1,sy-1,(along?L*.22:S*.6)+2,(along?S*.6:L*.22)+2);ctx.save();ctx.shadowColor=a.c;ctx.shadowBlur=graphicsShadow(5);ctx.fillStyle=a.c;ctx.globalAlpha*=.85;ctx.fillRect(sx,sy,along?L*.22:1.3,along?1.3:L*.22);ctx.restore();
+   for(let k=0;k<3;k++){let t2=(k+1)/4;circle(along?x0+L*t2:x0+S*.18,along?y0+S*.18:y0+L*t2,.9,(seed+k)%3===0?a.c:'rgba(220,238,255,.55)')}
+   ctx.restore();ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath()}}
   if(o.edge!==false){ctx.save();if(o.glow){ctx.shadowColor=a.c;ctx.shadowBlur=graphicsShadow(o.glow*1.3)}ctx.strokeStyle=o.edgeColor||a.c;ctx.globalAlpha*=Math.min(1,(o.edgeAlpha??.9)+.2);ctx.lineWidth=(o.edgeWidth??1.3)*(o.glow?1.7:1.35);ctx.stroke();ctx.restore()}
   // Bevel: a faint lit inset towards the light.
   let cx=xs.reduce((v,x)=>v+x,0)/xs.length,cy=ys.reduce((v,y)=>v+y,0)/ys.length;ctx.beginPath();points.forEach((p,i)=>{let x=cx+(p[0]-cx)*.82,y=cy+(p[1]-cy)*.82;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.strokeStyle='rgba(205,232,255,.2)';ctx.lineWidth=1.1;ctx.stroke()},
@@ -2818,7 +2825,8 @@ const bossArt={
 };
 const bossArtPlates={grid:['#3f5b78','#1f3047'],belt:['#6e5f4e','#33291f'],storm:['#57518a','#2a2650'],foundry:['#715447','#36241f'],cryo:['#4c7894','#21405a'],city:['#56598a','#282b4c']};
 function bossArtMix(hex,k){let n=parseInt(hex.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return '#'+[r,g,b].map(v=>Math.round(v*k).toString(16).padStart(2,'0')).join('')}
-function bossArtPalette(e){let frozen=e.freeze>0,c=frozen?'#d4f7ff':e.c,pl=bossArtPlates[e.finalBoss?'grid':e.sectorBoss||'grid']||bossArtPlates.grid;return {c,frozen,hot:'#ffcf8f',hot2:e.hp<e.max*.5,deep:frozen?'#4d7f99':bossArtDeep[e.kind]||bossArtMix(c,.42),plateLight:frozen?'#4f6f86':pl[0],plateDark:frozen?'#22384b':pl[1]}}
+function bossArtBlend(x,y,k){let a=parseInt(x.slice(1),16),b=parseInt(y.slice(1),16);return '#'+[16,8,0].map(s=>Math.round((a>>s&255)*(1-k)+(b>>s&255)*k).toString(16).padStart(2,'0')).join('')}
+function bossArtPalette(e){let frozen=e.freeze>0,c=frozen?'#d4f7ff':e.c,pl=bossArtPlates[e.finalBoss?'grid':e.sectorBoss||'grid']||bossArtPlates.grid;return {c,frozen,hot:'#ffcf8f',hot2:e.hp<e.max*.5,deep:frozen?'#4d7f99':bossArtDeep[e.kind]||bossArtMix(c,.42),plateLight:frozen?'#4f6f86':bossArtBlend(pl[0],c,.22),plateDark:frozen?'#22384b':bossArtBlend(pl[1],c,.1),plateMid:bossArtBlend(pl[0],'#ffffff',.12)}}
 const bossArtDeep={warden:'#7a1f5b',reaper:'#145f87',engine:'#8a4416',final:'#173a52'};
 function drawBossArtV2(e,t){let clock=reducedMotion||e.freeze>0?0:t,charge=bossChargeProgress(e),a=bossArtPalette(e);ctx.save();ctx.lineJoin='round';ctx.shadowBlur=0;
  // Soft cast shadow so the hull sits above the arena.
@@ -2879,9 +2887,11 @@ function bossArc(x,y,bx,by,c,t,seed=0,w=1.4,alpha=1){let n=6,dx=bx-x,dy=by-y,len
 function bossFacet(points,e,tint){let a=bossArtPalette(e),c=tint||a.c,xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);let g=ctx.createLinearGradient(Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys));g.addColorStop(0,'#ffffff');g.addColorStop(.35,c);g.addColorStop(1,bossArtMix(c,.35));ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.lineJoin='round';ctx.strokeStyle='#03070e';ctx.lineWidth=2.4;ctx.stroke();ctx.fillStyle=g;ctx.globalAlpha*=.92;ctx.fill();ctx.globalAlpha/=.92;ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=.8;ctx.stroke()}
 function bossWindows(x,y,cols,rows,w,h,c,t,seed=0){for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){let v=Math.sin((i*7+j*13+seed)*1.7),on=v>-.3,flick=Math.sin(t*2+i*3+j*5+seed)>.92;ctx.fillStyle=on&&!flick?c:'#0b1222';ctx.globalAlpha=on?.85:1;ctx.fillRect(x+i*(w+1.2),y+j*(h+1.2),w,h);ctx.globalAlpha=1}}
 function bossEngine(x,y,r,c,t,len=14,seed=0){let f=.75+.25*Math.sin(t*23+seed*2.1);let g=ctx.createLinearGradient(x,0,x-len*f,0);g.addColorStop(0,'#ffffff');g.addColorStop(.3,c);g.addColorStop(1,c+'00');ctx.save();ctx.fillStyle=g;ctx.globalAlpha=.85;ctx.beginPath();ctx.moveTo(x,y-r);ctx.lineTo(x-len*f,y);ctx.lineTo(x,y+r);ctx.fill();ctx.restore();ctx.fillStyle='#03070e';ctx.fillRect(x-1.5,y-r-.6,4,r*2+1.2)}
+function bossFins(e,x,y,len,sweep=.55,w=7){for(let side of [-1,1]){ctx.save();ctx.scale(1,side);bossArt.hull([[x,y],[x+w,y],[x-len*sweep+w*.3,y+len],[x-len*sweep-w*.6,y+len*.92],[x-w*.4,y+len*.25]],e,{glow:6,greeble:false,seams:false});bossArt.line(x+w*.2,y+2,x-len*sweep+w*.1,y+len-3,bossArtPalette(e).c,1,.7);ctx.restore()}}
+function bossSpikes(e,n,r0,r1,w=5,offset=0){for(let i=0;i<n;i++){ctx.save();ctx.rotate(offset+i*TAU/n);bossArt.hull([[r0,-w],[r1,0],[r0,w]],e,{glow:6,greeble:false,seams:false});ctx.restore()}}
 const bossDesigns={
  // SHATTERED BELT: salvage pirates.
- 'belt/corsair'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);let open=.25+.2*Math.sin(t*2)+ch*.5;
+ 'belt/corsair'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);let open=.25+.2*Math.sin(t*2)+ch*.5;bossFins(e,-20,12,20,.9,6);
   for(let side of [-1,1]){ctx.save();ctx.scale(1,side);
    H([[-6,10],[26,14],[30,20],[-4,20]],{edgeAlpha:.6});bossArt.line(0,15,26,17,'#03070e',1.5);
    ctx.save();ctx.translate(30,18);ctx.rotate(-open);H([[0,-4],[16,-6],[22,-1],[14,1],[16,5],[0,5]],{glow:6});bossArt.light(17,-2,1.4,a.c,.7);ctx.restore();
@@ -2892,19 +2902,19 @@ const bossDesigns={
   H([[14,-9],[24,-3],[24,3],[14,9],[2,9],[2,-9]],{dark:'#151110',light:'#3a3128',edgeAlpha:.5});bossWindows(6,-4,3,2,3,3,a.c,t,3);
   H([[-26,-8],[-10,-8],[-10,-2],[-26,-2]],{light:'#7a5b3b',dark:'#2c2018',edgeAlpha:.5});H([[-26,2],[-10,2],[-10,8],[-26,8]],{light:'#55606b',dark:'#1d2228',edgeAlpha:.5});
   ctx.save();ctx.translate(-6,0);bossArt.core(5,e,t,{charge:ch});ctx.restore();bossEngine(-38,0,4,a.c,t,16,0)},
- 'belt/crusher'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);let bite=(1-ch)*.22+.05*Math.sin(t*3);
+ 'belt/crusher'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);let bite=(1-ch)*.22+.05*Math.sin(t*3);bossFins(e,-18,24,22,.8,8);
   for(let side of [-1,1]){ctx.save();ctx.scale(1,side);
    H([[-36,16],[22,16],[26,30],[-38,30]],{edgeAlpha:.6});for(let i=0;i<8;i++){bossArt.line(-32+i*7,18,-32+i*7,28,'#03070e',2)}bossArt.line(-34,23,22,23,a.c,.8,.35);
    ctx.save();ctx.translate(26,10);ctx.rotate(bite);H([[0,-2],[22,2],[28,12],[20,10],[16,6],[0,10]],{glow:8});for(let i=0;i<4;i++)poly([[5+i*5,2],[7.5+i*5,-2+i*.4],[10+i*5,3]],'#e8d3b0','#03070e',.8);ctx.restore();
   ctx.restore()}
-  H([[30,-12],[36,0],[30,12],[-30,16],[-40,8],[-40,-8],[-30,-16]],{glow:10,edgeWidth:1.6});
+  H([[30,-12],[44,0],[30,12],[-30,16],[-46,10],[-40,0],[-46,-10],[-30,-16]],{glow:10,edgeWidth:1.6});
   H([[20,-8],[24,0],[20,8],[-18,10],[-24,0],[-18,-10]],{dark:'#151110',light:'#3a3128',edgeAlpha:.45});
   for(let x of [-30,-22])bossArt.vent(x,-5,5,10,4,e,e.hp<e.max*.5?1:.3);
   for(let side of [-1,1]){let puff=((t*1.5+side*.3)%1+1)%1;ctx.save();ctx.globalAlpha=.25*(1-puff);circle(-34-puff*10,side*6,3+puff*5,'#9a8b7a');ctx.restore()}
   bossArt.core(8,e,t,{charge:ch});bossArt.chargeRing(12,e,ch)},
- 'belt/dreadnought'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);
+ 'belt/dreadnought'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);bossFins(e,-30,34,18,.9,8);
   for(let side of [-1,1]){ctx.save();ctx.scale(1,side);
-   H([[-44,22],[18,20],[30,28],[18,36],[-44,36],[-50,29]],{edgeAlpha:.6});
+   H([[-44,22],[18,20],[38,28],[18,36],[-44,36],[-50,29]],{edgeAlpha:.6});
    let cols=['#7a5b3b','#4d6a7d','#7d4a3f','#6b6b4a'];for(let i=0;i<5;i++)H([[-40+i*11,24],[-31+i*11,24],[-31+i*11,32],[-40+i*11,32]],{light:cols[(i+(side>0?1:0))%4],dark:bossArtMix(cols[(i+(side>0?1:0))%4],.35),edgeAlpha:.3,key:1.6});
    bossEngine(-50,29,3.5,a.c,t,14,side+2);
   ctx.restore()}
@@ -2915,7 +2925,7 @@ const bossDesigns={
   bossEngine(-48,-6,4,a.c,t,18,1);bossEngine(-48,6,4,a.c,t,18,2);
   ctx.save();ctx.translate(-26,10);bossArt.core(6,e,t,{charge:ch});bossArt.chargeRing(10,e,ch);ctx.restore()},
  // STORM RELAY: electrical machinery.
- 'storm/keeper'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);let tips=[];
+ 'storm/keeper'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);let tips=[];bossSpikes(e,4,22,42,6,Math.PI/4);
   for(let i=0;i<4;i++){let ang=i*Math.PI/2;ctx.save();ctx.rotate(ang);H([[18,-7],[34,-6],[34,6],[18,7]],{edgeAlpha:.6});for(let k=0;k<3;k++){H([[28+k*6,-9+k],[32+k*6,-9+k],[32+k*6,9-k],[28+k*6,9-k]],{light:'#6d68a0',dark:'#211f3d',edgeAlpha:.8,key:1.8})}circle(48,0,4.5,'#03070e');circle(48,0,3.2,a.c);circle(47,-1,1.2,'#ffffff');ctx.restore();tips.push([Math.cos(ang)*48,Math.sin(ang)*48])}
   for(let i=0;i<4;i++){let p=tips[i],q=tips[(i+1)%4];if(ch>0||Math.sin(t*3+i*1.9)>.3)bossArc(p[0],p[1],q[0],q[1],a.c,t,i,1.2,.5+.5*ch)}
   let oct=[[22,-14],[22,14],[14,22],[-14,22],[-22,14],[-22,-14],[-14,-22],[14,-22]];H(oct,{glow:10,edgeWidth:1.6});H(oct.map(p=>[p[0]*.66,p[1]*.66]),{dark:'#0d0c1c',light:'#26244a',edgeAlpha:.45});
@@ -2935,7 +2945,7 @@ const bossDesigns={
   let k=Math.floor(t*2.3)%6;if(Math.sin(t*6)>0||ch>0)bossArc(rods[k][0],rods[k][1],rods[(k+2)%6][0],rods[(k+2)%6][1],a.c,t,k,1.3,.8);
   bossArt.core(11,e,t,{charge:ch});ctx.save();ctx.rotate(t*1.4);for(let i=0;i<3;i++){ctx.rotate(TAU/3);bossArc(0,0,10,0,'#ffffff',t,i,.8,.8)}ctx.restore();bossArt.chargeRing(16,e,ch)},
  // CINDER FOUNDRY: heavy industry.
- 'foundry/harvester'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);
+ 'foundry/harvester'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);bossFins(e,-22,14,24,.7,7);
   for(let side of [-1,1]){ctx.save();ctx.scale(1,side);H([[14,8],[40,14],[44,24],[30,28],[10,20]],{glow:6});bossArt.line(18,14,40,20,'#03070e',2);ctx.restore()}
   ctx.save();ctx.translate(36,0);ctx.rotate(t*3);for(let i=0;i<8;i++){ctx.save();ctx.rotate(i*TAU/8);poly([[3,-1.5],[11,-3],[12,0],[3,1.5]],'#cbb39b','#03070e',.8);ctx.restore()}circle(0,0,3.5,'#2a2420',a.c);ctx.restore();
   H([[28,-12],[30,12],[-30,18],[-42,8],[-42,-8],[-30,-18]],{glow:10,edgeWidth:1.6});
@@ -2944,14 +2954,14 @@ const bossDesigns={
   for(let side of [-1,1])bossArt.line(-6,side*10,20,side*7,'#03070e',3),bossArt.line(-6,side*10,20,side*7,'#7a5c4a',1.6);
   ctx.save();ctx.translate(14,0);bossArt.core(5,e,t,{charge:ch});bossArt.chargeRing(9,e,ch);ctx.restore();bossEngine(-42,-4,3,a.c,t,12,1);bossEngine(-42,4,3,a.c,t,12,2)},
  'foundry/warden'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);
-  for(let side of [-1,1]){ctx.save();ctx.scale(1,side);H([[-34,16],[26,16],[34,22],[26,30],[-34,30]],{edgeAlpha:.6});
+  bossFins(e,-26,28,16,.9,7);for(let side of [-1,1]){ctx.save();ctx.scale(1,side);H([[-38,16],[26,16],[40,23],[24,31],[-30,31],[-42,25]],{edgeAlpha:.6});
    for(let i=0;i<3;i++){let x=-26+i*17;H([[x,18],[x+12,18],[x+12,28],[x,28]],{light:'#2a1d1a',dark:'#120c0c',edgeAlpha:.5,key:1.8});let heat=.55+.45*Math.sin(t*2.4+i*1.3+side);let g=ctx.createLinearGradient(0,19,0,27);g.addColorStop(0,'#ffe2a3');g.addColorStop(1,'#ff5a1a');ctx.save();ctx.globalAlpha=.5+.5*heat;ctx.fillStyle=g;ctx.fillRect(x+2,20,8,6);ctx.restore();for(let k=0;k<3;k++)bossArt.line(x+3+k*3,20,x+3+k*3,26,'#03070e',1)}
   ctx.restore()}
-  H([[40,0],[28,-14],[-30,-14],[-40,-6],[-40,6],[-30,14],[28,14]],{glow:10,edgeWidth:1.6});H([[44,-4],[52,0],[44,4],[36,4],[36,-4]],{glow:6});
+  H([[40,0],[28,-14],[-30,-14],[-40,-6],[-40,6],[-30,14],[28,14]],{glow:10,edgeWidth:1.6});H([[42,-5],[56,0],[42,5],[34,4],[34,-4]],{glow:6});
   for(let x of [-30,-20]){ctx.save();ctx.translate(x,0);H([[-4,-4],[4,-4],[4,4],[-4,4]],{light:'#3a2c28',dark:'#140e0e',edgeAlpha:.6,key:2});let rise=((t*.9+x*.1)%1+1)%1;ctx.globalAlpha=.3*(1-rise);circle(-rise*8,0,2+rise*5,'#ff9a5a');ctx.restore()}
   H([[24,-8],[30,0],[24,8],[-6,8],[-10,0],[-6,-8]],{dark:'#140e0e',light:'#3a2c28',edgeAlpha:.45});
   ctx.save();ctx.translate(8,0);bossArt.core(7,e,t,{charge:ch});for(let i=-1;i<=1;i++)bossArt.line(-4,i*3,4,i*3,'#03070e',1.2);bossArt.chargeRing(11,e,ch);ctx.restore()},
- 'foundry/forge'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);
+ 'foundry/forge'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);bossSpikes(e,4,32,50,7,Math.PI/4);
   for(let i=0;i<4;i++){ctx.save();ctx.rotate(i*Math.PI/2);let pump=Math.max(0,Math.sin(t*2.2+i*Math.PI/2))*6*(1+ch);H([[28,-11],[38,-11],[38,11],[28,11]],{edgeAlpha:.6});bossArt.line(38,0,40+pump,0,'#03070e',5);bossArt.line(38,0,40+pump,0,'#a08a74',2.4);H([[40+pump,-12],[50+pump,-10],[50+pump,10],[40+pump,12]],{glow:8});for(let k=0;k<3;k++)bossArt.line(43+pump,-7+k*7,48+pump,-7+k*7,'#03070e',1.4);ctx.restore()}
   let oct=[[30,-20],[30,20],[20,30],[-20,30],[-30,20],[-30,-20],[-20,-30],[20,-30]];H(oct,{glow:12,edgeWidth:1.8});
   for(let i=0;i<4;i++){ctx.save();ctx.rotate(i*Math.PI/2+Math.PI/4);bossArt.vent(20,-3,7,6,3,e,.5+.5*Math.sin(t*2+i));ctx.restore()}
@@ -2987,7 +2997,7 @@ const bossDesigns={
   bossFacet([[30,0],[18,-5],[10,0],[18,5]],e,'#a9dfef');
   let blink=Math.floor(t*6)%2;ctx.save();ctx.shadowBlur=graphicsShadow(10);for(let k=0;k<2;k++){let red=(k===blink);ctx.shadowColor=red?'#ff4d6d':'#4db8ff';ctx.fillStyle=red?'#ff4d6d':'#4db8ff';ctx.fillRect(-4,k?1:-5,8,4)}ctx.restore();ctx.fillStyle='#03070e';ctx.fillRect(-5,-1,10,2);
   ctx.save();ctx.translate(-18,0);bossArt.core(5,e,t,{charge:ch});bossArt.chargeRing(9,e,ch);ctx.restore();bossEngine(-38,0,3.5,a.c,t,14,0)},
- 'city/enforcer'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);
+ 'city/enforcer'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);bossFins(e,-26,28,18,.8,8);
   for(let side of [-1,1]){ctx.save();ctx.scale(1,side);H([[-30,18],[10,18],[14,30],[-34,30]],{edgeAlpha:.6});bossWindows(-28,20,8,2,3.2,3.2,'#ffd9a8',t,side*5);
    let recoil=ch>0?ch*3:0;H([[6-recoil,10],[48-recoil,11],[52-recoil,14],[48-recoil,17],[6-recoil,18]],{glow:8});bossArt.line(14-recoil,14,46-recoil,14,'#03070e',2);bossArt.light(50-recoil,14,1.6,a.c,.5+.5*ch);
   ctx.restore()}
@@ -2995,7 +3005,7 @@ const bossDesigns={
   for(let k=0;k<3;k++){let s1=1-k*.22;H([[26*s1,0],[16*s1,-12*s1],[-20*s1,-12*s1],[-28*s1,0],[-20*s1,12*s1],[16*s1,12*s1]].map(p=>[p[0]-k*3,p[1]]),{dark:bossArtMix('#16182e',1-k*.15),light:bossArtMix('#45476a',1-k*.1),edgeAlpha:.35+.1*k,key:1.6})}
   bossWindows(-14,-6,4,3,2.6,2.6,'#ffd9a8',t,11);
   ctx.save();ctx.translate(14,0);bossArt.core(6,e,t,{charge:ch});bossArt.chargeRing(10,e,ch);ctx.restore();bossEngine(-42,-6,3.5,a.c,t,14,1);bossEngine(-42,6,3.5,a.c,t,14,2)},
- 'city/overlord'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);
+ 'city/overlord'(e,t,ch,a){const H=(p,o)=>bossArt.hull(p,e,o);bossSpikes(e,4,36,52,7,Math.PI/4);bossSpikes(e,4,32,42,5,0);
   ctx.save();ctx.rotate(t*.6);ctx.strokeStyle=a.c;ctx.setLineDash([6,4]);ctx.lineWidth=1.4;ctx.globalAlpha=.6;ctx.beginPath();ctx.arc(0,0,48,0,TAU);ctx.stroke();ctx.setLineDash([]);for(let i=0;i<4;i++){ctx.rotate(Math.PI/2);ctx.globalAlpha=.9;poly([[46,-2],[51,0],[46,2]],a.c)}ctx.restore();
   let sq=[[34,-26],[34,26],[26,34],[-26,34],[-34,26],[-34,-26],[-26,-34],[26,-34]];H(sq,{glow:12,edgeWidth:1.8});
   let towers=[[-24,-24,12,14,3],[8,-26,16,10,4],[-26,6,10,18,2],[12,10,14,16,3],[-8,16,12,10,2]];
