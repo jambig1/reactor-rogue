@@ -1,3 +1,11 @@
+# v0.59.0 — sector weather
+
+- Add sector weather on the GPU: driving rain and lightning in the Storm Relay, snow in Cryo Reach, rising embers and furnace glows in Cinder Foundry, neon rain and sign flicker in the Neon Undercity, drifting dust in the Shattered Belt and light motes in the Neon Expanse. Particles drift at two depths with parallax.
+- Lightning draws a branching bolt and lights the whole scene for a moment. Furnace and neon glows light the scenery they pass. Flashes off turns lightning into a distant flicker without bolts; reduced motion turns weather off.
+- Add Settings → Graphics → Sector weather (On/Off). Low turns it off; Medium and High turn it on. Weather keeps running with bloom off.
+- Fix GPU glow halos and sparks never being drawn by the real Three.js since v0.55: sprite quads were culled as back-facing. Halos, sparks and light pools now appear as designed, and bloom strength is rebalanced for them.
+- Weather uses its own random stream and never changes combat; parity and the crowded benchmark are identical.
+
 # v0.58.0 — blueprints and mastery
 
 - Add weapon blueprints. Every sector boss drops one for a weapon in your build, as do every sixth elite, completed signals and cleared breaches. Each weapon has three tiers: Mk I, II and III add 10%, 20% and 30% damage in every future run. The weapon is chosen from your build (lowest tier first, then your top damage dealer); once your build is maxed, other weapons are upgraded in turn, then blueprints become 60 credits.
