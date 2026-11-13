@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.60.0**.
+Current version: **0.61.0**.
 
 ## Where the game is now
 
@@ -34,9 +34,12 @@ Current version: **0.60.0**.
 - Gravity wells, void rifts, toxic gas, plasma pools, Corona, nets, flame trails and storm hazards drawn by GPU shaders beneath the ships.
 - Recent runs record what defeated you, blueprints found, mastery gained and final encounter time. Developer quick tests (weapon showcase, boss fight, final encounter, late-run swarm, endless) and test links; the developer unlock can be remembered per device.
 
+### 0.61 — Boss redesign (done)
+- All bosses redrawn in the player-ship style with sector-tinted armour, neon edges, glowing cores and damage states. Constellation Salvo's carrier sprite replaced by a star pattern.
+
 ## Next
 
-### 0.61 — Cross-device saves
+### 0.62 — Cross-device saves
 - Switch on the cloud saves that are already built, so progress carries between iPhone, iPad and desktop.
 
 ## Later
