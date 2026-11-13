@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.62.0**.
+Current version: **0.63.0**.
 
 ## Where the game is now
 
@@ -40,15 +40,17 @@ Current version: **0.62.0**.
 ### 0.62 — Sector boss designs (done)
 - Unique designs for all fifteen sector bosses outside the Neon Expanse, each reflecting its attacks.
 
+### 0.63 — Deeper endless (done)
+- A new threat each endless cycle (seven in all), stacking Overcharge rewards once mutations run out, credits per cycle and an endless record per sector.
+
 ## Next
 
-### 0.63 — Cross-device saves
-- Switch on the cloud saves that are already built, so progress carries between iPhone, iPad and desktop.
+To be chosen: pick from the list below.
 
 ## Later
 
 - **New sector and enemy family:** a seventh environment with its own fleet and three bosses.
-- **Deeper endless mode:** escalating mutators and rewards for long runs.
+- **Cross-device saves:** switch on the cloud saves that are already built, so progress carries between iPhone, iPad and desktop.
 - **Daily seeded run:** the same set-up each day as a personal challenge.
 - **Before sharing the game more widely:** a guided first run, a clearer end-of-run screen, optional anonymous run reports and online leaderboards.
 - **Co-op:** a large project, considered once everything else is settled.
