@@ -1,3 +1,12 @@
+# v0.63.0 — deeper endless
+
+- Each endless cycle (every two minutes) adds one new threat, announced on screen, until all seven are active: Armoured Fleet (+15% armour on ordinary ships), Swift Hulls (enemies 20% faster), Swarm Surge (25% more arrivals), Shielded Reactors (endless reactors bring two shield systems that cut damage by 60% until destroyed), Barrage (enemy shots 25% faster), Elite Escorts (elites twice as often) and Self-Repair (damaged ships repair 2% per second). Enemy health and damage keep rising as before.
+- Once all six mutations are taken, endless reactor kills offer a stacking Overcharge instead: +12% damage, weapons cycle 8% faster, or +25 maximum HP with a full repair.
+- Endless pays 15 credits for every cycle reached after the first.
+- Each sector keeps an endless record (best cycle and time survived), shown on the sector cards and in the end-of-run debrief, which also lists the threats faced and Overcharges taken. Saves and backups carry the records.
+- Test link: `test=endless&cycle=5` starts endless already at cycle 5 with four threats.
+- The sector route is unchanged: threats only exist after choosing endless. Combat parity and the crowd benchmark are identical.
+
 # v0.62.0 — sector boss designs
 
 - Every sector's three bosses now have their own designs in the new boss style, matching what they do:
