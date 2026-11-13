@@ -1,3 +1,9 @@
+# v0.76.0 — launch cards
+
+- After you press Launch, you're dealt three launch cards: pick one to bend the rules for the whole run, or fly without one. Nine cards: Glass Reactor, Iron Hull, Critical Mass, Boss Hunter, Lucky Cache, Overclocked Thrusters, Second Wind, Scrap Baron and Gravity Collector.
+- Your card and what it does show on the pause screen (Second Wind also shows whether it's been used). Keys 1–3 pick a card.
+- Test runs (quick tests and the developer panel) skip the cards.
+
 # v0.75.0 — jackpot caches and Reactor Overdrive
 
 - Caches now open with a reveal: the crate shakes, the tier label spins, then the lid bursts open before your choices flip in. Tap to skip.
