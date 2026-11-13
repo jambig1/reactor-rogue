@@ -1,7 +1,8 @@
-# v0.71.1 — smoother sector haze on large screens
+# v0.71.1 — painted sector objects and smoother haze
 
 - The animated haze in Solar Corona, Hive Nebula and Ghost Fleet Graveyard no longer forms soft light rectangles on wide screens. The noise behind it is now rotated and warped, so it reads as drifting cloud, and it is a little fainter.
 - Ghost fog is no longer stretched sideways into flat slabs.
+- Painted rocks, cover, turrets, spore pods, fuel canisters and salvage crystals/crates for Solar Corona, Abyssal Rift, Hive Nebula and Ghost Fleet Graveyard. Each sector has nine rock and nine cover designs; objects keep their spin and drift, flash when hit, crack as they take damage, and cast a soft shadow.
 
 # v0.71.0 — painted backgrounds and animated sector layers
 
