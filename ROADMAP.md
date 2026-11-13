@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.57.0**.
+Current version: **0.59.0**.
 
 ## Where the game is now
 
@@ -21,19 +21,19 @@ Current version: **0.57.0**.
 - Bloom adapts to the device: drops from Full to Subtle, then Off, when the frame rate stays low, and comes back when there is headroom.
 - Goal: steady 60 FPS in late-run crowds on iPhone.
 
-### 0.58 — Blueprints and mastery
-- New weapons unlock through blueprints found in runs, events and contracts. Existing unlocks are kept.
-- Ship mastery ranks earned by playing each ship, with cosmetic rewards such as hull paints and engine colours.
+### 0.58 — Blueprints and mastery (done)
+- Weapon blueprints from bosses, every sixth elite, signals and breaches: three tiers per weapon (+10/20/30% damage), chosen from your current build.
+- Ship mastery ranks (1–5) from time, bosses and clears: accent paints per ship and one extra reroll at rank 5.
 
-### 0.59 — Run history and tester tools
+### 0.59 — Sector weather (done)
+- GPU weather and lighting per sector: lightning that lights the Storm Relay, snow in Cryo Reach, embers and furnace glows in Cinder Foundry, neon rain and sign flicker in the Undercity, dust in the Shattered Belt and light motes in the Neon Expanse.
+- Cosmetic only. Respects reduced motion, flash and quality settings.
+
+### 0.60 — Run history and tester tools
 - A local run log in Records: ship, sector, time, level, build, damage by weapon and what defeated you. No data leaves the device.
 - Quick-test options in the Developer tab: start at a chosen boss, grant a build, jump to endless. Test runs still never count towards progress.
 
 ## Next
-
-### 0.60 — Sector weather
-- GPU weather and lighting per sector: lightning that lights the Storm Relay, snow drift in Cryo Reach, embers and heat shimmer in Cinder Foundry, neon rain in the Undercity.
-- Cosmetic only. Respects reduced motion, flash and quality settings.
 
 ### 0.61 — Final encounter
 - A larger last boss with destructible systems and phases, as a proper ending to a sector clear.

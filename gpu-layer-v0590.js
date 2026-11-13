@@ -1,4 +1,4 @@
-/* Reactor Rogue GPU layers, v0.56.
+/* Reactor Rogue GPU layers, v0.59 (sector weather added to the top layer).
    createGpuLayer: Three.js canvas beneath the 2D playfield (sector background, parallax stars, lighting,
    glow sprites). createBloomLayer: Three.js canvas above it, composited with plus-lighter, adding
    thresholded bloom from a small copy of the frame, glow sprites, sparks and light pools.
@@ -73,6 +73,8 @@ void main(){
   gl_FragColor = vec4(col, 1.0);
 }`;
 
+// Sprite quads flip y into screen space, which reverses their winding: their materials must use
+// DoubleSide or Three.js culls every sprite as back-facing (the cause of invisible sprites before v0.59).
 // Instanced soft sprites, added to the background. hard = 0 is a wide glow halo;
 // hard = 1 adds a bright core, used for particles that replace the 2D squares.
 export const SPRITE_VERTEX = `precision highp float;
@@ -171,7 +173,7 @@ export async function createGpuLayer(canvas, loadThree = () => import(THREE_URL)
   spriteGeometry.instanceCount = 0;
   const spriteMaterial = new T.RawShaderMaterial({
     uniforms: { uRes: bgUniforms.uRes }, vertexShader: SPRITE_VERTEX, fragmentShader: SPRITE_FRAGMENT,
-    transparent: true, depthTest: false, depthWrite: false,
+    transparent: true, depthTest: false, depthWrite: false, side: T.DoubleSide,
     blending: T.CustomBlending, blendEquation: T.AddEquation, blendSrc: T.OneFactor, blendDst: T.OneFactor
   });
   const sprites = new T.Mesh(spriteGeometry, spriteMaterial);
@@ -364,6 +366,59 @@ void main(){
   gl_FragColor = vec4(c, max(c.r, max(c.g, c.b)));
 }`;
 
+// Procedural sector weather, drawn additively on the top layer. Two particle depths per sector, each a grid
+// of cells holding at most one particle, scrolled by velocity over time and by the camera for parallax.
+// Types: 1 grid motes, 2 belt dust, 3 storm rain, 4 foundry embers, 5 cryo snow, 6 city neon rain.
+export const WEATHER_FRAGMENT = `precision highp float;
+uniform vec2 uRes;
+uniform vec2 uCam;
+uniform float uTime;
+uniform float uType;
+uniform float uAmount;
+varying vec2 vUv;
+float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+vec3 layer(vec2 screen, float par, float cell, vec2 vel, float density, float seed, vec2 size, vec3 a, vec3 b, float sway, float flick){
+  vec2 pos = screen + uCam * par - vel * uTime;
+  vec2 g = floor(pos / cell);
+  vec2 f = pos / cell - g;
+  float h = hash(g + seed);
+  if (h > density) return vec3(0.0);
+  vec2 c = vec2(hash(g + seed + 3.1), hash(g + seed + 7.7)) * 0.5 + 0.25;
+  c.x += sin(uTime * (0.7 + h) + h * 6.28) * sway / cell;
+  vec2 d = (f - c) * cell;
+  vec2 dir = normalize(vel + vec2(0.0, 0.0001));
+  vec2 q = vec2(dot(d, vec2(dir.y, -dir.x)), dot(d, dir));
+  float r = length(q / size);
+  float m = 1.0 - smoothstep(0.35, 1.0, r);
+  float tw = 1.0 - flick * 0.55 * (0.5 + 0.5 * sin(uTime * (6.0 + h * 9.0) + h * 30.0));
+  return mix(a, b, hash(g + seed + 1.9)) * m * tw;
+}
+void main(){
+  vec2 sc = vec2(vUv.x * uRes.x, (1.0 - vUv.y) * uRes.y);
+  vec3 c = vec3(0.0);
+  if (uType < 1.5) {
+    c += layer(sc, 0.95, 92.0, vec2(4.0, -14.0), 0.10, 1.0, vec2(1.5), vec3(0.45, 0.95, 0.9), vec3(0.55, 0.75, 1.0), 6.0, 0.6) * 0.6;
+    c += layer(sc, 1.15, 120.0, vec2(-3.0, -20.0), 0.08, 9.0, vec2(2.0), vec3(0.5, 1.0, 0.9), vec3(0.7, 0.6, 1.0), 9.0, 0.6) * 0.55;
+  } else if (uType < 2.5) {
+    c += layer(sc, 0.9, 70.0, vec2(16.0, 5.0), 0.18, 2.0, vec2(1.3), vec3(0.78, 0.66, 0.52), vec3(0.6, 0.58, 0.55), 4.0, 0.2) * 0.55;
+    c += layer(sc, 1.2, 96.0, vec2(26.0, 8.0), 0.12, 11.0, vec2(2.0), vec3(0.85, 0.72, 0.55), vec3(0.7, 0.66, 0.6), 6.0, 0.2) * 0.5;
+  } else if (uType < 3.5) {
+    c += layer(sc, 1.0, 64.0, vec2(-110.0, 720.0), 0.45, 3.0, vec2(0.8, 12.0), vec3(0.62, 0.62, 1.0), vec3(0.8, 0.75, 1.0), 0.0, 0.0) * 0.55;
+    c += layer(sc, 1.3, 88.0, vec2(-140.0, 900.0), 0.32, 13.0, vec2(1.0, 16.0), vec3(0.7, 0.7, 1.0), vec3(0.85, 0.8, 1.0), 0.0, 0.0) * 0.5;
+  } else if (uType < 4.5) {
+    c += layer(sc, 1.0, 88.0, vec2(8.0, -42.0), 0.18, 4.0, vec2(2.0), vec3(1.0, 0.5, 0.15), vec3(1.0, 0.78, 0.35), 9.0, 1.0) * 1.9;
+    c += layer(sc, 1.25, 120.0, vec2(-6.0, -60.0), 0.12, 14.0, vec2(2.6), vec3(1.0, 0.42, 0.12), vec3(1.0, 0.65, 0.25), 12.0, 1.0) * 1.6;
+  } else if (uType < 5.5) {
+    c += layer(sc, 0.9, 68.0, vec2(14.0, 42.0), 0.32, 5.0, vec2(2.2), vec3(0.85, 0.95, 1.0), vec3(0.75, 0.88, 1.0), 10.0, 0.1) * 0.9;
+    c += layer(sc, 1.3, 96.0, vec2(22.0, 70.0), 0.22, 15.0, vec2(3.2), vec3(0.9, 0.97, 1.0), vec3(0.8, 0.92, 1.0), 14.0, 0.1) * 0.8;
+  } else {
+    c += layer(sc, 1.0, 72.0, vec2(-55.0, 780.0), 0.4, 6.0, vec2(0.75, 13.0), vec3(1.0, 0.45, 0.85), vec3(0.4, 0.9, 1.0), 0.0, 0.0) * 0.6;
+    c += layer(sc, 1.3, 96.0, vec2(-70.0, 950.0), 0.26, 16.0, vec2(0.95, 18.0), vec3(1.0, 0.5, 0.9), vec3(0.45, 0.95, 1.0), 0.0, 0.0) * 0.5;
+  }
+  c = min(vec3(1.0), c * uAmount);
+  gl_FragColor = vec4(c, max(c.r, max(c.g, c.b)));
+}`;
+
 function spriteBatch(T, uniforms) {
   const geometry = new T.InstancedBufferGeometry();
   geometry.setAttribute('position', new T.BufferAttribute(new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0]), 3));
@@ -372,7 +427,7 @@ function spriteBatch(T, uniforms) {
   const aSprite = new T.InstancedBufferAttribute(sprite, 4), aColor = new T.InstancedBufferAttribute(colour, 4);
   aSprite.setUsage(T.DynamicDrawUsage); aColor.setUsage(T.DynamicDrawUsage);
   geometry.setAttribute('aSprite', aSprite); geometry.setAttribute('aColor', aColor); geometry.instanceCount = 0;
-  const material = new T.RawShaderMaterial({ uniforms, vertexShader: SPRITE_VERTEX, fragmentShader: SPRITE_FRAGMENT, transparent: true, depthTest: false, depthWrite: false,
+  const material = new T.RawShaderMaterial({ uniforms, vertexShader: SPRITE_VERTEX, fragmentShader: SPRITE_FRAGMENT, transparent: true, depthTest: false, depthWrite: false, side: T.DoubleSide,
     blending: T.CustomBlending, blendEquation: T.AddEquation, blendSrc: T.OneFactor, blendDst: T.OneFactor });
   const mesh = new T.Mesh(geometry, material); mesh.frustumCulled = false;
   let count = 0, width = 1, height = 1;
@@ -415,6 +470,7 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
   const blur = raw(BLUR_FRAGMENT, { uTex: { value: null }, uStep: { value: new T.Vector2() } });
   const copy = raw(BLUR_FRAGMENT, { uTex: { value: null }, uStep: { value: new T.Vector2() } });
   const composite = raw(COMPOSITE_FRAGMENT, { uNear: { value: null }, uWide: { value: null }, uNearStrength: { value: 1 }, uWideStrength: { value: 1 } }, true);
+  const weather = raw(WEATHER_FRAGMENT, { uRes: res, uCam: { value: new T.Vector2() }, uTime: { value: 0 }, uType: { value: 0 }, uAmount: { value: 1 } }, true);
   const quad = new T.Mesh(quadGeometry, prefilter); quad.frustumCulled = false;
   const quadScene = new T.Scene(); quadScene.add(quad);
   const glow = spriteBatch(T, { uRes: res }), screen = spriteBatch(T, { uRes: res });
@@ -447,10 +503,24 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
     // Drawn sharp at full resolution on top (sparks, light pools).
     screen(x, y, r, c, a = 1, hard = 0) { screen.add(x, y, r, c, a, hard); },
     get spriteCount() { return glow.count + screen.count; },
-    // frame: {capture: canvas|null, threshold, near, wide}
+    // frame: {bloom: bool (default true), capture: canvas|null, threshold, near, wide,
+    //         weather: {type 1-6, amount, camX, camY, time} | null}
     render(frame) {
       if (lost) return;
       glow.commit(); screen.commit();
+      const drawWeather = () => {
+        let w = frame.weather;
+        if (!w || !(w.type > 0) || !(w.amount > 0)) return;
+        weather.uniforms.uType.value = w.type; weather.uniforms.uAmount.value = w.amount; weather.uniforms.uTime.value = w.time || 0;
+        weather.uniforms.uCam.value.set(w.camX || 0, w.camY || 0);
+        quad.material = weather; renderer.render(quadScene, camera);
+      };
+      if (frame.bloom === false) {
+        renderer.setRenderTarget(null); renderer.clear(true, false, false);
+        drawWeather();
+        if (screen.count) renderer.render(screenScene, camera);
+        return;
+      }
       let src = frame.capture || null;
       // Prefilter the captured frame into A, or start A empty.
       if (src) {
@@ -472,12 +542,13 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
       composite.uniforms.uNear.value = A.texture; composite.uniforms.uWide.value = C.texture;
       composite.uniforms.uNearStrength.value = frame.near ?? 1; composite.uniforms.uWideStrength.value = frame.wide ?? 1;
       quad.material = composite; renderer.render(quadScene, camera);
+      drawWeather();
       if (screen.count) renderer.render(screenScene, camera);
     },
     dispose() {
       for (let t of [A, B, C, D]) t.dispose();
       if (captureTexture) captureTexture.dispose();
-      for (let m of [prefilter, blur, copy, composite]) m.dispose();
+      for (let m of [prefilter, blur, copy, composite, weather]) m.dispose();
       quadGeometry.dispose(); glow.dispose(); screen.dispose(); renderer.dispose();
     }
   };

@@ -1,7 +1,7 @@
 // Test stand-in for the subset of Three.js used by gpu-layer-v0550.js, implemented on raw WebGL2.
 // Follows the r187 behaviours checked in its source: RawShaderMaterial gets only #define prefixes,
 // custom blending ONE/ONE, instanced attributes with divisor 1, CanvasTexture honouring flipY.
-export const DynamicDrawUsage = 35048, CustomBlending = 5, AddEquation = 100, OneFactor = 201, RepeatWrapping = 1000, NoColorSpace = '';
+export const FrontSide = 0, BackSide = 1, DoubleSide = 2, DynamicDrawUsage = 35048, CustomBlending = 5, AddEquation = 100, OneFactor = 201, RepeatWrapping = 1000, NoColorSpace = '';
 export class Vector2 { constructor(x = 0, y = 0) { this.x = x; this.y = y } set(x, y) { this.x = x; this.y = y; return this } }
 export class Vector3 { constructor(x = 0, y = 0, z = 0) { this.x = x; this.y = y; this.z = z } set(x, y, z) { this.x = x; this.y = y; this.z = z; return this } }
 export class BufferAttribute { constructor(array, itemSize) { this.array = array; this.itemSize = itemSize; this.version = 0; this.divisor = 0 } setUsage() { return this } set needsUpdate(v) { if (v) this.version++ } clearUpdateRanges() {} addUpdateRange() {} }
@@ -51,6 +51,8 @@ export class WebGLRenderer {
     gl.viewport(0, 0, this.canvas.width, this.canvas.height); gl.clearColor(...this.clear, 1); gl.clear(gl.COLOR_BUFFER_BIT);
     for (let mesh of [...scene.children].sort((a, b) => a.renderOrder - b.renderOrder)) {
       if (!mesh.visible) continue; let g = mesh.geometry, m = mesh.material, p = this.program(m); gl.useProgram(p);
+      // Like Three.js: materials are front-side unless told otherwise, so back-facing triangles are culled.
+      if (m.side === DoubleSide) gl.disable(gl.CULL_FACE); else { gl.enable(gl.CULL_FACE); gl.cullFace(m.side === BackSide ? gl.FRONT : gl.BACK); }
       if (m.blending === CustomBlending) { gl.enable(gl.BLEND); gl.blendEquation(gl.FUNC_ADD); gl.blendFunc(gl.ONE, gl.ONE) } else gl.disable(gl.BLEND);
       let vao = mesh.__vao || (mesh.__vao = gl.createVertexArray()); gl.bindVertexArray(vao);
       for (let [name, attr] of Object.entries(g.attributes)) {
