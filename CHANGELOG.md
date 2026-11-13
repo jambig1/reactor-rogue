@@ -1,3 +1,10 @@
+# v0.74.0 — locked content looks locked
+
+- Locked ships show a lock badge, a greyed icon and a dashed outline, with a progress bar toward their unlock challenge. Ships you can buy glow gold.
+- Locked sectors have a greyed preview and a gold lock line saying exactly how to unlock them ("Defeat any boss" / "Win any run").
+- On phones, locked sectors shrink to compact rows, so sector select is far shorter to scroll.
+- The Launch button no longer wraps onto two lines; the ship and sector you picked show in the line above the cards instead.
+
 # v0.73.0 — simpler menus
 
 - The launch menu is now Play plus four destinations: How to play, Hangar & contracts, Records and Settings. Profile and Website & feedback are small links underneath.
