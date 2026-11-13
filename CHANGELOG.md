@@ -162,6 +162,13 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.82.0
+
+- Campaign, Vampire Survivors style. Sectors now open in order: defeat 2 bosses in a sector to unlock the next (Neon Expanse → Shattered Belt → Storm Relay → Cinder Foundry → Cryo Reach → Neon Undercity → Solar Corona → Abyssal Rift → Hive Nebula → Ghost Fleet). A banner announces each new sector.
+- Stranded pilots: ten ships are now found, not ground out. Each sector hides one pilot; their distress pod appears two minutes into a run, an edge arrow points to it, and holding position over it for 3 seconds rescues them. Rescued pilots can then be bought in the Hangar. Wasp still unlocks from 500 kills.
+- Painted distress pod: it drifts, spins, smokes, sparks and flashes its red beacon, then splits open when the pilot is rescued. A ring of enemies guards it (more in later sectors) and reinforcements warp in while you hold position.
+- Existing saves keep every sector and ship they had already unlocked.
+
 ## 0.81.0
 
 - Painted pickups: coins, coin bags, XP gems (4 tiers), repair, chrono stop, purge beacon, XP vacuum, plasma breath, fortune shard, reroll, salvage fever, reactor surge, size matrix, kinetic drive, afterburner, overcharge and aegis now use hand-painted art with a soft coloured glow. Old icons stay as a fallback while images load.

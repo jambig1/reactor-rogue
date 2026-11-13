@@ -12,7 +12,7 @@ function setup(id,path='',evolved=false){fresh();run(`Math.random=()=>.99;s.item
 
 
 assert(run('sectors.length')>=6);
-run("hangar.claimed=[]");assert(!run("sectorOpen('foundry')"));assert(!run("sectorOpen('cryo')"));run("hangar.claimed=['win']");assert(run("sectorOpen('foundry')&&sectorOpen('cryo')"));assert(!run("sectorOpen('invalid')"));
+run("hangar.claimed=[];hangar.campaign={v:1,open:[],rescued:[],best:{}}");assert(!run("sectorOpen('foundry')"));assert(!run("sectorOpen('cryo')"));run("hangar.campaign.best.storm=2;hangar.campaign.best.foundry=2");assert(run("sectorOpen('foundry')&&sectorOpen('cryo')"));assert(!run("sectorOpen('invalid')"));
 for(let id of ['foundry','cryo']){
  fresh();run(`s.sector='${id}';s.dev.test=true;s.sectorClock=0;updateExpansion(.1)`);assert.equal(run('s.sectorHazards.length'),id==='foundry'?1:0);if(id==='foundry'){assert.equal(run('s.sectorHazards[0].kind'),'vent');assert(run('s.sectorHazards[0].warning>=1.5'))}else{run('updateFrontierHazards(120,false)');assert.equal(run('s.sectorHazards.length'),0)};
  // Real oriented rectangle collision, including player-radius tolerance.

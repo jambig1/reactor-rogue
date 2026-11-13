@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.81.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.82.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -154,3 +154,6 @@ Final encounter v0.60: the third route boss kill calls `queueFinalEncounter()` (
 Deeper endless v0.63: `endlessThreatDefs` (seven) are added one per cycle by `updateEndlessThreats(cycle)` from `updateEndless`; `endlessThreat(id)` gates each effect (armour in `enemyArmour`, swift in enemy speed, surge in `endlessPressure().spawn`, barrage in `updateHostiles`, elites in the elite timer, repair in the enemy loop, shielded via `endlessShieldBoss`/`updateEndlessShield` reusing the final-encounter shield pods). `openMutation` offers `endlessBoonDefs` (stacking in `s.endlessBoons`, read by `enemyDamage`, `rate`, `maxHP`) once mutations are exhausted in endless. `endlessCycleCredits()` feeds `runCreditBreakdown`. `bankEndlessRecord()` (called from `finish`) writes `hangar.endlessBest[sector]={cycle,time}`. Tests: `TEST-ENDLESS-DEEP.cjs`.
 
 Extra sectors v0.69: `var extraSectors` (declared before `sectors`) is filled at the end of the main script by `registerExtraSector(def)`, which adds the sector to `sectors` and to every per-sector table (fleet paint, boss plates, menu nebula, GPU tint, mist, terrain materials, weather, boss defs, presentations, designs, final boss). Core hooks read `extraSectors[id]` for: unlock (`sectorOpen`), fleet hull variants (`spawn`, `fitting`), terrain kinds and cover art, music, boss attacks and warnings, boss toast, ambient hazards (`hazardUpdate` in `updateExpansion`, `hazardDraw` in `drawCombatReadability`, `hazardScreen` after the vignette) and the background (`texture` painter → `proceduralSectorTexture` data URL used by `sectorTexture` and `sectorPreview`). Solar Corona: `solarHazardUpdate/Draw/Screen`, `solarShadowed`, `solarBossAttack`. Tests: `TEST-SOLAR.cjs`.
+
+
+Campaign v0.82: `hangar.campaign={v:1,open,rescued,best}`. `sectorOpen` follows `sectorChain` (2 bosses in the previous sector, `best[id]` = most bosses in one run there, updated by `campaignBoss()` after each sector boss). `pilotPods` maps sector → ship; those ships' `shipChallenges` read `campaign.rescued`, old rules kept in `legacyShipChallenges` for the one-time `campaignInit()` migration. In-run pod: `updatePilotPod` (spawns at 120s, 820m away, 3s hold in 72 radius), `drawPilotPod` (optional art `pilot-pod-{closed|open}-v0820.webp`, procedural fallback, edge arrow). Tests: `TEST-CAMPAIGN.cjs`.

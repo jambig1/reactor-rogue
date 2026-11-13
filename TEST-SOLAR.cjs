@@ -3,7 +3,7 @@ const fs=require('fs'),path=require('path'),assert=require('assert');
 const prefix=fs.readFileSync(path.join(__dirname,'TEST-EQUIPMENT.cjs'),'utf8').split('assert.equal(run("defs.filter')[0];
 eval(prefix+`
 assert.equal(run("sectors.some(x=>x.id==='solar')"),true);assert.equal(run("sectorBossDefs.solar.length"),3);assert.equal(run("finalBossDefs.solar.name"),'SOLAR THRONE');
-assert.equal(run("hangar.claimed=hangar.claimed.filter(x=>x!=='win');sectorOpen('solar')"),false);assert.equal(run("hangar.claimed.push('win');sectorOpen('solar')"),true);
+assert.equal(run("hangar.campaign.best.city=0;sectorOpen('solar')"),false);assert.equal(run("hangar.campaign.best.city=2;sectorOpen('solar')"),true);
 // Flare: warning, then the sweep hurts an exposed pilot once.
 fresh();run("s.sector='solar';state='play';s.terrain=[];s.enemies=[];s.p.inv=0;s.dashTime=0;s.t=30;s.solar={next:0,flare:null,count:0};solarHazardUpdate(.016,false)");assert.equal(run('!!s.solar.flare'),true);
 run("s.terrain=[];var hp0=s.p.hp;for(let i=0;i<300&&s.solar.flare;i++){s.p.inv=0;solarHazardUpdate(1/60,false)}");assert(run('s.p.hp')<run('hp0'),'exposed pilot is burned');assert.equal(run('s.solar.count'),1);

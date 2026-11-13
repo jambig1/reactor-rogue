@@ -12,7 +12,7 @@ function setup(id,path='',evolved=false){fresh();run(`Math.random=()=>.99;s.item
 
 
 const ids=run('sectors.map(x=>x.id)');assert(ids.length>=6);let names=run('sectors.flatMap(x=>(sectorBossDefs[x.id]||bossDefs).map(b=>b.name))');assert.equal(names.length,3*ids.length);assert.equal(new Set(names).size,names.length);
-run("hangar.claimed=[]");assert(!run("sectorOpen('city')"));run("hangar.claimed=['win']");assert(run("sectorOpen('city')"));
+run("hangar.claimed=[];hangar.campaign={v:1,open:[],rescued:[],best:{}}");assert(!run("sectorOpen('city')"));run("hangar.campaign.best.cryo=2");assert(run("sectorOpen('city')"));
 for(let tier=0;tier<3;tier++){
  fresh();run(`s.sector='city';s.dev.test=true;s.bossIndex=${tier};spawnBoss();target=s.enemies[0];target.arrival=0;target.fireCD=0`);assert.equal(run('target.sectorBoss'),'city');run('cityBossAttack(target,.1)');let count=run('target.cityPlan.rays.length');assert.equal(count,[3,6,12][tier]);assert.equal(run('s.hostile.length'),0);run('cityBossAttack(target,1.6)');assert.equal(run('s.hostile.length'),count);
  run('target.fireCD=0;cityBossAttack(target,.1)');assert.equal(run('target.cityPlan.lanes.length'),[1,2,4][tier]);run('cityBossAttack(target,1.6)');assert.equal(run('s.sectorHazards.length'),[1,2,4][tier]);assert(run('s.sectorHazards.every(h=>h.warning===1.8&&h.kind==="lockdown"&&h.bossOwner===target)'));
