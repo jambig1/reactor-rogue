@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.61.0**.
+Current version: **0.62.0**.
 
 ## Where the game is now
 
@@ -37,9 +37,12 @@ Current version: **0.61.0**.
 ### 0.61 — Boss redesign (done)
 - All bosses redrawn in the player-ship style with sector-tinted armour, neon edges, glowing cores and damage states. Constellation Salvo's carrier sprite replaced by a star pattern.
 
+### 0.62 — Sector boss designs (done)
+- Unique designs for all fifteen sector bosses outside the Neon Expanse, each reflecting its attacks.
+
 ## Next
 
-### 0.62 — Cross-device saves
+### 0.63 — Cross-device saves
 - Switch on the cloud saves that are already built, so progress carries between iPhone, iPad and desktop.
 
 ## Later

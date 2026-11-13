@@ -1,3 +1,14 @@
+# v0.62.0 — sector boss designs
+
+- Every sector's three bosses now have their own designs in the new boss style, matching what they do:
+  - Shattered Belt: Grapple Corsair with snapping grapple claws on cables, Scrap Crusher with toothed jaws that open as it charges and smoking exhausts, Salvage Dreadnought with stacked cargo containers, a bridge tower and a swinging crane.
+  - Storm Relay: Relay Keeper with four tesla coils and lightning jumping between them, Arc Conductor with three forked emitters arcing at the tips, Tempest Citadel with six lightning rods, a rolling cloud ring and a crackling core.
+  - Cinder Foundry: Slag Harvester with a spinning grinder intake and a bubbling slag tank, Furnace Warden with glowing furnace grates and smoking stacks, The World Forge with four pumping hammer pistons around a molten crucible.
+  - Cryo Reach: Rime Stalker as a faceted ice spear with swept crystal blades, Glass Empress as a crown of crystal spires, Absolute Zero as a snowflake of branching crystal arms around a white-hot core.
+  - Neon Undercity: Patrol Interdictor with a flashing red/blue light bar and searchlight, Skyline Enforcer with twin siege cannons and lit precinct windows, Metroplex Overlord as a flying city block of lit towers inside a holographic ring.
+- All bosses get brighter, colour-tinted armour, thicker neon outlines, panel seams, raised sub-panels and lights; ship-like bosses gain swept fins and pointed prows, square ones gain corner spikes. The dark disc behind round bosses is gone.
+- Cosmetic only: hitboxes, attacks and stats are unchanged; combat parity is identical.
+
 # v0.61.0 — boss redesign
 
 - Every boss now shares the player ship's look: dark layered armour plates tinted per sector, a neon edge in the boss colour, inset plates, lit vents and running lights, and a glowing core that picks up bloom.
