@@ -1,3 +1,9 @@
+# v0.75.0 — jackpot caches and Reactor Overdrive
+
+- Caches now open with a reveal: the crate shakes, the tier label spins, then the lid bursts open before your choices flip in. Tap to skip.
+- Every cache rolls a bonus tier on top of its normal choice. BONUS: a free level on one of your items and 20 XP. JACKPOT: up to three free item levels, a full repair, 40 XP and 10 seconds of Overcharge. Evolution caches pay out far more often (about half give a bonus, roughly one in eight is a jackpot) than supply caches.
+- Reactor Overdrive: five minutes into endless, hordes of weak orange drones pour in every couple of seconds in rings, columns and pincers, and every weapon hit is multiplied: ×1.5 after the first minute, rising each minute up to ×7. The screen edge glows while it's active.
+
 # v0.74.0 — locked content, matching sector previews and tidier records
 
 - Locked ships show a lock badge, a greyed icon and a dashed outline, with a progress bar toward their unlock challenge. Ships you can buy glow gold.
