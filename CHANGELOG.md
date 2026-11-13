@@ -6,6 +6,7 @@
   - Cinder Foundry: Slag Harvester with a spinning grinder intake and a bubbling slag tank, Furnace Warden with glowing furnace grates and smoking stacks, The World Forge with four pumping hammer pistons around a molten crucible.
   - Cryo Reach: Rime Stalker as a faceted ice spear with swept crystal blades, Glass Empress as a crown of crystal spires, Absolute Zero as a snowflake of branching crystal arms around a white-hot core.
   - Neon Undercity: Patrol Interdictor with a flashing red/blue light bar and searchlight, Skyline Enforcer with twin siege cannons and lit precinct windows, Metroplex Overlord as a flying city block of lit towers inside a holographic ring.
+- All bosses get brighter, colour-tinted armour, thicker neon outlines, panel seams, raised sub-panels and lights; ship-like bosses gain swept fins and pointed prows, square ones gain corner spikes. The dark disc behind round bosses is gone.
 - Cosmetic only: hitboxes, attacks and stats are unchanged; combat parity is identical.
 
 # v0.61.0 — boss redesign
