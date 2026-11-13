@@ -1,3 +1,9 @@
+# v0.77.0 — crash reports
+
+- If the game closes unexpectedly (for example a phone running out of memory) or hits a script error, a crash report is saved. The next time you open the game, it shows the report with a Copy button (and Share on phones) so you can send it over.
+- Reports note the version, device, screen size, where you were (sector, ship, run time, level, endless, overdrive, launch card) and how busy the screen was (enemies, shots, effects, frame rate, graphics setting). The last six are kept; a "Crash report" link appears on the launch menu while any are saved.
+- Nothing is sent anywhere automatically; reports stay on your device until you copy them.
+
 # v0.76.0 — launch cards
 
 - After you press Launch, you're dealt three launch cards: pick one to bend the rules for the whole run, or fly without one. Nine cards: Glass Reactor, Iron Hull, Critical Mass, Boss Hunter, Lucky Cache, Overclocked Thrusters, Second Wind, Scrap Baron and Gravity Collector.
