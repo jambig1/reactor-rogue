@@ -1,3 +1,12 @@
+# v0.72.0 — menu polish
+
+- Menus scale up on large screens (PC monitors), so text and buttons are readable instead of a small card in the middle of the screen.
+- Text no longer shows through under the Back / Done bars on How to play, Records, Arsenal and the end screen.
+- How to play opens on "Your first run", then groups the rest under Basics, Combat, Arsenal and Sectors. The intro now mentions the final encounter.
+- Settings tabs wrap onto a second line instead of being cut off at both edges.
+- Records keeps one size and a single tab row when switching between Leaderboard, Statistics, Recent runs and Arsenal.
+- Pause buttons on wider screens sit in two even rows.
+
 # v0.71.1 — painted sector objects and smoother haze
 
 - The animated haze in Solar Corona, Hive Nebula and Ghost Fleet Graveyard no longer forms soft light rectangles on wide screens. The noise behind it is now rotated and warped, so it reads as drifting cloud, and it is a little fainter.
