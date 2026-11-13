@@ -1,3 +1,9 @@
+# v0.65.0 — fewer level-up pauses
+
+- Levels take longer from level 3 onwards (XP needed ×1.55), so a full run has about a fifth fewer level-up pauses: around level 40 at the end instead of 50. In simulated runs every route still clears, with a little more damage taken.
+- New Settings → Weapons → Level-ups with three modes. Choose immediately (default) pauses for each level-up as before. Bank choices keeps you flying and shows a glowing LEVEL UP ×N button (or press U) to pick all banked upgrades in one go. Auto-pick never pauses and picks for you, favouring upgrades to what you already own.
+- Specialisations, caches and mutations still open as before.
+
 # v0.64.0 — animated menu
 
 - New animated menu scene in place of the flat aurora ribbons: drifting nebula clouds in your selected sector's colours, three layers of parallax stars with shooting stars, and a large showcase boss that cycles through the sector's three reactors and its final boss.
