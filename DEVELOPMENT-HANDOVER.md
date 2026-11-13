@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.60.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.61.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -146,3 +146,5 @@ Sector weather v0.59: `WEATHER_FRAGMENT` (top layer, additive, after the bloom c
 Sprite rendering fix v0.59: the sprite vertex shader flips y, reversing triangle winding, so Three.js (FrontSide by default) culled every sprite on both GPU canvases from v0.55 to v0.58. Both sprite materials now use `side: T.DoubleSide`; `TEST-GPU-LAYER.cjs` asserts it, and `TEST-GPU-MOCK-THREE.js` now culls back faces like Three.js so the browser review would catch a regression.
 
 Shader fields v0.60: `drawEnergyField` first calls `gpuFieldDraw`, which (GPU active, not overlay) sends the field to `gpuLayer.field(x,y,r,kind,colour,fade)` in screen space and skips the 2D painter. `FIELD_KINDS` maps gravity, void, corrosion/toxic, plasma, aura, net, fire/wake and storm to `FIELD_FRAGMENT` branches; unknown kinds or a full batch (64) return false and the 2D painter runs. Fields render between the background and sprites with premultiplied blending (ONE, ONE_MINUS_SRC_ALPHA): rgb glows, alpha darkens. Quads extend to 1.3× radius for outer glow and must stay double-sided. Time freezes with reduced motion. Gravity/void fields also add a soft glow sprite to bloom. All `drawEnergyField` callers pass world coordinates; keep it that way, because the GPU path converts with the camera offset only.
+
+Quick tests v0.61: `quickTest(kind, weapon, evolve, {pilot, sector})` (kinds weapon/boss/swarm/endless) sets `devLaunch` before `start()`, so `initDevRun` marks the run as a developer test and nothing permanent is banked; it then applies `quickBuild` (bolt, laser, rocket, chain, frost, gravity at 5; area, power, reach, armour at 3), `quickRing` and the scenario, and sets `state='play'`. `quickTestFromURL` runs once after start-up for `?test=weapon:<id>[:evo]|boss|swarm|endless` with optional `ship`/`sector`; it needs no developer unlock because test runs cannot change progress. `devRemember` stores `rr_dev_remember` ('1'/'0') in raw localStorage; `lockDev` clears it. `hurtPlayer` stores `s.lastHitBy`; `snapshotRun` adds `cause` (defeats only, via `describeHit`), `blueprintsFound` and `masteryGain`, shown in Recent runs with `escapeHTML`. `TEST-QUICK-TESTS.cjs` covers these.

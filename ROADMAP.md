@@ -2,7 +2,7 @@
 
 A plan, not a promise. Order and scope can change as updates are played. The game is currently played and tested by its developer only, so priorities favour depth, feel and testing speed over onboarding or online features. Each update should be small enough to check on iPhone, iPad and desktop before it goes live.
 
-Current version: **0.60.0**.
+Current version: **0.61.0**.
 
 ## Where the game is now
 
@@ -32,9 +32,9 @@ Current version: **0.60.0**.
 ### 0.60 — Weapon field effects (done)
 - Gravity wells, void rifts, toxic gas, plasma pools, Corona, nets, flame trails and storm hazards drawn by GPU shaders beneath the ships.
 
-### 0.61 — Run history and tester tools
-- A local run log in Records: ship, sector, time, level, build, damage by weapon and what defeated you. No data leaves the device.
-- Quick-test options in the Developer tab: start at a chosen boss, grant a build, jump to endless. Test runs still never count towards progress.
+### 0.61 — Run history and tester tools (done)
+- Recent runs now record what defeated you, blueprints found and mastery gained, alongside build and damage by weapon. Stored on the device only.
+- Developer quick tests (weapon showcase, boss fight, late-run swarm, endless) and test links that open straight into a scenario; the developer unlock can be remembered per device. Test runs never count towards progress.
 
 ## Next
 

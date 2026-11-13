@@ -1,3 +1,11 @@
+# v0.61.0 — faster testing
+
+- Add Quick tests to Settings → Developer: Weapon showcase (any weapon at level 5, base or evolved, invulnerable, with a ring of enemies), Boss fight (late-run build plus the next sector boss), Late-run swarm (evolved build, eight minutes in, 100 enemies, invulnerable) and Endless. They start playing immediately using the chosen ship and sector.
+- Add test links: `index.html?play=1&test=weapon:gravity:evo`, `test=boss`, `test=swarm` or `test=endless`, with optional `&ship=` and `&sector=`. The Developer tab shows the link for the current choice.
+- Developer unlock can be kept on this device until you lock the panel.
+- Recent runs now show what defeated you, blueprints recovered and mastery XP gained.
+- Quick tests and test links are developer test runs: no credits, unlocks, records, blueprints or mastery.
+
 # v0.60.0 — weapon field effects
 
 - Redraw weapon fields with GPU shaders beneath the ships. Gravity Well is a black hole with a dark core, a spinning accretion ring and arms spiralling inward; void rifts (Phase Torpedoes, Void effects, Sovereign's rift) use a violet version.
