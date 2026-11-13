@@ -1,4 +1,4 @@
-// v0.61 quick tests, test links, remembered developer unlock and run-log causes.
+// v0.60 quick tests, test links, remembered developer unlock and run-log causes.
 const fs=require('fs'),path=require('path'),assert=require('assert');
 const prefix=fs.readFileSync(path.join(__dirname,'TEST-EQUIPMENT.cjs'),'utf8').split('assert.equal(run("defs.filter')[0];
 eval(prefix+`
