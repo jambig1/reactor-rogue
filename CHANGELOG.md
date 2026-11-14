@@ -168,7 +168,7 @@
 - Scenery now sits in three depth layers (far, mid and near) that drift at different speeds. Each piece drifts and slowly spins like it is floating in space, its neon edges pulse, and on the GPU renderer the three.js bloom layer adds a soft halo. Far and near layers switch off on Low graphics and when the screen gets crowded.
 - Menu previews for all ten sectors now show each sector's background.
 - Pickups and gems are slightly larger with a soft glow so the line art reads at phone size.
-- Launch card emblems redrawn in the same neon style.
+- Launch card emblems and all 128 weapon, evolution and passive icons redrawn in the same neon style.
 - Fixed a script error when drawing some ice rocks in Cryo Reach.
 
 ## 0.83.0
