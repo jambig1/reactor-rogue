@@ -162,6 +162,11 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.83.0
+
+- Power-ups shop (Hangar → Power-ups), Vampire Survivors style: permanent ranks bought with credits that apply to every ship. Might, Armour, Max Hull, Recovery, Cooldown, Area, Velocity, Thrust, Magnet, Growth, Greed, Luck and Revival (come back once per run at 50% hull).
+- Each rank costs more than the last, and every rank you own makes all others 10% dearer. Refund all returns every credit spent so you can rebuild.
+
 ## 0.82.0
 
 - Campaign, Vampire Survivors style. Sectors now open in order: defeat 2 bosses in a sector to unlock the next (Neon Expanse → Shattered Belt → Storm Relay → Cinder Foundry → Cryo Reach → Neon Undercity → Solar Corona → Abyssal Rift → Hive Nebula → Ghost Fleet). A banner announces each new sector.

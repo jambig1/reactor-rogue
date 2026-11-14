@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.82.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.83.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -157,3 +157,5 @@ Extra sectors v0.69: `var extraSectors` (declared before `sectors`) is filled at
 
 
 Campaign v0.82: `hangar.campaign={v:1,open,rescued,best}`. `sectorOpen` follows `sectorChain` (2 bosses in the previous sector, `best[id]` = most bosses in one run there, updated by `campaignBoss()` after each sector boss). `pilotPods` maps sector → ship; those ships' `shipChallenges` read `campaign.rescued`, old rules kept in `legacyShipChallenges` for the one-time `campaignInit()` migration. In-run pod: `updatePilotPod` (spawns at 120s, 820m away, 3s hold in 72 radius), `drawPilotPod` (optional art `pilot-pod-{closed|open}-v0820.webp`, procedural fallback, edge arrow). Tests: `TEST-CAMPAIGN.cjs`.
+
+Power-ups v0.83: `powerUps` table, `hangar.powerups` {id:rank} + `hangar.puSpent` (sanitised by `powerupInit()` at load). Price `base*(1+rank)*(1+0.1*ownedRanks)`. `applyPowerUps()` runs in `initExpansion` before HP is set: edits `s.pilot` (armour, hp, regen, fireRate, speed), sets `s.pu` multipliers read by `hit` (might), `areaMult`, `velocityMult`, `luckMult`, gem pickup radius/XP, `runCredits` (greed), and `s.puRevives` (checked in `hurtPlayer`). Developer test runs get no power-ups. Tests: `TEST-POWERUPS.cjs`.
