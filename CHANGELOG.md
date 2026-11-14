@@ -162,6 +162,14 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.84.0
+
+- New neon art style for the world, matching the ships: every pickup, XP gem, cache crate and distress pod, all 90 background structures across the ten sectors, and the painted terrain in Solar Corona, Abyssal Rift, Hive Nebula and Ghost Fleet now use flat dark hulls with a crisp neon outline.
+- Scenery now sits in three depth layers (far, mid and near) that drift at different speeds. Each piece spins and slowly tumbles like it is floating in space, its neon edges pulse, and on the GPU renderer the three.js bloom layer adds a soft halo. Far and near layers switch off on Low graphics and when the screen gets crowded.
+- New menu previews for all ten sectors in the neon style.
+- Pickups and gems are slightly larger with a soft glow so the line art reads at phone size.
+- Fixed a script error when drawing some ice rocks in Cryo Reach.
+
 ## 0.83.0
 
 - Power-ups shop (Hangar → Power-ups), Vampire Survivors style: permanent ranks bought with credits that apply to every ship. Might, Armour, Max Hull, Recovery, Cooldown, Area, Velocity, Thrust, Magnet, Growth, Greed, Luck and Revival (come back once per run at 50% hull).
