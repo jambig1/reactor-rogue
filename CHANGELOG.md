@@ -166,7 +166,7 @@
 
 - New neon art style for the world, matching the ships: every pickup, XP gem, cache crate and distress pod, all 90 background structures across the ten sectors, and the painted terrain in Solar Corona, Abyssal Rift, Hive Nebula and Ghost Fleet now use flat dark hulls with a crisp neon outline.
 - Scenery now sits in three depth layers (far, mid and near) that drift at different speeds. Each piece drifts and slowly spins like it is floating in space, its neon edges pulse, and on the GPU renderer the three.js bloom layer adds a soft halo. Far and near layers switch off on Low graphics and when the screen gets crowded.
-- New menu previews for all ten sectors in the neon style.
+- New menu previews for all ten sectors: each sector's background with its neon scenery at in-game size.
 - Pickups and gems are slightly larger with a soft glow so the line art reads at phone size.
 - Fixed a script error when drawing some ice rocks in Cryo Reach.
 
