@@ -162,6 +162,13 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.85.0
+
+- Post-processing: the glow layer now uses the postprocessing library's mip-chain bloom (bundled offline beside three.js) for smoother, wider, richer halos. If it can't load, the old bloom is used automatically.
+- Getting hit now gives a quick red-blue chromatic split and a red flash around the screen edges; defeating a boss gives a warm flash.
+- Subtle film grain on Medium and High graphics, and a soft vignette that darkens the screen corners (off on Low).
+- Reduced motion turns off the colour split and the grain.
+
 ## 0.84.0
 
 - New neon art style for the world, matching the ships: every pickup, XP gem, cache crate and distress pod, all 90 background structures across the ten sectors, and the painted terrain in Solar Corona, Abyssal Rift, Hive Nebula and Ghost Fleet now use flat dark hulls with a crisp neon outline.

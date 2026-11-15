@@ -8,6 +8,8 @@
 
 export const THREE_VERSION = '0.187.0';
 // Bundled beside the game (MIT licence in vendor/three-0.187.0/LICENSE); three.module.js imports ./three.core.js.
+// postprocessing (zlib licence, vendor/postprocessing-6.39.6/LICENSE.md): only its MipmapBlurPass, bundled with three as an external.
+export const POSTFX_URL = new URL('./vendor/postprocessing-6.39.6/mipmap-blur.js', import.meta.url).href;
 export const THREE_URL = new URL('./vendor/three-' + THREE_VERSION + '/three.module.js', import.meta.url).href;
 
 const SPRITE_CAP = 4096;
@@ -456,6 +458,37 @@ attribute vec3 position;
 varying vec2 vUv;
 void main(){ vUv = position.xy * 0.5 + 0.5; gl_Position = vec4(position.xy, 0.0, 1.0); }`;
 
+// v0.85 post-processing composite for the additive top layer: mip-chain bloom, a brief chromatic
+// fringe from the frame copy when the ship is hit, an edge flash, and fine film grain.
+export const POSTFX_FRAGMENT = `precision mediump float;
+uniform sampler2D uBloom;
+uniform sampler2D uCap;
+uniform float uHasCap;
+uniform float uStrength;
+uniform float uChroma;
+uniform float uGrain;
+uniform float uTime;
+uniform vec4 uFlash;
+uniform vec2 uRes;
+varying vec2 vUv;
+float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+vec3 cap(vec2 uv){ vec4 t = texture2D(uCap, uv); return t.rgb * t.a; }
+void main(){
+  vec3 c = texture2D(uBloom, vUv).rgb * uStrength;
+  if (uChroma > 0.001 && uHasCap > 0.5) {
+    vec2 d = vUv - 0.5;
+    vec2 o = d * uChroma * 0.05 + vec2(uChroma * 0.006, 0.0);
+    vec3 base = cap(vUv);
+    float r = cap(vUv + o).r;
+    vec2 gb = cap(vUv - o).gb;
+    c += max(vec3(r - base.r, gb - base.gb), 0.0) * uChroma * 1.4;
+  }
+  float e = length((vUv - 0.5) * vec2(1.0, 1.25)) * 1.5;
+  c += uFlash.rgb * uFlash.a * smoothstep(0.62, 1.12, e);
+  if (uGrain > 0.0) { float n = h(floor(vUv * uRes * 0.5) + fract(uTime * 7.13) * 91.0); c += vec3(n * n * n) * uGrain; }
+  gl_FragColor = vec4(c, max(c.r, max(c.g, c.b)));
+}`;
+
 export const PREFILTER_FRAGMENT = `precision mediump float;
 uniform sampler2D uTex;
 uniform vec2 uTexel;
@@ -615,9 +648,11 @@ function spriteBatch(T, uniforms) {
   };
 }
 
-export async function createBloomLayer(canvas, loadThree = () => import(THREE_URL)) {
+export async function createBloomLayer(canvas, loadThree = () => import(THREE_URL), loadPostfx = () => import(POSTFX_URL)) {
   if (!canvas) return null;
   const T = await loadThree();
+  let PP = null;
+  try { PP = loadPostfx ? await loadPostfx() : null; } catch (e) { PP = null; }
   let renderer;
   try {
     renderer = new T.WebGLRenderer({ canvas, antialias: false, alpha: true, premultipliedAlpha: true, depth: false, stencil: false, powerPreference: 'high-performance' });
@@ -640,7 +675,10 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
   const glowScene = new T.Scene(); glowScene.add(glow.mesh);
   const screenScene = new T.Scene(); screenScene.add(screen.mesh);
   const target = (w, h) => new T.WebGLRenderTarget(w, h, { depthBuffer: false, stencilBuffer: false, type: T.UnsignedByteType, magFilter: T.LinearFilter, minFilter: T.LinearFilter, generateMipmaps: false });
-  let A = target(1, 1), B = target(1, 1), C = target(1, 1), D = target(1, 1);
+  let A = target(1, 1), B = target(1, 1), C = target(1, 1), D = target(1, 1), M = target(1, 1);
+  const postfx = raw(POSTFX_FRAGMENT, { uBloom: { value: null }, uCap: { value: null }, uHasCap: { value: 0 }, uStrength: { value: 1 }, uChroma: { value: 0 }, uGrain: { value: 0 }, uTime: { value: 0 }, uFlash: { value: new T.Vector4() }, uRes: res }, true);
+  let mip = null;
+  if (PP && PP.MipmapBlurPass) { try { mip = new PP.MipmapBlurPass(); mip.levels = 6; mip.radius = 0.8; } catch (e) { mip = null; } }
   let width = 1, height = 1, lost = false, captureTexture = null, captureSource = null;
 
   function run(material, out, clear = true) {
@@ -657,6 +695,8 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
       renderer.setPixelRatio(ratio || 1); renderer.setSize(width, height, false);
       let qw = Math.max(1, Math.ceil(width / 4)), qh = Math.max(1, Math.ceil(height / 4)), ew = Math.max(1, Math.ceil(width / 8)), eh = Math.max(1, Math.ceil(height / 8));
       A.setSize(qw, qh); B.setSize(qw, qh); C.setSize(ew, eh); D.setSize(ew, eh);
+      let hw = Math.max(1, Math.ceil(width / 2)), hh = Math.max(1, Math.ceil(height / 2)); M.setSize(hw, hh);
+      if (mip) { try { mip.setSize(hw, hh); } catch (e) { mip = null; } }
       glow.size(width, height); screen.size(width, height);
     },
     setVisible(on) { canvas.style.display = on ? 'block' : 'none'; },
@@ -666,6 +706,7 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
     // Drawn sharp at full resolution on top (sparks, light pools).
     screen(x, y, r, c, a = 1, hard = 0) { screen.add(x, y, r, c, a, hard); },
     get spriteCount() { return glow.count + screen.count; },
+    get postfx() { return !!mip; },
     // frame: {bloom: bool (default true), capture: canvas|null, threshold, near, wide,
     //         weather: {type 1-6, amount, camX, camY, time} | null}
     render(frame) {
@@ -691,9 +732,28 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
         captureTexture.needsUpdate = true;
         prefilter.uniforms.uTex.value = captureTexture; prefilter.uniforms.uTexel.value.set(1 / src.width, 1 / src.height);
         prefilter.uniforms.uThreshold.value = frame.threshold ?? 0.5; prefilter.uniforms.uKnee.value = 0.3;
-        run(prefilter, A);
-      } else { renderer.setRenderTarget(A); renderer.clear(true, false, false); }
-      if (glow.count) { renderer.setRenderTarget(A); renderer.render(glowScene, camera); }
+        if (!mip) run(prefilter, A);
+      } else if (!mip) { renderer.setRenderTarget(A); renderer.clear(true, false, false); }
+      if (mip) {
+        // Mip-chain bloom (postprocessing's MipmapBlurPass): prefilter at half resolution so halos stay smooth.
+        if (src) run(prefilter, M); else { renderer.setRenderTarget(M); renderer.clear(true, false, false); }
+        if (glow.count) { renderer.setRenderTarget(M); renderer.render(glowScene, camera); }
+        try { mip.render(renderer, M); } catch (e) { mip = null; }
+        if (mip) {
+          renderer.setRenderTarget(null); renderer.clear(true, false, false);
+          let u = postfx.uniforms, fx = frame.fx || {};
+          u.uBloom.value = mip.texture; u.uStrength.value = ((frame.near ?? 1) + (frame.wide ?? 1)) * 0.62;
+          u.uCap.value = src ? captureTexture : null; u.uHasCap.value = src ? 1 : 0;
+          u.uChroma.value = fx.chroma || 0; u.uGrain.value = fx.grain || 0; u.uTime.value = fx.time || 0;
+          let f = fx.flash; if (f) { let c = parseColour(f.color || '#ff3050'); u.uFlash.value.set(c[0], c[1], c[2], f.amount || 0); } else u.uFlash.value.set(0, 0, 0, 0);
+          quad.material = postfx; renderer.render(quadScene, camera);
+          drawWeather();
+          if (screen.count) renderer.render(screenScene, camera);
+          return;
+        }
+        if (src) run(prefilter, A); else { renderer.setRenderTarget(A); renderer.clear(true, false, false); }
+        if (glow.count) { renderer.setRenderTarget(A); renderer.render(glowScene, camera); }
+      } else if (glow.count) { renderer.setRenderTarget(A); renderer.render(glowScene, camera); }
       // Two blur levels.
       blur.uniforms.uTex.value = A.texture; blur.uniforms.uStep.value.set(1 / A.width, 0); run(blur, B);
       blur.uniforms.uTex.value = B.texture; blur.uniforms.uStep.value.set(0, 1 / A.height); run(blur, A);
@@ -709,9 +769,10 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
       if (screen.count) renderer.render(screenScene, camera);
     },
     dispose() {
-      for (let t of [A, B, C, D]) t.dispose();
+      for (let t of [A, B, C, D, M]) t.dispose();
+      if (mip) try { mip.dispose(); } catch (e) {}
       if (captureTexture) captureTexture.dispose();
-      for (let m of [prefilter, blur, copy, composite, weather]) m.dispose();
+      for (let m of [prefilter, blur, copy, composite, weather, postfx]) m.dispose();
       quadGeometry.dispose(); glow.dispose(); screen.dispose(); renderer.dispose();
     }
   };
