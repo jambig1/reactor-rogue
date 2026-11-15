@@ -162,6 +162,14 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.98.0 — Flight tutorial, clearer controls, itch.io build
+
+- **First-run flight tutorial:** six short tips on your first run (flying, gems, levelling, evolutions, dash, the reactor timer). Each step moves on when you do it; skippable, never blocks play, and replayable from the Field Manual.
+- **Control settings tidied:** every PC mode now says how to dash; modes ordered Mouse + keyboard, Keyboard only, Mouse only, Touch; plainer wording; the dash is called the dash everywhere (not "ship ability"); phones no longer mention the U key.
+- **Level-up choice moved** from the Weapons tab to Gameplay.
+- HUD version label fixed (it still said 0.29.0).
+- `build-itch.sh` makes an itch.io upload zip with only the files the game needs.
+
 ## 0.97.0 — Physics wreckage and screen effects
 
 - **Matter.js wreckage:** destroyed ships and broken crates break into hull chunks that tumble, knock into each other, bounce off structures, get flung by explosions and the Plasma Breath jet, and get shoved aside when you fly through them. Hot chunks glow orange as they cool; frozen kills leave icy shards. Cosmetic only (max 140 pieces, own random numbers; off with reduced motion or particles off).
