@@ -20,6 +20,6 @@ run("s.launchCard='jackpot';s.items.bolt=1;var c=[0,0,0];for(let i=0;i<2000;i++)
 run("s.launchCard='scrap';s.dev=null;var k=runCreditBreakdown();var plain=k.base+k.bonus");assert.equal(run('runCredits()'),Math.round(run('plain')*1.5));
 // Second Wind saves exactly once.
 fresh();run("state='play';s.dev=null;s.launchCard='wind';s.p.inv=0;s.p.shield=0;s.p.hp=5;hurtPlayer(500)");assert.equal(run('state'),'play');assert(run('s.p.hp')>0);assert.equal(run('s.windUsed'),true);
-run("s.p.inv=0;s.dashTime=0;s.p.hp=5;hurtPlayer(500)");assert.equal(run('state'),'end','second lethal hit ends the run');
+run("s.p.inv=0;s.dashTime=0;s.p.hp=5;hurtPlayer(500)");assert(run('!!s.dying'),'second lethal hit starts the death explosion');run('deathTick(deathLength+.1)');assert.equal(run('state'),'end','the run ends once the explosion has played');
 console.log('PASS launch cards: dealt once after launch (never in test runs), skip option, all nine cards reachable, glass/iron hull and damage, critical mass, boss hunter, lucky cache odds, scrap baron credits, second wind saves once');
 `);

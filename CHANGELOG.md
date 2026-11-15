@@ -162,6 +162,29 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.88.0
+
+- three.quarks particle explosions (bundled offline beside three.js): every destroyed ship now bursts into GPU-batched sparks and glowing embers in its own colour, elites add a fireball, bosses erupt in a huge shower, and your own ship's death gets a big particle blast on top of the existing explosion.
+- Particles feed into the bloom so they glow, follow the graphics settings (off on Low and with reduced motion), thin out when the screen is crowded, and are capped so phones stay smooth. If three.quarks can't load, the old effects carry on alone.
+
+## 0.87.0
+
+- Orbiting Blades are now **Defence Satellites**: little satellites with solar panels circle your ship and zap ships they touch. The evolution, **Laser Lattice**, links them into a glowing laser ring, and its special ability spins two rings of linked satellites.
+- Comet Scythes are now **Rogue Comets**: blazing comets with glowing tails arc out and swing back. The evolution, **Comet Storm**, adds comets behind you and its ability spirals out three giant comets.
+- Same damage, range and behaviour as before; only the names, descriptions, art and icons changed.
+
+## 0.86.0
+
+- Death explosion: when your hull is destroyed the action freezes and your ship blows apart (white-hot flash, fireball, three shockwave rings, sparks, smoke and spinning hull shards in your ship's colour, with a screen shake and a short phone buzz where supported), then the screen fades into the results instead of cutting straight to the menu.
+- Vignette softened slightly.
+
+## 0.85.0
+
+- Post-processing: the glow layer now uses the postprocessing library's mip-chain bloom (bundled offline beside three.js) for smoother, wider, richer halos. If it can't load, the old bloom is used automatically.
+- Getting hit now gives a quick red-blue chromatic split and a red flash around the screen edges; defeating a boss gives a warm flash.
+- Subtle film grain on Medium and High graphics, and a soft vignette that darkens the screen corners (off on Low).
+- Reduced motion turns off the colour split and the grain.
+
 ## 0.84.0
 
 - New neon art style for the world, matching the ships: every pickup, XP gem, cache crate and distress pod, all 90 background structures across the ten sectors, and the painted terrain in Solar Corona, Abyssal Rift, Hive Nebula and Ghost Fleet now use flat dark hulls with a crisp neon outline.
