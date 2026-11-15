@@ -166,7 +166,7 @@
 
 - Orbiting Blades are now **Defence Satellites**: little satellites with solar panels circle your ship and zap ships they touch. The evolution, **Laser Lattice**, links them into a glowing laser ring, and its special ability spins two rings of linked satellites.
 - Comet Scythes are now **Rogue Comets**: blazing comets with glowing tails arc out and swing back. The evolution, **Comet Storm**, adds comets behind you and its ability spirals out three giant comets.
-- Same damage, range and behaviour as before; only the names, descriptions and art changed.
+- Same damage, range and behaviour as before; only the names, descriptions, art and icons changed.
 
 ## 0.86.0
 
