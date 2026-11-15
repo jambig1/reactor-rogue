@@ -162,6 +162,12 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.87.0
+
+- Orbiting Blades are now **Defence Satellites**: little satellites with solar panels circle your ship and zap ships they touch. The evolution, **Laser Lattice**, links them into a glowing laser ring, and its special ability spins two rings of linked satellites.
+- Comet Scythes are now **Rogue Comets**: blazing comets with glowing tails arc out and swing back. The evolution, **Comet Storm**, adds comets behind you and its ability spirals out three giant comets.
+- Same damage, range and behaviour as before; only the names, descriptions and art changed.
+
 ## 0.86.0
 
 - Death explosion: when your hull is destroyed the action freezes and your ship blows apart (white-hot flash, fireball, three shockwave rings, sparks, smoke and spinning hull shards in your ship's colour, with a screen shake and a short phone buzz where supported), then the screen fades into the results instead of cutting straight to the menu.
