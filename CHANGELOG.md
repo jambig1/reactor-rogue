@@ -162,6 +162,14 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.90.0
+
+- Sound pass 1 (ZzFX): new generated sound effects. All 48 weapons now have a sound that fits them (blasters, needles, shotguns, missiles, zaps, lasers, ice, goo, pulses, comets…) instead of most sharing one beep.
+- Every destroyed ship now makes a sound (crunchy pops for small ships, heavier booms for elites, a huge blast for bosses), placed left or right in stereo by where it happened.
+- XP gems climb in pitch when you hoover up a run of them, like Vampire Survivors.
+- New explosion, hurt, dash, boss arrival and boss fire sounds, and soft clicks on menu buttons.
+- Sounds are generated once and reused, with voice limits so big fights stay clear and don't distort.
+
 ## 0.89.0
 
 - PixiJS renderer, stage 1 (bundled offline): ordinary enemy ships and all the floating sector scenery are now drawn by PixiJS as GPU sprites. Each enemy design is painted once into a texture, then reused, so crowds are much cheaper to draw (about 3x faster with 220 enemies on screen in testing). They look the same as before.
