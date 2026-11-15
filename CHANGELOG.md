@@ -162,6 +162,20 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.92.0
+
+- Eight new soundtracks, all generated in the game and each built around its sector:
+  - Cinder Foundry, Furnace Breaks: industrial halftime with anvil clangs, steam vents and a grinding bass.
+  - Cryo Reach, Glacier Rollers: liquid drum & bass with crystal bells and warm pads.
+  - Neon Undercity, Undercity Pressure: cyberpunk neurofunk with a gated synth arpeggio, police sirens and a growling reese.
+  - Solar Corona, Solar Flare: euphoric rave jungle with hoovers, major stabs and piano chords.
+  - Abyssal Rift, Event Horizon: dark halftime with a sub drone, glitch stutters and swelling risers.
+  - Hive Nebula, Swarm Riddim: acid ragga jungle with a squelchy 303 line and insect-buzz sirens.
+  - Ghost Fleet, Ghost Signal: haunted dub with ghostly choir, theremin melody, distant bells and long echoes.
+  - Final bosses, Reactor Meltdown: everything at once at 180 BPM with an alarm siren.
+- Adaptive music: the track is muffled when the arena is quiet and opens up fully as the swarm builds, and always at full blast in boss fights.
+- All new tracks can be picked in the soundtrack setting.
+
 ## 0.91.0
 
 - Animated menus with GSAP (bundled offline): every menu panel springs in and its contents cascade into place; level-up and specialise cards flip in one after another (and again on reroll); buttons and cards squash when pressed and bounce back; the Launch button gently glows; the menu logo floats; and the numbers on the results screen count up.
