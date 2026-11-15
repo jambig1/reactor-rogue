@@ -164,8 +164,15 @@
 
 ## 0.92.0
 
-- Eight new jungle / drum & bass tracks, all generated in the game: Furnace Breaks (amen jungle, Cinder Foundry), Glacier Rollers (liquid, Cryo Reach), Undercity Pressure (neurofunk, Neon Undercity), Solar Flare (rave jungle, Solar Corona), Event Horizon (dark neuro, Abyssal Rift), Swarm Riddim (ragga jungle, Hive Nebula), Ghost Signal (dark liquid, Ghost Fleet) and Reactor Meltdown for the final bosses.
-- New instruments: chopped breakbeats that change every bar, rolling reese bass, rave stabs, rides and risers before each drop.
+- Eight new soundtracks, all generated in the game and each built around its sector:
+  - Cinder Foundry, Furnace Breaks: industrial halftime with anvil clangs, steam vents and a grinding bass.
+  - Cryo Reach, Glacier Rollers: liquid drum & bass with crystal bells and warm pads.
+  - Neon Undercity, Undercity Pressure: cyberpunk neurofunk with a gated synth arpeggio, police sirens and a growling reese.
+  - Solar Corona, Solar Flare: euphoric rave jungle with hoovers, major stabs and piano chords.
+  - Abyssal Rift, Event Horizon: dark halftime with a sub drone, glitch stutters and swelling risers.
+  - Hive Nebula, Swarm Riddim: acid ragga jungle with a squelchy 303 line and insect-buzz sirens.
+  - Ghost Fleet, Ghost Signal: haunted dub with ghostly choir, theremin melody, distant bells and long echoes.
+  - Final bosses, Reactor Meltdown: everything at once at 180 BPM with an alarm siren.
 - Adaptive music: the track is muffled when the arena is quiet and opens up fully as the swarm builds, and always at full blast in boss fights.
 - All new tracks can be picked in the soundtrack setting.
 
