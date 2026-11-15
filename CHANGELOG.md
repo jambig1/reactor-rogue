@@ -162,6 +162,11 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.91.0
+
+- Animated menus with GSAP (bundled offline): every menu panel springs in and its contents cascade into place; level-up and specialise cards flip in one after another (and again on reroll); buttons and cards squash when pressed and bounce back; the Launch button gently glows; the menu logo floats; and the numbers on the results screen count up.
+- Turned off with reduced motion. Animations never block taps.
+
 ## 0.90.0
 
 - Sound pass 1 (ZzFX): new generated sound effects. All 48 weapons now have a sound that fits them (blasters, needles, shotguns, missiles, zaps, lasers, ice, goo, pulses, comets…) instead of most sharing one beep.

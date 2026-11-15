@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.90.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.91.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -169,3 +169,5 @@ Particles v0.88: `vendor/three.quarks-0.17.1/quarks.js` (esbuild bundle, three e
 PixiJS v0.89 (stage 2a): `pixi-layer-v0890.js` + `vendor/pixi.js-8.23.0/pixi.js` (esbuild bundle of Application/Container/Sprite/Texture/Rectangle/Matrix, webgl). `#pixiLayer` sits between `#gpuLayer` and `#game`. `beginPixiFrame()`/`endPixiFrame()` wrap `draw()`; on only when `gpuFrame.on && !gpuFrame.overlay` and in a run. `pixiEnemy(e)` routes ordinary hulls (not bosses/finals/spores/turrets/swarm/objectives) to cached textures painted by `drawIllustratedEnemyHull` (global `ctx` is now `let` and is swapped during painting). `drawSectorStructures` sends pieces to `pixiLayer.scenery`. Camera = `ctx.getTransform()` at first use per frame. `?pixi=0` disables. Next stages: bosses/specials, player shots, hostile shots, gems/drops, then bitECS.
 
 Sound v0.90: `zzfxBuild` (ZzFX sample builder, MIT) + `sfxBank` presets, `sfxRender` normalises to the preset volume, `sfxBuffer` caches AudioBuffers (prewarmed after unlock), `playSfx(name,x,{rate,vol})` adds stereo pan and per-name voice limits (`sfxLimits`). `sound(id,x)` tries gem streak → `sfxFamily[id]` → `sfxBank[id]` → old synth. Kill sounds at `s.kills++`. Tests: `TEST-SFX.cjs`.
+
+Motion v0.91: `vendor/gsap-3.15.1/gsap.min.js` loaded with defer (GreenSock standard no-charge licence, see README-licence.md). `show(id,on)` calls `motionIn(id)` when an overlay becomes visible; `motionCards` via MutationObserver on #choices/#specChoices; `motionPress` on pointer events; `motionCountUp` for `.result-stat strong`; `motionMenu` logo float + #start glow. All guarded by `uiMotion.ok()` (gsap loaded and not reducedMotion).
