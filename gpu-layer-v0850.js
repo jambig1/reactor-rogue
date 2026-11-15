@@ -10,6 +10,8 @@ export const THREE_VERSION = '0.187.0';
 // Bundled beside the game (MIT licence in vendor/three-0.187.0/LICENSE); three.module.js imports ./three.core.js.
 // postprocessing (zlib licence, vendor/postprocessing-6.39.6/LICENSE.md): only its MipmapBlurPass, bundled with three as an external.
 export const POSTFX_URL = new URL('./vendor/postprocessing-6.39.6/mipmap-blur.js', import.meta.url).href;
+// three.quarks (MIT, vendor/three.quarks-0.17.1/LICENSE): GPU-batched particle explosions on the top layer.
+export const QUARKS_URL = new URL('./vendor/three.quarks-0.17.1/quarks.js', import.meta.url).href;
 export const THREE_URL = new URL('./vendor/three-' + THREE_VERSION + '/three.module.js', import.meta.url).href;
 
 const SPRITE_CAP = 4096;
@@ -648,11 +650,82 @@ function spriteBatch(T, uniforms) {
   };
 }
 
-export async function createBloomLayer(canvas, loadThree = () => import(THREE_URL), loadPostfx = () => import(POSTFX_URL)) {
+// v0.88 three.quarks explosions. World-space particles under an orthographic camera that pans with the
+// player, so bursts stay where they happened. Presets are cloned per burst (shared materials, so they
+// batch into a few draw calls) and destroy themselves; a cap keeps phones safe.
+export function createParticleFX(T, Q, maxSystems = 48) {
+  const scene = new T.Scene(), camera = new T.OrthographicCamera(0, 1, 0, 1, -100, 100);
+  const batch = new Q.BatchedRenderer(); scene.add(batch);
+  const dot = (() => {
+    let c = typeof document !== 'undefined' && document.createElement ? document.createElement('canvas') : null;
+    if (!c || !c.getContext) return null;
+    c.width = c.height = 64; let g = c.getContext('2d'), r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.35, 'rgba(255,255,255,.75)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = r; g.fillRect(0, 0, 64, 64); let t = new T.CanvasTexture(c); t.colorSpace = T.NoColorSpace; return t;
+  })();
+  const mat = new T.MeshBasicMaterial({ map: dot, transparent: true, blending: T.AdditiveBlending, depthWrite: false, depthTest: false, side: T.DoubleSide });
+  const V3 = (x, y, z) => new Q.Vector3(x, y, z), V4 = (x, y, z, w) => new Q.Vector4(x, y, z, w);
+  const fade = (a0 = 1) => new Q.Gradient([[V3(1, 1, 1), 0], [V3(1, 1, 1), 1]], [[a0, 0], [0, 1]]);
+  const shrink = (k = 0) => new Q.SizeOverLife(new Q.PiecewiseBezier([[new Q.Bezier(1, .8, .45, k), 0]]));
+  const slow = () => new Q.SpeedOverLife(new Q.PiecewiseBezier([[new Q.Bezier(1, .55, .2, .05), 0]]));
+  function system(o) {
+    let ps = new Q.ParticleSystem({
+      duration: .2, looping: false, autoDestroy: true, worldSpace: true,
+      shape: new Q.CircleEmitter({ radius: o.radius || 4, thickness: 1 }),
+      startLife: new Q.IntervalValue(o.life[0], o.life[1]), startSpeed: new Q.IntervalValue(o.speed[0], o.speed[1]),
+      startSize: new Q.IntervalValue(o.size[0], o.size[1]), startColor: new Q.ConstantColor(V4(1, 1, 1, 1)),
+      emissionOverTime: new Q.ConstantValue(0),
+      emissionBursts: [{ time: 0, count: new Q.ConstantValue(o.count), cycle: 1, interval: .01, probability: 1 }],
+      behaviors: [new Q.ColorOverLife(fade(1)), shrink(o.shrinkTo || 0), slow()],
+      renderMode: o.stretch ? Q.RenderMode.StretchedBillBoard : Q.RenderMode.BillBoard, speedFactor: o.stretch || 0,
+      material: mat
+    });
+    return ps;
+  }
+  // Each preset is a list of layers: hot sparks (stretched), embers, and a soft fireball.
+  const presets = {
+    enemy: [{ count: 16, life: [.2, .45], speed: [160, 420], size: [4, 8], stretch: .06 }, { count: 7, life: [.35, .7], speed: [30, 120], size: [9, 18] }],
+    elite: [{ count: 28, life: [.25, .6], speed: [180, 480], size: [3, 7], stretch: .05 }, { count: 12, life: [.5, .95], speed: [40, 150], size: [10, 20] }, { count: 1, life: [.25, .3], speed: [0, 0], size: [70, 80], radius: .1 }],
+    boss: [{ count: 90, life: [.4, 1.1], speed: [220, 760], size: [4, 9], stretch: .06 }, { count: 40, life: [.8, 1.6], speed: [40, 240], size: [16, 34] }, { count: 2, life: [.35, .5], speed: [0, 0], size: [180, 240], radius: .1 }],
+    player: [{ count: 70, life: [.35, 1], speed: [200, 640], size: [3, 8], stretch: .055 }, { count: 30, life: [.7, 1.4], speed: [30, 200], size: [14, 28] }, { count: 1, life: [.3, .4], speed: [0, 0], size: [160, 200], radius: .1 }]
+  };
+  const live = [];
+  return {
+    scene, camera,
+    get active() { return live.length; },
+    resize(w, h) { this.w = w; this.h = h; },
+    // Colour tints the whole burst: hot white core fading through the given colour.
+    burst(kind, x, y, colour = [1, .6, .3], scale = 1, density = 1) {
+      let layers = presets[kind] || presets.enemy;
+      for (let L of layers) {
+        if (live.length >= maxSystems) { let old = live.shift(); try { old.dispose(); } catch (e) {} }
+        let n = Math.max(1, Math.round(L.count * density * (L.count > 2 ? 1 : 1)));
+        let ps = system({ ...L, count: n, size: [L.size[0] * scale, L.size[1] * scale], speed: [L.speed[0] * scale, L.speed[1] * scale] });
+        let hot = L.count <= 2 ? [1, .95, .85] : colour;
+        ps.startColor = new Q.ConstantColor(V4(Math.min(1, hot[0] * 1.15 + .1), Math.min(1, hot[1] * 1.15 + .1), Math.min(1, hot[2] * 1.15 + .1), 1));
+        ps.emitter.position.set(x, y, 0); ps.emitter.updateMatrixWorld(true);
+        scene.add(ps.emitter); batch.addSystem(ps);
+        live.push({ ps, dispose() { try { batch.deleteSystem(ps); } catch (e) {} if (ps.emitter.parent) ps.emitter.parent.remove(ps.emitter); } });
+      }
+    },
+    update(dt) {
+      if (!(dt > 0)) return;
+      batch.update(Math.min(dt, .05));
+      for (let i = live.length - 1; i >= 0; i--) { let ps = live[i].ps; if (ps.emitEnded && ps.particleNum === 0) { live[i].dispose(); live.splice(i, 1); } }
+    },
+    // ox/oy: screen position of world (0,0). Camera spans the screen in world units.
+    aim(ox, oy, w, h) { camera.left = -ox; camera.right = -ox + w; camera.top = -oy; camera.bottom = -oy + h; camera.updateProjectionMatrix(); camera.updateMatrixWorld(true); },
+    clear() { while (live.length) live.pop().dispose(); },
+    dispose() { this.clear(); mat.dispose(); if (dot) dot.dispose(); }
+  };
+}
+
+export async function createBloomLayer(canvas, loadThree = () => import(THREE_URL), loadPostfx = () => import(POSTFX_URL), loadQuarks = () => import(QUARKS_URL)) {
   if (!canvas) return null;
   const T = await loadThree();
-  let PP = null;
+  let PP = null, QK = null;
   try { PP = loadPostfx ? await loadPostfx() : null; } catch (e) { PP = null; }
+  try { QK = loadQuarks ? await loadQuarks() : null; } catch (e) { QK = null; }
   let renderer;
   try {
     renderer = new T.WebGLRenderer({ canvas, antialias: false, alpha: true, premultipliedAlpha: true, depth: false, stencil: false, powerPreference: 'high-performance' });
@@ -677,7 +750,8 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
   const target = (w, h) => new T.WebGLRenderTarget(w, h, { depthBuffer: false, stencilBuffer: false, type: T.UnsignedByteType, magFilter: T.LinearFilter, minFilter: T.LinearFilter, generateMipmaps: false });
   let A = target(1, 1), B = target(1, 1), C = target(1, 1), D = target(1, 1), M = target(1, 1);
   const postfx = raw(POSTFX_FRAGMENT, { uBloom: { value: null }, uCap: { value: null }, uHasCap: { value: 0 }, uStrength: { value: 1 }, uChroma: { value: 0 }, uGrain: { value: 0 }, uTime: { value: 0 }, uFlash: { value: new T.Vector4() }, uRes: res }, true);
-  let mip = null;
+  let mip = null, particles = null;
+  if (QK && QK.BatchedRenderer) { try { particles = createParticleFX(T, QK); } catch (e) { particles = null; } }
   if (PP && PP.MipmapBlurPass) { try { mip = new PP.MipmapBlurPass(); mip.levels = 6; mip.radius = 0.8; } catch (e) { mip = null; } }
   let width = 1, height = 1, lost = false, captureTexture = null, captureSource = null;
 
@@ -707,6 +781,9 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
     screen(x, y, r, c, a = 1, hard = 0) { screen.add(x, y, r, c, a, hard); },
     get spriteCount() { return glow.count + screen.count; },
     get postfx() { return !!mip; },
+    get particles() { return !!particles; },
+    get particleSystems() { return particles ? particles.active : 0; },
+    burst(kind, x, y, colour, scale, density) { if (particles) try { particles.burst(kind, x, y, colour, scale, density); } catch (e) { particles = null; } },
     // frame: {bloom: bool (default true), capture: canvas|null, threshold, near, wide,
     //         weather: {type 1-6, amount, camX, camY, time} | null}
     render(frame) {
@@ -719,10 +796,16 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
         weather.uniforms.uCam.value.set(w.camX || 0, w.camY || 0);
         quad.material = weather; renderer.render(quadScene, camera);
       };
+      const drawParticles = (into) => {
+        if (!particles || !particles.active) return;
+        try { particles.aim(frame.ox || 0, frame.oy || 0, width, height); renderer.setRenderTarget(into); renderer.render(particles.scene, particles.camera); } catch (e) { particles = null; }
+      };
+      if (particles) { try { particles.update(frame.fxDt || 0); } catch (e) { particles = null; } }
       if (frame.bloom === false) {
         renderer.setRenderTarget(null); renderer.clear(true, false, false);
         drawWeather();
         if (screen.count) renderer.render(screenScene, camera);
+        drawParticles(null);
         return;
       }
       let src = frame.capture || null;
@@ -738,6 +821,7 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
         // Mip-chain bloom (postprocessing's MipmapBlurPass): prefilter at half resolution so halos stay smooth.
         if (src) run(prefilter, M); else { renderer.setRenderTarget(M); renderer.clear(true, false, false); }
         if (glow.count) { renderer.setRenderTarget(M); renderer.render(glowScene, camera); }
+        drawParticles(M);
         try { mip.render(renderer, M); } catch (e) { mip = null; }
         if (mip) {
           renderer.setRenderTarget(null); renderer.clear(true, false, false);
@@ -749,6 +833,7 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
           quad.material = postfx; renderer.render(quadScene, camera);
           drawWeather();
           if (screen.count) renderer.render(screenScene, camera);
+          drawParticles(null);
           return;
         }
         if (src) run(prefilter, A); else { renderer.setRenderTarget(A); renderer.clear(true, false, false); }
@@ -767,10 +852,12 @@ export async function createBloomLayer(canvas, loadThree = () => import(THREE_UR
       quad.material = composite; renderer.render(quadScene, camera);
       drawWeather();
       if (screen.count) renderer.render(screenScene, camera);
+      drawParticles(null);
     },
     dispose() {
       for (let t of [A, B, C, D, M]) t.dispose();
       if (mip) try { mip.dispose(); } catch (e) {}
+      if (particles) try { particles.dispose(); } catch (e) {}
       if (captureTexture) captureTexture.dispose();
       for (let m of [prefilter, blur, copy, composite, weather, postfx]) m.dispose();
       quadGeometry.dispose(); glow.dispose(); screen.dispose(); renderer.dispose();

@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.87.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.88.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -163,3 +163,5 @@ Power-ups v0.83: `powerUps` table, `hangar.powerups` {id:rank} + `hangar.puSpent
 Neon art v0.84: all world art is `-v0840`. Structures: `sector-structures-{id}-v0840.webp` + `-glow-v0840` (rim + accent glow, generated from the main sheet), meta in `sectorStructureSets`. `drawSectorStructures` draws `structureLayers` (far P.3 dimmed, mid P.55, near P.74 sparse) with spin, pulse and `bloomLayer.glow` halos on the GPU path. Extra-sector terrain `sector-sprites-{id}-v0840.webp` is a flattened neon version of the v0711 painted sheets. Sector previews `sector-preview-{id}-v0840.webp` are composites of background + structures for all ten sectors.
 
 Post-processing v0.85: `gpu-layer-v0850.js` bloom layer imports `vendor/postprocessing-6.39.6/mipmap-blur.js` (esbuild bundle of postprocessing's MipmapBlurPass, three as an external rewritten to the bundled path). Path: prefilter capture into half-res `M`, glow sprites into `M`, `MipmapBlurPass.render`, then `POSTFX_FRAGMENT` (bloom + chromatic fringe from the capture + edge flash + grain). `frame.fx` comes from `postFxFrame()` (hit = `s.fxHitAt`, boss flash = `s.fxFlashAt`). Falls back to the old two-level blur if the import or pass fails. `#vignette` is CSS, hidden by `html.gfx-low`.
+
+Particles v0.88: `vendor/three.quarks-0.17.1/quarks.js` (esbuild bundle, three external rewritten to the vendored path). `createParticleFX(T,Q)` in `gpu-layer-v0850.js` owns a BatchedRenderer + ortho camera aimed by `frame.ox/oy`; presets enemy/elite/boss/player; cap 48 systems. Bloom layer exposes `burst()`; game calls `fxBurst(kind,x,y,colour,scale)` from the kill path and `startDeath`. Particles render into the bloom input (mip path) and again sharp on screen.

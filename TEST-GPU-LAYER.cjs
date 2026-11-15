@@ -66,7 +66,7 @@ const wx=await mod.createBloomLayer({style:{},addEventListener(){}},async()=>TB)
 passes.length=0;wx.begin();wx.render({bloom:false,weather:{type:5,amount:1,camX:0,camY:0,time:3}});assert.deepEqual(passes,['screen'],'weather only: one screen pass, no render targets');
 passes.length=0;wx.begin();wx.screen(10,10,2,'#fff',1,1);wx.render({bloom:false,weather:null});assert.deepEqual(passes,['screen'],'no weather: sprites only');
 passes.length=0;wx.begin();wx.render({capture:null,weather:{type:3,amount:1}});assert.deepEqual(passes.slice(-2),['screen','screen'],'bloom composite then weather');
-assert.equal((fs.readFileSync(path.join(__dirname,'gpu-layer-v0850.js'),'utf8').match(/side: T\.DoubleSide/g)||[]).length,3,'y-flipped sprite quads must be double-sided or Three.js culls them');assert(/uType < 5\.5/.test(mod.WEATHER_FRAGMENT)&&!/smoothstep\(\s*[0-9.]+\s*,\s*0\.0/.test(mod.WEATHER_FRAGMENT));
+assert.equal((fs.readFileSync(path.join(__dirname,'gpu-layer-v0850.js'),'utf8').match(/side: T\.DoubleSide/g)||[]).length,4,'y-flipped sprite quads must be double-sided or Three.js culls them');assert(/uType < 5\.5/.test(mod.WEATHER_FRAGMENT)&&!/smoothstep\(\s*[0-9.]+\s*,\s*0\.0/.test(mod.WEATHER_FRAGMENT));
 for(let src of [mod.PREFILTER_FRAGMENT,mod.BLUR_FRAGMENT,mod.COMPOSITE_FRAGMENT]){assert(/^precision mediump float;/.test(src));assert(!/smoothstep\(\s*[0-9.]+\s*,\s*0\.0/.test(src))}
 assert(/uLight\[12\]/.test(mod.BACKGROUND_FRAGMENT)&&/float\(i\) >= uLightCount/.test(mod.BACKGROUND_FRAGMENT));
 // Game wiring: optional start, fallback, setting, transparent 2D canvas only when active.
@@ -75,3 +75,7 @@ for(let needle of ['<canvas id="gpuLayer" aria-hidden="true"></canvas><canvas id
 assert(sw.includes('"gpu-layer-v0850.js"'));assert(sw.includes('"vendor/three-0.187.0/three.module.js","vendor/three-0.187.0/three.core.js"'),'bundled Three.js precached');assert(!/jsdelivr/i.test(sw+html),'no CDN dependency');
 console.log('PASS GPU layer exports, colour parsing, GLSL sources, stubbed Three.js lifecycle/bounds/pixel-upload reuse/self-check, strategy retries and overlay fallback/context loss, renderer-failure fallback, background lighting, bloom pass chain/capture reuse/context loss, weather passes, game wiring and bundled offline Three.js');
 })().catch(e=>{console.error(e);process.exitCode=1});
+// v0.88 three.quarks particle bursts with the real bundled Three.js and quarks.
+(async()=>{const m=await import(require('path').join(__dirname,'gpu-layer-v0850.js'));const T=await import(require('path').join(__dirname,'vendor/three-0.187.0/three.module.js'));const Q=await import(require('path').join(__dirname,'vendor/three.quarks-0.17.1/quarks.js'));
+const fx=m.createParticleFX(T,Q,10);fx.burst('enemy',0,0,[1,.4,.2]);assert.equal(fx.active,2);fx.burst('boss',50,50);assert.equal(fx.active,5);for(let i=0;i<12;i++)fx.burst('enemy',i,i);assert(fx.active<=10,'capped');
+fx.aim(195,422,390,844);assert.equal(fx.camera.left,-195);for(let i=0;i<120;i++)fx.update(.03);assert.equal(fx.active,0,'bursts clean themselves up');fx.dispose();console.log('PASS three.quarks bursts, cap and cleanup')})().catch(e=>{console.error(e);process.exit(1)});

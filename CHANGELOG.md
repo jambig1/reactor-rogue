@@ -162,6 +162,11 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.88.0
+
+- three.quarks particle explosions (bundled offline beside three.js): every destroyed ship now bursts into GPU-batched sparks and glowing embers in its own colour, elites add a fireball, bosses erupt in a huge shower, and your own ship's death gets a big particle blast on top of the existing explosion.
+- Particles feed into the bloom so they glow, follow the graphics settings (off on Low and with reduced motion), thin out when the screen is crowded, and are capped so phones stay smooth. If three.quarks can't load, the old effects carry on alone.
+
 ## 0.87.0
 
 - Orbiting Blades are now **Defence Satellites**: little satellites with solar panels circle your ship and zap ships they touch. The evolution, **Laser Lattice**, links them into a glowing laser ring, and its special ability spins two rings of linked satellites.
