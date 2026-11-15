@@ -10,7 +10,7 @@ function fresh(id='vanguard'){run(`state='menu';hangar.ships=pilots.map(p=>p.id)
 function setup(id,path='',evolved=false){fresh();run(`Math.random=()=>.99;s.items={'${id}':3};s.spec=${path?`{'${id}':'${path}'}`:'{}'};s.evolved=${evolved?`{'${id}':true}`:'{}'};s.p.hp=50;s.pilot.damage=1;s.t=100;s.nextBreach=999;s.specialClock=999;s.spawn=999;s.elite=999;s.need=Infinity;s.debris=[];spawn(0);target=s.enemies[0];target.x=100;target.y=0;target.hp=target.max=100000;target.v=0;target.armour=0`)}
 
 
-const trackIds=run('musicTracks.map(t=>t.id)');assert.equal(new Set(trackIds).size,6);
+const trackIds=run('musicTracks.map(t=>t.id)');assert.equal(new Set(trackIds).size,14);
 let trackStats=[];
 for(let id of trackIds){let begin=Date.now(),pcm=run(`renderMusicPCM(musicTracks.find(t=>t.id==='${id}'),22050,16)`),sum=0,peak=0,changes=0;for(let i=0;i<pcm.length;i++){assert(Number.isFinite(pcm[i]));sum+=pcm[i]*pcm[i];peak=Math.max(peak,Math.abs(pcm[i]));if(i&&pcm[i]*pcm[i-1]<0)changes++}assert(peak>.1&&peak<=.721);assert.equal(pcm[0],0);assert.equal(pcm.at(-1),0);assert(Math.sqrt(sum/pcm.length)>.025);trackStats.push({id,duration:pcm.length/22050,rms:Math.sqrt(sum/pcm.length),peak,renderMs:Date.now()-begin,changes});}
 assert(trackStats.find(t=>t.id==='menu').duration>trackStats.find(t=>t.id==='grid').duration);
@@ -31,7 +31,7 @@ run("state='play';s.enemies=[];s.sector='grid';audioTick();audioTick();audioEngi
 run("audioPrefs.master=.65;audioPrefs.pauseMusic=false;state='pause';audioTick();audioTick()");assert(run('!!musicTransport.current'));assert.equal(run('audioEngine.music.gain.value'),.25*.42);run("audioPrefs.pauseMusic=true;state='pause';previewMusic();audioTick()");assert(run('musicTransport.previewUntil>audioEngine.ctx.currentTime'));assert(run('!!musicTransport.current'));run('audioEngine.ctx.currentTime+=21;audioTick()');assert.equal(run('musicTransport.current'),null);run("audioPrefs.soundtrack='storm';state='play';audioTick();audioTick();saveAudio()");assert.equal(run('musicTransport.current.id'),'storm');assert.equal(JSON.parse(storage.ns_audio).soundtrack,'storm');
 // Cached loops reuse buffers; transition tails are bounded through repeated changes/mutes.
 run("for(let i=0;i<20;i++){audioPrefs.soundtrack=i%2?'menu':'grid';audioTick();audioTick();audioPrefs.music=0;audioTick();audioPrefs.music=.25}");assert(run('musicTransport.fading.length<=2'));assert(run('musicTransport.cache.size<=4'));assert.equal(run('audioEngine.voices'),0);
-console.log('PASS 6 original deterministic loops, safe peaks/seams, private RNG, buses, adaptive/manual scenes, pauses/playheads, hidden/mute, preview, preferences and bounded transitions/cache');console.log(JSON.stringify(trackStats));
+console.log('PASS 14 original deterministic loops, safe peaks/seams, private RNG, buses, adaptive/manual scenes, pauses/playheads, hidden/mute, preview, preferences and bounded transitions/cache');console.log(JSON.stringify(trackStats));
 
 // Visibility events silence immediately even when requestAnimationFrame is suspended.
 run("audioPrefs.soundtrack='grid';audioPrefs.music=.25;audioPrefs.pauseMusic=true;state='play';document.hidden=false;audioTick();audioTick();audioEngine.ctx.currentTime+=2;document.hidden=true");for(let cb of events['doc:visibilitychange']||[])cb();assert.equal(run('musicTransport.current'),null);assert.equal(run('audioEngine.master.gain.value'),0);

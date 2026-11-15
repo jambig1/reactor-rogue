@@ -162,6 +162,13 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.92.0
+
+- Eight new jungle / drum & bass tracks, all generated in the game: Furnace Breaks (amen jungle, Cinder Foundry), Glacier Rollers (liquid, Cryo Reach), Undercity Pressure (neurofunk, Neon Undercity), Solar Flare (rave jungle, Solar Corona), Event Horizon (dark neuro, Abyssal Rift), Swarm Riddim (ragga jungle, Hive Nebula), Ghost Signal (dark liquid, Ghost Fleet) and Reactor Meltdown for the final bosses.
+- New instruments: chopped breakbeats that change every bar, rolling reese bass, rave stabs, rides and risers before each drop.
+- Adaptive music: the track is muffled when the arena is quiet and opens up fully as the swarm builds, and always at full blast in boss fights.
+- All new tracks can be picked in the soundtrack setting.
+
 ## 0.91.0
 
 - Animated menus with GSAP (bundled offline): every menu panel springs in and its contents cascade into place; level-up and specialise cards flip in one after another (and again on reroll); buttons and cards squash when pressed and bounce back; the Launch button gently glows; the menu logo floats; and the numbers on the results screen count up.
