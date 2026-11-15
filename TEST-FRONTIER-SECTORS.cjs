@@ -27,7 +27,7 @@ for(let id of ['foundry','cryo']){
   if(tier===2){run("s.bossKills=2;hit(target,1e9,'bolt')");assert.equal(run('s.finalEncounter.stage'),'approach');assert(!run('s.finalClearPending'))}
  }
  fresh();run(`s.sector='${id}';s.enemies=[];spawn(0);spawn(0);spawn(0)`);assert.equal(run('s.enemies.filter(e=>e.sectorHull===s.sector).length'),2);assert.equal(run('cleanRun({...snapshotRun("abandoned"),sector:s.sector}).sector'),id);
- run(`state='play'`);assert.equal(run('musicScene()'),id==='foundry'?'storm':'belt');
+ run(`state='play'`);assert.equal(run('musicScene()'),id);
  run('s.sectorHazards=[];for(let i=0;i<100;i++)addFrontierHazard("vent",0,0)');assert.equal(run('s.sectorHazards.length'),24);
  // Hundreds of real updates with legal loadout and existing population cap.
  fresh();run(`s.sector='${id}';s.dev.test=true;s.dev.god=true;s.items={bolt:3,echoRing:2,corona:2,shield:2};s.need=Infinity;s.nextBreach=9999;s.t=240;s.spawn=999;for(let i=0;i<180;i++)spawn(0)`);for(let i=0;i<300;i++)run('update(.016)');assert(run('s.enemies.length<=240&&s.sectorHazards.length<=24'));assert(run('Number.isFinite(s.p.x+s.p.y+s.p.hp)'));
