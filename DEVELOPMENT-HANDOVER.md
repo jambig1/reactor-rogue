@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.95.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.96.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -177,3 +177,7 @@ Map noise v0.93: `vendor/simplex-noise-4.0.3/simplex.js` (IIFE exposing `Simplex
 Tactics v0.94: `vendor/yuka-0.7.8/yuka.js` (IIFE `window.YUKA`, defer). `tacticHeading(e,base)` slots between `specialistHeading` and `formationHeading` in enemy movement; per-enemy non-enumerable `e.tac` Vehicle with Seek/Arrive/Flee/Separation/Alignment/Cohesion, positions relative to the player in a CellSpacePartitioning, recomputed every ~0.1s. Kinds: swarm/flank/direct/heavy. Off in dev test runs and without the library. `tacticsPrune()` twice a second. Tests: `TEST-TACTICS.cjs`.
 
 Pacing v0.95: `earlyLevelEase(l)` scales `levelXPRequirement` (min 3); early spawn interval `min(.75-.0018t, .42+.0019t)`; bolt cooldown .56. Evolutions: `upgradeSynergy` shows evolution rows for owned weapons too; `evoRelevant` + `rollChoices` swap (55%) the third card for an evolution-relevant one; `s.evoAnnounced` banner pulls `s.elite` to t+10. Attack-parity baseline (`/home/claude/work/prev-index.html`) was given the same bolt cadence.
+
+
+### 0.96.0
+`swarmEase()` multiplies the ordinary spawn interval by 1+(alive-110)/55 above 110 non-boss enemies (not in endless). Phone HUD rules live in the `v0.96 phone HUD` media block (max-width 600px) at the end of the main stylesheet.

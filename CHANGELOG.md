@@ -162,6 +162,11 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.96.0 — Smoother mid-game, cleaner phone HUD
+
+- **Swarm director:** when ordinary enemies pile up past ~110 because the build can't keep up, new spawns slow down (about half as often at 165 alive). Strong builds never trigger it; endless mode is unchanged. In bot tests the weak builds that used to hit the 240-enemy cap and die around 7 minutes now peak at 150–170 and survive past 10–13 minutes.
+- **Phone HUD (≤600px):** brand text hidden; clock, objective and kills on one compact row; wave label dropped; smaller settings and pause buttons; credits and total score hidden during play; the combo counter sits top-left and the boss bar is shifted right so they no longer overlap; toast and boost chips moved below them.
+
 ## 0.95.0
 
 - Faster start: the first level now needs 3 XP instead of 5, and early levels are about 40% cheaper, easing back to normal by level 10. Enemies arrive about twice as often in the first minute and a half, so there's action and XP straight away.
