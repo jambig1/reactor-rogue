@@ -162,6 +162,12 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.93.0
+
+- Procedural maps (simplex-noise): every run now has its own randomly generated layout. Each sector is shaped into dense belts, scattered fields and empty open voids, so you fly through real places instead of an even sprinkle.
+- Belts are packed with asteroids (more of them, spawning faster, and bigger) and background scenery; voids are open space with almost nothing in them. A banner tells you when you enter one, named for the sector: Asteroid Belt, Ice Field, Slag Field, Ion Shoal, Wreckage Row, Corona Debris, Accretion Band, Spore Bank, Ship Graveyard or Debris Field.
+- Asteroids still drift and can be blasted, so a belt never boxes you in.
+
 ## 0.92.0
 
 - Eight new soundtracks, all generated in the game and each built around its sector:
