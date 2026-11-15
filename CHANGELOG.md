@@ -162,6 +162,11 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.86.0
+
+- Death explosion: when your hull is destroyed the action freezes and your ship blows apart (white-hot flash, fireball, three shockwave rings, sparks, smoke and spinning hull shards in your ship's colour, with a screen shake and a short phone buzz where supported), then the screen fades into the results instead of cutting straight to the menu.
+- Vignette softened slightly.
+
 ## 0.85.0
 
 - Post-processing: the glow layer now uses the postprocessing library's mip-chain bloom (bundled offline beside three.js) for smoother, wider, richer halos. If it can't load, the old bloom is used automatically.
