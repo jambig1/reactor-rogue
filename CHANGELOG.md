@@ -162,6 +162,16 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.94.0
+
+- Smarter enemies (Yuka AI). Ordinary ships now pick a tactic:
+  - Swarmers fly as a flock, keeping spacing and moving together.
+  - Flankers swing wide round to your far side to surround you, then dive in.
+  - Direct ships charge straight at you as before.
+  - Heavies keep their spacing so they don't stack up.
+- Badly damaged small ships break off and flee for a couple of seconds before coming back.
+- Enemy speed, damage and toughness are unchanged; only how they move is smarter. Bosses, formations and special enemies keep their own patterns.
+
 ## 0.93.0
 
 - Procedural maps (simplex-noise): every run now has its own randomly generated layout. Each sector is shaped into dense belts, scattered fields and empty open voids, so you fly through real places instead of an even sprinkle.

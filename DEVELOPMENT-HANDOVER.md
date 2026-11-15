@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.93.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.94.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -173,3 +173,5 @@ Sound v0.90: `zzfxBuild` (ZzFX sample builder, MIT) + `sfxBank` presets, `sfxRen
 Motion v0.91: `vendor/gsap-3.15.1/gsap.min.js` loaded with defer (GreenSock standard no-charge licence, see README-licence.md). `show(id,on)` calls `motionIn(id)` when an overlay becomes visible; `motionCards` via MutationObserver on #choices/#specChoices; `motionPress` on pointer events; `motionCountUp` for `.result-stat strong`; `motionMenu` logo float + #start glow. All guarded by `uiMotion.ok()` (gsap loaded and not reducedMotion).
 
 Map noise v0.93: `vendor/simplex-noise-4.0.3/simplex.js` (IIFE exposing `SimplexNoise.createNoise2D/alea`, loaded defer; `hashNoise2D` fallback). `mapFieldInit(seed)` per run (not in dev test runs), `mapDensity(x,y)` 0..1 ridged field (scale 4200). Used by `drawSectorStructures` keep probability (cells offset by seed), `updateDebris` cap/clock, `addDebris` void skip and size, `updateMapZone` banners. Tests: `TEST-MAP-NOISE.cjs`.
+
+Tactics v0.94: `vendor/yuka-0.7.8/yuka.js` (IIFE `window.YUKA`, defer). `tacticHeading(e,base)` slots between `specialistHeading` and `formationHeading` in enemy movement; per-enemy non-enumerable `e.tac` Vehicle with Seek/Arrive/Flee/Separation/Alignment/Cohesion, positions relative to the player in a CellSpacePartitioning, recomputed every ~0.1s. Kinds: swarm/flank/direct/heavy. Off in dev test runs and without the library. `tacticsPrune()` twice a second. Tests: `TEST-TACTICS.cjs`.
