@@ -162,6 +162,12 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.89.0
+
+- PixiJS renderer, stage 1 (bundled offline): ordinary enemy ships and all the floating sector scenery are now drawn by PixiJS as GPU sprites. Each enemy design is painted once into a texture, then reused, so crowds are much cheaper to draw (about 3x faster with 220 enemies on screen in testing). They look the same as before.
+- Bosses, special enemies, the player, weapons and effects still use the existing renderer for now; they move across in later stages.
+- Only used when the three.js background is running. On older devices, or if PixiJS fails, everything is drawn the old way automatically. Add `&pixi=0` to the address to compare.
+
 ## 0.88.0
 
 - three.quarks particle explosions (bundled offline beside three.js): every destroyed ship now bursts into GPU-batched sparks and glowing embers in its own colour, elites add a fireball, bosses erupt in a huge shower, and your own ship's death gets a big particle blast on top of the existing explosion.
