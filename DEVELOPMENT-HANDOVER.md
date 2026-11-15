@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.88.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.89.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -165,3 +165,5 @@ Neon art v0.84: all world art is `-v0840`. Structures: `sector-structures-{id}-v
 Post-processing v0.85: `gpu-layer-v0850.js` bloom layer imports `vendor/postprocessing-6.39.6/mipmap-blur.js` (esbuild bundle of postprocessing's MipmapBlurPass, three as an external rewritten to the bundled path). Path: prefilter capture into half-res `M`, glow sprites into `M`, `MipmapBlurPass.render`, then `POSTFX_FRAGMENT` (bloom + chromatic fringe from the capture + edge flash + grain). `frame.fx` comes from `postFxFrame()` (hit = `s.fxHitAt`, boss flash = `s.fxFlashAt`). Falls back to the old two-level blur if the import or pass fails. `#vignette` is CSS, hidden by `html.gfx-low`.
 
 Particles v0.88: `vendor/three.quarks-0.17.1/quarks.js` (esbuild bundle, three external rewritten to the vendored path). `createParticleFX(T,Q)` in `gpu-layer-v0850.js` owns a BatchedRenderer + ortho camera aimed by `frame.ox/oy`; presets enemy/elite/boss/player; cap 48 systems. Bloom layer exposes `burst()`; game calls `fxBurst(kind,x,y,colour,scale)` from the kill path and `startDeath`. Particles render into the bloom input (mip path) and again sharp on screen.
+
+PixiJS v0.89 (stage 2a): `pixi-layer-v0890.js` + `vendor/pixi.js-8.23.0/pixi.js` (esbuild bundle of Application/Container/Sprite/Texture/Rectangle/Matrix, webgl). `#pixiLayer` sits between `#gpuLayer` and `#game`. `beginPixiFrame()`/`endPixiFrame()` wrap `draw()`; on only when `gpuFrame.on && !gpuFrame.overlay` and in a run. `pixiEnemy(e)` routes ordinary hulls (not bosses/finals/spores/turrets/swarm/objectives) to cached textures painted by `drawIllustratedEnemyHull` (global `ctx` is now `let` and is swapped during painting). `drawSectorStructures` sends pieces to `pixiLayer.scenery`. Camera = `ctx.getTransform()` at first use per frame. `?pixi=0` disables. Next stages: bosses/specials, player shots, hostile shots, gems/drops, then bitECS.
