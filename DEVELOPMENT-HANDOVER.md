@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 0.92.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 0.93.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -171,3 +171,5 @@ PixiJS v0.89 (stage 2a): `pixi-layer-v0890.js` + `vendor/pixi.js-8.23.0/pixi.js`
 Sound v0.90: `zzfxBuild` (ZzFX sample builder, MIT) + `sfxBank` presets, `sfxRender` normalises to the preset volume, `sfxBuffer` caches AudioBuffers (prewarmed after unlock), `playSfx(name,x,{rate,vol})` adds stereo pan and per-name voice limits (`sfxLimits`). `sound(id,x)` tries gem streak → `sfxFamily[id]` → `sfxBank[id]` → old synth. Kill sounds at `s.kills++`. Tests: `TEST-SFX.cjs`.
 
 Motion v0.91: `vendor/gsap-3.15.1/gsap.min.js` loaded with defer (GreenSock standard no-charge licence, see README-licence.md). `show(id,on)` calls `motionIn(id)` when an overlay becomes visible; `motionCards` via MutationObserver on #choices/#specChoices; `motionPress` on pointer events; `motionCountUp` for `.result-stat strong`; `motionMenu` logo float + #start glow. All guarded by `uiMotion.ok()` (gsap loaded and not reducedMotion).
+
+Map noise v0.93: `vendor/simplex-noise-4.0.3/simplex.js` (IIFE exposing `SimplexNoise.createNoise2D/alea`, loaded defer; `hashNoise2D` fallback). `mapFieldInit(seed)` per run (not in dev test runs), `mapDensity(x,y)` 0..1 ridged field (scale 4200). Used by `drawSectorStructures` keep probability (cells offset by seed), `updateDebris` cap/clock, `addDebris` void skip and size, `updateMapZone` banners. Tests: `TEST-MAP-NOISE.cjs`.
