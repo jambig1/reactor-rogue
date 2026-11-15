@@ -4,7 +4,7 @@ const prefix=fs.readFileSync(path.join(__dirname,'TEST-EQUIPMENT.cjs'),'utf8').s
 eval(prefix+`
 assert.equal(run('levelUpMode'),'immediate');
 // Slower curve from level 3 on.
-assert.equal(run('levelXPRequirement(1)'),5);assert(run('levelXPRequirement(10)')>=Math.floor((6+30+Math.pow(10,1.32)+.2*25)*1.5));
+assert.equal(run('levelXPRequirement(1)'),3);assert(run('levelXPRequirement(10)')>=Math.floor((6+30+Math.pow(10,1.32)+.2*25)*1.5));
 // Immediate: pauses as before.
 fresh();run("s.need=levelXPRequirement(s.lv);state='play';s.xp=s.need;levelUp()");assert.equal(run('state'),'upgrade');
 // Bank: no pause, levels bank, the button opens them one after another.

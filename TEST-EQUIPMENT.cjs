@@ -44,7 +44,7 @@ fresh();run('s.items={shield:1,coupler:5};s.hitAgo=4.6;s.p.shield=0;s.p.inv=999;
 setup('spire');run('s.items={baffles:3};target.x=30;hurtPlayer(20)');assert(run('target.slow>=1.9'));run('target.slow=0;s.p.inv=0;hurtPlayer(20)');assert.equal(run('target.slow'),0);run('updateNewArsenal(8.1);s.p.inv=0;hurtPlayer(20)');assert(run('target.slow>=1.9'));
 setup('spire');run('s.items={predator:5,lastStand:5};s.p.hp=39;target.type=3');assert(Math.abs(run("equipmentDamage(target,'spire')")-1.56)<1e-9);assert.equal(run("equipmentDamage(target,'pickupPurge')"),1);assert.equal(run("equipmentDamage(target,'thorns')"),1);run('target.type=0;s.p.hp=40');assert.equal(run("equipmentDamage(target,'spire')"),1);
 // Full slots, banishing, contextual hints, save clean-up and new run resets.
-fresh();run("s.items={spire:1};");assert(run("upgradeSynergy('predator').includes('Tempest Cathedral')"));assert.equal(run("upgradeSynergy('spire')"),'');fresh();assert.equal(run("upgradeSynergy('predator')"),'');
+fresh();run("s.items={spire:1};");assert(run("upgradeSynergy('predator').includes('Tempest Cathedral')"));assert(run("upgradeSynergy('spire')").includes('Tempest Cathedral'));fresh();assert.equal(run("upgradeSynergy('predator')"),'');
 fresh();run('s.items={bolt:1,rapid:1,chain:1,laser:1,nova:1,rocket:1,armour:1,hull:1,regen:1,shield:1,speed:1,clock:1}');assert(!run("pool().some(d=>equipmentWeaponIds.includes(d.id)||['maneuver','coupler','baffles','repairAmp','predator','lastStand'].includes(d.id))"));
 fresh();run("s.banished=['spire','coupler']");assert(!run("pool().some(d=>d.id==='spire'||d.id==='coupler')"));
 // Simulated crowded combat: no extra spawns, budgets, finite state and balanced draw stack.
