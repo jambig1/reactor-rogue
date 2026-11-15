@@ -2302,7 +2302,7 @@ const dropTypes=[
 {id:'freeze',name:'CHRONO STOP',icon:'❄',color:'#9be6ff',weight:2,minLevel:4,lucky:true,duration:10},
 {id:'novaDrop',name:'PURGE BEACON',icon:'✦',color:'#ffabc5',weight:1,minLevel:8,lucky:true},
 {id:'vacuum',name:'XP VACUUM',icon:'∩',color:'#c6a0ff',weight:2,minLevel:12,lucky:true},
-{id:'flame',name:'PLASMA BREATH',icon:'♨',color:'#ff9a62',weight:1,minLevel:0,lucky:true,duration:10},
+{id:'flame',name:'PLASMA BREATH',icon:'🔥',color:'#ff9a62',weight:1,minLevel:0,lucky:true,duration:10},
 {id:'clover',name:'FORTUNE SHARD',icon:'♧',color:'#92f0ad',weight:.5,minLevel:0},
 {id:'rerollDrop',name:'REROLL TOKEN',icon:'↻',color:'#c2ceff',weight:1,minLevel:0},
 {id:'goldFever',name:'SALVAGE FEVER',icon:'♜',color:'#ffe49a',weight:1,minLevel:30,lucky:true,duration:10},
@@ -3166,7 +3166,7 @@ function drawCacheCrate(d,t){let evo=cacheKindOf(d)==='evolution',img=cacheCrate
 
 // v0.81 painted pickups: one small image per pickup and XP gem tier; the old drawn icons remain the fallback.
 const pickupArtIds=['coin','coinBag','richBag','repair','freeze','novaDrop','vacuum','flame','clover','rerollDrop','goldFever','goldFinger','passiveArea','passiveVelocity','speed','damage','defence','gem0','gem1','gem2','gem3'],pickupArt={};
-function pickupImage(id){if(typeof Image!=='function'||!pickupArtIds.includes(id))return null;let row=pickupArt[id];if(!row){let img=new Image();row=pickupArt[id]={img,ready:false};img.onload=()=>{row.ready=true};img.src='pickup-'+id+'-v0840.webp'}return row.ready?row.img:null}
+function pickupImage(id){if(typeof Image!=='function'||!pickupArtIds.includes(id))return null;let row=pickupArt[id];if(!row){let img=new Image();row=pickupArt[id]={img,ready:false};img.onload=()=>{row.ready=true};img.src='pickup-'+id+'-'+(id==='flame'?'v0960':'v0840')+'.webp'}return row.ready?row.img:null}
 function softGlow(x,y,r,c,a){if(!graphicsVisual.glow)return;ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=a;let g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,c);g.addColorStop(.45,c+'55');g.addColorStop(1,c+'00');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();ctx.restore()}
 function drawPickupArt(d,t,def){let img=pickupImage(d.id);if(!img)return false;let money=['coin','coinBag','richBag'].includes(d.id),size=d.id==='richBag'?30:d.id==='coinBag'?24:money?19:28,pulse=reducedMotion?.6:.5+.5*Math.sin(t*4+d.x);
  ctx.save();ctx.translate(d.x,d.y+(reducedMotion?0:Math.sin(t*3+d.x)*2));ctx.shadowBlur=0;softGlow(0,0,size*.85,def.color,.22+.25*pulse);

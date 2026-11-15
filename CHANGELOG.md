@@ -165,6 +165,7 @@
 ## 0.96.0 — Smoother mid-game, cleaner phone HUD
 
 - **Swarm director:** when ordinary enemies pile up past ~110 because the build can't keep up, new spawns slow down (about half as often at 165 alive). Strong builds never trigger it; endless mode is unchanged. In bot tests the weak builds that used to hit the 240-enemy cap and die around 7 minutes now peak at 150–170 and survive past 10–13 minutes.
+- **Plasma Breath pickup:** the faint squiggle on the card is replaced with a proper layered neon flame, and its marker/boost icon is now 🔥 instead of ♨.
 - **Phone HUD (≤600px):** brand text hidden; clock, objective and kills on one compact row; wave label dropped; smaller settings and pause buttons; credits and total score hidden during play; the combo counter sits top-left and the boss bar is shifted right so they no longer overlap; toast and boost chips moved below them.
 
 ## 0.95.0
