@@ -1,8 +1,8 @@
 // v0.89 PixiJS layer: wiring, enemy routing and fallbacks (renderer itself is checked in the browser).
 const fs=require('fs'),path=require('path'),assert=require('assert');
-const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8'),sw=fs.readFileSync(path.join(__dirname,'sw.js'),'utf8'),mod=fs.readFileSync(path.join(__dirname,'pixi-layer-v0890.js'),'utf8');
+const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8'),sw=fs.readFileSync(path.join(__dirname,'sw.js'),'utf8'),mod=fs.readFileSync(path.join(__dirname,'pixi-layer-v0970.js'),'utf8');
 assert(html.includes('<canvas id="gpuLayer" aria-hidden="true"></canvas><canvas id="pixiLayer" aria-hidden="true"></canvas><canvas id="game"'),'pixi canvas sits between background and playfield');
-assert(sw.includes('"pixi-layer-v0890.js","vendor/pixi.js-8.23.0/pixi.js"'),'precached offline');
+assert(sw.includes('"pixi-layer-v0970.js","vendor/pixi.js-8.23.0/pixi.js"'),'precached offline');
 assert(fs.existsSync(path.join(__dirname,'vendor/pixi.js-8.23.0/LICENSE')));
 assert(mod.includes("preference: 'webgl'")&&mod.includes('catch (e) { return null; }'),'webgl only, null on failure');
 const prefix=fs.readFileSync(path.join(__dirname,'TEST-EQUIPMENT.cjs'),'utf8').split('assert.equal(run("defs.filter')[0];

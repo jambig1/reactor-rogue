@@ -1,4 +1,5 @@
-/* Reactor Rogue PixiJS layer, v0.89 (stage 2 of the PixiJS move).
+/* Reactor Rogue PixiJS layer, v0.89 (stage 2 of the PixiJS move); v0.97 adds pixi-filters screen effects
+   (shockwave ripples, hit glitch, freeze grade) on this layer only, loaded lazily and skipped if unavailable.
    A WebGL canvas between the three.js background (#gpuLayer) and the 2D playfield (#game). It batches the
    things there are most of: ordinary enemy hulls and the floating sector scenery. Each enemy design is
    painted once by the existing canvas painter into a texture (keyed by fleet, type, role, colour and
@@ -16,6 +17,17 @@ export async function createPixiLayer(canvas, load = () => import(PIXI_URL), opt
   if (app.ticker) app.ticker.stop();
   const world = new P.Container(), scenery = new P.Container(), sceneryGlow = new P.Container(), shadows = new P.Container(), hulls = new P.Container();
   world.addChild(scenery, sceneryGlow, shadows, hulls); app.stage.addChild(world);
+  // v0.97 pixi-filters. Effects are only attached while something is playing, so idle frames cost nothing.
+  let F = options.filters !== false && P.ShockwaveFilter ? P : null;
+  const waves = [], fxState = { hurt: 0, hurtMax: 0.3, freeze: 0, clock: 0 }; let split = null, glitch = null, grade = null, filterArea = null;
+  if (F) {
+    try {
+      split = new F.RGBSplitFilter({ red: { x: 0, y: 0 }, green: { x: 0, y: 0 }, blue: { x: 0, y: 0 } });
+      glitch = new F.GlitchFilter({ slices: 6, offset: 0, direction: 0, fillMode: 2, average: false, seed: 0.5 });
+      grade = new F.AdjustmentFilter({ saturation: 1, brightness: 1, red: 1, green: 1, blue: 1 });
+      filterArea = new P.Rectangle(0, 0, 1, 1);
+    } catch (e) { F = null; }
+  }
   const pools = new Map([[scenery, []], [sceneryGlow, []], [shadows, []], [hulls, []]]), used = new Map();
   const textures = new Map(), atlasSources = new Map(), MAX_TEX = 180;
   let lost = false, width = 1, height = 1, ratio = 1, drawn = 0;
@@ -75,6 +87,30 @@ export async function createPixiLayer(canvas, load = () => import(PIXI_URL), opt
         let gs = sprite(sceneryGlow); gs.texture = ge.tex; gs.position.set(x, y); gs.rotation = angle; gs.scale.set(sx2, sy2); gs.alpha = Math.min(1, glowAlpha); gs.tint = 0xffffff; gs.blendMode = 'add';
       }
       return true;
+    },
+    get filters() { return !!F; },
+    // A ripple from world point (x,y). power ~ 0.4 (heavy kill) .. 1.6 (boss / player death).
+    shockwave(x, y, power = 1) {
+      if (!F || lost) return false;
+      let pt = world.toGlobal(new P.Point(x, y)), old = waves.length >= 4 ? waves.shift() : null;
+      if (old) old.f.destroy?.();
+      let f; try { f = new F.ShockwaveFilter({ center: { x: pt.x, y: pt.y }, speed: 520 + 260 * power, amplitude: 14 + 22 * power, wavelength: 90 + 60 * power, brightness: 1.12 + 0.12 * power, radius: 260 + 420 * power, time: 0 }); } catch (e) { return false; }
+      waves.push({ f, wx: x, wy: y, t: 0, max: (260 + 420 * power) / (520 + 260 * power) + 0.15 }); return true;
+    },
+    hurt(strength = 1) { if (F) { fxState.hurt = fxState.hurtMax = 0.22 + 0.16 * Math.min(1, strength); fxState.hurtPower = Math.min(1, strength); } },
+    freeze(level) { fxState.freeze = Math.max(0, Math.min(1, level || 0)); },
+    tick(dt) {
+      if (!F) return; fxState.clock += dt; let list = [];
+      for (let i = waves.length - 1; i >= 0; i--) { let w = waves[i]; w.t += dt; if (w.t >= w.max) { try { w.f.destroy?.(); } catch (e) {} waves.splice(i, 1); continue; } let pt = world.toGlobal(new P.Point(w.wx, w.wy)); w.f.center = { x: pt.x, y: pt.y }; w.f.time = w.t; }
+      for (let w of waves) list.push(w.f);
+      if (fxState.freeze > 0.01) { let k = fxState.freeze; grade.saturation = 1 - 0.55 * k; grade.red = 1 - 0.25 * k; grade.green = 1 + 0.05 * k; grade.blue = 1 + 0.35 * k; grade.brightness = 1 + 0.08 * k; list.push(grade); }
+      if (fxState.hurt > 0) {
+        fxState.hurt = Math.max(0, fxState.hurt - dt); let k = fxState.hurt / fxState.hurtMax, o = 7 * k * (0.5 + 0.5 * (fxState.hurtPower || 1));
+        split.red = { x: -o, y: 0 }; split.green = { x: 0, y: o * 0.4 }; split.blue = { x: o, y: 0 }; list.push(split);
+        if (k > 0.35) { glitch.offset = 22 * k; glitch.seed = Math.random(); glitch.slices = 4 + Math.floor(Math.random() * 6); list.push(glitch); }
+      }
+      app.stage.filterArea = list.length ? (filterArea.width = width, filterArea.height = height, filterArea) : null;
+      app.stage.filters = list.length ? list : null;
     },
     render() {
       if (lost) return;

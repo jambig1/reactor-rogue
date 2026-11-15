@@ -162,6 +162,12 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.97.0 — Physics wreckage and screen effects
+
+- **Matter.js wreckage:** destroyed ships and broken crates break into hull chunks that tumble, knock into each other, bounce off structures, get flung by explosions and the Plasma Breath jet, and get shoved aside when you fly through them. Hot chunks glow orange as they cool; frozen kills leave icy shards. Cosmetic only (max 140 pieces, own random numbers; off with reduced motion or particles off).
+- **pixi-filters effects** on the enemy/scenery layer: shockwave ripples from heavy kills, boss kills, big blasts and your death; an RGB-split glitch when you take damage; an icy colour grade while Chrono Stop has enemies frozen. Off with reduced motion or screen flashes off.
+- PixiJS is rebuilt with the four filters bundled in (one PixiJS instance, +26 KB).
+
 ## 0.96.0 — Smoother mid-game, cleaner phone HUD
 
 - **Swarm director:** when ordinary enemies pile up past ~110 because the build can't keep up, new spawns slow down (about half as often at 165 alive). Strong builds never trigger it; endless mode is unchanged. In bot tests the weak builds that used to hit the 240-enemy cap and die around 7 minutes now peak at 150–170 and survive past 10–13 minutes.
