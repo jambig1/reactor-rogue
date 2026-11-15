@@ -162,6 +162,15 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.95.0
+
+- Faster start: the first level now needs 3 XP instead of 5, and early levels are about 40% cheaper, easing back to normal by level 10. Enemies arrive about twice as often in the first minute and a half, so there's action and XP straight away.
+- Neon Bolts fires 25% faster.
+- Evolutions you can actually reach:
+  - Every weapon card now shows which passive it evolves with and your progress (for example "Rail Lance 3/5 + ○ Guidance Chip"), including weapons you already own.
+  - If none of the three level-up cards helps an evolution, there's a good chance one of them is swapped for a card that does.
+  - When an evolution becomes ready, a banner tells you, and the next elite (which drops the evolution cache) arrives within about 10 seconds.
+
 ## 0.94.0
 
 - Smarter enemies (Yuka AI). Ordinary ships now pick a tactic:
