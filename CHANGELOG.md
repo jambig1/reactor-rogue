@@ -186,6 +186,7 @@ The game now centres on one ship that grows with you, instead of a roster of sep
 - **Build radar:** a six-axis chart (speed, damage, defence, crit, firepower, utility) that morphs as your build changes.
 - **Name your ship** (shown in the bay, launch summary, results and PC HUD); **colour wheel** with brightness for hull and trail; **hull patterns** (racing stripes, chevrons, tiger, camo, digital camo, hex armour, carbon fibre, neon edge; bold enough to read in-game, with their own colour and picker previews) and a **glow** slider; **3 saved loadouts** of parts, paint and trail.
 - **Star map redesign:** a calm animated space backdrop with soft hyperlanes, shaded spinning planets in each sector's colour (rings on some), a compact mission card, and smooth motion: planets float, fade in one by one and the routes draw in when you open the map; it glides to your current planet; picking a planet pops it, slides the card info in and flies your ship over.
+- **PC layout:** on wide screens the ship screen is two columns (big hangar bay and stats on the left, Skills/Parts/Paint on the right), the star map is a wide horizontal route showing every planet at once, and the header is compact.
 - **Film grain setting** (Settings › Graphics): Off, Low (new default), Medium, Strong. It was too strong on PC.
 - **Launch sequence:** your ship lifts off and the screen warps to the star map; your ship flies the route when you pick a planet.
 - **Swipe** left/right to change Skills/Parts/Paint, or branches on the tree.
