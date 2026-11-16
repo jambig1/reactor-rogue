@@ -236,7 +236,7 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       let outer = new T.Mesh(new T.ConeGeometry(r || 2.6, 1, 14, 1, true), fm), inner = new T.Mesh(new T.ConeGeometry((r || 2.6) * .45, 1, 10, 1, true), core);
       disposables.push(outer.geometry, inner.geometry);
       for (let m of [outer, inner]) { m.rotation.z = Math.PI / 2; m.position.set(x, -y, Math.max(0, zAt(x + 2, y) * .5)); model.add(m); glowMeshes.push(m); }
-      flames.push({ outer, inner, x, r: r || 2.6 });
+      flames.push({ outer, inner, x, y: -y, z: Math.max(0, zAt(x + 2, y) * .5), r: r || 2.6 });
       { let rr = (r || 2.6), nz = new T.Mesh(new T.CylinderGeometry(rr * 1.05, rr * 1.3, 3.2, 16, 1, true), metal('#3a4c5e', true)); disposables.push(nz.geometry); nz.material.side = T.DoubleSide; nz.rotation.z = Math.PI / 2; nz.position.set(x + 1.2, -y, Math.max(0, zAt(x + 2, y) * .5)); model.add(nz); bodyMeshes.push(nz);
         addEdge(rec.trail || col, { pts: Array.from({ length: 17 }, (_, k) => { let a = k / 16 * Math.PI * 2; return [x - .4, y + Math.cos(a) * rr * 1.3, Math.max(0, zAt(x + 2, y) * .5) + Math.sin(a) * rr * 1.3]; }), closed: true }, .3, 1.5); }
       let glow = new T.PointLight(new T.Color(rec.trail || col), .6, 60, 1.5); glow.position.set(x - 6, -y, 0); model.add(glow);
@@ -260,6 +260,7 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
   const tmpQ = new T.Quaternion(), qYaw = new T.Quaternion(), qPitch = new T.Quaternion(), qRoll = new T.Quaternion(), X = new T.Vector3(1, 0, 0), Y = new T.Vector3(0, 1, 0), Z = new T.Vector3(0, 0, 1);
 
   const ship = {
+    exhaust: [],
     get lost() { return lost; },
     // rec is rebuilt only when its key changes (hull, paint, parts)
     setShip(key, rec) { if (key === built) return; built = key; try { build(rec); } catch (e) { console.warn('ship3d build', e); } },
@@ -288,6 +289,12 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       }
       renderer.setRenderTarget(null); renderer.setViewport(0, 0, W, H); renderer.clear(true, true, true);
       renderer.render(scene, camera);
+      // where each nozzle is on screen, and which way (and how far, foreshortened) its exhaust points
+      ship.exhaust = flames.map(fl => {
+        let a = new T.Vector3(fl.x - 1.5, fl.y, fl.z).applyMatrix4(model.matrixWorld).project(camera), b = new T.Vector3(fl.x - 11.5, fl.y, fl.z).applyMatrix4(model.matrixWorld).project(camera);
+        let ax = (a.x + 1) / 2 * W, ay = (1 - a.y) / 2 * H, bx = (b.x + 1) / 2 * W, by = (1 - b.y) / 2 * H, s0 = Math.max(.05, f.scale) * 10;
+        return { x: ax, y: ay, dx: (bx - ax) / s0, dy: (by - ay) / s0, behind: b.z > a.z };
+      });
       if (f.bloom === false) return;
       // glow-only pass
       let swapped = bodyMeshes.map(m => [m, m.material]); for (let [m] of swapped) m.material = blackMat;
