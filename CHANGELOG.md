@@ -162,6 +162,16 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 1.2.0 — 3D ship in the hangar
+
+- Your ship in the hangar bay is now a real 3D model, not a flat drawing. It's built automatically from the same design the game draws, so your hull, class, specialisation, paint colour and fitted parts all appear on it.
+- The hull is sculpted, not cut out flat. It rises from a thin neon rim to a rounded spine like a real fuselage, with a shallower curve underneath. Every outline has softly rounded corners. Detail plating is shaped to follow the hull's curve across its whole surface, so nothing hovers above it. Pieces that hang off the edge of the hull (lights, pods) are small rounded solids joined to its side, vents are flush inset grilles, and each engine flame comes out of a metal nozzle ring. Wings and engine pods are rounded, tapered pieces, and neon lines run along every edge and panel. It reflects the hangar's lights, gets a coloured rim light and pad glow, and has animated engine flames in your trail colour.
+- Translucent parts such as Prism Sails are tinted crystal glass.
+- Your trail (plasma, ribbon, sparks) now streams out of each real engine nozzle and follows the 3D ship however it's spun or tumbled, with one trail per engine.
+- Drag left and right to spin it, and up and down to tumble it. Flick it and it keeps turning, then it settles back to its pose after a moment. Pinch (or use the mouse wheel) to zoom, and tap for a 3D barrel roll.
+- Hull patterns aren't shown on the 3D model yet; they still show in game.
+- If 3D isn't available on a device, the bay falls back to the 2D ship automatically. The game itself is unchanged.
+
 ## 1.1.0 — Immersive star map
 
 - The star map now has depth: three layers of stars and the nebula shift at different speeds as you scroll, drag, move the mouse or tilt your phone, with a slow idle drift.
