@@ -162,6 +162,29 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.99.0 — ONE SHIP (rework phase 1)
+
+The game now centres on one ship that grows with you, instead of a roster of separate pilots. The classic version is kept on the `classic` branch.
+
+- **Your ship & skill tree:** Play opens *Your ship*. Every ship level gives a skill point to spend in four branches: Interceptor (speed, crits, dashes), Juggernaut (hull, armour, shields), Gunship (damage, fire rate) and Carrier (pickups, credits, drones).
+  - 6 points in a branch unlock its **class**, which changes your hull and starting weapon (Wasp, Bastion, Gunship, Scavenger). You can only be one class at a time.
+  - **Modules** start every run with a support or weapon already fitted (Thrusters, Energy Shield, Reactive Spikes, Critical Core, Size Matrix, Seeker Drones, Defence Satellites).
+  - 9 points: choose one of two **specialisations** (Harrier/Spectre, Sovereign/Glacier, Tempest/Helios, Architect/Echo).
+  - 10 points: a **keystone** with a big trade-off (Glass Cannon, Fortress, Overcharge, Swarm Command).
+  - Refund every point for 25 credits per point.
+- **Ship XP:** every run earns ship XP (kills, bosses, level reached). Existing saves start with bonus points based on bosses already beaten.
+- **Star map:** step two is a star map of the ten planets along a route. Beat 2 of a planet's 3 reactor bosses to open the next.
+- Results show ship XP and level-ups; the old ship-unlock goals are gone from the results screen.
+- Includes the unreleased 0.98 work: first-run flight tutorial, clearer control settings, itch.io build script.
+
+## 0.98.0 — Flight tutorial, clearer controls, itch.io build
+
+- **First-run flight tutorial:** six short tips on your first run (flying, gems, levelling, evolutions, dash, the reactor timer). Each step moves on when you do it; skippable, never blocks play, and replayable from the Field Manual.
+- **Control settings tidied:** every PC mode now says how to dash; modes ordered Mouse + keyboard, Keyboard only, Mouse only, Touch; plainer wording; the dash is called the dash everywhere (not "ship ability"); phones no longer mention the U key.
+- **Level-up choice moved** from the Weapons tab to Gameplay.
+- HUD version label fixed (it still said 0.29.0).
+- `build-itch.sh` makes an itch.io upload zip with only the files the game needs.
+
 ## 0.97.0 — Physics wreckage and screen effects
 
 - **Matter.js wreckage:** destroyed ships and broken crates break into hull chunks that tumble, knock into each other, bounce off structures, get flung by explosions and the Plasma Breath jet, and get shoved aside when you fly through them. Hot chunks glow orange as they cool; frozen kills leave icy shards. Cosmetic only (max 140 pieces, own random numbers; off with reduced motion or particles off).
