@@ -162,6 +162,14 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 1.0.0 — Crew and Workshop (RPG update, part 1)
+
+- **Crew quarters** replace the old Ships tab. Pilots you rescue from distress pods now join your crew. Each one has a role and a perk: Gunner +6% damage, Quartermaster +15 hull, Navigator +6% speed, and so on. You start with one crew seat, get a second at ship level 5 and a third at level 10. Assigned crew show under your ship's name in the hangar bay. Pilots you haven't found yet show which planet they're lost on.
+- **Workshop** replaces Power-ups. Spend credits to upgrade the parts you own, up to +5. Each level makes the part's bonuses 12% stronger.
+- Power-ups are retired. Anything you spent on them is refunded once as credits, and a notice tells you how much.
+- Cleanup of old-version leftovers: ship licences and mastery, the hull frame variants and old paint schemes on the Reactor tab, ship-challenge unlock notices, and pods that unlocked ships are gone. Wording throughout (manual, menus, hints, contract rewards) now matches the one-ship game.
+- Hangar tabs: Crew, Workshop, Upgrade tools, Contracts, Reactor.
+
 ## 0.99.0 — ONE SHIP (rework phases 1 and 2, hangar)
 
 The game now centres on one ship that grows with you, instead of a roster of separate pilots. The classic version is kept on the `classic` branch.

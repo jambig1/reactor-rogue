@@ -14,7 +14,7 @@ for(let svg of previews){assert(svg.includes('viewBox="-36 -38 72 76"'));assert(
 assert.equal(run('JSON.stringify(s)'),stateBefore);assert.equal(depth,drawDepth);
 run("s=null;state='menu';hangar.paint='original'");assert.equal(run('shipIcon(pilots[0])'),run('shipIcon(pilots[0])'));
 for(let p of ['aurora','solar']){run("hangar.paints=hangar.paints||[];hangar.paint="+JSON.stringify(p));let svg=run('shipIcon(pilots[0])');assert(svg.includes('<svg'))}
-run("reducedMotion=true;pilotPicker();renderHangar()");assert(map.pilotPicker.innerHTML.includes('#314d60'));assert(map.hangarContent.innerHTML.includes('#314d60'));
+run("reducedMotion=true;pilotPicker();renderHangar()");assert(map.pilotPicker.innerHTML.includes('#314d60'));run("hangar.campaign.rescued=['bastion'];renderHangar()");assert(map.hangarContent.innerHTML.includes('#314d60'));
 console.log('PASS all twelve complete previews, shared turret/detail geometry, no run-state mutation, static menu/reset and Hangar paths');
 
 // Every hull and weapon mount is deterministic and independent of gameplay RNG.
