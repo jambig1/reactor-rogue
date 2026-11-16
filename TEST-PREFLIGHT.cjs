@@ -3,7 +3,7 @@ function boot(initial={}){let store={...initial},map={},reloads=0,writes=0,failA
 
 let a=boot(),run=a.run;
 // Play opens Your ship (skill tree) without starting a run.
-run("s=null;state='menu';$('start').onclick()");assert.equal(run('state'),'preflight');assert.equal(run('preflightStep'),'ship');assert.equal(run('s'),null);assert.equal(run("$('preflightTitle').textContent"),'Your ship');assert(run("$('pilotPicker').innerHTML.includes('SKILL')"));assert.equal(run('selectedPilot'),'vanguard');
+run("s=null;state='menu';$('start').onclick()");assert.equal(run('state'),'preflight');assert.equal(run('preflightStep'),'ship');assert.equal(run('s'),null);assert.equal(run("$('preflightTitle').textContent"),'Your ship');assert(run("$('pilotPicker').innerHTML.includes('POINTS')"));assert.equal(run('selectedPilot'),'vanguard');
 // Skill points: tier one first, class only after 6 points in the branch, one class at a time, spec then keystone.
 run('hangar.bosses=0;hangar.ship=null;shipState().pts=20');assert.equal(run('buyShipNode("i_class")'),false);for(let i=0;i<3;i++)run('buyShipNode("i_thrust");buyShipNode("i_crit")');assert.equal(run('branchSpent("interceptor")'),6);assert.equal(run('buyShipNode("i_key")'),false);assert(run('buyShipNode("i_class")'));assert.equal(run('treePilot()'),'wasp');
 run('for(let i=0;i<3;i++){buyShipNode("j_hull");buyShipNode("j_armour")}');assert.equal(run('buyShipNode("j_class")'),false,'one class at a time');
