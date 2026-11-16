@@ -788,7 +788,7 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 /* v1.1 immersive star map */
 #starMapFg{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:3!important;pointer-events:none}
 .star-map{-webkit-mask-image:linear-gradient(#0000,#000 28px,#000 calc(100% - 40px),#0000);mask-image:linear-gradient(#0000,#000 28px,#000 calc(100% - 40px),#0000)}
-.star-map:after{content:'';position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(90deg,#02040bb0,#0000 18%,#0000 82%,#02040bb0)}
+.star-map:after{content:'';position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(90deg,#02040b70,#0000 12%,#0000 88%,#02040b70)}
 .planet-orb{z-index:2}
 .moon-x{position:absolute;left:50%;top:calc(var(--ps)/2);width:0;height:0;z-index:3;pointer-events:none;animation:moonX 11s ease-in-out infinite alternate}
 .moon-y{position:absolute;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:radial-gradient(circle at 32% 30%,#fff 0,#c9d6e2 30%,#5a6b7c 70%,#1d2733);box-shadow:0 0 6px #cfe8ff66;animation:moonY 11s ease-in-out -5.5s infinite alternate}
@@ -2234,10 +2234,26 @@ function drawStarMap(now){let c=typeof document!=='undefined'&&document.getEleme
  let body=document.getElementById('preflightBody'),sc=body?body.scrollTop:0;
  g.drawImage(mapFx.neb,-P-cam.x*P*.35,-P-cam.y*P*.35+sc*.06);
  // the sun: a warm star top-left, matching the planets' lighting
- {let sx=w*(wide?.06:.16)-cam.x*6,sy=(wide?60:110)-cam.y*6+sc*.94,pul=1+Math.sin(T*.8)*.04,gr=g.createRadialGradient(sx,sy,0,sx,sy,260*pul);gr.addColorStop(0,'#fff6dccc');gr.addColorStop(.04,'#ffe0a066');gr.addColorStop(.18,'#ff9a5022');gr.addColorStop(1,'#ff6a3000');g.globalCompositeOperation='lighter';g.fillStyle=gr;g.fillRect(sx-270,sy-270,540,540);
-  g.save();g.translate(sx,sy);g.rotate(T*.02);for(let k=0;k<7;k++){g.rotate(TAU/7);let L=180+patternHash(k,7)*160;let rg=g.createLinearGradient(0,0,L,0);rg.addColorStop(0,'#ffe2b01c');rg.addColorStop(1,'#ffe2b000');g.fillStyle=rg;g.beginPath();g.moveTo(0,-3);g.lineTo(L,-14-k%3*6);g.lineTo(L,14+k%3*6);g.lineTo(0,3);g.fill()}g.restore();
-  g.fillStyle='#fffaf0';g.shadowColor='#ffd890';g.shadowBlur=18;g.beginPath();g.arc(sx,sy,5,0,TAU);g.fill();g.shadowBlur=0;
-  g.globalAlpha=.25;g.fillStyle='#ffe8c0';g.fillRect(sx-70,sy-.5,140,1);g.fillRect(sx-.5,sy-40,1,80);g.globalAlpha=1;for(let k=1;k<4;k++){let fx=sx+(w*.55-sx)*k*.45+cam.x*k*8,fy=sy+(260-0)*k*.35+cam.y*k*8,fr=[0,14,7,22][k],fgr=g.createRadialGradient(fx,fy,0,fx,fy,fr);fgr.addColorStop(0,['','#ffd9a018','#9fe0ff22','#c8a0ff10'][k]);fgr.addColorStop(.8,['','#ffd9a00c','#9fe0ff10','#c8a0ff08'][k]);fgr.addColorStop(1,'#0000');g.globalCompositeOperation='lighter';g.fillStyle=fgr;g.beginPath();g.arc(fx,fy,fr,0,TAU);g.fill()}g.globalCompositeOperation='source-over'}
+ {let R=wide?48:36,sx=(wide?w*.012:w*.17)-cam.x*6,sy=(wide?50:120)-cam.y*6+sc*.94,TT=T;
+  if(!mapFx.sunTex||mapFx.sunTex.R!==R){let S=document.createElement('canvas'),D=R*2+4;S.width=S.height=D*2;let q=S.getContext('2d');q.scale(2,2);let c0=D/2;
+   let gr=q.createRadialGradient(c0-R*.25,c0-R*.25,R*.05,c0,c0,R);gr.addColorStop(0,'#ffffff');gr.addColorStop(.4,'#fff1c4');gr.addColorStop(.8,'#ffc46a');gr.addColorStop(1,'#f07a2a');q.fillStyle=gr;q.beginPath();q.arc(c0,c0,R,0,TAU);q.fill();
+   q.save();q.beginPath();q.arc(c0,c0,R,0,TAU);q.clip();for(let i=0;i<1400;i++){let a=patternHash(i,201)*TAU,d=Math.sqrt(patternHash(i,202))*R,x=c0+Math.cos(a)*d,y=c0+Math.sin(a)*d,r=.4+patternHash(i,203)*1.1;q.globalAlpha=.05+patternHash(i,204)*.08;q.fillStyle=patternHash(i,205)>.5?'#fff3c8':'#b8401200';q.fillStyle=patternHash(i,205)>.5?'#fff3c8':'#c44a14';q.beginPath();q.arc(x,y,r,0,TAU);q.fill()}
+   q.globalAlpha=1;let lg=q.createRadialGradient(c0,c0,R*.6,c0,c0,R);lg.addColorStop(0,'#0000');lg.addColorStop(1,'#c0501866');q.fillStyle=lg;q.fillRect(0,0,D,D);q.restore();S.R=R;S.D=D;mapFx.sunTex=S}
+  g.globalCompositeOperation='lighter';
+  // wide warm bloom
+  let bl=g.createRadialGradient(sx,sy,R*.8,sx,sy,R*8);bl.addColorStop(0,'#ffc87066');bl.addColorStop(.12,'#ffa05030');bl.addColorStop(.4,'#ff703012');bl.addColorStop(1,'#ff502000');g.fillStyle=bl;g.fillRect(sx-R*8,sy-R*8,R*16,R*16);
+  // flickering corona: two noisy layers turning at different speeds
+  for(let L=0;L<3;L++){let n=a=>Math.sin(a*4+TT*(.35+L*.2)+L)*.55+Math.sin(a*9-TT*(.7-L*.15))*.3+Math.sin(a*15+TT*1.1+L*2)*.15,cg=g.createRadialGradient(sx,sy,R*.9,sx,sy,R*(1.35+L*.35));cg.addColorStop(0,['#fff4c8aa','#ffd08a55','#ffa05a2a'][L]);cg.addColorStop(.45,['#ffd0804a','#ffa05522','#ff803012'][L]);cg.addColorStop(1,'#ff702000');g.fillStyle=cg;g.beginPath();for(let k=0;k<=90;k++){let a=k/90*TAU,r=R*(1.2+L*.3+n(a)*(.05+L*.05));k?g.lineTo(sx+Math.cos(a)*r,sy+Math.sin(a)*r):g.moveTo(sx+Math.cos(a)*r,sy+Math.sin(a)*r)}g.closePath();g.fill()}
+  // slow looping solar prominences
+  g.lineCap='round';for(let k=0;k<2;k++){let a0=[-.6,2.5][k]+Math.sin(TT*.05+k)*.15,sp=.32+k*.05,life=(Math.sin(TT*.35+k*2.1)+1)/2,hgt=R*(.15+.22*life),a1=a0-sp,a2=a0+sp,p1x=sx+Math.cos(a1)*R*.97,p1y=sy+Math.sin(a1)*R*.97,p2x=sx+Math.cos(a2)*R*.97,p2y=sy+Math.sin(a2)*R*.97,cx=sx+Math.cos(a0)*(R+hgt*2),cy=sy+Math.sin(a0)*(R+hgt*2);
+   for(let j=0;j<2;j++){g.globalAlpha=(j?.6:.22)*(.2+.8*life);g.strokeStyle=j?'#ffe2a8':'#ff9040';g.lineWidth=j?1:3.5;g.beginPath();g.moveTo(p1x,p1y);g.quadraticCurveTo(cx,cy,p2x,p2y);g.stroke()}}g.globalAlpha=1;
+  // the star itself, slowly turning
+  g.globalCompositeOperation='source-over';let S=mapFx.sunTex;g.save();g.translate(sx,sy);g.rotate(TT*.015);g.drawImage(S,-S.D/2,-S.D/2,S.D,S.D);g.restore();
+  g.globalCompositeOperation='lighter';let hl=g.createRadialGradient(sx-R*.3,sy-R*.3,0,sx-R*.3,sy-R*.3,R*.8);hl.addColorStop(0,'#ffffff40');hl.addColorStop(1,'#fff0');g.fillStyle=hl;g.beginPath();g.arc(sx,sy,R,0,TAU);g.fill();
+  g.strokeStyle='#fff0c8';g.globalAlpha=.35;g.lineWidth=1;g.beginPath();g.arc(sx,sy,R+.5,0,TAU);g.stroke();g.globalAlpha=1;
+  // faint lens-flare ghosts across from the star
+  for(let k=1;k<4;k++){let fx=sx+(w*.6-sx)*k*.42+cam.x*k*8,fy=sy+R*3*k*.6+cam.y*k*8,fr=[0,12,6,20][k],fgr=g.createRadialGradient(fx,fy,0,fx,fy,fr);fgr.addColorStop(0,['','#ffd9a014','#9fe0ff1c','#c8a0ff0e'][k]);fgr.addColorStop(1,'#0000');g.fillStyle=fgr;g.beginPath();g.arc(fx,fy,fr,0,TAU);g.fill()}
+  g.globalCompositeOperation='source-over'}
  // parallax star layers; they streak during a warp jump
  let wp=mapFx.warp||0,wx=mapFx.wdx||0,wy=mapFx.wdy||1;
  for(let layer of mapFx.layers)for(let st of layer){let z=st.z,x=st.x-cam.x*z*22,y=((st.y+sc*(1-z)*.35-cam.y*z*16)%h+h)%h,a=(.2+.6*z)*(.55+.45*Math.sin(T*(1+st.c)*1.4+st.ph));g.globalAlpha=a;g.fillStyle=st.c>.85?'#ffe2bf':st.c>.7?'#bfe6ff':'#d9ecff';

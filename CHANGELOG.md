@@ -165,7 +165,7 @@
 ## 1.1.0 — Immersive star map
 
 - The star map now has depth: three layers of stars and the nebula shift at different speeds as you scroll, drag, move the mouse or tilt your phone, with a slow idle drift.
-- A sun lights the scene from the same side the planets are shaded, with soft light rays and a faint lens flare. It stays in view as you scroll, like a distant star.
+- A sun lights the scene from the same side the planets are shaded. It's a glowing star with a fine textured surface, a softly flickering corona, slow solar flares looping off its edge, a warm bloom and a faint lens flare. It stays in view as you scroll, like a distant star (on PC it sits partly off the top-left edge).
 - A galactic band of faint stars and dark dust lanes runs across the map, and each sector's planet tints the clouds around it.
 - Space dust drifts in front of the planets, and a shooting star crosses now and then.
 - The selected planet has a small moon orbiting it, passing behind and in front.
