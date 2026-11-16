@@ -172,6 +172,13 @@
 - When your ship flies to a new planet, it leaves an engine trail and the stars streak into a brief warp.
 - Motion respects the Reduce motion setting.
 
+**Keyboard flight**
+
+- Keyboard movement now has a little momentum. The ship ramps up to full speed in about a fifth of a second, glides briefly when you let go, and curves smoothly when you change direction instead of snapping between 8 fixed headings. Reversing direction responds faster than a gentle turn, so dodging still feels sharp.
+- Dashes and abilities always go the way you're pressing, even mid-glide.
+- The ship banks (its wings lean) into turns. This is visual only, and off with Reduce motion.
+- Top speed, diagonal speed, dash and boost distances are unchanged. Touch and mouse controls are unchanged.
+
 ## 1.0.0 — Crew and Workshop (RPG update, part 1)
 
 - **Crew quarters** replace the old Ships tab. Pilots you rescue from distress pods now join your crew. Each one has a role and a perk: Gunner +6% damage, Quartermaster +15 hull, Navigator +6% speed, and so on. You start with one crew seat, get a second at ship level 5 and a third at level 10. Assigned crew show under your ship's name in the hangar bay. Pilots you haven't found yet show which planet they're lost on.
