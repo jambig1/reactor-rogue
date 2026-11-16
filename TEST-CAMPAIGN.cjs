@@ -25,7 +25,7 @@ run("updatePilotPod(5)");assert.equal(run('s.pod.status'),'lost','too far away')
 run("s.p.x=s.pod.x;s.p.y=s.pod.y;updatePilotPod(1.5);updatePilotPod(1.6)");assert.equal(run('s.pod.status'),'rescued');assert(run("hangar.campaign.rescued.includes('harrier')"));assert(run("shipReady('harrier')"));
 // No pod once rescued, or for an owned ship.
 fresh();run("s.dev=null;s.sector='grid';s.t=130;updatePilotPod(.1)");assert.equal(run('!!s.pod'),false);
-fresh();run("hangar.campaign.rescued=[];hangar.ships.push('bastion');s.dev=null;s.sector='belt';s.t=130;updatePilotPod(.1)");assert.equal(run('!!s.pod'),false);
+fresh();run("hangar.campaign.rescued=[];hangar.ships.push('bastion');s.dev=null;s.sector='belt';s.t=130;updatePilotPod(.1)");assert.equal(run('!!s.pod'),true,'old ship licence no longer blocks a crew pod');
 // Draw does not throw in either state.
 fresh();run("hangar.campaign.rescued=[];hangar.ships=['vanguard'];s.sector='storm';s.t=130;updatePilotPod(.1);drawPilotPod();s.pod.status='rescued';drawPilotPod()");
 console.log('campaign ok');
