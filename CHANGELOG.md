@@ -162,6 +162,16 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 1.1.0 — Immersive star map
+
+- The star map now has depth: three layers of stars and the nebula shift at different speeds as you scroll, drag, move the mouse or tilt your phone, with a slow idle drift.
+- A sun lights the scene from the same side the planets are shaded, with soft light rays and a faint lens flare. It stays in view as you scroll, like a distant star.
+- A galactic band of faint stars and dark dust lanes runs across the map, and each sector's planet tints the clouds around it.
+- Space dust drifts in front of the planets, and a shooting star crosses now and then.
+- The selected planet has a small moon orbiting it, passing behind and in front.
+- When your ship flies to a new planet, it leaves an engine trail and the stars streak into a brief warp.
+- Motion respects the Reduce motion setting.
+
 ## 1.0.0 — Crew and Workshop (RPG update, part 1)
 
 - **Crew quarters** replace the old Ships tab. Pilots you rescue from distress pods now join your crew. Each one has a role and a perk: Gunner +6% damage, Quartermaster +15 hull, Navigator +6% speed, and so on. You start with one crew seat, get a second at ship level 5 and a third at level 10. Assigned crew show under your ship's name in the hangar bay. Pilots you haven't found yet show which planet they're lost on.
