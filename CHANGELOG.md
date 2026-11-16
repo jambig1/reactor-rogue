@@ -182,7 +182,7 @@ The game now centres on one ship that grows with you, instead of a roster of sep
 - **Feedback:** unlock bursts, a class-change beam, equip "clunks" at the part's hardpoint, counting stat changes, and sounds for each.
 - **Part previews:** tap a part to see green/red stat changes and its outline on the build radar before equipping.
 - **Build radar:** a six-axis chart (speed, damage, defence, crit, firepower, utility) that morphs as your build changes.
-- **Name your ship** (shown in the bay, launch summary, results and PC HUD); **colour wheel** with brightness for hull and trail; **hull patterns** (stripes, camo, carbon, neon edge, also in-game) and a **glow** slider; **3 saved loadouts** of parts, paint and trail.
+- **Name your ship** (shown in the bay, launch summary, results and PC HUD); **colour wheel** with brightness for hull and trail; **hull patterns** (racing stripes, chevrons, tiger, camo, digital camo, hex armour, carbon fibre, neon edge; bold enough to read in-game, with their own colour and picker previews) and a **glow** slider; **3 saved loadouts** of parts, paint and trail.
 - **Launch sequence:** your ship lifts off and the screen warps to the star map; your ship flies the route when you pick a planet.
 - **Swipe** left/right to change Skills/Parts/Paint, or branches on the tree.
 - Includes the unreleased 0.98 work: first-run flight tutorial, clearer control settings, itch.io build script.
