@@ -680,6 +680,12 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 .tree-tier.pair .tree-node{flex-direction:column;gap:6px}.tree-tier.pair .tn-ico{align-self:flex-start;width:32px;height:32px}.tree-tier.pair .tn-ico svg,.tree-tier.pair .tn-ico img{width:22px;height:22px}.tree-tier header{position:relative}.tree-tier header span:after{content:'';display:inline-block;width:40px;height:1px;margin-left:8px;vertical-align:middle;background:linear-gradient(90deg,currentColor,transparent)}
 .ship-screen h4{display:flex;align-items:center;gap:8px}.ship-screen h4:before{content:'';width:6px;height:6px;transform:rotate(45deg);background:#65f7ef}.ship-screen h4:after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#65f7ef55,transparent)}
 .tree-tabs button{clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));border-radius:4px}
+
+/* v0.99 part art */
+.part-slot .part-ico img{width:30px;height:30px;object-fit:contain}
+.part-row.has-art{grid-template-columns:56px 1fr auto}.part-row.has-art>.part-art{grid-column:1;grid-row:1/4;width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--rc) 50%,transparent))}
+.part-row.has-art>small,.part-row.has-art>b,.part-row.has-art>span{grid-column:2}.part-row.has-art>em,.part-row.has-art>.equip-btn{grid-column:3}
+.part-row.unknown>.part-art{filter:brightness(0) drop-shadow(0 0 1px #ffffff55);opacity:.7}
 </style><!-- Exo 2 font licence:
 Copyright 2013 The Exo 2 Project Authors (https://github.com/googlefonts/Exo-2.0)
 
@@ -2060,7 +2066,7 @@ function buyShipNode(id,spec){let d=shipNodes.find(x=>x.id===id),sh=shipState();
 function respecCost(){return 25*shipSpent()}
 function respecShip(){let sh=shipState(),cost=respecCost();if(!shipSpent()||hangar.credits<cost)return false;hangar.credits-=cost;sh.pts+=shipSpent();sh.nodes={};sh.cls='';sh.spec='';saveHangar();return true}
 function shipTreeBonus(eqOverride){let T={speed:0,crit:0,hp:0,armour:0,dmg:0,rate:0,magnet:0,greed:0,area:0,dashCd:1,taken:1,starter:1,hpMult:1,items:{},wslots:6,pslots:6},sh=shipState();for(let q of partSlots){let d=eqOverride&&eqOverride[q.id]?shipParts.find(x=>x.id===eqOverride[q.id]):equippedPart(q.id);if(d&&d.fx)d.fx(T)}for(let d of shipNodes){let r=sh.nodes[d.id]||0;if(r&&d.fx)d.fx(T,r)}return T}
-function applyShipTree(){if(!s||s.dev?.test||!hangar)return;let T=shipTreeBonus();s.pilot.speed*=Math.max(.3,1+T.speed);s.pilot.hp=Math.max(20,Math.round((s.pilot.hp+T.hp)*T.hpMult));s.pilot.armour=(s.pilot.armour||0)+T.armour;if(T.rate)s.pilot.fireRate=(s.pilot.fireRate||1)*(1-T.rate);if(s.pu){s.pu.might*=1+T.dmg;s.pu.magnet*=1+T.magnet;s.pu.greed*=1+T.greed;s.pu.area+=T.area}let sh=shipState();if(sh.cls==='gunship'&&!sh.spec){s.pilot.color='#ffb070';s.pilot.name='GUNSHIP'}partState();if(sh.paint.hull)s.pilot.color=sh.paint.hull;if(sh.paint.pattern&&sh.paint.pattern!=='none'){s.pilot.pattern=sh.paint.pattern;if(sh.paint.patternColor)s.pilot.patternColor=sh.paint.patternColor}try{let bs=document.querySelector('.hud .brand span');if(bs&&bs.firstChild)bs.firstChild.textContent=(sh.name?sh.name.toUpperCase():'REACTOR ROGUE')+' '}catch(e){}if((sh.paint.glow??1)!==1)s.pilot.glow=sh.paint.glow;s.paintTrail=sh.paint.trail;s.paintTrailColor=sh.paint.trailColor;s.slots={weapon:T.wslots,support:T.pslots};s.tree={crit:T.crit,dashCd:T.dashCd,taken:T.taken,starter:T.starter,items:T.items}}
+function applyShipTree(){if(!s||s.dev?.test||!hangar)return;let T=shipTreeBonus();s.pilot.speed*=Math.max(.3,1+T.speed);s.pilot.hp=Math.max(20,Math.round((s.pilot.hp+T.hp)*T.hpMult));s.pilot.armour=(s.pilot.armour||0)+T.armour;if(T.rate)s.pilot.fireRate=(s.pilot.fireRate||1)*(1-T.rate);if(s.pu){s.pu.might*=1+T.dmg;s.pu.magnet*=1+T.magnet;s.pu.greed*=1+T.greed;s.pu.area+=T.area}let sh=shipState();if(sh.cls==='gunship'&&!sh.spec){s.pilot.color='#ffb070';s.pilot.name='GUNSHIP'}partState();if(sh.paint.hull)s.pilot.color=sh.paint.hull;{let ps=partState(),pp={};for(let q of partSlots){let d=equippedPart(q.id);if(d&&d.r>0)pp[q.id]=d.id}if(Object.keys(pp).length)s.pilot.parts=pp}if(sh.paint.pattern&&sh.paint.pattern!=='none'){s.pilot.pattern=sh.paint.pattern;if(sh.paint.patternColor)s.pilot.patternColor=sh.paint.patternColor}try{let bs=document.querySelector('.hud .brand span');if(bs&&bs.firstChild)bs.firstChild.textContent=(sh.name?sh.name.toUpperCase():'REACTOR ROGUE')+' '}catch(e){}if((sh.paint.glow??1)!==1)s.pilot.glow=sh.paint.glow;s.paintTrail=sh.paint.trail;s.paintTrailColor=sh.paint.trailColor;s.slots={weapon:T.wslots,support:T.pslots};s.tree={crit:T.crit,dashCd:T.dashCd,taken:T.taken,starter:T.starter,items:T.items}}
 function applyShipTreeItems(){try{$('weaponsLabel').textContent='ARSENAL · '+slotCap('weapon')+' SLOTS';$('passivesLabel').textContent='PASSIVES + DEFENCE · '+slotCap('support')+' SLOTS';$('weapons').classList.toggle('slots-7',slotCap('weapon')>=7);$('passives').classList.toggle('slots-7',slotCap('support')>=7)}catch(e){}if(!s||!s.tree||!s.items)return;let wcap=slotCap('weapon'),pcap=slotCap('support');for(let [id,l] of Object.entries(s.tree.items||{})){let dd=defs.find(d=>d.id===id);if(!dd)continue;if(!s.items[id]&&defs.filter(x=>x.kind===dd.kind&&s.items[x.id]).length>=(dd.kind==='weapon'?wcap:pcap))continue;s.items[id]=Math.max(s.items[id]||0,l);if(s.cd)s.cd[id]=0}if(s.tree.items?.shield&&typeof shieldCapacity==='function')s.p.shield=shieldCapacity()}
 function runShipXP(){return Math.floor((s.kills||0)+60*(s.bossKills||0)+5*Math.max(0,(s.lv||1)-1))}
 function shipGainXP(x){let sh=shipState(),gained=0;sh.xp+=Math.max(0,Math.floor(x));while(sh.xp>=shipNeed(sh.lvl)&&sh.lvl<99){sh.xp-=shipNeed(sh.lvl);sh.lvl++;sh.pts++;gained++}return gained}
@@ -2139,9 +2145,9 @@ function drawShipTrail(t){if(!s||!s.paintTrail||s.paintTrail==='standard'||reduc
  ctx.restore()}
 let shipView='skills',partSlotView='engine';
 function renderPartsView(){let ps=partState(),T=shipTreeBonus(),slot=partSlotView;
- let slots='<div class="part-slots">'+partSlots.map(q=>{let d=equippedPart(q.id);return '<button class="part-slot" data-part-slot="'+q.id+'" aria-pressed="'+(q.id===slot)+'" style="--rc:'+partRarity[d.r].c+'"><span class="part-ico">'+equipmentIcon(q.icon)+'</span><small>'+q.name.toUpperCase()+'</small><b>'+d.name+'</b><em>'+partRarity[d.r].name+'</em></button>'}).join('')+'</div>';
+ let slots='<div class="part-slots">'+partSlots.map(q=>{let d=equippedPart(q.id);return '<button class="part-slot" data-part-slot="'+q.id+'" aria-pressed="'+(q.id===slot)+'" style="--rc:'+partRarity[d.r].c+'"><span class="part-ico"><img src="'+partSrc(d.id)+'" alt=""></span><small>'+q.name.toUpperCase()+'</small><b>'+d.name+'</b><em>'+partRarity[d.r].name+'</em></button>'}).join('')+'</div>';
  let sum='<p class="part-sum">'+(partPreview?'Previewing <b>'+(shipParts.find(x=>x.id===partPreview)?.name||'')+'</b> · changes show in the stats above':'Tap a part to preview its stats · bosses drop new parts')+'</p>';
- let list=shipParts.filter(d=>d.slot===slot).map(d=>{let own=!!ps.owned[d.id],eq=ps.eq[slot]===d.id;let pv=partPreview===d.id;return '<div class="part-row'+(own?'':' unknown')+(eq?' equipped':'')+(pv?' previewing':'')+'" '+(own&&!eq?'data-part-preview="'+d.id+'" role="button" tabindex="0"':'')+' style="--rc:'+partRarity[d.r].c+'"><small>'+partRarity[d.r].name.toUpperCase()+(pv?' · PREVIEWING':'')+'</small><b>'+(own?d.name:'??? '+partRarity[d.r].name+' part')+'</b><span>'+(own?d.desc:'Not found yet. Defeat bosses to find parts.')+'</span>'+(eq?'<em>EQUIPPED</em>':own?'<button class="equip-btn" data-part-equip="'+d.id+'">'+(pv?'Equip ✓':'Equip')+'</button>':'')+'</div>'}).join('');
+ let list=shipParts.filter(d=>d.slot===slot).map(d=>{let own=!!ps.owned[d.id],eq=ps.eq[slot]===d.id;let pv=partPreview===d.id;return '<div class="part-row has-art'+(own?'':' unknown')+(eq?' equipped':'')+(pv?' previewing':'')+'" '+(own&&!eq?'data-part-preview="'+d.id+'" role="button" tabindex="0"':'')+' style="--rc:'+partRarity[d.r].c+'"><img class="part-art" src="'+partSrc(d.id)+'" alt=""><small>'+partRarity[d.r].name.toUpperCase()+(pv?' · PREVIEWING':'')+'</small><b>'+(own?d.name:'??? '+partRarity[d.r].name+' part')+'</b><span>'+(own?d.desc:'Not found yet. Defeat bosses to find parts.')+'</span>'+(eq?'<em>EQUIPPED</em>':own?'<button class="equip-btn" data-part-equip="'+d.id+'">'+(pv?'Equip ✓':'Equip')+'</button>':'')+'</div>'}).join('');
  return slots+sum+'<div class="part-list">'+list+'</div>'}
 function hexToHsl(h){let m=/^#?([0-9a-f]{6})$/i.exec(h||'');if(!m)return null;let n=parseInt(m[1],16),r=(n>>16&255)/255,g=(n>>8&255)/255,b=(n&255)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,d=mx-mn,s=d?d/(1-Math.abs(2*l-1)):0,hh=0;if(d){hh=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;hh*=60;if(hh<0)hh+=360}return {h:hh,s:s*100,l:l*100}}
 function hslToHex(h,s,l){s/=100;l/=100;let k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));return '#'+[f(0),f(8),f(4)].map(x=>Math.round(x*255).toString(16).padStart(2,'0')).join('')}
@@ -2158,7 +2164,8 @@ if(typeof document!=='undefined'&&document.addEventListener){document.addEventLi
 
 
 // v0.99 hangar bay: a live, animated view of your ship on the Your ship screen (cosmetic canvas, own loop).
-function bayPilot(){let sh=shipState(),p=pilots.find(x=>x.id===treePilot())||pilots[1];partState();return {...p,color:sh.paint.hull||(sh.cls==='gunship'&&!sh.spec?'#ffb070':p.color),pattern:sh.paint.pattern||'none',patternColor:sh.paint.patternColor||'',glow:sh.paint.glow??1}}
+function bayParts(){let o={};for(let q of partSlots){let d=equippedPart(q.id);if(d)o[q.id]=d.id}if(typeof partPreview!=='undefined'&&partPreview){let d=shipParts.find(x=>x.id===partPreview);if(d)o[d.slot]=d.id}return o}
+function bayPilot(){let sh=shipState(),p=pilots.find(x=>x.id===treePilot())||pilots[1];partState();return {...p,color:sh.paint.hull||(sh.cls==='gunship'&&!sh.spec?'#ffb070':p.color),pattern:sh.paint.pattern||'none',patternColor:sh.paint.patternColor||'',glow:sh.paint.glow??1,parts:bayParts()}}
 const bayFx={sparks:[],pts:[],ghosts:[],last:0,running:false,rot:0,rotVel:0,offX:0,offY:0,roll:0,drag:null,bursts:[],flash:0,flashC:'#fff',beam:0,clunks:[]};
 function bayBurst(color,count=26,slot){let B=bayFx;B.flash=1;B.flashC=color;let spots={mount:[0,-28],wings:[-25,4],engine:[0,24],plating:[0,2]},o=slot?spots[slot]:[0,0];for(let i=0;i<count;i++){let a=Math.random()*TAU,sp=60+Math.random()*(slot?110:200);B.bursts.push({lx:o[0],ly:o[1],vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,age:0,life:.5+Math.random()*.5,c:Math.random()<.3?'#ffffff':color,r:1+Math.random()*2.4})}if(slot)B.clunks.push({slot,age:0,c:color})}
 function bayPointer(e){let c=e.currentTarget,r=c.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,B=bayFx;if(e.type==='pointerdown'){B.drag={x,y,sx:x,sy:y,t:performance.now(),moved:0};try{c.setPointerCapture(e.pointerId)}catch(_){}B.rotVel=0;return}if(!B.drag)return;if(e.type==='pointermove'){let dx=x-B.drag.x,dy=y-B.drag.y;B.drag.moved+=Math.hypot(dx,dy);let cx=r.width/2,cy=r.height*.46;let a0=Math.atan2(B.drag.y-cy,B.drag.x-cx),a1=Math.atan2(y-cy,x-cx),da=Math.atan2(Math.sin(a1-a0),Math.cos(a1-a0));let spin=da*1.4+dx*.012;B.rot+=spin;let now=performance.now(),el=Math.max(.008,(now-B.drag.t)/1000);B.rotVel=B.rotVel*.5+spin/el*.5;B.drag.t=now;B.offX=clamp(B.offX+dx*.35,-r.width*.18,r.width*.18);B.offY=clamp(B.offY+dy*.35,-26,22);B.drag.x=x;B.drag.y=y;return}if(e.type==='pointerup'||e.type==='pointercancel'){if(B.drag.moved<8){B.roll=.7;try{sound('dash')}catch(_){}}B.drag=null}}
@@ -2171,7 +2178,7 @@ function drawShipBay(now){let c=typeof document!=='undefined'&&document.getEleme
  try{drawHangarScene(g,t,dt,w,h,cx,pad,col,TX,TY,k)}catch(e){}
  // floor grid and pad
  g.save();g.translate(-TX*12,-TY*7);let rg=g.createRadialGradient(cx,pad,4,cx,pad,w*.55);rg.addColorStop(0,col+'40');rg.addColorStop(1,'#00000000');g.fillStyle=rg;g.fillRect(0,pad-60,w,h);
- g.strokeStyle='#65f7ef1c';g.lineWidth=1;for(let i=0;i<7;i++){let y=pad-10+i*i*3.2;g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke()}for(let i=-8;i<=8;i++){g.beginPath();g.moveTo(cx+i*14,pad-10);g.lineTo(cx+i*60,h);g.stroke()}
+ if(!hangarArtReady()){g.strokeStyle='#65f7ef1c';g.lineWidth=1;for(let i=0;i<7;i++){let y=pad-10+i*i*3.2;g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke()}for(let i=-8;i<=8;i++){g.beginPath();g.moveTo(cx+i*14,pad-10);g.lineTo(cx+i*60,h);g.stroke()}}
  g.translate(cx,pad);g.scale(1,.32);g.strokeStyle=col;g.lineWidth=2;g.globalAlpha=.55;g.setLineDash([10,8]);g.lineDashOffset=reducedMotion?0:-t*30;g.beginPath();g.arc(0,0,w*.27,0,TAU);g.stroke();g.globalAlpha=.25;g.setLineDash([3,9]);g.lineDashOffset=reducedMotion?0:t*20;g.beginPath();g.arc(0,0,w*.36,0,TAU);g.stroke();g.setLineDash([]);
  let pg=g.createRadialGradient(0,0,0,0,0,w*.22);pg.addColorStop(0,col+'66');pg.addColorStop(1,col+'00');g.globalAlpha=1;g.fillStyle=pg;g.beginPath();g.arc(0,0,w*.22,0,TAU);g.fill();g.restore();
  // interaction: drag to spin (with momentum) and nudge; tap for a barrel roll
@@ -2322,7 +2329,7 @@ function drawHullDetail(g,shape,c,full){let path=k=>{g.beginPath();shape.forEach
 
 // v0.99 hangar scene: back wall with ribs and a girder, an observation window onto space, light rigs, hazard
 // ring on the pad, BAY decal, docking clamps that release when you grab the ship or launch, dust in the light.
-function drawHangarScene(g,t,dt,w,h,cx,pad,col,TX,TY,k){let B=bayFx;g.save();
+function drawHangarScene(g,t,dt,w,h,cx,pad,col,TX,TY,k){let B=bayFx;g.save();if(hangarArtReady()){g.fillStyle='#050b17';g.fillRect(0,0,w,h);let iw=w*1.14,ih=iw/1.5,ix=cx-iw/2-TX*8,iy=pad-ih*.8-TY*5;if(iy+ih<h){let f=(h-iy+4)/ih;iw*=f;ih*=f;ix=cx-iw/2-TX*8}g.drawImage(hangarImg,ix,iy,iw,ih);g.restore();g.save();B.dust=B.dust||Array.from({length:22},(_,i)=>({x:patternHash(i,1),y:patternHash(i,2),v:.2+patternHash(i,4)*.6}));g.fillStyle='#e8fbff';for(let d of B.dust){d.y-=dt*d.v*.05;d.x+=Math.sin(t*.6+d.v*9)*dt*.004;if(d.y<.15)d.y=.95;g.globalAlpha=.12+.25*Math.sin(t+d.v*20)**2;g.fillRect(d.x*w,d.y*h,1.2,1.2)}g.restore();return}
  let wall=g.createLinearGradient(0,0,0,pad);wall.addColorStop(0,'#0b1626');wall.addColorStop(1,'#060c18');g.fillStyle=wall;g.fillRect(0,0,w,pad);
  g.save();g.translate(-TX*5,-TY*3);
  let ww=w*.3,wh=h*.19,wx=cx-ww/2+w*.04,wy=18;g.fillStyle='#02040a';g.beginPath();g.roundRect?g.roundRect(wx,wy,ww,wh,8):g.rect(wx,wy,ww,wh);g.fill();g.save();g.clip();
@@ -2336,11 +2343,26 @@ function drawHangarScene(g,t,dt,w,h,cx,pad,col,TX,TY,k){let B=bayFx;g.save();
  g.restore();
  B.dust=B.dust||Array.from({length:22},(_,i)=>({x:patternHash(i,1),y:patternHash(i,2),v:.2+patternHash(i,4)*.6}));g.fillStyle='#e8fbff';for(let d of B.dust){d.y-=dt*d.v*.05;d.x+=Math.sin(t*.6+d.v*9)*dt*.004;if(d.y<.15)d.y=.95;let x=d.x*w,y=d.y*h,a=.12+.25*Math.sin(t+d.v*20)**2;g.globalAlpha=a;g.fillRect(x,y,1.2,1.2)}g.globalAlpha=1;
  g.restore()}
-function drawPadDetail(g,t,w,h,cx,pad,col,TX,TY,k){g.save();g.translate(cx-TX*12,pad-TY*7);g.scale(1,.32);let R=w*.31;for(let i=0;i<36;i++){let a0=i/36*TAU,a1=a0+TAU/36*.8;g.strokeStyle=i%2?'#1a1608':'#ffcf4a';g.globalAlpha=i%2?.9:.55;g.lineWidth=7;g.beginPath();g.arc(0,0,R,a0,a1);g.stroke()}g.globalAlpha=.5;g.strokeStyle='#2d4258';g.lineWidth=2;g.beginPath();g.arc(0,0,R+7,0,TAU);g.stroke();
+function drawPadDetail(g,t,w,h,cx,pad,col,TX,TY,k){if(hangarArtReady()){g.save();g.translate(cx-TX*12,pad-TY*7);g.scale(1,.32);g.globalAlpha=.22;g.fillStyle=col;g.font='800 26px "Exo 2",sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('BAY 07',0,w*.31*.42);g.restore();return}g.save();g.translate(cx-TX*12,pad-TY*7);g.scale(1,.32);let R=w*.31;for(let i=0;i<36;i++){let a0=i/36*TAU,a1=a0+TAU/36*.8;g.strokeStyle=i%2?'#1a1608':'#ffcf4a';g.globalAlpha=i%2?.9:.55;g.lineWidth=7;g.beginPath();g.arc(0,0,R,a0,a1);g.stroke()}g.globalAlpha=.5;g.strokeStyle='#2d4258';g.lineWidth=2;g.beginPath();g.arc(0,0,R+7,0,TAU);g.stroke();
  g.globalAlpha=.32;g.fillStyle=col;g.font='800 40px "Exo 2",sans-serif';g.textAlign='center';g.textBaseline='middle';g.font='800 30px "Exo 2",sans-serif';g.fillText('BAY 07',0,R*.4);g.restore()}
 function drawClamps(g,t,dt,w,cx,shy,kk,rot){let B=bayFx,want=(B.drag||B.launch>0||Math.abs(B.rotVel||0)>.6||Math.abs(rot)>.15)?0:1;B.clamp=(B.clamp??1)+(want-(B.clamp??1))*Math.min(1,dt*(want?3:9));let q=B.clamp;if(q<.02)return;g.save();for(let side of [-1,1]){let base=side<0?0:w,tip=cx+side*(26*kk),reach=base+(tip-base)*(.55+.45*q),y=shy+4*kk;g.strokeStyle='#1d2d40';g.lineWidth=9;g.lineCap='round';g.beginPath();g.moveTo(base,y+14);g.lineTo(base+(reach-base)*.55,y+6);g.lineTo(reach,y);g.stroke();g.strokeStyle='#3d5670';g.lineWidth=2;g.beginPath();g.moveTo(base,y+11);g.lineTo(base+(reach-base)*.55,y+3);g.lineTo(reach,y-3);g.stroke();g.fillStyle='#2a3e55';g.beginPath();g.arc(base+(reach-base)*.55,y+6,5,0,TAU);g.fill();g.fillStyle=q>.9?'#7cf4a0':'#ffcf4a';g.beginPath();g.arc(base+(reach-base)*.55,y+6,1.8,0,TAU);g.fill();g.fillStyle='#3d5670';g.fillRect(reach-(side<0?0:6),y-5,6,10)}g.restore()}
 
 const nodeIcon={i_thrust:'speed',i_crit:'crit',i_burn:'speed',i_reflex:'clock',i_key:'power',j_hull:'hull',j_armour:'armour',j_shield:'shield',j_spikes:'thorns',j_key:'armour',g_dmg:'power',g_rate:'clock',g_crit:'crit',g_area:'area',g_key:'nova',c_magnet:'magnet',c_greed:'luck',c_drones:'seeker',c_sats:'blade',c_key:'seeker'};
+
+// v0.99 ship part art (ChatGPT sheets, cut into part-<id>-v0990.webp). Engines and wings sit behind the hull,
+// plating and gun mounts on top of it (under the rotating turret). Stock parts are the ship's own look, so only
+// found parts (Rare and up) are drawn on the hull. Sizes are in hull units (nose up, ship about 50 units long).
+const partArtSize={"m_stock": [196, 228], "m_heavy": [153, 256], "m_rotary": [171, 256], "m_array": [256, 212], "m_siege": [194, 256], "p_stock": [197, 256], "p_reactive": [209, 256], "p_light": [223, 256], "p_heavy": [212, 256], "p_aegis": [228, 256], "e_stock": [244, 227], "e_twin": [256, 216], "e_ion": [256, 222], "e_fusion": [256, 250], "e_nova": [244, 256], "w_stock": [256, 158], "w_razor": [256, 211], "w_vane": [256, 171], "w_prism": [256, 195], "w_phantom": [256, 187]};
+const partArtPlace={engine:{w:26,x:0,y:25},wings:{w:64,x:0,y:3},plating:{w:21,x:0,y:3},mount:{w:13,x:0,y:-21}};
+const partImgs={};
+function partImg(id){if(typeof Image==='undefined')return null;if(!partImgs[id]){let im=new Image();im.decoding='async';im.src='part-'+id+'-v0990.webp';partImgs[id]=im}return partImgs[id]}
+function partSrc(id){return 'part-'+id+'-v0990.webp'}
+function drawShipParts(g,pilot,layer){let P=pilot&&pilot.parts;if(!P||typeof g.drawImage!=='function')return;let slots=layer==='back'?['wings','engine']:layer==='nose'?['mount']:['plating'];g.save();g.rotate(Math.PI/2);g.shadowBlur=0;
+ for(let slot of slots){let id=P[slot];if(!id)continue;let d=shipParts.find(x=>x.id===id);if(!d||d.r<1)continue;let im=partImg(id),sz=partArtSize[id];if(!im||!im.complete||!im.naturalWidth||!sz)continue;let pl=partArtPlace[slot],w=pl.w,h=w*sz[1]/sz[0];try{g.drawImage(im,pl.x-w/2,pl.y-h/2,w,h)}catch(e){}}
+ g.restore()}
+const hangarImg=(typeof Image!=='undefined')?Object.assign(new Image(),{decoding:'async'}):null;if(hangarImg)hangarImg.src='hangar-bay-v0990.webp';
+function hangarArtReady(){return hangarImg&&hangarImg.complete&&hangarImg.naturalWidth>0}
+
 let hangar=loadHangar(),hangarReturn='menu',hangarTab='ships',hangarNotice='';saveHangar();
 function saveHangar(){try{profileStorage.setItem('rr_hangar',JSON.stringify(hangar));return true}catch(e){hangarNotice='Browser storage is unavailable. Progress lasts for this session only.';return false}}
 function hasContract(id){return hangar.claimed.includes(id)}
@@ -4322,7 +4344,7 @@ function enemyDesign(e,t){if(e.objectiveTarget)return;ctx.save();drawContactReco
 function pilotDesign(t,view=s,paint=shipCanvasPainter){
 const {ctx,poly,circle,hex}=paint;const s=view;
 if(!s.preview){ctx.save();ctx.translate(3,6);ctx.scale(1,.55);circle(0,0,s.pilot.id==='bastion'?28:19,'#00000088');ctx.restore();}
-ctx.save();ctx.rotate(paintHullHeading(s));drawIdentityHull(s.pilot,t,paint,s);ctx.restore();ctx.save();ctx.rotate(paintHullHeading(s));
+ctx.save();ctx.rotate(paintHullHeading(s));drawShipParts(ctx,s.pilot,'back');drawIdentityHull(s.pilot,t,paint,s);ctx.restore();ctx.save();ctx.rotate(paintHullHeading(s));
 if(!reducedMotion){let pulse=.5+.5*Math.sin(t*17),length=(s.dashTime>0||s.boostTime>0?28:4+(s.flightVisual?.thrust||0)*12)+pulse*4;for(let side of [-1,1]){let y=side*(s.pilot.id==='bastion'?16:9);ctx.save();ctx.globalAlpha=.3;poly([[-15,y-2],[-15-length,y],[-15,y+2]],s.pilot.color);ctx.globalAlpha=.75;poly([[-15,y-1],[-17-length*.6,y],[-15,y+1]],'#d4fff3');ctx.restore()}}
 ctx.shadowBlur=graphicsShadow(0);
 let heavy=['bastion','sovereign'].includes(s.pilot.id),light=s.pilot.id==='wasp',c=s.pilot.color;
@@ -4333,9 +4355,9 @@ poly([[8,0],[-1,-5],[-5,0],[-1,5]],'#081c30','#78ded5',1);poly([[5,0],[-1,-2],[-
 
 for(let side of [-1,1]){let y=side*(heavy?16:light?12:9);ctx.fillStyle='#385261';ctx.fillRect(-14,y-3,5,6);ctx.fillStyle=c;ctx.fillRect(-16,y-1,3,2)}
 if((s.items.armour||0))for(let i=0;i<Math.min(6,(s.items.armour||0)+1);i++){ctx.save();ctx.rotate(Math.PI/6+i*TAU/6);ctx.fillStyle='#e7f1ef88';ctx.fillRect(16,-4,3,1);ctx.fillStyle='#1c2a3c';ctx.fillRect(18,-1,2,2);ctx.restore()}
-ctx.restore();
+drawShipParts(ctx,s.pilot,'front');ctx.restore();
 ctx.save();ctx.rotate(s.face||0);ctx.shadowColor=s.pilot.color;ctx.shadowBlur=graphicsShadow(6);
-drawFleetMount(s.pilot,paint);ctx.restore()}
+drawFleetMount(s.pilot,paint);ctx.restore();ctx.save();ctx.rotate(paintHullHeading(s));drawShipParts(ctx,s.pilot,'nose');ctx.restore()}
 function projectileBase(b,t){drawWeaponProjectile(b,t)}
 
 
