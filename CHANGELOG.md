@@ -176,8 +176,8 @@
 
 - Keyboard movement now has a little momentum. The ship ramps up to full speed in about a fifth of a second, glides briefly when you let go, and curves smoothly when you change direction instead of snapping between 8 fixed headings. Reversing direction responds faster than a gentle turn, so dodging still feels sharp.
 - Dashes and abilities always go the way you're pressing, even mid-glide.
-- The ship banks (its wings lean) into turns. This is visual only, and off with Reduce motion.
-- Top speed, diagonal speed, dash and boost distances are unchanged. Touch and mouse controls are unchanged.
+- The ship banks (its wings lean) into turns with every control type: keyboard, touch and mouse. The lean follows how fast the ship is turning, so smooth thumb curves on a phone lean as well as sharp turns. This is visual only, and off with Reduce motion.
+- Top speed, diagonal speed, dash and boost distances are unchanged. Touch and mouse steering are unchanged apart from the lean.
 
 ## 1.0.0 — Crew and Workshop (RPG update, part 1)
 
