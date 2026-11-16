@@ -116,6 +116,19 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
   const prof = t => .2 + .8 * Math.sqrt(Math.max(0, 1 - t * t));               // contour scale at height fraction t
   const profInv = r => r <= .2 ? 1 : Math.sqrt(Math.max(0, 1 - Math.pow((r - .2) / .8, 2)));
   function densify(pts, step) { let out = []; for (let i = 0; i < pts.length; i++) { let a = pts[i], b = pts[(i + 1) % pts.length], n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step)); for (let k = 0; k < n; k++) out.push([a[0] + (b[0] - a[0]) * k / n, a[1] + (b[1] - a[1]) * k / n]); } return out; }
+  // Round every corner with a small fillet (a quadratic curve cut back from the vertex).
+  function roundCorners(pts, r, seg = 4) {
+    if (r <= 0 || pts.length < 3) return pts; let out = [], n = pts.length;
+    for (let i = 0; i < n; i++) {
+      let p = pts[(i + n - 1) % n], v = pts[i], q = pts[(i + 1) % n], l1 = Math.hypot(p[0] - v[0], p[1] - v[1]), l2 = Math.hypot(q[0] - v[0], q[1] - v[1]);
+      if (l1 < 1e-6 || l2 < 1e-6) continue;
+      let d1 = Math.min(r, l1 * .42), d2 = Math.min(r, l2 * .42), a = [v[0] + (p[0] - v[0]) / l1 * d1, v[1] + (p[1] - v[1]) / l1 * d1], b = [v[0] + (q[0] - v[0]) / l2 * d2, v[1] + (q[1] - v[1]) / l2 * d2];
+      let turn = Math.abs(((p[0] - v[0]) * (q[1] - v[1]) - (p[1] - v[1]) * (q[0] - v[0])) / (l1 * l2));
+      if (turn < .08) { out.push(v); continue; }                                   // nearly straight: keep the point
+      for (let k = 0; k <= seg; k++) { let u = k / seg, w = 1 - u; out.push([w * w * a[0] + 2 * w * u * v[0] + u * u * b[0], w * w * a[1] + 2 * w * u * v[1] + u * u * b[1]]); }
+    }
+    return out;
+  }
   function ccw(pts) { return polygonArea(pts) > 0 ? pts : pts.slice().reverse(); }
   // half-width of a polygon across the line x = const (max |y| of the crossings)
   function halfWidth(pts, x) { let w = 0; for (let i = 0; i < pts.length; i++) { let a = pts[i], b = pts[(i + 1) % pts.length]; if ((a[0] - x) * (b[0] - x) <= 0 && a[0] !== b[0]) { let y = a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]); w = Math.max(w, Math.abs(y)); } else if (a[0] === x) w = Math.max(w, Math.abs(a[1])); } return w; }
@@ -142,21 +155,35 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
   }
   // A thin shell that drapes over the surface below it (detail plating).
   function shell(pts0, zAt, lift, thick) {
-    let pts = ccw(densify(pts0, 2.2)), n = pts.length, pos = [], idx = [];
-    let tz = pts.map(([x, y]) => zAt(x, y) + lift), bz = tz.map(z => z - thick);
-    for (let i = 0; i < n; i++) pos.push(pts[i][0], -pts[i][1], tz[i]); for (let i = 0; i < n; i++) pos.push(pts[i][0], -pts[i][1], bz[i]);
-    let tri = T.ShapeUtils.triangulateShape(pts.map(([x, y]) => new T.Vector2(x, y)), []);
-    for (let [a, b, c] of tri) { idx.push(a, c, b); idx.push(n + a, n + b, n + c); }
-    for (let i = 0; i < n; i++) { let j = (i + 1) % n; idx.push(i, j, n + j, i, n + j, n + i); }
+    let pts = ccw(densify(pts0, 2.0)), n = pts.length;
+    // triangulate, then split long interior edges so the plate can bend with the hull (boundary edges are <= 2.0, never split)
+    let V = pts.map(p => [p[0], p[1]]), tris = T.ShapeUtils.triangulateShape(pts.map(([x, y]) => new T.Vector2(x, y)), []).map(t => t.slice()), mid = new Map();
+    let midpoint = (a, b) => { let k = a < b ? a + ',' + b : b + ',' + a; if (!mid.has(k)) { V.push([(V[a][0] + V[b][0]) / 2, (V[a][1] + V[b][1]) / 2]); mid.set(k, V.length - 1); } return mid.get(k); };
+    let len = (a, b) => Math.hypot(V[a][0] - V[b][0], V[a][1] - V[b][1]);
+    for (let pass = 0; pass < 6; pass++) {
+      let next = [], split = false;
+      for (let [a, b, c] of tris) {
+        let e = [[a, b, c], [b, c, a], [c, a, b]].sort((p, q) => len(q[0], q[1]) - len(p[0], p[1]))[0];
+        if (len(e[0], e[1]) > 2.1) { let m = midpoint(e[0], e[1]); next.push([e[0], m, e[2]], [m, e[1], e[2]]); split = true; } else next.push([a, b, c]);
+      }
+      tris = next; if (!split) break;
+    }
+    let N = V.length, tz = V.map(([x, y]) => zAt(x, y) + lift), pos = [], idx = [];
+    for (let k = 0; k < N; k++) pos.push(V[k][0], -V[k][1], tz[k]);
+    for (let k = 0; k < N; k++) pos.push(V[k][0], -V[k][1], tz[k] - thick);
+    for (let [a, b, c] of tris) { idx.push(a, c, b); idx.push(N + a, N + b, N + c); }
+    for (let k = 0; k < n; k++) { let m = (k + 1) % n; idx.push(k, m, N + m, k, N + m, N + k); }
     let g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
     let nrm = g.getAttribute('normal'), up = 0; for (let v = 0; v < n; v++) up += nrm.getZ(v); if (up < 0) { let ix = g.getIndex().array; for (let q = 0; q < ix.length; q += 3) { let t0 = ix[q + 1]; ix[q + 1] = ix[q + 2]; ix[q + 2] = t0; } g.computeVertexNormals(); }
-    return { geo: g, top: pts.map((p, i) => [p[0], p[1], tz[i] + .02]) };
+    return { geo: g, top: pts.map((p, k) => [p[0], p[1], tz[k] + .02]) };
   }
+
 
   function build(rec) {
     clearModel();
     let col = rec.color || '#65f7ef', shapes = rec.shapes.filter(s => s.pts.length >= 3 && (s.alpha > .3 || (s.glass && s.stroke))), base = -1, best = 0;
     shapes.forEach((s, i) => { s.area = Math.abs(polygonArea(s.pts)); s.box = bbox(s.pts); if (s.area > best && !s.glass) { best = s.area; base = i; } });
+    shapes.forEach((s, i) => { let sz = Math.sqrt(s.area); s.pts = roundCorners(s.pts, i === base ? Math.min(2.6, sz * .09) : Math.min(1.5, sz * .12), i === base ? 5 : 3); });
     if (base < 0) return;
     let edgesBy = new Map(), addEdge = (c, path, w, k) => { let key = c + '|' + w + '|' + k; if (!edgesBy.has(key)) edgesBy.set(key, { c, w, k, paths: [] }); edgesBy.get(key).paths.push(path); };
     let B = shapes[base], span = Math.max(B.box.y1 - B.box.y0, B.box.x1 - B.box.x0), HH = Math.max(4, Math.min(9, span * .14)), surfaces = [], levels = [];
@@ -181,16 +208,26 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
         if (s.fill && /^#?(f|e|d)[0-9a-f]/i.test(s.fill.replace('#', '')) && s.area < 40) { let m = bodyMeshes.pop(); m.material = neon(s.fill, 1.4); glowMeshes.push(m); }
         continue;
       }
+      // a piece mostly hanging off the hull (tail lights, gun pods, vents) becomes a small rounded solid at the hull's side
+      let onSurf = 0; for (let [x, y] of s.pts) { for (let f of surfaces) if (f(x, y) !== null) { onSurf++; break; } }
+      if (onSurf < s.pts.length * .3) {
+        let H = Math.max(.9, Math.min(2.4, Math.sqrt(s.area) * .3)), L = loft(s.pts, H, H * .75, 'centre', 4);
+        let glowy = s.fill && /^#?(f|e|d)[0-9a-f]/i.test(s.fill.replace('#', '')) && s.area < 40;
+        put(L.geo, glowy ? neon(s.fill, 1.4) : metal(s.fill, false), glowy); surfaces.push(L.height);
+        if (s.stroke) addEdge(s.stroke, { pts: densify(s.pts, 2.5).map(([x, y]) => [x, y, 0]), closed: true }, .34, 1.2);
+        continue;
+      }
       // plating: lift above anything it overlaps that was plated earlier
-      let lv = 0; for (let p of levels) if (overlap(p.box, s.box)) lv = Math.max(lv, p.lv + 1);
-      let lift = .32 + lv * .3, sh = shell(s.pts, zAt, lift, .55 + lv * .3);
+      let lv = 0, cxs = (s.box.x0 + s.box.x1) / 2, cys = (s.box.y0 + s.box.y1) / 2; for (let p of levels) if (p.area > s.area * 1.2 && cxs > p.box.x0 && cxs < p.box.x1 && cys > p.box.y0 && cys < p.box.y1) lv = Math.max(lv, p.lv + 1); lv = Math.min(lv, 2);
+      let dark = (() => { let c = new T.Color(s.fill || '#000'); return c.r + c.g + c.b < .06; })() && s.area < 24;
+      let lift = dark ? .1 + lv * .26 : .26 + lv * .26, sh = shell(s.pts, zAt, lift, dark ? .3 : .6 + lv * .26);
       let glowy = s.fill && /^#?(f|e|d)[0-9a-f]/i.test(s.fill.replace('#', '')) && s.area < 40;
       put(sh.geo, glowy ? neon(s.fill, 1.4) : metal(s.fill, false), glowy);
-      levels.push({ box: s.box, lv });
+      levels.push({ box: s.box, lv, area: s.area, pts: s.pts, lift });
       if (s.stroke) addEdge(s.stroke, { pts: sh.top, closed: true }, Math.max(.24, Math.min(.46, (s.lw || 1) * .28)), 1.2);
     }
-    for (let l of rec.lines || []) if (l.pts && l.pts.length > 1) { let pts = l.pts.length === 2 ? [0, .25, .5, .75, 1].map(u => [l.pts[0][0] + (l.pts[1][0] - l.pts[0][0]) * u, l.pts[0][1] + (l.pts[1][1] - l.pts[0][1]) * u]) : l.pts; addEdge(l.color || col, { pts: pts.map(([x, y]) => [x, y, zAt(x, y) + .45]), closed: !!l.closed }, Math.max(.22, Math.min(.42, (l.w || 1) * .26)), 1.1); }
-    for (let e of edgesBy.values()) { let m = edgeMesh(e.paths, e.c, e.w, 0, e.k); if (m) model.add(m); }
+    for (let l of rec.lines || []) if (l.pts && l.pts.length > 1) { let pts = l.pts.length === 2 ? [0, .25, .5, .75, 1].map(u => [l.pts[0][0] + (l.pts[1][0] - l.pts[0][0]) * u, l.pts[0][1] + (l.pts[1][1] - l.pts[0][1]) * u]) : l.pts; let lineZ = (x, y) => { let t = .3; for (let p of levels) if (inside(p.pts, x, y)) t = Math.max(t, p.lift + .04); return zAt(x, y) + t; };
+      addEdge(l.color || col, { pts: (l.pts.length === 2 ? pts : densify(l.pts, 1.5)).map(([x, y]) => [x, y, lineZ(x, y)]), closed: !!l.closed }, Math.max(.22, Math.min(.42, (l.w || 1) * .26)), 1.1); }
     // engine flames: additive cones behind the tail
     let fm = new T.MeshBasicMaterial({ color: new T.Color(rec.trail || col).multiplyScalar(2.2), transparent: true, opacity: .85, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false, side: T.DoubleSide }),
         core = new T.MeshBasicMaterial({ color: new T.Color('#ffffff').multiplyScalar(2.4), transparent: true, opacity: .9, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false, side: T.DoubleSide });
@@ -200,8 +237,11 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       disposables.push(outer.geometry, inner.geometry);
       for (let m of [outer, inner]) { m.rotation.z = Math.PI / 2; m.position.set(x, -y, Math.max(0, zAt(x + 2, y) * .5)); model.add(m); glowMeshes.push(m); }
       flames.push({ outer, inner, x, r: r || 2.6 });
+      { let rr = (r || 2.6), nz = new T.Mesh(new T.CylinderGeometry(rr * 1.05, rr * 1.3, 3.2, 16, 1, true), metal('#3a4c5e', true)); disposables.push(nz.geometry); nz.material.side = T.DoubleSide; nz.rotation.z = Math.PI / 2; nz.position.set(x + 1.2, -y, Math.max(0, zAt(x + 2, y) * .5)); model.add(nz); bodyMeshes.push(nz);
+        addEdge(rec.trail || col, { pts: Array.from({ length: 17 }, (_, k) => { let a = k / 16 * Math.PI * 2; return [x - .4, y + Math.cos(a) * rr * 1.3, Math.max(0, zAt(x + 2, y) * .5) + Math.sin(a) * rr * 1.3]; }), closed: true }, .3, 1.5); }
       let glow = new T.PointLight(new T.Color(rec.trail || col), .6, 60, 1.5); glow.position.set(x - 6, -y, 0); model.add(glow);
     }
+    for (let e of edgesBy.values()) { let m = edgeMesh(e.paths, e.c, e.w, 0, e.k); if (m) model.add(m); }
     pad.color.set(col); rim.color.set(col);
   }
 
