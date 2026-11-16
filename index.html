@@ -2366,18 +2366,30 @@ function partFit(pilot,slot,id){let sh=hullShapeOf(pilot),minY=Math.min(...sh.ma
  w=Math.max(10,span*.24);let h=w*ar;return {w,h,x:0,y:minY+h*.42}}
 // Recolour a part's lights to the ship colour (metal untouched); parts behind the hull get a touch of shade.
 const partTintCache={};
-function partCanvas(id,col,mode,back){let im=partImg(id);if(!im||!im.complete||!im.naturalWidth)return null;let key=id+'|'+(mode==='match'?col:'r')+'|'+(back?1:0);if(partTintCache[key])return partTintCache[key];if(typeof document==='undefined')return im;
- try{let c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;let g=c.getContext('2d');g.drawImage(im,0,0);if(mode==='match'||back){let d=g.getImageData(0,0,c.width,c.height),px=d.data,t=hexToHsl(col)||{h:170,s:90,l:65},th=t.h/360,ts=Math.max(.6,t.s/100);
-  for(let i=0;i<px.length;i+=4){if(!px[i+3])continue;let r=px[i]/255,gg=px[i+1]/255,b=px[i+2]/255,mx=Math.max(r,gg,b),mn=Math.min(r,gg,b),l=(mx+mn)/2,sat=mx===mn?0:(mx-mn)/(1-Math.abs(2*l-1));
-   if(mode==='match'&&sat>.32&&mx>.35){let hh=th,ss=Math.min(1,ts*(.6+sat*.5)),q=l<.5?l*(1+ss):l+ss-l*ss,p2=2*l-q,f=tt=>{tt=(tt+1)%1;return tt<1/6?p2+(q-p2)*6*tt:tt<.5?q:tt<2/3?p2+(q-p2)*(2/3-tt)*6:p2};r=f(hh+1/3);gg=f(hh);b=f(hh-1/3)}
-   if(back){r*=.82;gg*=.82;b*=.86}px[i]=r*255;px[i+1]=gg*255;px[i+2]=b*255}g.putImageData(d,0,0)}return partTintCache[key]=c}catch(e){return im}}
+function partCanvas(id,col,mode,back){let im=partImg(id);if(!im||!im.complete||!im.naturalWidth)return null;let d0=shipParts.find(x=>x.id===id),neon=mode==='match'?col:(partRarity[d0?.r||0]||partRarity[0]).c,key=id+'|'+neon+'|'+(back?1:0);if(partTintCache[key])return partTintCache[key];if(typeof document==='undefined')return im;
+ // Neon conversion: metal -> the hull's navy panel palette, lights -> the neon colour, a thick glowing neon outline
+ // round the silhouette and faint neon seams on the panel lines, so parts match the ships' flat neon style.
+ try{let c=document.createElement('canvas'),W=im.naturalWidth,H=im.naturalHeight;c.width=W;c.height=H;let g=c.getContext('2d');g.drawImage(im,0,0);let D=g.getImageData(0,0,W,H),px=D.data,N=hexToHsl(neon)||{h:170,s:90,l:65},nh=N.h/360,ns=Math.max(.55,N.s/100);
+  let hsl2rgb=(h,s2,l)=>{let q=l<.5?l*(1+s2):l+s2-l*s2,p2=2*l-q,f=t=>{t=(t+1)%1;return t<1/6?p2+(q-p2)*6*t:t<.5?q:t<2/3?p2+(q-p2)*(2/3-t)*6:p2};return [f(h+1/3),f(h),f(h-1/3)]};
+  let nc=hsl2rgb(nh,ns,Math.max(.55,Math.min(.72,N.l/100))),lum=new Float32Array(W*H),dist=new Float32Array(W*H);
+  for(let i=0,j=0;j<W*H;i+=4,j++){lum[j]=(px[i]*.3+px[i+1]*.59+px[i+2]*.11)/255;dist[j]=px[i+3]>110?1e4:0}
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){let j=y*W+x;if(!dist[j])continue;let m=dist[j];if(x>0)m=Math.min(m,dist[j-1]+1);if(y>0)m=Math.min(m,dist[j-W]+1);if(x>0&&y>0)m=Math.min(m,dist[j-W-1]+1.41);if(x<W-1&&y>0)m=Math.min(m,dist[j-W+1]+1.41);dist[j]=m}
+  for(let y=H-1;y>=0;y--)for(let x=W-1;x>=0;x--){let j=y*W+x;if(!dist[j])continue;let m=dist[j];if(x<W-1)m=Math.min(m,dist[j+1]+1);if(y<H-1)m=Math.min(m,dist[j+W]+1);if(x<W-1&&y<H-1)m=Math.min(m,dist[j+W+1]+1.41);if(x>0&&y<H-1)m=Math.min(m,dist[j+W-1]+1.41);dist[j]=m}
+  let edge=Math.max(3,Math.round(Math.max(W,H)/44)),dark=[12,24,40],mid=[32,51,70],lite=[61,92,116],shade=back?.84:1;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){let j=y*W+x,i=j*4;if(!px[i+3])continue;let r=px[i]/255,gg=px[i+1]/255,b=px[i+2]/255,mx=Math.max(r,gg,b),mn=Math.min(r,gg,b),l=(mx+mn)/2,sat=mx===mn?0:(mx-mn)/(1-Math.abs(2*l-1)),out;
+   if(dist[j]>0&&dist[j]<=edge){let k=dist[j]<=edge*.45?.35:0;out=[nc[0]+(1-nc[0])*k,nc[1]+(1-nc[1])*k,nc[2]+(1-nc[2])*k].map(v=>v*255);px[i+3]=Math.max(px[i+3],230)}
+   else if(sat>.3&&mx>.38){let L=Math.min(.82,.45+l*.5);out=hsl2rgb(nh,ns,L).map(v=>v*255)}
+   else{let L=lum[j],t2=Math.min(1,L/.75),base=t2<.45?dark.map((v,k)=>v+(mid[k]-v)*t2/.45):mid.map((v,k)=>v+(lite[k]-v)*(t2-.45)/.55);
+    let gx=x>0&&x<W-1?lum[j+1]-lum[j-1]:0,gy=y>0&&y<H-1?lum[j+W]-lum[j-W]:0,gm=Math.hypot(gx,gy);if(gm>.22){let a2=Math.min(.55,(gm-.22)*1.6);base=base.map((v,k)=>v+(nc[k]*255-v)*a2)}out=base}
+   px[i]=out[0]*shade;px[i+1]=out[1]*shade;px[i+2]=out[2]*shade}
+  g.putImageData(D,0,0);return partTintCache[key]=c}catch(e){return im}}
 function partTintMode(pilot){return pilot.partTint||'match'}
 function drawShipParts(g,pilot,layer){let P=pilot&&pilot.parts;if(!P||typeof g.drawImage!=='function')return;if(layer==='front'){if(P.plating){g.save();g.rotate(Math.PI/2);try{drawHullPlating(g,pilot,hullShapeOf(pilot),pilot.color)}catch(e){}g.restore()}return}let slots=layer==='back'?['wings','engine']:layer==='nose'?['mount']:[];if(!slots.length)return;g.save();g.rotate(Math.PI/2);g.shadowBlur=0;
  for(let slot of slots){let id=P[slot];if(!id)continue;let d=shipParts.find(x=>x.id===id);if(!d||d.r<1)continue;let cv=partCanvas(id,pilot.color,partTintMode(pilot),layer==='back');if(!cv)continue;let f=partFit(pilot,slot,id);
-  try{if(slot==='mount'){g.save();g.globalAlpha=.45;g.filter&&(g.filter='blur(1.5px) brightness(0)');g.drawImage(cv,f.x-f.w/2+1,f.y-f.h/2+2,f.w,f.h);g.restore()}g.drawImage(cv,f.x-f.w/2,f.y-f.h/2,f.w,f.h)}catch(e){}}
+  try{g.shadowColor=pilot.color;g.shadowBlur=graphicsShadow(8);g.drawImage(cv,f.x-f.w/2,f.y-f.h/2,f.w,f.h)}catch(e){}}
  g.restore()}
 // Plating is drawn INSIDE the hull outline (called from drawIdentityHull), with the neon edge redrawn over it.
-function drawHullPlating(g,pilot,shape,c){let id=pilot.parts&&pilot.parts.plating,d=id&&shipParts.find(x=>x.id===id);if(!d||d.r<1||typeof g.drawImage!=='function'||typeof g.clip!=='function')return;let cv=partCanvas(id,c,partTintMode(pilot),false);if(!cv)return;let f=partFit(pilot,'plating',id);
+function drawHullPlating(g,pilot,shape,c){let F=fuselage(pilot);if(F)shape=F.poly;let id=pilot.parts&&pilot.parts.plating,d=id&&shipParts.find(x=>x.id===id);if(!d||d.r<1||typeof g.drawImage!=='function'||typeof g.clip!=='function')return;let cv=partCanvas(id,c,partTintMode(pilot),false);if(!cv)return;let f=partFit(pilot,'plating',id);
  g.save();g.beginPath();shape.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.clip();g.shadowBlur=0;g.globalAlpha=.95;try{g.drawImage(cv,f.x-f.w/2,f.y-f.h/2,f.w,f.h)}catch(e){}g.restore();
  g.save();g.strokeStyle=c;g.lineWidth=1.7;g.shadowColor=c;g.shadowBlur=graphicsShadow(8);g.beginPath();shape.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.stroke();g.restore()}
 // Animated flames from an equipped engine part's nozzles (heading frame: x forward).
@@ -2385,6 +2397,28 @@ function drawPartFlames(g,pilot,t,thrust,boost){let id=pilot.parts&&pilot.parts.
  if(!reducedMotion)for(let side of [-1,1]){let x=side*f.w*.27,hx=-ny,hy=x;g.save();g.globalAlpha=.35;g.fillStyle=c;g.beginPath();g.moveTo(hx,hy-2.4);g.lineTo(hx-len,hy);g.lineTo(hx,hy+2.4);g.closePath();g.fill();g.globalAlpha=.8;g.fillStyle='#e8fbff';g.beginPath();g.moveTo(hx,hy-1.1);g.lineTo(hx-len*.6,hy);g.lineTo(hx,hy+1.1);g.closePath();g.fill();g.restore()}return true}
 const hangarImg=(typeof Image!=='undefined')?Object.assign(new Image(),{decoding:'async'}):null;if(hangarImg)hangarImg.src='hangar-bay-v0990.webp';
 function hangarArtReady(){return hangarImg&&hangarImg.complete&&hangarImg.naturalWidth>0}
+
+
+// v0.99 MODULAR HULL. With wings fitted, the hull is cut down to its central body (fuselage) and the wing pieces
+// attach to its sides; with an engine fitted, the tail is cut off and the engine bolts on behind. The neon outline
+// is redrawn around the cut body so the parts join it instead of sitting on top. Nose-up hull units.
+function partOn(pilot,slot){let id=pilot&&pilot.parts&&pilot.parts[slot],d=id&&shipParts.find(x=>x.id===id);return d&&d.r>0?d:null}
+function clipPolyHalf(poly,inside,cut){let out=[];for(let i=0;i<poly.length;i++){let a=poly[i],b=poly[(i+1)%poly.length],ia=inside(a),ib=inside(b);if(ia)out.push(a);if(ia!==ib)out.push(cut(a,b))}return out}
+const fuselageCache={};
+function fuselage(pilot){let wings=!!partOn(pilot,'wings'),eng=!!partOn(pilot,'engine');if(!wings&&!eng)return null;let key=pilot.id+'|'+wings+'|'+eng;if(fuselageCache[key])return fuselageCache[key];let shape=hullShapeOf(pilot),heavy=['bastion','sovereign','architect'].includes(pilot.id),fx=heavy?16:12.5,poly=shape.map(q=>[q[0],q[1]]);
+ let lerpX=(a,b,x)=>[x,a[1]+(b[1]-a[1])*(x-a[0])/((b[0]-a[0])||1e-6)],lerpY=(a,b,y)=>[a[0]+(b[0]-a[0])*(y-a[1])/((b[1]-a[1])||1e-6),y];
+ if(wings){let span0=Math.max(...shape.map(q=>Math.abs(q[0]))),k=Math.min(1,fx/span0);poly=poly.map(q=>[q[0]*Math.min(1,k+(1-k)*Math.max(0,Math.min(1,(-q[1]-8)/18))*.0),q[1]])}
+ let maxY=Math.max(...poly.map(q=>q[1])),minY=Math.min(...poly.map(q=>q[1])),cutY=null;if(eng){cutY=maxY-Math.max(5,(maxY-minY)*.16);poly=clipPolyHalf(poly,q=>q[1]<=cutY,(a,b)=>lerpY(a,b,cutY))}
+ let widthAt=y=>{let xs=[];for(let i=0;i<poly.length;i++){let a=poly[i],b=poly[(i+1)%poly.length];if((a[1]-y)*(b[1]-y)<=0&&a[1]!==b[1])xs.push(a[0]+(b[0]-a[0])*(y-a[1])/(b[1]-a[1]))}return xs.length?Math.max(...xs.map(Math.abs)):fx};
+ return fuselageCache[key]={fx,cutY,poly,wings,eng,minY,maxY:Math.max(...poly.map(q=>q[1])),widthAt,origSpan:Math.max(...shape.map(q=>Math.abs(q[0]))),wideY:shape.reduce((a,q)=>Math.abs(q[0])>Math.abs(a[0])?q:a,shape[0])[1]}}
+function clipToFuselage(g,pilot){let F=fuselage(pilot);if(!F||typeof g.clip!=='function')return false;g.save();g.rotate(Math.PI/2);g.beginPath();F.poly.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.restore();g.clip();return true}
+function strokeFuselage(g,pilot){let F=fuselage(pilot);if(!F||typeof g.stroke!=='function')return;let c=pilot.color;g.save();g.rotate(Math.PI/2);g.strokeStyle=c;g.lineWidth=1.7;g.shadowColor=c;g.shadowBlur=graphicsShadow(10);g.lineJoin='round';g.beginPath();F.poly.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.stroke();g.restore()}
+// wing pieces: find the left and right pieces in the art once, then bolt each to the fuselage side
+const wingBoxCache={};
+function wingBoxes(id,cv){if(wingBoxCache[id])return wingBoxCache[id];try{let g=cv.getContext?cv.getContext('2d'):null;if(!g)return null;let w=cv.width,h=cv.height,d=g.getImageData(0,0,w,h).data,col=new Array(w).fill(0);for(let x=0;x<w;x++)for(let y=0;y<h;y++)if(d[(y*w+x)*4+3]>60){col[x]=1;break}let mid=Math.floor(w/2),l0=col.indexOf(1),l1=mid,r0=mid,r1=col.lastIndexOf(1);while(l1>0&&!col[l1])l1--;while(r0<w&&!col[r0])r0++;let box=(x0,x1)=>{let y0=h,y1=0;for(let x=x0;x<=x1;x++)for(let y=0;y<h;y++)if(d[(y*w+x)*4+3]>60){if(y<y0)y0=y;if(y>y1)y1=y}return [x0,y0,x1-x0+1,y1-y0+1]};return wingBoxCache[id]={L:box(l0,l1),R:box(r0,r1)}}catch(e){return null}}
+function drawModularWings(g,pilot){let d=partOn(pilot,'wings');if(!d)return;let F=fuselage(pilot),cv=partCanvas(d.id,pilot.color,partTintMode(pilot),true);if(!F||!cv||!cv.getContext)return;let B=wingBoxes(d.id,cv);if(!B)return;let reach=Math.max(13,(F.origSpan-F.fx)*1.35),y=F.wideY*.5;g.save();g.rotate(Math.PI/2);g.shadowColor=pilot.color;g.shadowBlur=graphicsShadow(8);
+ for(let [k,side] of [['L',-1],['R',1]]){let [sx,sy,sw,sh]=B[k],w=reach,h=w*sh/sw,inner=side*(F.widthAt(y)-1.2),x=side<0?inner-w:inner;try{g.drawImage(cv,sx,sy,sw,sh,x,y-h*.45,w,h)}catch(e){}}g.restore()}
+function drawModularEngine(g,pilot){let d=partOn(pilot,'engine');if(!d)return;let F=fuselage(pilot),cv=partCanvas(d.id,pilot.color,partTintMode(pilot),true);if(!F||!cv)return;let sz=partArtSize[d.id]||[256,256],bw=F.widthAt(F.cutY-1)*2,w=Math.max(16,Math.min(30,bw*1.45)),h=w*sz[1]/sz[0];g.save();g.rotate(Math.PI/2);g.shadowColor=pilot.color;g.shadowBlur=graphicsShadow(8);try{g.drawImage(cv,-w/2,F.cutY-h*.16,w,h)}catch(e){}g.restore();return {w,h,top:F.cutY-h*.16}}
 
 let hangar=loadHangar(),hangarReturn='menu',hangarTab='ships',hangarNotice='';saveHangar();
 function saveHangar(){try{profileStorage.setItem('rr_hangar',JSON.stringify(hangar));return true}catch(e){hangarNotice='Browser storage is unavailable. Progress lasts for this session only.';return false}}
@@ -4367,16 +4401,16 @@ function enemyDesign(e,t){if(e.objectiveTarget)return;ctx.save();drawContactReco
 function pilotDesign(t,view=s,paint=shipCanvasPainter){
 const {ctx,poly,circle,hex}=paint;const s=view;
 if(!s.preview){ctx.save();ctx.translate(3,6);ctx.scale(1,.55);circle(0,0,s.pilot.id==='bastion'?28:19,'#00000088');ctx.restore();}
-ctx.save();ctx.rotate(paintHullHeading(s));drawShipParts(ctx,s.pilot,'back');drawIdentityHull(s.pilot,t,paint,s);ctx.restore();ctx.save();ctx.rotate(paintHullHeading(s));
+ctx.save();ctx.rotate(paintHullHeading(s));let modular=false;try{modular=!!fuselage(s.pilot)&&typeof ctx.clip==='function'}catch(e){}if(modular){try{drawModularWings(ctx,s.pilot);drawModularEngine(ctx,s.pilot)}catch(e){}ctx.save();clipToFuselage(ctx,s.pilot);{let F=fuselage(s.pilot);if(F&&F.wings){let k=Math.min(1,F.fx/F.origSpan);ctx.scale(1,Math.max(.5,k))}}drawIdentityHull(s.pilot,t,paint,s);ctx.restore();try{strokeFuselage(ctx,s.pilot)}catch(e){}}else{drawShipParts(ctx,s.pilot,'back');drawIdentityHull(s.pilot,t,paint,s)}ctx.restore();ctx.save();ctx.rotate(paintHullHeading(s));
 let partEngine=false;try{partEngine=drawPartFlames(ctx,s.pilot,t,s.flightVisual?.thrust||0,s.dashTime>0||s.boostTime>0)}catch(e){}if(!reducedMotion&&!partEngine){let pulse=.5+.5*Math.sin(t*17),length=(s.dashTime>0||s.boostTime>0?28:4+(s.flightVisual?.thrust||0)*12)+pulse*4;for(let side of [-1,1]){let y=side*(s.pilot.id==='bastion'?16:9);ctx.save();ctx.globalAlpha=.3;poly([[-15,y-2],[-15-length,y],[-15,y+2]],s.pilot.color);ctx.globalAlpha=.75;poly([[-15,y-1],[-17-length*.6,y],[-15,y+1]],'#d4fff3');ctx.restore()}}
 ctx.shadowBlur=graphicsShadow(0);
-let heavy=['bastion','sovereign'].includes(s.pilot.id),light=s.pilot.id==='wasp',c=s.pilot.color;
-for(let side of [-1,1]){let y=side*(heavy?14:9);poly([[-9,y-3],[3,y-3],[7,y],[3,y+3],[-9,y+3]],heavy?'#526170':'#335c67','#7ca7ad',.6);
+let heavy=['bastion','sovereign'].includes(s.pilot.id),light=s.pilot.id==='wasp',c=s.pilot.color,sq=1;try{let F=typeof ctx.clip==='function'&&fuselage(s.pilot);if(F&&F.wings)sq=Math.max(.5,Math.min(1,F.fx/F.origSpan))}catch(e){}
+for(let side of [-1,1]){let y=side*(heavy?14:9)*sq;poly([[-9,y-3],[3,y-3],[7,y],[3,y+3],[-9,y+3]],heavy?'#526170':'#335c67','#7ca7ad',.6);
 for(let i=0;i<3;i++){ctx.fillStyle='#0a1c2b';ctx.fillRect(-7+i*3,y-2,1.2,4)}
 circle(2,y,1,'#c2fff0');ctx.strokeStyle='#c2fff044';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(-10,y-4);ctx.lineTo(2,y-4);ctx.stroke()}
 poly([[8,0],[-1,-5],[-5,0],[-1,5]],'#081c30','#78ded5',1);poly([[5,0],[-1,-2],[-3,0],[-1,2]],'#c9fff2');ctx.save();ctx.globalAlpha=reducedMotion?.25:.2+.2*Math.sin(t*4);circle(0,0,7,s.pilot.color);ctx.restore();
 
-if(!partEngine)for(let side of [-1,1]){let y=side*(heavy?16:light?12:9);ctx.fillStyle='#385261';ctx.fillRect(-14,y-3,5,6);ctx.fillStyle=c;ctx.fillRect(-16,y-1,3,2)}
+if(!partEngine)for(let side of [-1,1]){let y=side*(heavy?16:light?12:9)*sq;ctx.fillStyle='#385261';ctx.fillRect(-14,y-3,5,6);ctx.fillStyle=c;ctx.fillRect(-16,y-1,3,2)}
 if((s.items.armour||0))for(let i=0;i<Math.min(6,(s.items.armour||0)+1);i++){ctx.save();ctx.rotate(Math.PI/6+i*TAU/6);ctx.fillStyle='#e7f1ef88';ctx.fillRect(16,-4,3,1);ctx.fillStyle='#1c2a3c';ctx.fillRect(18,-1,2,2);ctx.restore()}
 drawShipParts(ctx,s.pilot,'front');ctx.restore();
 ctx.save();ctx.rotate(s.face||0);ctx.shadowColor=s.pilot.color;ctx.shadowBlur=graphicsShadow(6);
