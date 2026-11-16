@@ -162,7 +162,7 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
-## 0.99.0 — ONE SHIP (rework phase 1)
+## 0.99.0 — ONE SHIP (rework phases 1 and 2)
 
 The game now centres on one ship that grows with you, instead of a roster of separate pilots. The classic version is kept on the `classic` branch.
 
@@ -175,6 +175,9 @@ The game now centres on one ship that grows with you, instead of a roster of sep
 - **Ship XP:** every run earns ship XP (kills, bosses, level reached). Existing saves start with bonus points based on bosses already beaten.
 - **Star map:** step two is a star map of the ten planets along a route. Beat 2 of a planet's 3 reactor bosses to open the next.
 - Results show ship XP and level-ups; the old ship-unlock goals are gone from the results screen.
+- **Ship parts (phase 2):** four part slots (Engine, Wings, Gun mount, Plating) with Stock, Rare, Epic and Legendary parts (20 in total). Gun mounts set your weapon slots (5–7) and plating sets passive slots (4–7), so you can trade defence for firepower. Every boss you beat drops a part; duplicates are scrapped for credits. You start with the stock set plus one random Rare part. New parts show on the results screen.
+- **Paint & trails:** pick a hull colour and an engine trail (Plasma stream, Spark shower, Rainbow ribbon, Afterimages) with its own colour. Some trails unlock with ship level.
+- **Your build steers the cards:** level-up choices lean towards weapons and passives that suit your class (drones for Carriers, shields for Juggernauts, and so on).
 - Includes the unreleased 0.98 work: first-run flight tutorial, clearer control settings, itch.io build script.
 
 ## 0.98.0 — Flight tutorial, clearer controls, itch.io build
