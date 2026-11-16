@@ -715,6 +715,36 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 .mc-bosses{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}.mc-bosses span{font-size:8px;letter-spacing:2px;color:#91a6bb}.mc-bosses em{font-style:normal;font-size:11px;padding:3px 8px;border-radius:7px;border:1px solid #ff7a8a55;color:#ffb0ba;background:#2a0f17}.mc-bosses em.down{border-color:#7cf4a055;color:#7cf4a0;background:#0f2a1f}
 .mc-progress{grid-column:1/-1;font-size:11px;color:#91a6bb;margin-top:6px}.mc-progress b{color:#ffdc8d}
 @media(max-width:650px){#preflightLoadout:has(.mission-card){position:sticky;top:0;z-index:4;background:#0b1424;padding-bottom:8px;box-shadow:0 10px 18px #050b17}}
+
+/* v0.99 star map: simpler */
+.planet-tag{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;backdrop-filter:none!important;text-shadow:0 1px 6px #000,0 0 2px #000}
+.planet-tag b{font-size:12px}.planet.selected .planet-tag b{color:#fff}
+.planet.locked .planet-tag em{display:none}.planet.locked .planet-tag b{color:#6f8296}
+.planet-target{border:1px solid #ffffff55!important;opacity:.7}.planet-target:after{display:none}
+.planet-orb{box-shadow:0 0 12px color-mix(in srgb,var(--pc) 45%,transparent)!important}.planet.locked .planet-orb{box-shadow:none!important}
+.planet-lock{font-size:11px;opacity:.7}
+.mission-card{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px;border-radius:12px;background:#0a1424;box-shadow:none;border:1px solid #ffffff14}
+.mission-card:before,.mission-card:after{display:none}
+.mc-body small{font-size:8px;letter-spacing:2px;color:#91a6bb}.mc-body h3{font-size:17px;margin:1px 0 2px;color:var(--pc)}.mc-body p{margin:0;font-size:11px;color:#91a6bb}
+.mc-bosses{grid-column:auto;margin:0;flex-direction:column;align-items:center;gap:4px;flex-wrap:nowrap}.mc-bosses{display:grid;grid-template-columns:repeat(3,8px);gap:4px}.mc-bosses i{width:8px;height:8px;border-radius:50%;background:#ffffff1f}.mc-bosses i.down{background:#ffdc8d;box-shadow:0 0 6px #ffdc8d88}.mc-bosses span{grid-column:1/-1;text-align:center;font-size:10px;letter-spacing:1px;color:#91a6bb}
+.star-map{border:0;box-shadow:none}
+
+/* v0.99 star map motion */
+@media (prefers-reduced-motion:no-preference){
+ .star-map .planet{animation:planetFloat 6s ease-in-out var(--f) infinite}
+ @keyframes planetFloat{50%{translate:0 -5px}}
+ .star-map.enter .planet{animation:planetIn .7s cubic-bezier(.2,.8,.2,1) var(--d) both,planetFloat 6s ease-in-out calc(var(--d) + .7s) infinite}
+ @keyframes planetIn{from{opacity:0;translate:0 18px;scale:.85}to{opacity:1;translate:0 0;scale:1}}
+ .star-map.enter .map-ship{animation:fadeIn .6s ease 1s both}@keyframes fadeIn{from{opacity:0}}
+ .planet.just .planet-orb{animation:planetPop .55s cubic-bezier(.2,1.4,.4,1),planetSpin 46s ease-in-out infinite alternate}
+ @keyframes planetPop{from{scale:.75;filter:brightness(1.8) contrast(1.15) saturate(1.3)}to{scale:1}}
+ .planet.just .planet-target{animation:targetIn .5s ease-out,targetSpin 9s linear .5s infinite}@keyframes targetIn{from{opacity:0;scale:1.4}}
+ .planet-tag{transition:color .3s}
+ .mission-card.swap .planet-orb{animation:planetPop .55s cubic-bezier(.2,1.4,.4,1),planetSpin 46s ease-in-out infinite alternate}
+ .mission-card.swap .mc-body,.mission-card.swap .mc-bosses{animation:cardIn .4s cubic-bezier(.2,.8,.2,1) both}.mission-card.swap .mc-bosses{animation-delay:.08s}
+ @keyframes cardIn{from{opacity:0;translate:14px 0}}
+ .map-ship{transition:left .9s cubic-bezier(.45,0,.2,1),top .9s cubic-bezier(.45,0,.2,1)}
+}
 </style><!-- Exo 2 font licence:
 Copyright 2013 The Exo 2 Project Authors (https://github.com/googlefonts/Exo-2.0)
 
@@ -2119,27 +2149,27 @@ function shipScreenClick(e){let t=e.target.closest('[data-tree-branch],[data-tre
 function sectorColour(id){return (sectors.find(x=>x.id===id)||{}).color||'#65f7ef'}
 const ringedPlanets={belt:1,solar:1,hive:1};
 function planetOrb(id,size,extra=''){let img=sectorGameplayStills[id];return '<span class="planet-orb'+extra+'" style="--ps:'+size+'px;--pc:'+sectorColour(id)+(img?';background-image:linear-gradient(135deg,color-mix(in srgb,'+sectorColour(id)+' 70%,#000),color-mix(in srgb,'+sectorColour(id)+' 30%,#000)),url('+img+')':'')+'">'+(ringedPlanets[id]?'<i class="planet-ring"></i>':'')+'</span>'}
-function renderStarMap(){let sel=hangar.sector,c=hangar.campaign,best=id=>c?.best?.[id]||0,pts=sectorChain.map((id,i)=>({id,i,x:[30,70,50,26,62][i%5],y:64+i*118}));
- let planets=pts.map(q=>{let open=sectorOpen(q.id),sec=sectors.find(x=>x.id===q.id),name=sec?.name||sectorName(q.id)||q.id,b=best(q.id),on=q.id===sel,size=on?82:open?62:48;return '<button class="planet'+(open?'':' locked')+(on?' selected':'')+'" data-preflight-sector="'+q.id+'" style="left:'+q.x+'%;top:'+q.y+'px;--ps:'+size+'px;--pc:'+sectorColour(q.id)+'" '+(open?'':'disabled')+' aria-pressed="'+on+'">'+(on?'<i class="planet-target"></i>':'')+planetOrb(q.id,size)+(open?'':'<i class="planet-lock">🔒</i>')+'<span class="planet-tag"><small>SECTOR '+String(q.i+1).padStart(2,'0')+'</small><b>'+name+'</b><span class="pips">'+[0,1,2].map(k=>'<i class="'+(k<b?'on':'')+'"></i>').join('')+'</span>'+(open?'':'<em>'+sectorLockText(q.id)+'</em>')+'</span></button>'}).join('');
- return '<div class="star-map" style="height:'+(pts.length*118+30)+'px"><canvas id="starMapBg" aria-hidden="true"></canvas>'+planets+'<div class="map-ship" id="mapShip" aria-hidden="true">'+shipIcon(bayPilot(),'map-ship-icon')+'</div></div>'}
-function starMapDetail(){let sec=sectors.find(x=>x.id===hangar.sector)||sectors[0],i=Math.max(0,sectorChain.indexOf(sec.id)),b=hangar.campaign?.best?.[sec.id]||0,threat=Math.min(5,1+Math.floor(i/2)),bosses=(sectorBossDefs[sec.id]||bossDefs);
- return '<div class="mission-card" style="--pc:'+sec.color+'">'+planetOrb(sec.id,86,' big')+'<div class="mc-body"><small>SECTOR '+String(i+1).padStart(2,'0')+' · '+(b>=3?'CLEARED':b>=2?'ROUTE OPEN':'MISSION')+'</small><h3>'+sec.name+'</h3><div class="mc-threat"><span>THREAT</span>'+[1,2,3,4,5].map(k=>'<i class="'+(k<=threat?'on':'')+'"></i>').join('')+'</div><p>'+(sec.desc||'').replace(/\s*(Complete a sector to unlock|Unlocks after your first sector clear)\.?/g,'')+'</p></div><div class="mc-bosses"><span>BOSSES</span>'+bosses.slice(0,3).map((x,k)=>'<em class="'+(k<b?'down':'')+'">'+(k<b?'✓ ':'')+x.name+'</em>').join('')+'</div><div class="mc-progress"><b>'+b+'/3</b> reactor bosses beaten'+(i<sectorChain.length-1?' · beat 2 to open the next planet':'')+'</div></div>'}
+function renderStarMap(){let fresh=!mapFx.running,changed=!fresh&&mapFx.lastSel&&mapFx.lastSel!==hangar.sector;mapFx.fresh=fresh;mapFx.changed=changed;mapFx.lastSel=hangar.sector;let sel=hangar.sector,c=hangar.campaign,best=id=>c?.best?.[id]||0,pts=sectorChain.map((id,i)=>({id,i,x:[30,70,50,26,62][i%5],y:64+i*118}));
+ let planets=pts.map(q=>{let open=sectorOpen(q.id),sec=sectors.find(x=>x.id===q.id),name=sec?.name||sectorName(q.id)||q.id,b=best(q.id),on=q.id===sel,size=on?82:open?62:48;return '<button class="planet'+(open?'':' locked')+(on?' selected':'')+(on&&changed?' just':'')+'" data-preflight-sector="'+q.id+'" style="--d:'+(q.i*90)+'ms;--f:'+(q.i*.7)+'s;left:'+q.x+'%;top:'+q.y+'px;--ps:'+size+'px;--pc:'+sectorColour(q.id)+'" '+(open?'':'disabled')+' aria-pressed="'+on+'">'+(on?'<i class="planet-target"></i>':'')+planetOrb(q.id,size)+(open?'':'<i class="planet-lock">🔒</i>')+'<span class="planet-tag"><b>'+name+'</b><span class="pips">'+[0,1,2].map(k=>'<i class="'+(k<b?'on':'')+'"></i>').join('')+'</span>'+(open?'':'<em>'+sectorLockText(q.id)+'</em>')+'</span></button>'}).join('');
+ return '<div class="star-map'+(fresh?' enter':'')+'" style="height:'+(pts.length*118+30)+'px"><canvas id="starMapBg" aria-hidden="true"></canvas>'+planets+'<div class="map-ship" id="mapShip" aria-hidden="true">'+shipIcon(bayPilot(),'map-ship-icon')+'</div></div>'}
+function starMapDetail(){let sec=sectors.find(x=>x.id===hangar.sector)||sectors[0],i=Math.max(0,sectorChain.indexOf(sec.id)),b=hangar.campaign?.best?.[sec.id]||0,bosses=(sectorBossDefs[sec.id]||bossDefs).slice(0,3);
+ return '<div class="mission-card'+(mapFx.changed||mapFx.fresh?' swap':'')+'" style="--pc:'+sec.color+'">'+planetOrb(sec.id,54,' big')+'<div class="mc-body"><small>SECTOR '+String(i+1).padStart(2,'0')+'</small><h3>'+sec.name+'</h3><p>'+(sec.desc||'').replace(/\s*(Complete a sector to unlock|Unlocks after your first sector clear)\.?/g,'').split('. ')[0].replace(/\.$/,'')+'.</p></div><div class="mc-bosses" title="BOSSES: '+bosses.map(x=>x.name).join(', ')+'">'+bosses.map((x,k)=>'<i class="'+(k<b?'down':'')+'"></i>').join('')+'<span>'+b+'/3</span></div></div>'}
 // animated star map background: nebula tinted by the planets, parallax stars and glowing hyperlanes
 const mapFx={running:false,neb:null,key:''};
-function startStarMap(){if(mapFx.running||typeof requestAnimationFrame!=='function')return;mapFx.running=true;requestAnimationFrame(drawStarMap)}
+function startStarMap(){if(mapFx.running||typeof requestAnimationFrame!=='function')return;mapFx.running=true;mapFx.t0=performance.now()/1000;try{let b=document.getElementById('preflightBody'),i=Math.max(0,sectorChain.indexOf(hangar.sector)),y=64+i*118-110;if(b&&b.scrollTo&&i>1)setTimeout(()=>b.scrollTo({top:y,behavior:reducedMotion?'auto':'smooth'}),250)}catch(e){}requestAnimationFrame(drawStarMap)}
 function drawStarMap(now){let c=typeof document!=='undefined'&&document.getElementById('starMapBg');if(!c||state!=='preflight'||preflightStep!=='sector'){mapFx.running=false;return}requestAnimationFrame(drawStarMap);if(!c.offsetParent)return;
  let dpr=Math.min(2,window.devicePixelRatio||1),w=c.clientWidth,h=c.clientHeight;if(!w||!h)return;if(c.width!==Math.round(w*dpr)||c.height!==Math.round(h*dpr)){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);mapFx.key=''}
  let g=c.getContext('2d'),t=now/1000,T=reducedMotion?0:t,pts=sectorChain.map((id,i)=>({id,x:[30,70,50,26,62][i%5]/100*w,y:64+i*118,open:sectorOpen(id),col:sectorColour(id)}));
- if(mapFx.key!==w+'x'+h){mapFx.key=w+'x'+h;let n=document.createElement('canvas');n.width=w;n.height=h;let q=n.getContext('2d');q.fillStyle='#03070f';q.fillRect(0,0,w,h);q.globalCompositeOperation='lighter';for(let [i,p] of pts.entries()){for(let k=0;k<3;k++){let x=p.x+(patternHash(i,k)-.5)*w*.7,y=p.y+(patternHash(k,i)-.5)*160,r=90+patternHash(i+k,3)*120,gr=q.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,p.col+(p.open?'26':'12'));gr.addColorStop(1,p.col+'00');q.fillStyle=gr;q.fillRect(x-r,y-r,r*2,r*2)}}q.globalCompositeOperation='source-over';mapFx.neb=n;mapFx.stars=Array.from({length:Math.round(w*h/2600)},(_,i)=>({x:patternHash(i,11)*w,y:patternHash(i,12)*h,z:.3+patternHash(i,13)*.7,ph:patternHash(i,14)*TAU}))}
+ if(mapFx.key!==w+'x'+h){mapFx.key=w+'x'+h;let n=document.createElement('canvas');n.width=w;n.height=h;let q=n.getContext('2d');q.fillStyle='#03070f';q.fillRect(0,0,w,h);q.globalCompositeOperation='lighter';for(let [i,p] of pts.entries()){for(let k=0;k<3;k++){let x=p.x+(patternHash(i,k)-.5)*w*.7,y=p.y+(patternHash(k,i)-.5)*160,r=90+patternHash(i+k,3)*120,gr=q.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,p.col+(p.open?'14':'08'));gr.addColorStop(1,p.col+'00');q.fillStyle=gr;q.fillRect(x-r,y-r,r*2,r*2)}}q.globalCompositeOperation='source-over';mapFx.neb=n;mapFx.stars=Array.from({length:Math.round(w*h/5200)},(_,i)=>({x:patternHash(i,11)*w,y:patternHash(i,12)*h,z:.3+patternHash(i,13)*.7,ph:patternHash(i,14)*TAU}))}
  g.setTransform(dpr,0,0,dpr,0,0);g.drawImage(mapFx.neb,0,0,w,h);
  let body=document.getElementById('preflightBody'),sc=body?body.scrollTop:0;
  for(let st of mapFx.stars){let y=(st.y+sc*(1-st.z)*.35)%h,a=.25+.55*st.z*(.6+.4*Math.sin(T*1.5+st.ph));g.globalAlpha=a;g.fillStyle=st.z>.85?'#d6f8ff':'#8fb3c8';g.fillRect(st.x,y,st.z>.8?1.6:1,st.z>.8?1.6:1)}g.globalAlpha=1;
- for(let i=0;i<pts.length-1;i++){let a=pts[i],b=pts[i+1],lit=b.open,mx=(a.x+b.x)/2+(i%2?-30:30),my=(a.y+b.y)/2;g.save();g.lineCap='round';
-  if(lit){let gr=g.createLinearGradient(a.x,a.y,b.x,b.y);gr.addColorStop(0,a.col);gr.addColorStop(1,b.col);g.strokeStyle=gr;g.shadowColor=b.col;g.shadowBlur=12;g.lineWidth=2.2;g.globalAlpha=.75;g.beginPath();g.moveTo(a.x,a.y);g.quadraticCurveTo(mx,my,b.x,b.y);g.stroke();g.shadowBlur=0;g.globalAlpha=.25;g.lineWidth=7;g.stroke();
-   if(!reducedMotion)for(let k=0;k<2;k++){let u=((T*.35+k*.5+i*.13)%1),x=(1-u)*(1-u)*a.x+2*(1-u)*u*mx+u*u*b.x,y=(1-u)*(1-u)*a.y+2*(1-u)*u*my+u*u*b.y;g.globalAlpha=1;g.fillStyle='#ffffff';g.shadowColor=b.col;g.shadowBlur=10;g.beginPath();g.arc(x,y,2.2,0,TAU);g.fill()}}
-  else{g.strokeStyle='#5f7488';g.globalAlpha=.45;g.lineWidth=1.2;g.setLineDash([3,7]);g.beginPath();g.moveTo(a.x,a.y);g.quadraticCurveTo(mx,my,b.x,b.y);g.stroke()}
+ let rev=reducedMotion?1:(t-(mapFx.t0||0));for(let i=0;i<pts.length-1;i++){let a=pts[i],b0=pts[i+1],lit=b0.open,mx=(a.x+b0.x)/2+(i%2?-30:30),my=(a.y+b0.y)/2,pr=Math.max(0,Math.min(1,(rev-.25-i*.09)/.5));if(pr<=0)continue;pr=1-Math.pow(1-pr,3);let qx=(1-pr)*a.x+pr*mx,qy=(1-pr)*a.y+pr*my,ex=(1-pr)*(1-pr)*a.x+2*(1-pr)*pr*mx+pr*pr*b0.x,ey=(1-pr)*(1-pr)*a.y+2*(1-pr)*pr*my+pr*pr*b0.y,b={...b0,x:ex,y:ey};mx=qx;my=qy;g.save();g.lineCap='round';
+  if(lit){let gr=g.createLinearGradient(a.x,a.y,b.x,b.y);gr.addColorStop(0,a.col);gr.addColorStop(1,b.col);g.strokeStyle=gr;g.shadowColor=b.col;g.shadowBlur=12;g.lineWidth=1.6;g.globalAlpha=.55;g.beginPath();g.moveTo(a.x,a.y);g.quadraticCurveTo(mx,my,b.x,b.y);g.stroke();g.shadowBlur=0;
+   if(!reducedMotion)for(let k=0;k<1;k++){let u=((T*.22+i*.31)%1),x=(1-u)*(1-u)*a.x+2*(1-u)*u*mx+u*u*b.x,y=(1-u)*(1-u)*a.y+2*(1-u)*u*my+u*u*b.y;g.globalAlpha=.8;g.fillStyle='#ffffff';g.shadowColor=b.col;g.shadowBlur=8;g.beginPath();g.arc(x,y,1.6,0,TAU);g.fill()}}
+  else{g.strokeStyle='#5f7488';g.globalAlpha=.3;g.lineWidth=1;g.setLineDash([2,7]);g.beginPath();g.moveTo(a.x,a.y);g.quadraticCurveTo(mx,my,b.x,b.y);g.stroke()}
   g.restore()}
- for(let p of pts){g.save();g.translate(p.x,p.y);g.scale(1,.32);g.strokeStyle=p.col;g.globalAlpha=p.open?.28:.1;g.lineWidth=1.2;g.setLineDash([4,6]);g.lineDashOffset=-T*8;g.beginPath();g.arc(0,0,p.id===hangar.sector?70:52,0,TAU);g.stroke();g.restore()}}
+ if(false)for(let p of pts){g.save();g.translate(p.x,p.y);g.scale(1,.32);g.strokeStyle=p.col;g.globalAlpha=p.open?.28:.1;g.lineWidth=1.2;g.setLineDash([4,6]);g.lineDashOffset=-T*8;g.beginPath();g.arc(0,0,p.id===hangar.sector?70:52,0,TAU);g.stroke();g.restore()}}
 
 
 
