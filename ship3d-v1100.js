@@ -110,43 +110,86 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
     disposables = []; neonMat.clear(); glowMeshes.length = 0; bodyMeshes.length = 0; flames = [];
   }
 
-  // rec: {shapes:[{pts,fill,stroke,lw,alpha}], lines:[{pts,closed,color,w}], color, trail, engines:[[x,y,r]]}
+  // rec: {shapes:[{pts,fill,stroke,lw,alpha,glass}], lines:[{pts,closed,color,w}], color, trail, engines:[[x,y,r]]}
+  // Shape space: x = nose, y = right side (mirrored to -y in 3D), z = up. Pieces are lofted, not slab-extruded:
+  // the hull rises from a thin rim to a rounded spine; panels are shells that follow the surface under them.
+  const prof = t => .2 + .8 * Math.sqrt(Math.max(0, 1 - t * t));               // contour scale at height fraction t
+  const profInv = r => r <= .2 ? 1 : Math.sqrt(Math.max(0, 1 - Math.pow((r - .2) / .8, 2)));
+  function densify(pts, step) { let out = []; for (let i = 0; i < pts.length; i++) { let a = pts[i], b = pts[(i + 1) % pts.length], n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step)); for (let k = 0; k < n; k++) out.push([a[0] + (b[0] - a[0]) * k / n, a[1] + (b[1] - a[1]) * k / n]); } return out; }
+  function ccw(pts) { return polygonArea(pts) > 0 ? pts : pts.slice().reverse(); }
+  // half-width of a polygon across the line x = const (max |y| of the crossings)
+  function halfWidth(pts, x) { let w = 0; for (let i = 0; i < pts.length; i++) { let a = pts[i], b = pts[(i + 1) % pts.length]; if ((a[0] - x) * (b[0] - x) <= 0 && a[0] !== b[0]) { let y = a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]); w = Math.max(w, Math.abs(y)); } else if (a[0] === x) w = Math.max(w, Math.abs(a[1])); } return w; }
+  function inside(pts, x, y) { let c = false; for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) { let a = pts[i], b = pts[j]; if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0]) c = !c; } return c; }
+  // Loft a closed outline into a smooth solid. mode 'spine': contours squeeze toward y=0; 'centre': toward the centroid.
+  function loft(pts0, H, Hb, mode, rings = 7) {
+    let pts = ccw(pts0), n = pts.length, cx = 0, cy = 0; for (let [x, y] of pts) { cx += x; cy += y; } cx /= n; cy /= n;
+    let ring = (t, z) => pts.map(([x, y]) => { let s = prof(t); return mode === 'spine' ? [x + (cx - x) * (1 - s) * .12, y * s, z] : [cx + (x - cx) * s, cy + (y - cy) * s, z]; });
+    let pos = [], idx = [], add = r => { let b = pos.length / 3; for (let [x, y, z] of r) pos.push(x, -y, z); return b; };
+    // top rings (rim duplicated so the rim stays crisp), then bottom rings
+    let top = [], bot = [];
+    for (let k = 0; k <= rings; k++) { let t = k / rings; top.push(add(ring(t, H * Math.sin(t * Math.PI / 2)))); }
+    let bRings = Math.max(2, Math.round(rings / 2));
+    for (let k = 0; k <= bRings; k++) { let t = k / bRings; bot.push(add(ring(t, -Hb * Math.sin(t * Math.PI / 2)))); }
+    let strip = (A, B, flip) => { for (let i = 0; i < n; i++) { let j = (i + 1) % n, a = A + i, b = A + j, c = B + j, d = B + i; if (flip) idx.push(a, c, b, a, d, c); else idx.push(a, b, c, a, c, d); } };
+    for (let k = 0; k < rings; k++) strip(top[k], top[k + 1], false);
+    for (let k = 0; k < bRings; k++) strip(bot[k], bot[k + 1], true);
+    let capT = T.ShapeUtils.triangulateShape(pts.map(([x, y]) => new T.Vector2(x, y)), []);
+    for (let [a, b, c] of capT) { idx.push(top[rings] + a, top[rings] + b, top[rings] + c); idx.push(bot[bRings] + a, bot[bRings] + c, bot[bRings] + b); }
+    let g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
+    // The y-mirror flips winding; make sure faces point outward.
+    let nrm = g.getAttribute('normal'), p = g.getAttribute('position'), out = 0; for (let v = top[rings]; v < top[rings] + n; v++) out += nrm.getZ(v); if (out < 0) { let ix = g.getIndex().array; for (let q = 0; q < ix.length; q += 3) { let t0 = ix[q + 1]; ix[q + 1] = ix[q + 2]; ix[q + 2] = t0; } g.computeVertexNormals(); }
+    return { geo: g, height: (x, y) => { if (!inside(pts, x, y)) return null; if (mode === 'spine') { let w = halfWidth(pts, x) || 1; return H * Math.sin(profInv(Math.abs(y) / w) * Math.PI / 2); } let d = Math.hypot(x - cx, y - cy), m = 0; for (let [px, py] of pts) m = Math.max(m, Math.hypot(px - cx, py - cy)); return H * Math.sin(profInv(Math.min(1, d / (m || 1))) * Math.PI / 2); } };
+  }
+  // A thin shell that drapes over the surface below it (detail plating).
+  function shell(pts0, zAt, lift, thick) {
+    let pts = ccw(densify(pts0, 2.2)), n = pts.length, pos = [], idx = [];
+    let tz = pts.map(([x, y]) => zAt(x, y) + lift), bz = tz.map(z => z - thick);
+    for (let i = 0; i < n; i++) pos.push(pts[i][0], -pts[i][1], tz[i]); for (let i = 0; i < n; i++) pos.push(pts[i][0], -pts[i][1], bz[i]);
+    let tri = T.ShapeUtils.triangulateShape(pts.map(([x, y]) => new T.Vector2(x, y)), []);
+    for (let [a, b, c] of tri) { idx.push(a, c, b); idx.push(n + a, n + b, n + c); }
+    for (let i = 0; i < n; i++) { let j = (i + 1) % n; idx.push(i, j, n + j, i, n + j, n + i); }
+    let g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
+    let nrm = g.getAttribute('normal'), up = 0; for (let v = 0; v < n; v++) up += nrm.getZ(v); if (up < 0) { let ix = g.getIndex().array; for (let q = 0; q < ix.length; q += 3) { let t0 = ix[q + 1]; ix[q + 1] = ix[q + 2]; ix[q + 2] = t0; } g.computeVertexNormals(); }
+    return { geo: g, top: pts.map((p, i) => [p[0], p[1], tz[i] + .02]) };
+  }
+
   function build(rec) {
     clearModel();
     let col = rec.color || '#65f7ef', shapes = rec.shapes.filter(s => s.pts.length >= 3 && (s.alpha > .3 || (s.glass && s.stroke))), base = -1, best = 0;
     shapes.forEach((s, i) => { s.area = Math.abs(polygonArea(s.pts)); s.box = bbox(s.pts); if (s.area > best && !s.glass) { best = s.area; base = i; } });
     if (base < 0) return;
-    let placed = [], edgesBy = new Map(), addEdge = (c, path, w, k) => { let key = c + '|' + w + '|' + k; if (!edgesBy.has(key)) edgesBy.set(key, { c, w, k, paths: [] }); edgesBy.get(key).paths.push(path); };
-    const BASE_D = 3.4, BASE_BEV = 1.3;
-    shapes.forEach((s, i) => {
-      if (s.area < 1.2 && i !== base) return;
-      let depth, bev, z0;
-      if (s.glass) { depth = .45; bev = .15; z0 = i < base ? -.25 : BASE_D / 2 + .2; }
-      else if (i === base) { depth = BASE_D; bev = BASE_BEV; z0 = -depth / 2; }
-      else if (i < base) { depth = 2.2; bev = .5; z0 = -depth / 2 - .2; }             // back layer: wings, engines, fins
-      else {                                                                          // detail panels stack on whatever they sit over
-        let top = BASE_D / 2 + BASE_BEV * .55;
-        for (let p of placed) if (p.i !== base && p.i > base && overlap(p.box, s.box)) top = Math.max(top, p.top);
-        depth = s.area > 60 ? .9 : .7; bev = .28; z0 = top - .15;
+    let edgesBy = new Map(), addEdge = (c, path, w, k) => { let key = c + '|' + w + '|' + k; if (!edgesBy.has(key)) edgesBy.set(key, { c, w, k, paths: [] }); edgesBy.get(key).paths.push(path); };
+    let B = shapes[base], span = Math.max(B.box.y1 - B.box.y0, B.box.x1 - B.box.x0), HH = Math.max(4, Math.min(9, span * .14)), surfaces = [], levels = [];
+    let metal = (fill, main) => { let m = new T.MeshStandardMaterial({ color: new T.Color(fill || '#203346'), metalness: main ? .72 : .6, roughness: main ? .28 : .36, envMapIntensity: 1.0, emissive: new T.Color(col), emissiveIntensity: .02 }); disposables.push(m); return m; };
+    let put = (geo, mat, glow) => { disposables.push(geo); let m = new T.Mesh(geo, mat); model.add(m); (glow ? glowMeshes : bodyMeshes).push(m); return m; };
+    let zAt = (x, y) => { let z = -Infinity; for (let f of surfaces) { let h = f(x, y); if (h !== null && h > z) z = h; } return z === -Infinity ? 0 : z; };
+    // 1) back-layer pieces (wings, fins, engine pods) as small rounded lofts; 2) the hull; 3) plating shells on top.
+    let order = shapes.map((s, i) => i).filter(i => i < base).concat([base], shapes.map((s, i) => i).filter(i => i > base));
+    for (let i of order) {
+      let s = shapes[i]; if (s.area < 1.2 && i !== base) continue;
+      if (s.glass) {
+        let sh = shell(s.pts, (x, y) => i < base ? .2 : zAt(x, y), .35, .35);
+        let mat = new T.MeshStandardMaterial({ color: new T.Color(s.fill), metalness: .1, roughness: .05, transparent: true, opacity: .36, emissive: new T.Color(s.fill), emissiveIntensity: .16, depthWrite: false, side: T.DoubleSide }); disposables.push(mat);
+        let m = put(sh.geo, mat, false); bodyMeshes.pop(); m.renderOrder = 2;
+        if (s.stroke) addEdge(s.stroke, { pts: sh.top, closed: true }, .35, 1.2);
+        continue;
       }
-      let shape = new T.Shape(s.pts.map(([x, y]) => new T.Vector2(x, -y)));
-      let geo = new T.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: bev, bevelSize: Math.min(bev, Math.sqrt(s.area) * .12), bevelSegments: i === base ? 4 : 2, steps: 1, curveSegments: 6 });
-      geo.translate(0, 0, z0); disposables.push(geo);
-      let mat = new T.MeshStandardMaterial({ color: new T.Color(s.fill || '#203346'), metalness: i === base ? .7 : .6, roughness: i === base ? .3 : .38, envMapIntensity: 1.0, emissive: new T.Color(col), emissiveIntensity: .02 });
-      disposables.push(mat);
-      if (s.glass) { mat.dispose(); mat = new T.MeshStandardMaterial({ color: new T.Color(s.fill), metalness: .1, roughness: .05, transparent: true, opacity: .36, emissive: new T.Color(s.fill), emissiveIntensity: .16, depthWrite: false, side: T.DoubleSide }); disposables.push(mat); }
-      let mesh = new T.Mesh(geo, mat); model.add(mesh); if (!s.glass) bodyMeshes.push(mesh); else mesh.renderOrder = 2;
-      let topZ = z0 + depth + bev;
-      placed.push({ i, box: s.box, top: topZ });
-      if (s.stroke) {
-        let w = i === base ? .7 : Math.max(.28, Math.min(.55, (s.lw || 1) * .32)), k = i === base ? 1.6 : 1.2;
-        addEdge(s.stroke, { pts: s.pts.map(([x, y]) => [x, y, topZ + .02]), closed: true }, w, k);
-        if (i <= base) addEdge(s.stroke, { pts: s.pts.map(([x, y]) => [x, y, z0 - bev - .02]), closed: true }, w * .8, k * .7);
+      if (i <= base) {
+        let main = i === base, H = main ? HH : Math.max(.9, Math.min(2.6, Math.sqrt(s.area) * .2)), L = loft(s.pts, H, main ? H * .45 : H * .6, main ? 'spine' : 'centre', main ? 8 : 4);
+        put(L.geo, metal(s.fill, main)); surfaces.push(L.height);
+        if (s.stroke) { let w = main ? .62 : .42, k = main ? 1.6 : 1.3; addEdge(s.stroke, { pts: densify(s.pts, 3).map(([x, y]) => [x, y, 0]), closed: true }, w, k); }
+        if (s.fill && /^#?(f|e|d)[0-9a-f]/i.test(s.fill.replace('#', '')) && s.area < 40) { let m = bodyMeshes.pop(); m.material = neon(s.fill, 1.4); glowMeshes.push(m); }
+        continue;
       }
-      if (s.fill && /^#?(f|e|d)[0-9a-f]/i.test(s.fill.replace('#', '')) && s.area < 40) { mesh.material = neon(s.fill, 1.4); glowMeshes.push(mesh); bodyMeshes.pop(); }
-    });
-    let topAll = Math.max(...placed.map(p => p.top)) + .1;
-    for (let l of rec.lines || []) if (l.pts && l.pts.length > 1) addEdge(l.color || col, { pts: l.pts.map(([x, y]) => [x, y, topAll]), closed: !!l.closed }, Math.max(.25, Math.min(.5, (l.w || 1) * .3)), 1.1);
+      // plating: lift above anything it overlaps that was plated earlier
+      let lv = 0; for (let p of levels) if (overlap(p.box, s.box)) lv = Math.max(lv, p.lv + 1);
+      let lift = .32 + lv * .3, sh = shell(s.pts, zAt, lift, .55 + lv * .3);
+      let glowy = s.fill && /^#?(f|e|d)[0-9a-f]/i.test(s.fill.replace('#', '')) && s.area < 40;
+      put(sh.geo, glowy ? neon(s.fill, 1.4) : metal(s.fill, false), glowy);
+      levels.push({ box: s.box, lv });
+      if (s.stroke) addEdge(s.stroke, { pts: sh.top, closed: true }, Math.max(.24, Math.min(.46, (s.lw || 1) * .28)), 1.2);
+    }
+    for (let l of rec.lines || []) if (l.pts && l.pts.length > 1) { let pts = l.pts.length === 2 ? [0, .25, .5, .75, 1].map(u => [l.pts[0][0] + (l.pts[1][0] - l.pts[0][0]) * u, l.pts[0][1] + (l.pts[1][1] - l.pts[0][1]) * u]) : l.pts; addEdge(l.color || col, { pts: pts.map(([x, y]) => [x, y, zAt(x, y) + .45]), closed: !!l.closed }, Math.max(.22, Math.min(.42, (l.w || 1) * .26)), 1.1); }
     for (let e of edgesBy.values()) { let m = edgeMesh(e.paths, e.c, e.w, 0, e.k); if (m) model.add(m); }
     // engine flames: additive cones behind the tail
     let fm = new T.MeshBasicMaterial({ color: new T.Color(rec.trail || col).multiplyScalar(2.2), transparent: true, opacity: .85, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false, side: T.DoubleSide }),
@@ -155,7 +198,7 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
     for (let [x, y, r] of rec.engines || []) {
       let outer = new T.Mesh(new T.ConeGeometry(r || 2.6, 1, 14, 1, true), fm), inner = new T.Mesh(new T.ConeGeometry((r || 2.6) * .45, 1, 10, 1, true), core);
       disposables.push(outer.geometry, inner.geometry);
-      for (let m of [outer, inner]) { m.rotation.z = Math.PI / 2; m.position.set(x, -y, 0); model.add(m); glowMeshes.push(m); }
+      for (let m of [outer, inner]) { m.rotation.z = Math.PI / 2; m.position.set(x, -y, Math.max(0, zAt(x + 2, y) * .5)); model.add(m); glowMeshes.push(m); }
       flames.push({ outer, inner, x, r: r || 2.6 });
       let glow = new T.PointLight(new T.Color(rec.trail || col), .6, 60, 1.5); glow.position.set(x - 6, -y, 0); model.add(glow);
     }
