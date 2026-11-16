@@ -2393,8 +2393,8 @@ function drawHullPlating(g,pilot,shape,c){let F=fuselage(pilot);if(F)shape=F.pol
  g.save();g.beginPath();shape.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.clip();g.shadowBlur=0;g.globalAlpha=.95;try{g.drawImage(cv,f.x-f.w/2,f.y-f.h/2,f.w,f.h)}catch(e){}g.restore();
  g.save();g.strokeStyle=c;g.lineWidth=1.7;g.shadowColor=c;g.shadowBlur=graphicsShadow(8);g.beginPath();shape.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.closePath();g.stroke();g.restore()}
 // Animated flames from an equipped engine part's nozzles (heading frame: x forward).
-function drawPartFlames(g,pilot,t,thrust,boost){let id=pilot.parts&&pilot.parts.engine,d=id&&shipParts.find(x=>x.id===id);if(!d||d.r<1)return false;let f=partFit(pilot,'engine',id),ny=f.y+f.h*.24,len=(boost?26:6+thrust*12)+(.5+.5*Math.sin(t*17))*4,c=pilot.partTint==='rarity'?partRarity[d.r].c:pilot.color;
- if(!reducedMotion)for(let side of [-1,1]){let x=side*f.w*.27,hx=-ny,hy=x;g.save();g.globalAlpha=.35;g.fillStyle=c;g.beginPath();g.moveTo(hx,hy-2.4);g.lineTo(hx-len,hy);g.lineTo(hx,hy+2.4);g.closePath();g.fill();g.globalAlpha=.8;g.fillStyle='#e8fbff';g.beginPath();g.moveTo(hx,hy-1.1);g.lineTo(hx-len*.6,hy);g.lineTo(hx,hy+1.1);g.closePath();g.fill();g.restore()}return true}
+function drawPartFlames(g,pilot,t,thrust,boost){let d=partOn(pilot,'engine');if(!d)return false;let E=engineGeo(pilot,d.id),acc=partAccent(pilot,d),pulse=.5+.5*Math.sin(t*17);
+ if(!reducedMotion)for(let nz of E.nozzles){let len=((boost?26:5+thrust*12)+pulse*4)*nz.len,hx=-nz.y,hy=nz.x,w=nz.w;g.save();g.globalAlpha=.38;g.fillStyle=acc;g.beginPath();g.moveTo(hx,hy-w);g.lineTo(hx-len,hy);g.lineTo(hx,hy+w);g.closePath();g.fill();g.globalAlpha=.85;g.fillStyle='#e8fbff';g.beginPath();g.moveTo(hx,hy-w*.45);g.lineTo(hx-len*.6,hy);g.lineTo(hx,hy+w*.45);g.closePath();g.fill();if(nz.ring){g.globalAlpha=.6;g.strokeStyle=acc;g.lineWidth=.7;for(let r of [.35,.65]){g.beginPath();g.ellipse(hx-len*r,hy,1.2,w*1.4,0,0,TAU);g.stroke()}}g.restore()}return true}
 const hangarImg=(typeof Image!=='undefined')?Object.assign(new Image(),{decoding:'async'}):null;if(hangarImg)hangarImg.src='hangar-bay-v0990.webp';
 function hangarArtReady(){return hangarImg&&hangarImg.complete&&hangarImg.naturalWidth>0}
 
@@ -2419,6 +2419,44 @@ function wingBoxes(id,cv){if(wingBoxCache[id])return wingBoxCache[id];try{let g=
 function drawModularWings(g,pilot){let d=partOn(pilot,'wings');if(!d)return;let F=fuselage(pilot),cv=partCanvas(d.id,pilot.color,partTintMode(pilot),true);if(!F||!cv||!cv.getContext)return;let B=wingBoxes(d.id,cv);if(!B)return;let reach=Math.max(13,(F.origSpan-F.fx)*1.35),y=F.wideY*.5;g.save();g.rotate(Math.PI/2);g.shadowColor=pilot.color;g.shadowBlur=graphicsShadow(8);
  for(let [k,side] of [['L',-1],['R',1]]){let [sx,sy,sw,sh]=B[k],w=reach,h=w*sh/sw,inner=side*(F.widthAt(y)-1.2),x=side<0?inner-w:inner;try{g.drawImage(cv,sx,sy,sw,sh,x,y-h*.45,w,h)}catch(e){}}g.restore()}
 function drawModularEngine(g,pilot){let d=partOn(pilot,'engine');if(!d)return;let F=fuselage(pilot),cv=partCanvas(d.id,pilot.color,partTintMode(pilot),true);if(!F||!cv)return;let sz=partArtSize[d.id]||[256,256],bw=F.widthAt(F.cutY-1)*2,w=Math.max(16,Math.min(30,bw*1.45)),h=w*sz[1]/sz[0];g.save();g.rotate(Math.PI/2);g.shadowColor=pilot.color;g.shadowBlur=graphicsShadow(8);try{g.drawImage(cv,-w/2,F.cutY-h*.16,w,h)}catch(e){}g.restore();return {w,h,top:F.cutY-h*.16}}
+
+
+// v0.99 CODE-DRAWN PARTS in the ships' own neon vector style. Drawn inside drawIdentityHull (nose-up hull units)
+// with the same panel fills, neon strokes and glow, and fitted from the hull's own outline. Wings and engines go
+// behind the hull so its edge overlaps their roots; plating and gun mounts go on top. Stock parts draw nothing.
+function hullMetrics(shape){let xs=shape.map(q=>Math.abs(q[0])),span=Math.max(...xs),wide=shape.reduce((a,q)=>Math.abs(q[0])>Math.abs(a[0])?q:a,shape[0]);return {span,minY:Math.min(...shape.map(q=>q[1])),maxY:Math.max(...shape.map(q=>q[1])),wideY:wide[1]}}
+function partAccent(pilot,d){return pilot.partTint==='rarity'?partRarity[d.r].c:pilot.color}
+function engineGeo(pilot,id){let M=hullMetrics(hullShapeOf(pilot)),y=M.maxY+1;return {e_twin:{nozzles:[-10,-5,5,10].map(x=>({x,y:y+3,w:1.6,len:.9}))},e_ion:{nozzles:[-7,7].map(x=>({x,y:y+4,w:1.1,len:1.15}))},e_fusion:{nozzles:[{x:0,y:y+6,w:2.4,len:1.1},{x:-9,y:y+3,w:1.4,len:.8},{x:9,y:y+3,w:1.4,len:.8}]},e_nova:{nozzles:[-7,7].map(x=>({x,y:y+7,w:3,len:1.6,ring:true}))}}[id]||{nozzles:[]}}
+function drawPartsGeo(paint,p,layer,shape){let P=p.parts;if(!P)return;const {ctx,poly,circle}=paint;let c=p.color,M=hullMetrics(shape),sp=M.span,fill='#1b2e42',fill2='#264958',dark='#0c1828';
+ let ring=(x,y,r,f,st,w)=>{ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fillStyle=f;ctx.fill();ctx.strokeStyle=st;ctx.lineWidth=w;ctx.stroke()},glow=on=>{ctx.shadowColor=c;ctx.shadowBlur=on?graphicsShadow(8):0};
+ if(layer==='back'){
+  let wd=partOn(p,'wings');if(wd){let a=partAccent(p,wd),wy=M.wideY*.45,r=sp*.55;glow(true);
+   for(let sd of [-1,1]){let X=x=>sd*x;
+    if(wd.id==='w_razor'){poly([[X(r),wy-8],[X(sp*1.32),wy+9],[X(sp*1.22),wy+13],[X(r+2),wy+3]],fill,c,1.3);poly([[X(sp*.9),wy+2],[X(sp*1.28),wy+10],[X(sp*1.24),wy+11]],fill2,c,.6);circle(X(sp*1.27),wy+11,1,'#ff5a6e')}
+    else if(wd.id==='w_vane'){for(let k=0;k<3;k++){let y0=wy-5+k*6,len=sp*(1.22-k*.12);poly([[X(r),y0],[X(len),y0+3],[X(len-2),y0+6],[X(r),y0+4]],k%2?fill2:fill,c,1);circle(X(len-1.5),y0+4.2,.8,a)}}
+    else if(wd.id==='w_prism'){ctx.save();ctx.globalAlpha=.9;poly([[X(r),wy-9],[X(sp*1.18),wy-2],[X(sp*1.26),wy+9],[X(sp*.95),wy+15],[X(r),wy+6]],a+'33',c,1.3);ctx.restore();ctx.save();ctx.globalAlpha=.55;ctx.strokeStyle=a;ctx.lineWidth=.6;for(let [x1,y1,x2,y2] of [[r,wy-9,sp*1.26,wy+9],[r,wy+6,sp*1.18,wy-2],[sp*.8,wy-5,sp*.95,wy+15]]){ctx.beginPath();ctx.moveTo(X(x1),y1);ctx.lineTo(X(x2),y2);ctx.stroke()}ctx.restore()}
+    else if(wd.id==='w_phantom'){ctx.save();ctx.beginPath();ctx.moveTo(X(r),wy-10);ctx.quadraticCurveTo(X(sp*1.25),wy-14,X(sp*1.5),wy+4);ctx.quadraticCurveTo(X(sp*1.2),wy+4,X(sp*1.32),wy+16);ctx.quadraticCurveTo(X(sp*.9),wy+8,X(r),wy+8);ctx.closePath();ctx.fillStyle=a+'2e';ctx.fill();ctx.strokeStyle=c;ctx.lineWidth=1.3;ctx.stroke();ctx.globalAlpha=.6;ctx.strokeStyle=a;ctx.lineWidth=.7;for(let k of [.35,.7]){ctx.beginPath();ctx.moveTo(X(r),wy-4+k*6);ctx.quadraticCurveTo(X(sp*(1+k*.2)),wy-6+k*10,X(sp*(1.2+k*.25)),wy+2+k*10);ctx.stroke()}ctx.restore();circle(X(sp*1.5),wy+4,1.1,a)}}
+   glow(false)}
+  let ed=partOn(p,'engine');if(ed){let a=partAccent(p,ed),y=M.maxY+1;glow(true);
+   if(ed.id==='e_twin'){for(let x of [-10,-5,5,10]){poly([[x-2.2,y-4],[x+2.2,y-4],[x+1.8,y+3],[x-1.8,y+3]],fill,c,1);circle(x,y+3,1,a)}for(let sd of [-1,1])for(let k=0;k<3;k++){ctx.fillStyle=c;ctx.globalAlpha=.6;ctx.fillRect(sd*13,y-3+k*2,sd*2.5,.7);ctx.globalAlpha=1}}
+   else if(ed.id==='e_ion'){for(let x of [-7,7]){poly([[x-4.5,y-5],[x+4.5,y-5],[x+4.5,y+4],[x-4.5,y+4]],fill,c,1.1);for(let k=0;k<4;k++){ctx.fillStyle=a;ctx.globalAlpha=.85;ctx.fillRect(x-3.3,y-3.6+k*2,6.6,.8);ctx.globalAlpha=1}}}
+   else if(ed.id==='e_fusion'){for(let x of [-9,9]){poly([[x-2,y-3],[x+2,y-3],[x+1.6,y+3],[x-1.6,y+3]],fill,c,1)}ring(0,y+1,6.2,fill,c,1.3);ring(0,y+1,3.8,dark,a,1);circle(0,y+1,2.1,'#fff1d6');ctx.save();ctx.globalAlpha=.5;circle(0,y+1,4.8,a+'55');ctx.restore()}
+   else if(ed.id==='e_nova'){for(let x of [-7,7]){poly([[x-3,y-4],[x+3,y-4],[x+4.6,y+6],[x-4.6,y+6]],fill,c,1.2);ctx.save();ctx.strokeStyle=a;ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x-3.6,y+1);ctx.lineTo(x+3.6,y+1);ctx.stroke();ctx.restore()}for(let sd of [-1,1])poly([[sd*11,y-6],[sd*15,y-1],[sd*12,y+5]],fill2,a,.9)}
+   glow(false)}
+  return}
+ // armour layer: plating (drawn from pilotDesign over the pods, under the turret); front layer: gun mount
+ let pd=layer==='armour'&&partOn(p,'plating');if(pd&&typeof ctx.clip==='function'){let a=partAccent(p,pd),cy=(M.minY+M.maxY)/2+3;ctx.save();ctx.beginPath();shape.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.closePath();ctx.clip();ctx.shadowBlur=0;
+  if(pd.id==='p_reactive'){let r=3.6,hw=r*Math.sqrt(3);for(let row=-2;row<=2;row++)for(let col=-2;col<=2;col++){let x=col*hw+(row&1?hw/2:0),y=cy+row*r*1.5;if(Math.hypot(x,(y-cy)*1.2)>11)continue;ctx.beginPath();for(let k=0;k<6;k++){let an=Math.PI/6+k*Math.PI/3;k?ctx.lineTo(x+Math.cos(an)*(r-.4),y+Math.sin(an)*(r-.4)):ctx.moveTo(x+Math.cos(an)*(r-.4),y+Math.sin(an)*(r-.4))}ctx.closePath();ctx.fillStyle=fill2;ctx.fill();ctx.strokeStyle=(row+col)&1?a:c;ctx.globalAlpha=.85;ctx.lineWidth=.6;ctx.stroke();ctx.globalAlpha=1}}
+  else if(pd.id==='p_light'){ctx.strokeStyle=c;ctx.lineWidth=.8;ctx.globalAlpha=.85;let pts=[[-8,cy-9],[8,cy-9],[-10,cy],[10,cy],[-7,cy+9],[7,cy+9],[0,cy-4],[0,cy+5]];for(let [i,j] of [[0,1],[0,2],[1,3],[2,4],[3,5],[4,5],[0,6],[1,6],[6,7],[2,7],[3,7],[4,7],[5,7]]){ctx.beginPath();ctx.moveTo(...pts[i]);ctx.lineTo(...pts[j]);ctx.stroke()}ctx.globalAlpha=1;for(let q of pts)circle(q[0],q[1],.9,a)}
+  else if(pd.id==='p_heavy'){for(let k=0;k<3;k++){let y=cy-8+k*6.5,w=11-k*1.5;poly([[-w,y],[0,y-3],[w,y],[w-1.5,y+4.5],[0,y+2],[-w+1.5,y+4.5]],k%2?fill2:fill,c,.9);circle(-w+2.5,y+1.5,.5,'#cfe9ff');circle(w-2.5,y+1.5,.5,'#cfe9ff')}}
+  else if(pd.id==='p_aegis'){ctx.save();ctx.beginPath();ctx.ellipse(0,cy,10.5,13,0,0,TAU);ctx.fillStyle=fill;ctx.fill();let gr=ctx.createLinearGradient(-8,cy-12,6,cy+6);gr.addColorStop(0,'#ffffff28');gr.addColorStop(.5,'#ffffff00');ctx.fillStyle=gr;ctx.fill();ctx.strokeStyle=c;ctx.lineWidth=1.2;ctx.shadowColor=c;ctx.shadowBlur=graphicsShadow(8);ctx.stroke();ctx.shadowBlur=0;ctx.strokeStyle=a;ctx.lineWidth=.7;ctx.globalAlpha=.85;ctx.beginPath();ctx.moveTo(0,cy-13);ctx.lineTo(0,cy+13);ctx.stroke();for(let sd of [-1,1]){ctx.beginPath();ctx.moveTo(0,cy-9);ctx.quadraticCurveTo(sd*9,cy-4,sd*4,cy+11);ctx.stroke()}ctx.restore()}
+  ctx.restore()}
+ let md=layer==='front'&&partOn(p,'mount');if(md){let a=partAccent(p,md),ny=M.minY;glow(true);
+  if(md.id==='m_heavy'){poly([[-3.4,ny+10],[3.4,ny+10],[2.6,ny-2],[-2.6,ny-2]],fill,c,1.1);poly([[-1.5,ny-2],[1.5,ny-2],[1.2,ny-10],[-1.2,ny-10]],fill2,c,.9);circle(0,ny-10,1,a)}
+  else if(md.id==='m_rotary'){ring(0,ny+5,4.6,fill,c,1.1);for(let k=0;k<6;k++){let an=k*TAU/6,x=Math.cos(an)*2.6;ctx.fillStyle=c;ctx.globalAlpha=.9;ctx.fillRect(x-.45,ny-8+Math.abs(Math.sin(an))*1.5,.9,10);ctx.globalAlpha=1}circle(0,ny+5,1.6,a)}
+  else if(md.id==='m_array'){poly([[-11,ny+8],[11,ny+8],[10,ny+12],[-10,ny+12]],fill,c,1.1);for(let x of [-7,0,7]){poly([[x-1.3,ny+8],[x+1.3,ny+8],[x+1,ny-2],[x-1,ny-2]],fill2,c,.8);circle(x,ny-2,.8,a)}}
+  else if(md.id==='m_siege'){for(let x of [-2.8,2.8]){poly([[x-1.7,ny+12],[x+1.7,ny+12],[x+1.4,ny-12],[x-1.4,ny-12]],fill,c,1.1);for(let k of [ny-6,ny]){ctx.fillStyle=a;ctx.fillRect(x-1.9,k,3.8,1.1)}circle(x,ny-12,1.2,a)}poly([[-6,ny+8],[6,ny+8],[5,ny+14],[-5,ny+14]],fill2,c,1)}
+  glow(false)}}
 
 let hangar=loadHangar(),hangarReturn='menu',hangarTab='ships',hangarNotice='';saveHangar();
 function saveHangar(){try{profileStorage.setItem('rr_hangar',JSON.stringify(hangar));return true}catch(e){hangarNotice='Browser storage is unavailable. Progress lasts for this session only.';return false}}
@@ -2638,7 +2676,7 @@ if(e.type>=2||e.boss){for(let side of [-1,1]){poly([[-9,side*8],[5,side*8],[10,s
 if(e.role==='rail'){poly([[-8,-5],[17,-5],[20,-3],[-8,-3]],'#7492a6',c,.6)}else if(['carrier','brood'].includes(e.role)){for(let side of [-1,1])for(let i=0;i<3;i++){ctx.fillStyle=c;ctx.fillRect(-9+i*6,side*14-1,3,2)}}else if(e.role==='minelayer'){for(let side of [-1,1])poly([[-16,side*10],[-12,side*7],[-8,side*10],[-12,side*13]],'#75604a',c,.7)}
 if(hp<.5){poly([[-7,-3],[-2,-1],[-6,3],[-9,2]],'#060d18');if(hp<.25){ctx.fillStyle='#ffc182';ctx.fillRect(-8,-1,2,2)}}ctx.restore()}
 
-function drawIdentityHull(p,t,paint=shipCanvasPainter,view=s){const {ctx,poly,circle,lineLocal}=paint;let c=p.color,id=p.id;ctx.save();ctx.rotate(Math.PI/2);ctx.shadowColor=id==='spectre'&&view.ambushTime>0?'#f6d7ff':c;ctx.shadowBlur=graphicsShadow(id==='spectre'&&view.ambushTime>0?20:12)*(p.glow??1);if(id==='spectre'&&view.phaseTime>0)ctx.globalAlpha=.6;let shape=fleetHullProfiles[id]||p.shape.split(' ').map(q=>q.split(',').map(Number));poly(shape,'#203346',c,1.7);ctx.shadowBlur=graphicsShadow(0);
+function drawIdentityHull(p,t,paint=shipCanvasPainter,view=s){const {ctx,poly,circle,lineLocal}=paint;let c=p.color,id=p.id;ctx.save();ctx.rotate(Math.PI/2);ctx.shadowColor=id==='spectre'&&view.ambushTime>0?'#f6d7ff':c;ctx.shadowBlur=graphicsShadow(id==='spectre'&&view.ambushTime>0?20:12)*(p.glow??1);if(id==='spectre'&&view.phaseTime>0)ctx.globalAlpha=.6;let shape=fleetHullProfiles[id]||p.shape.split(' ').map(q=>q.split(',').map(Number));if(p.parts){let sb=ctx.shadowBlur;try{drawPartsGeo(paint,p,'back',shape)}catch(e){}ctx.shadowColor=c;ctx.shadowBlur=sb}poly(shape,'#203346',c,1.7);ctx.shadowBlur=graphicsShadow(0);
 if(id==='wasp')for(let side of [-1,1])poly([[side*10,-6],[side*22,15],[side*15,20],[side*7,7]],'#264958',c,1);
 if(id==='vanguard'){poly([[-10,-8],[0,-15],[10,-8],[7,10],[-7,10]],'#335467',c,1);lineLocal(-13,0,-5,3,c,1);lineLocal(13,0,5,3,c,1)}
 if(id==='bastion')for(let side of [-1,1]){poly([[side*12,-18],[side*24,-10],[side*24,12],[side*12,17]],'#52606a',c,1.5);for(let j=0;j<3;j++){ctx.fillStyle='#182735';ctx.fillRect(side*17-2,-6+j*6,4,3)}}
@@ -2654,6 +2692,7 @@ if(id==='sovereign'){for(let side of [-1,1]){poly([[side*14,-13],[side*30,-20],[
 drawFleetHullFinish(p,paint);
 if(typeof ctx.clip==='function'&&typeof ctx.createLinearGradient==='function'){try{drawHullDetail(ctx,fleetHullProfiles[id]||p.shape.split(' ').map(q=>q.split(',').map(Number)),c,!!view.preview,!!(p.parts&&p.parts.engine&&(shipParts.find(x=>x.id===p.parts.engine)?.r||0)>0))}catch(e){}}
 if(p.pattern&&p.pattern!=='none'&&typeof ctx.clip==='function'){let shp=fleetHullProfiles[id]||p.shape.split(' ').map(q=>q.split(',').map(Number));drawHullPattern(ctx,shp,p.pattern,p.patternColor||c)}
+if(p.parts)try{drawPartsGeo(paint,p,'front',shape)}catch(e){}
 poly([[0,-13],[5,-4],[0,1],[-5,-4]],'#071b2e',c,1);poly([[0,-10],[2,-4],[0,-2],[-2,-4]],'#d6f8ff');for(let side of [-1,1]){ctx.fillStyle='#6b8192';ctx.fillRect(side*8-3,11,6,5);ctx.fillStyle=c;ctx.fillRect(side*8-2,16,4,2)}ctx.restore()}
 
 const shipChallenges={
@@ -4401,20 +4440,20 @@ function enemyDesign(e,t){if(e.objectiveTarget)return;ctx.save();drawContactReco
 function pilotDesign(t,view=s,paint=shipCanvasPainter){
 const {ctx,poly,circle,hex}=paint;const s=view;
 if(!s.preview){ctx.save();ctx.translate(3,6);ctx.scale(1,.55);circle(0,0,s.pilot.id==='bastion'?28:19,'#00000088');ctx.restore();}
-ctx.save();ctx.rotate(paintHullHeading(s));let modular=false;try{modular=!!fuselage(s.pilot)&&typeof ctx.clip==='function'}catch(e){}if(modular){try{drawModularWings(ctx,s.pilot);drawModularEngine(ctx,s.pilot)}catch(e){}ctx.save();clipToFuselage(ctx,s.pilot);{let F=fuselage(s.pilot);if(F&&F.wings){let k=Math.min(1,F.fx/F.origSpan);ctx.scale(1,Math.max(.5,k))}}drawIdentityHull(s.pilot,t,paint,s);ctx.restore();try{strokeFuselage(ctx,s.pilot)}catch(e){}}else{drawShipParts(ctx,s.pilot,'back');drawIdentityHull(s.pilot,t,paint,s)}ctx.restore();ctx.save();ctx.rotate(paintHullHeading(s));
+ctx.save();ctx.rotate(paintHullHeading(s));drawIdentityHull(s.pilot,t,paint,s);ctx.restore();ctx.save();ctx.rotate(paintHullHeading(s));
 let partEngine=false;try{partEngine=drawPartFlames(ctx,s.pilot,t,s.flightVisual?.thrust||0,s.dashTime>0||s.boostTime>0)}catch(e){}if(!reducedMotion&&!partEngine){let pulse=.5+.5*Math.sin(t*17),length=(s.dashTime>0||s.boostTime>0?28:4+(s.flightVisual?.thrust||0)*12)+pulse*4;for(let side of [-1,1]){let y=side*(s.pilot.id==='bastion'?16:9);ctx.save();ctx.globalAlpha=.3;poly([[-15,y-2],[-15-length,y],[-15,y+2]],s.pilot.color);ctx.globalAlpha=.75;poly([[-15,y-1],[-17-length*.6,y],[-15,y+1]],'#d4fff3');ctx.restore()}}
 ctx.shadowBlur=graphicsShadow(0);
-let heavy=['bastion','sovereign'].includes(s.pilot.id),light=s.pilot.id==='wasp',c=s.pilot.color,sq=1;try{let F=typeof ctx.clip==='function'&&fuselage(s.pilot);if(F&&F.wings)sq=Math.max(.5,Math.min(1,F.fx/F.origSpan))}catch(e){}
-for(let side of [-1,1]){let y=side*(heavy?14:9)*sq;poly([[-9,y-3],[3,y-3],[7,y],[3,y+3],[-9,y+3]],heavy?'#526170':'#335c67','#7ca7ad',.6);
+let heavy=['bastion','sovereign'].includes(s.pilot.id),light=s.pilot.id==='wasp',c=s.pilot.color
+for(let side of [-1,1]){let y=side*(heavy?14:9);poly([[-9,y-3],[3,y-3],[7,y],[3,y+3],[-9,y+3]],heavy?'#526170':'#335c67','#7ca7ad',.6);
 for(let i=0;i<3;i++){ctx.fillStyle='#0a1c2b';ctx.fillRect(-7+i*3,y-2,1.2,4)}
 circle(2,y,1,'#c2fff0');ctx.strokeStyle='#c2fff044';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(-10,y-4);ctx.lineTo(2,y-4);ctx.stroke()}
 poly([[8,0],[-1,-5],[-5,0],[-1,5]],'#081c30','#78ded5',1);poly([[5,0],[-1,-2],[-3,0],[-1,2]],'#c9fff2');ctx.save();ctx.globalAlpha=reducedMotion?.25:.2+.2*Math.sin(t*4);circle(0,0,7,s.pilot.color);ctx.restore();
 
-if(!partEngine)for(let side of [-1,1]){let y=side*(heavy?16:light?12:9)*sq;ctx.fillStyle='#385261';ctx.fillRect(-14,y-3,5,6);ctx.fillStyle=c;ctx.fillRect(-16,y-1,3,2)}
+if(!partEngine)for(let side of [-1,1]){let y=side*(heavy?16:light?12:9);ctx.fillStyle='#385261';ctx.fillRect(-14,y-3,5,6);ctx.fillStyle=c;ctx.fillRect(-16,y-1,3,2)}
 if((s.items.armour||0))for(let i=0;i<Math.min(6,(s.items.armour||0)+1);i++){ctx.save();ctx.rotate(Math.PI/6+i*TAU/6);ctx.fillStyle='#e7f1ef88';ctx.fillRect(16,-4,3,1);ctx.fillStyle='#1c2a3c';ctx.fillRect(18,-1,2,2);ctx.restore()}
-drawShipParts(ctx,s.pilot,'front');ctx.restore();
+if(s.pilot.parts&&s.pilot.parts.plating)try{ctx.save();ctx.rotate(Math.PI/2);drawPartsGeo(paint,s.pilot,'armour',fleetHullProfiles[s.pilot.id]||s.pilot.shape.split(' ').map(q=>q.split(',').map(Number)));ctx.restore()}catch(e){}ctx.restore();
 ctx.save();ctx.rotate(s.face||0);ctx.shadowColor=s.pilot.color;ctx.shadowBlur=graphicsShadow(6);
-drawFleetMount(s.pilot,paint);ctx.restore();ctx.save();ctx.rotate(paintHullHeading(s));drawShipParts(ctx,s.pilot,'nose');ctx.restore()}
+drawFleetMount(s.pilot,paint);ctx.restore()}
 function projectileBase(b,t){drawWeaponProjectile(b,t)}
 
 
