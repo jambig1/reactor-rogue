@@ -162,6 +162,44 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 0.99.0 — ONE SHIP (rework phases 1 and 2, hangar)
+
+The game now centres on one ship that grows with you, instead of a roster of separate pilots. The classic version is kept on the `classic` branch.
+
+- **Your ship & skill tree:** Play opens *Your ship*. Every ship level gives a skill point to spend in four branches: Interceptor (speed, crits, dashes), Juggernaut (hull, armour, shields), Gunship (damage, fire rate) and Carrier (pickups, credits, drones).
+  - 6 points in a branch unlock its **class**, which changes your hull and starting weapon (Wasp, Bastion, Gunship, Scavenger). You can only be one class at a time.
+  - **Modules** start every run with a support or weapon already fitted (Thrusters, Energy Shield, Reactive Spikes, Critical Core, Size Matrix, Seeker Drones, Defence Satellites).
+  - 9 points: choose one of two **specialisations** (Harrier/Spectre, Sovereign/Glacier, Tempest/Helios, Architect/Echo).
+  - 10 points: a **keystone** with a big trade-off (Glass Cannon, Fortress, Overcharge, Swarm Command).
+  - Refund every point for 25 credits per point.
+- **Ship XP:** every run earns ship XP (kills, bosses, level reached). Existing saves start with bonus points based on bosses already beaten.
+- **Star map:** step two is a star map of the ten planets along a route. Beat 2 of a planet's 3 reactor bosses to open the next.
+- Results show ship XP and level-ups; the old ship-unlock goals are gone from the results screen.
+- **Ship parts (phase 2):** four part slots (Engine, Wings, Gun mount, Plating) with Stock, Rare, Epic and Legendary parts (20 in total). Gun mounts set your weapon slots (5–7) and plating sets passive slots (4–7), so you can trade defence for firepower. Every boss you beat drops a part; duplicates are scrapped for credits. You start with the stock set plus one random Rare part. New parts show on the results screen.
+- **Paint & trails:** pick a hull colour and an engine trail (Plasma stream, Spark shower, Rainbow ribbon, Afterimages) with its own colour. Some trails unlock with ship level.
+- **Your build steers the cards:** level-up choices lean towards weapons and passives that suit your class (drones for Carriers, shields for Juggernauts, and so on).
+- **Hangar bay:** your ship, large and animated on a landing pad. Drag it to spin it (with momentum) and nudge it about; tap for a barrel roll. Trails curl as it spins. Fitted modules show around it (drones, satellites, shield bubble, spikes, crit reticle, area ring); maintenance drones weld the hull; nav lights blink; a diagnostic scan sweeps over it when you open the screen or change class. Tilt your phone (TILT button) or move the mouse for parallax.
+- **Detail pass:** ships get panel seams, a specular sheen and rear shading (in runs too), plus rivets, wing vents, engine nozzles and an antenna in the hangar. The hangar is now a scene: back wall with ribs and a lit girder, an observation window onto a planet, light rigs, docking clamps that release when you grab the ship, a hazard-striped pad with a BAY 07 decal, and drifting dust. Panels get icons on every skill and stat, cut-corner cards and section markers.
+- **Part art and hangar backdrop (ChatGPT art):** found parts now show on your ship, in the hangar and in runs. Engines and wings sit behind the hull, plating over it and gun mounts on the nose, each in its rarity style (blue blade fins, purple prism sails, gold phantom wings, nova flames and more). Parts are drawn in code in the ships' own neon style and fitted to each hull: blade, vane, prism and phantom wings extend from the hull; twin, ion, fusion and nova engines bolt on at the back with flames from their own nozzles; hex, truss, slab and dome armour cover the body; heavy, rotary, array and siege guns form the nose. Their lights use your ship colour, or rarity colours via Paint › Part lights. Parts are shaded like the hull (panel sheen, seams, rivets, wing-root fairings) and animated: rotary barrels spin, the fusion core pulses inside a turning ring, nova plasma rings stream, ion grilles ripple, prism sails glint, phantom membranes shimmer, hex armour ripples with light, Aegis seams pulse and tip lights blink. Higher rarity glows stronger. A fitted gun mount replaces the turret and aims at enemies. The ChatGPT part art is used for the part pictures. The Parts tab shows the real part art, with silhouettes for parts you haven't found. The hangar bay has a painted backdrop: window onto a blue planet, light rigs and a striped landing pad.
+- **Feedback:** unlock bursts, a class-change beam, equip "clunks" at the part's hardpoint, counting stat changes, and sounds for each.
+- **Part previews:** tap a part to see green/red stat changes and its outline on the build radar before equipping.
+- **Build radar:** a six-axis chart (speed, damage, defence, crit, firepower, utility) that morphs as your build changes.
+- **Name your ship** (shown in the bay, launch summary, results and PC HUD); **colour wheel** with brightness for hull and trail; **hull patterns** (racing stripes, chevrons, tiger, camo, digital camo, hex armour, carbon fibre, neon edge; bold enough to read in-game, with their own colour and picker previews) and a **glow** slider; **3 saved loadouts** of parts, paint and trail.
+- **Star map redesign:** a calm animated space backdrop with soft hyperlanes, shaded spinning planets in each sector's colour (rings on some), a compact mission card, and smooth motion: planets float, fade in one by one and the routes draw in when you open the map; it glides to your current planet; picking a planet pops it, slides the card info in and flies your ship over.
+- **PC layout:** on wide screens the ship screen is two columns (big hangar bay and stats on the left, Skills/Parts/Paint on the right), the star map is a wide horizontal route showing every planet at once, and the header is compact.
+- **Film grain setting** (Settings › Graphics): Off, Low (new default), Medium, Strong. It was too strong on PC.
+- **Launch sequence:** your ship lifts off and the screen warps to the star map; your ship flies the route when you pick a planet.
+- **Swipe** left/right to change Skills/Parts/Paint, or branches on the tree.
+- Includes the unreleased 0.98 work: first-run flight tutorial, clearer control settings, itch.io build script.
+
+## 0.98.0 — Flight tutorial, clearer controls, itch.io build
+
+- **First-run flight tutorial:** six short tips on your first run (flying, gems, levelling, evolutions, dash, the reactor timer). Each step moves on when you do it; skippable, never blocks play, and replayable from the Field Manual.
+- **Control settings tidied:** every PC mode now says how to dash; modes ordered Mouse + keyboard, Keyboard only, Mouse only, Touch; plainer wording; the dash is called the dash everywhere (not "ship ability"); phones no longer mention the U key.
+- **Level-up choice moved** from the Weapons tab to Gameplay.
+- HUD version label fixed (it still said 0.29.0).
+- `build-itch.sh` makes an itch.io upload zip with only the files the game needs.
+
 ## 0.97.0 — Physics wreckage and screen effects
 
 - **Matter.js wreckage:** destroyed ships and broken crates break into hull chunks that tumble, knock into each other, bounce off structures, get flung by explosions and the Plasma Breath jet, and get shoved aside when you fly through them. Hot chunks glow orange as they cool; frozen kills leave icy shards. Cosmetic only (max 140 pieces, own random numbers; off with reduced motion or particles off).
