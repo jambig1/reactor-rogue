@@ -162,7 +162,7 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
-## 0.99.0 — ONE SHIP (rework phases 1 and 2)
+## 0.99.0 — ONE SHIP (rework phases 1 and 2, hangar)
 
 The game now centres on one ship that grows with you, instead of a roster of separate pilots. The classic version is kept on the `classic` branch.
 
@@ -178,6 +178,13 @@ The game now centres on one ship that grows with you, instead of a roster of sep
 - **Ship parts (phase 2):** four part slots (Engine, Wings, Gun mount, Plating) with Stock, Rare, Epic and Legendary parts (20 in total). Gun mounts set your weapon slots (5–7) and plating sets passive slots (4–7), so you can trade defence for firepower. Every boss you beat drops a part; duplicates are scrapped for credits. You start with the stock set plus one random Rare part. New parts show on the results screen.
 - **Paint & trails:** pick a hull colour and an engine trail (Plasma stream, Spark shower, Rainbow ribbon, Afterimages) with its own colour. Some trails unlock with ship level.
 - **Your build steers the cards:** level-up choices lean towards weapons and passives that suit your class (drones for Carriers, shields for Juggernauts, and so on).
+- **Hangar bay:** your ship, large and animated on a landing pad. Drag it to spin it (with momentum) and nudge it about; tap for a barrel roll. Trails curl as it spins. Fitted modules show around it (drones, satellites, shield bubble, spikes, crit reticle, area ring); maintenance drones weld the hull; nav lights blink; a diagnostic scan sweeps over it when you open the screen or change class. Tilt your phone (TILT button) or move the mouse for parallax.
+- **Feedback:** unlock bursts, a class-change beam, equip "clunks" at the part's hardpoint, counting stat changes, and sounds for each.
+- **Part previews:** tap a part to see green/red stat changes and its outline on the build radar before equipping.
+- **Build radar:** a six-axis chart (speed, damage, defence, crit, firepower, utility) that morphs as your build changes.
+- **Name your ship** (shown in the bay, launch summary, results and PC HUD); **colour wheel** with brightness for hull and trail; **hull patterns** (stripes, camo, carbon, neon edge, also in-game) and a **glow** slider; **3 saved loadouts** of parts, paint and trail.
+- **Launch sequence:** your ship lifts off and the screen warps to the star map; your ship flies the route when you pick a planet.
+- **Swipe** left/right to change Skills/Parts/Paint, or branches on the tree.
 - Includes the unreleased 0.98 work: first-run flight tutorial, clearer control settings, itch.io build script.
 
 ## 0.98.0 — Flight tutorial, clearer controls, itch.io build
