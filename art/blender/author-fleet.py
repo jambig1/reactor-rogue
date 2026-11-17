@@ -3,8 +3,8 @@ import math
 import sys
 from pathlib import Path
 
-import bmesh
 import bpy
+import bmesh
 from mathutils import Vector
 
 DEST = Path(sys.argv[sys.argv.index("--") + 1])
