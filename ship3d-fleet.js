@@ -1,3 +1,4 @@
+import {roundedBox, roundedOutline, sculptedLoft} from './ship3d-surfaces.js';
 import {buildFitting} from './ship3d-fittings.js';
 export const fleetProfiles={
  wasp:{length:30,width:15,depth:2.5,wing:'dart',engines:1},
@@ -20,18 +21,22 @@ export function buildFleetShip(T,id,rec,parts={}){
  const neon=new T.MeshBasicMaterial({color:new T.Color(rec.color).multiplyScalar(2),toneMapped:false});owned.add(neon);
  if(rec.patternCanvas){const tex=new T.CanvasTexture(rec.patternCanvas);tex.colorSpace=T.SRGBColorSpace;owned.add(tex);hull.map=tex;hull.color.set('#ffffff');}
  const mesh=(g,m,x=0,y=0,z=0)=>{owned.add(g);const o=new T.Mesh(g,m);o.position.set(x,y,z);root.add(o);(m===neon?glowMeshes:bodyMeshes).push(o);return o;};
- const box=(x,y,z,a,b,c,m=hull)=>mesh(new T.BoxGeometry(a,b,c),m,x,y,z);
- const plate=(pts,z,d,m=hull)=>{const sh=new T.Shape();pts.forEach(([x,y],i)=>i?sh.lineTo(x,y):sh.moveTo(x,y));sh.closePath();const g=new T.ExtrudeGeometry(sh,{depth:d,bevelEnabled:true,bevelSize:.35,bevelThickness:.3,bevelSegments:1,steps:1});if(m===hull&&rec.patternCanvas){const a=g.attributes.position,uv=[];for(let i=0;i<a.count;i++)uv.push((-a.getY(i)+40)/80,(a.getX(i)+40)/80);g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));}return mesh(g,m,0,0,z);};
+ const box=(x,y,z,a,b,c,m=hull)=>mesh(roundedBox(T,a,b,c,id==='bastion'?.14:.28),m,x,y,z);
+ const plate=(pts,z,d,m=hull)=>{const sh=roundedOutline(T,pts,id==='bastion'?1.15:2.8);const g=new T.ExtrudeGeometry(sh,{depth:d,bevelEnabled:true,bevelSize:.35,bevelThickness:.3,bevelSegments:2,curveSegments:3,steps:1});if(m===hull&&rec.patternCanvas){const a=g.attributes.position,uv=[];for(let i=0;i<a.count;i++)uv.push((-a.getY(i)+40)/80,(a.getX(i)+40)/80);g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));}return mesh(g,m,0,0,z);};
  const tube=(x,y,z,r,l,m=steel)=>{const o=mesh(new T.CylinderGeometry(r,r,l,16),m,x,y,z);o.rotation.z=Math.PI/2;return o;};
  const ring=(x,y,z,r,m=neon)=>{const o=mesh(new T.TorusGeometry(r,.2,6,24),m,x,y,z);o.rotation.y=Math.PI/2;return o;};
  const L=p.length,W=p.width,D=p.depth;
  // Station-built volumes: full dorsal and ventral surfaces, with crisp chines.
+ // Interceptors get rounder chines. Armoured ships retain broader shoulders.
+ const chine={wasp:.86,bastion:.32,harrier:.69,glacier:.54,tempest:.78,scavenger:.38,spectre:.65,architect:.37,helios:.81,echo:.91,sovereign:.49}[id];
  function body(stations,y=0,z=0,m=hull){
-  const pos=[],ix=[];for(const [x,w,h,down]of stations)for(const [yy,zz]of [[-.6*w,h],[.6*w,h],[w,h*.4],[w,-down*.4],[.6*w,-down],[-.6*w,-down],[-w,-down*.4],[-w,h*.4]])pos.push(x,yy+y,zz+z);
-  for(let j=0;j<stations.length-1;j++)for(let k=0;k<8;k++){let q=j*8+k,n=j*8+(k+1)%8;ix.push(q,n+8,n,q,q+8,n+8);}
-  for(let k=1;k<7;k++){ix.push(0,k,k+1);let n=(stations.length-1)*8;ix.push(n,n+k+1,n+k);}
-  let g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(ix);let flat=g.toNonIndexed();g.dispose();flat.computeVertexNormals();
-  if(m===hull&&rec.patternCanvas){let p=flat.attributes.position,uv=[];for(let i=0;i<p.count;i++)uv.push((-p.getY(i)+40)/80,(p.getX(i)+40)/80);flat.setAttribute('uv',new T.Float32BufferAttribute(uv,2));}return mesh(flat,m);
+  const geometry=sculptedLoft(T,stations,y,z,m===glass?.91:chine);
+  if(m===hull&&rec.patternCanvas){
+   const p=geometry.attributes.position,uv=[];
+   for(let i=0;i<p.count;i++)uv.push((-p.getY(i)+40)/80,(p.getX(i)+40)/80);
+   geometry.setAttribute('uv',new T.Float32BufferAttribute(uv,2));
+  }
+  return mesh(geometry,m);
  }
  const orb=(x,y,z,r,m=neon)=>mesh(new T.IcosahedronGeometry(r,1),m,x,y,z);
  const hoop=(x,y,z,r,m=steel)=>mesh(new T.TorusGeometry(r,.35,8,32),m,x,y,z);

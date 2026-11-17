@@ -1,3 +1,4 @@
+import {roundedBox, roundedOutline} from './ship3d-surfaces.js';
 import {buildFitting} from './ship3d-fittings.js';
 /* Authored Vanguard benchmark. Shape space: +X forward, +Z dorsal.
  * No simulation state, storage, randomness, textures or external dependencies.
@@ -37,9 +38,9 @@ export function buildVanguard(T, rec, parts={}) {
     // Keep plane breaks crisp, rather than averaging normals around every chine.
     const flat=g.toNonIndexed();g.dispose();flat.computeVertexNormals();return add(flat,m);
   }
-  function plate(points,z,depth,m,bevel=.22){const s=new T.Shape();points.forEach(([x,y],i)=>i?s.lineTo(x,y):s.moveTo(x,y));s.closePath();
-    return add(new T.ExtrudeGeometry(s,{depth,bevelEnabled:bevel>0,bevelThickness:bevel,bevelSize:bevel,bevelSegments:1,steps:1,curveSegments:1}),m,0,0,z);}
-  const box=(x,y,z,sx,sy,sz,m,rz=0)=>add(new T.BoxGeometry(sx,sy,sz),m,x,y,z,0,0,rz);
+  function plate(points,z,depth,m,bevel=.22){const s=roundedOutline(T,points,1.35);
+    return add(new T.ExtrudeGeometry(s,{depth,bevelEnabled:bevel>0,bevelThickness:bevel,bevelSize:bevel,bevelSegments:2,steps:1,curveSegments:3}),m,0,0,z);}
+  const box=(x,y,z,sx,sy,sz,m,rz=0)=>add(roundedBox(T,sx,sy,sz,.20),m,x,y,z,0,0,rz);
   const cylinder=(x,y,z,r1,r2,l,m,n=16)=>add(new T.CylinderGeometry(r1,r2,l,n,1,false),m,x,y,z,0,0,-Math.PI/2);
   const strip=(points,r=.15)=>{for(let i=1;i<points.length;i++){const a=new T.Vector3(...points[i-1]),b=new T.Vector3(...points[i]),d=b.clone().sub(a);const g=new T.CylinderGeometry(r,r,d.length(),6);g.applyQuaternion(new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),d.normalize()));g.translate(...a.add(b).multiplyScalar(.5));add(g,accent);}};
   const ring=(x,y,z,r,t,m)=>add(new T.TorusGeometry(r,t,6,24),m,x,y,z,0,Math.PI/2,0);

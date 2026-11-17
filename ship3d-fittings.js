@@ -1,3 +1,4 @@
+import {roundedBox, roundedOutline} from './ship3d-surfaces.js';
 /* Authored fitting assemblies. Local axes: +X nose, +Z dorsal.
    This module is staged for fleet integration; it does not change equipment stats. */
 export const fittingIds = ['e_twin','e_ion','e_fusion','e_nova','w_razor','w_vane','w_prism','w_phantom','m_heavy','m_rotary','m_array','m_siege','p_reactive','p_light','p_heavy','p_aegis'];
@@ -24,10 +25,10 @@ export function buildFitting(T,id,{color='#65fbd2',width=12,tail=-22,shipId}={})
  const neon=new T.MeshBasicMaterial({color:new T.Color(color).multiplyScalar(1.8),toneMapped:false});
  for(const m of [metal,dark,alloy,neon])resources.add(m);
  const mesh=(g,m,x,y,z,rz=0)=>{resources.add(g);const o=new T.Mesh(g,m);o.position.set(x,y,z);o.rotation.z=rz;root.add(o);return o;};
- const box=(x,y,z,a,b,c,m=metal)=>mesh(new T.BoxGeometry(a,b,c),m,x,y,z);
+ const box=(x,y,z,a,b,c,m=metal)=>mesh(roundedBox(T,a,b,c,shipId==='bastion'?.15:.27),m,x,y,z);
  const tube=(x,y,z,r,l,m=alloy)=>mesh(new T.CylinderGeometry(r,r,l,16),m,x,y,z,Math.PI/2);
  const ring=(x,y,z,r,m=neon)=>{const o=mesh(new T.TorusGeometry(r,.18,6,24),m,x,y,z);o.rotation.y=Math.PI/2;return o;};
- const plate=(pts,z,d,m=metal)=>{const s=new T.Shape();pts.forEach(([x,y],i)=>i?s.lineTo(x,y):s.moveTo(x,y));s.closePath();return mesh(new T.ExtrudeGeometry(s,{depth:d,steps:1,bevelEnabled:true,bevelSize:.2,bevelThickness:.2,bevelSegments:1}),m,0,0,z);};
+ const plate=(pts,z,d,m=metal)=>{const s=roundedOutline(T,pts,shipId==='bastion'?.7:1.7);return mesh(new T.ExtrudeGeometry(s,{depth:d,steps:1,bevelEnabled:true,bevelSize:.2,bevelThickness:.2,bevelSegments:2,curveSegments:3}),m,0,0,z);};
  const nozzles=[];
  const palette={e_twin:'#ff9a52',e_ion:'#70beff',e_fusion:'#ffc968',e_nova:'#ff7852',w_razor:'#ff647b',w_vane:'#73e8d5',w_prism:'#b894ff',w_phantom:'#b391ff',m_heavy:'#ffb66c',m_rotary:'#ffdc83',m_array:'#85bdff',m_siege:'#ff735f',p_reactive:'#ffba70',p_light:'#6ce8db',p_heavy:'#a6bbdc',p_aegis:'#81dcff'};
  neon.color.set(palette[id]).multiplyScalar(2);
