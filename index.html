@@ -2619,7 +2619,7 @@ function drawHullPlating(g,pilot,shape,c){let F=fuselage(pilot);if(F)shape=F.pol
 // Animated flames from an equipped engine part's nozzles (heading frame: x forward).
 function drawPartFlames(g,pilot,t,thrust,boost){let d=partOn(pilot,'engine');if(!d)return false;let E=engineGeo(pilot,d.id),acc=partAccent(pilot,d),pulse=.5+.5*Math.sin(t*17);
  if(!reducedMotion)for(let nz of E.nozzles){let len=((boost?26:5+thrust*12)+pulse*4)*nz.len,hx=-nz.y,hy=nz.x,w=nz.w;g.save();g.globalAlpha=.38;g.fillStyle=acc;g.beginPath();g.moveTo(hx,hy-w);g.lineTo(hx-len,hy);g.lineTo(hx,hy+w);g.closePath();g.fill();g.globalAlpha=.85;g.fillStyle='#e8fbff';g.beginPath();g.moveTo(hx,hy-w*.45);g.lineTo(hx-len*.6,hy);g.lineTo(hx,hy+w*.45);g.closePath();g.fill();if(nz.ring){g.globalAlpha=.6;g.strokeStyle=acc;g.lineWidth=.7;for(let r of [.35,.65]){g.beginPath();g.ellipse(hx-len*r,hy,1.2,w*1.4,0,0,TAU);g.stroke()}}g.restore()}return true}
-const hangarImg=(typeof Image!=='undefined')?Object.assign(new Image(),{decoding:'async'}):null;if(hangarImg)hangarImg.src='hangar-bay-v0990.webp';
+const hangarImg=(typeof Image!=='undefined')?Object.assign(new Image(),{decoding:'async'}):null;if(hangarImg)hangarImg.src='art/blender/flight-deck.webp';
 function hangarArtReady(){return hangarImg&&hangarImg.complete&&hangarImg.naturalWidth>0}
 
 
