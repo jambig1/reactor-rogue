@@ -30,7 +30,7 @@ export function buildVanguard(T, rec, parts={}) {
   // Closed longitudinal sections with a chamfered octagonal cross-section.
   // Deliberate chine breaks replace the old uniformly inflated 2D outline.
   const detailBatches=[[],[],[]];
-  function section(stations,m,cy=0,cz=0) {
+  function section(stations,m,cy=0,cz=0,lowerSkin=false) {
     const pos=[],idx=[];
     for(const [x,w,top,bottom] of stations){for(const [y,z] of [[-.62*w,top],[.62*w,top],[w,top*.5],[w,bottom*.45],[.65*w,bottom],[-.65*w,bottom],[-w,bottom*.45],[-w,top*.5]])pos.push(x,y+cy,z+cz);}
     for(let j=0;j<stations.length-1;j++)for(let k=0;k<8;k++){let a=j*8+k,b=j*8+(k+1)%8,c=b+8,d=a+8;idx.push(a,b,c,a,c,d);}
@@ -39,7 +39,7 @@ export function buildVanguard(T, rec, parts={}) {
     const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(idx);
     // Keep plane breaks crisp, rather than averaging normals around every chine.
     const flat=g.toNonIndexed();g.dispose();flat.computeVertexNormals();
-    if(m===hull)addHullDetails(T,flat,stations,cy,'vanguard',detailBatches);
+    if(m===hull||lowerSkin)addHullDetails(T,flat,stations,cy,'vanguard',detailBatches,lowerSkin?'bottom':cy===0?'top':'both');
     return add(flat,m);
   }
   function plate(points,z,depth,m,bevel=.22){const s=roundedOutline(T,points,1.35);
@@ -48,7 +48,7 @@ export function buildVanguard(T, rec, parts={}) {
   const cylinder=(x,y,z,r1,r2,l,m,n=16)=>add(new T.CylinderGeometry(r1,r2,l,n,1,false),m,x,y,z,0,0,-Math.PI/2);
   const strip=(points,r=.15)=>{for(let i=1;i<points.length;i++){const a=new T.Vector3(...points[i-1]),b=new T.Vector3(...points[i]),d=b.clone().sub(a);const g=new T.CylinderGeometry(r,r,d.length(),6);g.applyQuaternion(new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),d.normalize()));g.translate(...a.add(b).multiplyScalar(.5));add(g,accent);}};
   const ring=(x,y,z,r,t,m)=>add(new T.TorusGeometry(r,t,6,24),m,x,y,z,0,Math.PI/2,0);
-  section([[-22,3.2,1.4,-1.8],[-17,7.1,3.3,-3],[-6,10,4.8,-3.7],[5,8,5.5,-3.1],[15,5,3.7,-1.7],[26,.35,.35,-.35]],dark);
+  section([[-22,3.2,1.4,-1.8],[-17,7.1,3.3,-3],[-6,10,4.8,-3.7],[5,8,5.5,-3.1],[15,5,3.7,-1.7],[26,.35,.35,-.35]],dark,0,0,true);
   section([[-19,3.8,2.4,-.2],[-12,7.6,4.6,-.5],[0,8.8,5.3,-.6],[12,5.5,4.5,-.4],[25,.4,.55,-.1]],hull);
   // Exposed keel and ventral armour: meaningful construction from below too.
   section([[-19,2,.8,-.7],[-9,4.7,.8,-2],[7,3.4,.8,-1.4],[20,.6,.8,-.3]],steel,0,-1.8);
