@@ -5,6 +5,7 @@ const records=await(await fetch('./ship-review-records.json')).json();
 const $=id=>document.getElementById(id);for(const p of records){let o=document.createElement('option');o.value=p.id;o.textContent=p.name;$('ship').append(o)}$('ship').value='vanguard';
 const views=await Promise.all([createBefore($('before')),createShip3D($('after'))]);
 function update(){let p=records.find(p=>p.id===$('ship').value);views.forEach(v=>v.setShip(JSON.stringify([p.id,p.rec.color,{engine:'e_stock',wings:'w_stock',mount:'m_stock',plating:'p_stock'}]),structuredClone(p.rec)));$('status').textContent=p.name+' · stock fittings · shared lighting and camera · no save access';}update();$('ship').onchange=update;
+window.shipReview={views,records,update};
 $('top').onclick=()=>{$('pitch').value=-32;$('yaw').value=0};$('side').onclick=()=>{$('pitch').value=58;$('yaw').value=90};$('under').onclick=()=>{$('pitch').value=148;$('yaw').value=-25};
 function frame(t){views.forEach((v,i)=>{let c=$(i?'after':'before'),w=c.clientWidth,h=c.clientHeight;v.resize(w,h,Math.min(2,devicePixelRatio));v.render({x:w/2,y:h*.5,scale:Math.min(w/100,h/85),yaw:(+$('yaw').value)*Math.PI/180,pitch:+$('pitch').value*Math.PI/180,roll:0,appear:1,thrust:.15,t:t/1000,bloom:$('bloom').checked,glow:.65})});requestAnimationFrame(frame)}requestAnimationFrame(frame);
 </script></html>
