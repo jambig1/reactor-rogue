@@ -1,3 +1,4 @@
+import {addHullDetails, hullDetailGeometry} from './ship3d-details.js';
 import {roundedBox, roundedOutline} from './ship3d-surfaces.js';
 import {buildFitting} from './ship3d-fittings.js';
 /* Authored Vanguard benchmark. Shape space: +X forward, +Z dorsal.
@@ -28,6 +29,7 @@ export function buildVanguard(T, rec, parts={}) {
   };
   // Closed longitudinal sections with a chamfered octagonal cross-section.
   // Deliberate chine breaks replace the old uniformly inflated 2D outline.
+  const detailBatches=[[],[],[]];
   function section(stations,m,cy=0,cz=0) {
     const pos=[],idx=[];
     for(const [x,w,top,bottom] of stations){for(const [y,z] of [[-.62*w,top],[.62*w,top],[w,top*.5],[w,bottom*.45],[.65*w,bottom],[-.65*w,bottom],[-w,bottom*.45],[-w,top*.5]])pos.push(x,y+cy,z+cz);}
@@ -36,7 +38,9 @@ export function buildVanguard(T, rec, parts={}) {
     for(let i=0;i<idx.length;i+=3)[idx[i+1],idx[i+2]]=[idx[i+2],idx[i+1]];
     const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(idx);
     // Keep plane breaks crisp, rather than averaging normals around every chine.
-    const flat=g.toNonIndexed();g.dispose();flat.computeVertexNormals();return add(flat,m);
+    const flat=g.toNonIndexed();g.dispose();flat.computeVertexNormals();
+    if(m===hull)addHullDetails(T,flat,stations,cy,'vanguard',detailBatches);
+    return add(flat,m);
   }
   function plate(points,z,depth,m,bevel=.22){const s=roundedOutline(T,points,1.35);
     return add(new T.ExtrudeGeometry(s,{depth,bevelEnabled:bevel>0,bevelThickness:bevel,bevelSize:bevel,bevelSegments:2,steps:1,curveSegments:3}),m,0,0,z);}
@@ -107,6 +111,9 @@ export function buildVanguard(T, rec, parts={}) {
   box(20,0,2.0,2.6,1.5,.18,dark);box(20.6,0,2.11,.7,.8,.08,accent);
   plate([[-14,-2.6],[-6,-3.3],[-4,0],[-6,3.3],[-14,2.6]],4.3,.45,hull,.18);
   for(let j=0;j<3;j++)box(-12+j*1.6,0,5.02,.65,3.3,.16,dark);
+  for(const [index,material] of [dark,edge,accent].entries()){
+    if(detailBatches[index].length)add(hullDetailGeometry(T,detailBatches[index]),material);
+  }
   // Merge static geometry by material to bound draw calls independent of detail count.
   for(const [mat,geos] of batches){let positions=[],normals=[];
     for(let g of geos){let q=g.index?g.toNonIndexed():g;const p=q.getAttribute('position'),n=q.getAttribute('normal');positions.push(...p.array);normals.push(...n.array);if(q!==g)q.dispose();g.dispose();}

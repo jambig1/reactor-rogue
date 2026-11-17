@@ -1,3 +1,4 @@
+import {addHullDetails, hullDetailGeometry} from './ship3d-details.js';
 import {roundedBox, roundedOutline, sculptedLoft} from './ship3d-surfaces.js';
 import {buildFitting} from './ship3d-fittings.js';
 export const fleetProfiles={
@@ -26,6 +27,7 @@ export function buildFleetShip(T,id,rec,parts={}){
  const tube=(x,y,z,r,l,m=steel)=>{const o=mesh(new T.CylinderGeometry(r,r,l,16),m,x,y,z);o.rotation.z=Math.PI/2;return o;};
  const ring=(x,y,z,r,m=neon)=>{const o=mesh(new T.TorusGeometry(r,.2,6,24),m,x,y,z);o.rotation.y=Math.PI/2;return o;};
  const L=p.length,W=p.width,D=p.depth;
+ const detailBatches=[[],[],[]];
  // Station-built volumes: full dorsal and ventral surfaces, with crisp chines.
  // Interceptors get rounder chines. Armoured ships retain broader shoulders.
  const chine={wasp:.86,bastion:.32,harrier:.69,glacier:.54,tempest:.78,scavenger:.38,spectre:.65,architect:.37,helios:.81,echo:.91,sovereign:.49}[id];
@@ -36,6 +38,7 @@ export function buildFleetShip(T,id,rec,parts={}){
    for(let i=0;i<p.count;i++)uv.push((-p.getY(i)+40)/80,(p.getX(i)+40)/80);
    geometry.setAttribute('uv',new T.Float32BufferAttribute(uv,2));
   }
+  if(m===hull)addHullDetails(T,geometry,stations,y,id,detailBatches);
   return mesh(geometry,m);
  }
  const orb=(x,y,z,r,m=neon)=>mesh(new T.IcosahedronGeometry(r,1),m,x,y,z);
@@ -140,6 +143,9 @@ export function buildFleetShip(T,id,rec,parts={}){
   hoop(-12,0,11,8,gold);
   body([[-29,3,2,1],[-21,4,6,1],[-14,3,5,1],[-6,1,2,1]],0,7,gold);
   hoop(-12,0,11,6,neon);orb(-12,0,11,3);
+ }
+ for(const [index,material] of [dark,steel,neon].entries()){
+  if(detailBatches[index].length)mesh(hullDetailGeometry(T,detailBatches[index]),material);
  }
  let nozzles=[];
  if(parts.engine&&parts.engine!=='e_stock'){}else for(let i=0;i<(id==='wasp'?2:p.engines);i++){const y=id==='wasp'?(i===0?-8:8):(i-(p.engines-1)/2)*9;box(-L*.8,y,0,7,5,4);tube(-L*.9,y,0,2.2,4);ring(-L*.9-2,y,0,1.8);nozzles.push({x:-L*.9-2.2,y,z:0,r:1.6});}
