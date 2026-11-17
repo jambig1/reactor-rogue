@@ -2372,7 +2372,8 @@ function shipRecorder(){let M=[1,0,0,1,0,0],stack=[],path=[],sub=null,filled=nul
   createLinearGradient:()=>({addColorStop(){}}),createRadialGradient:()=>({addColorStop(){}}),createConicGradient:()=>({addColorStop(){}}),createPattern:()=>null,isPointInPath:()=>false};
  return {ctx:c,out}}
 function recordShip3D(pilot){let R=shipRecorder(),p={...pilot,pattern:'none'};try{drawIdentityHull(p,0,shipPainter(R.ctx),{preview:true,pilot:p,items:{},hullFace:0,face:0,dashTime:0,boostTime:0,ambushTime:0,phaseTime:0,flightVisual:{heading:0,thrust:0}})}catch(e){}
- let rec={shapes:R.out.shapes,lines:R.out.lines,color:p.color,trail:shipState().paint.trailColor||p.color,engines:[]};
+ let rec={shapes:R.out.shapes,lines:R.out.lines,color:p.color,trail:shipState().paint.trailColor||p.color,engines:[],pattern:pilot.pattern||'none',patternColor:pilot.patternColor||p.color};
+ if(rec.pattern!=='none'){let cv=document.createElement('canvas');cv.width=cv.height=512;let g=cv.getContext('2d');g.fillStyle='#25394c';g.fillRect(0,0,512,512);g.translate(256,256);g.scale(8,8);drawHullPattern(g,[[-32,-32],[32,-32],[32,32],[-32,32]],rec.pattern,rec.patternColor);rec.patternCanvas=cv}
  try{let d=partOn(p,'engine');if(d){for(let nz of engineGeo(p,d.id).nozzles)rec.engines.push([-nz.y,nz.x,nz.w*1.2])}else{let M=hullMetrics(hullShapeOf(p)),y=p.id==='bastion'?16:9;rec.engines.push([-M.maxY+2,-y,2.2],[-M.maxY+2,y,2.2])}}catch(e){}
  return rec}
 const bay3d={state:'',ship:null,canvas:null,off:false};
@@ -2380,7 +2381,7 @@ function bay3dWanted(){return !bay3d.off&&typeof document!=='undefined'&&typeof 
 function bay3dStart(){if(bay3d.state||!bay3dWanted())return;bay3d.state='loading';try{let cv=document.createElement('canvas');cv.id='shipBay3d';cv.setAttribute('aria-hidden','true');bay3d.canvas=cv;import('./ship3d-v1100.js').then(m=>m.createShip3D(cv)).then(sh=>{if(!sh){bay3d.state='failed';return}bay3d.ship=sh;bay3d.state='ready'}).catch(e=>{console.warn('3D hangar ship unavailable',e);bay3d.state='failed'})}catch(e){bay3d.state='failed'}}
 function bay3dDraw(c,f){let S=bay3d.ship;if(bay3d.state!=='ready'||!S||S.lost||!bay3dWanted()){if(bay3d.canvas)bay3d.canvas.style.display='none';return false}
  let cv=bay3d.canvas;if(cv.parentNode!==c.parentNode)c.parentNode.insertBefore(cv,c.nextSibling);cv.style.display='block';
- let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor]);if(key!==bay3d.key){bay3d.key=key;S.setShip(key,recordShip3D(p))}
+ let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor]);if(key!==bay3d.key){bay3d.key=key;S.setShip(key,recordShip3D(p))}
  S.resize(c.clientWidth,c.clientHeight,Math.min(2,window.devicePixelRatio||1));S.render(f);return true}
 function bayPointer(e){let c=e.currentTarget,r=c.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,B=bayFx;B.ptrs=B.ptrs||{};if(e.type==='pointerdown')B.ptrs[e.pointerId]={x,y};else if(e.type==='pointermove'&&B.ptrs[e.pointerId])B.ptrs[e.pointerId]={x,y};else if(e.type==='pointerup'||e.type==='pointercancel')delete B.ptrs[e.pointerId];
  let ids=Object.keys(B.ptrs);if(bay3d.state==='ready'&&ids.length>=2){let a=B.ptrs[ids[0]],b=B.ptrs[ids[1]],d=Math.hypot(a.x-b.x,a.y-b.y);if(B.pinch)B.zoom=clamp((B.zoom||1)*d/B.pinch,.7,1.9);B.pinch=d;if(B.drag)B.drag.moved=99;return}B.pinch=0;
