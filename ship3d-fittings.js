@@ -1,7 +1,7 @@
 /* Authored fitting assemblies. Local axes: +X nose, +Z dorsal.
    This module is staged for fleet integration; it does not change equipment stats. */
 export const fittingIds = ['e_twin','e_ion','e_fusion','e_nova','w_razor','w_vane','w_prism','w_phantom','m_heavy','m_rotary','m_array','m_siege','p_reactive','p_light','p_heavy','p_aegis'];
-export function buildFitting(T,id,{color='#65fbd2',width=12,tail=-22}={}){
+export function buildFitting(T,id,{color='#65fbd2',width=12,tail=-22,shipId}={}){
  if(!fittingIds.includes(id))throw new Error('Unknown fitting '+id);
  const root=new T.Group(),resources=new Set();root.name=id;
  const metal=new T.MeshStandardMaterial({color:'#293e52',metalness:.7,roughness:.35});
@@ -20,6 +20,92 @@ export function buildFitting(T,id,{color='#65fbd2',width=12,tail=-22}={}){
  const orb=(x,y,z,r,m=neon)=>mesh(new T.IcosahedronGeometry(r,1),m,x,y,z);
  const hoop=(x,y,z,r,m=neon)=>mesh(new T.TorusGeometry(r,.18,6,32),m,x,y,z);
 
+ if(shipId==='wasp'||shipId==='bastion'){
+  const heavy=shipId==='bastion';
+  const rail=(from,to,r)=>{const a=new T.Vector3(...from),b=new T.Vector3(...to),delta=b.clone().sub(a);
+   const mid=a.clone().add(b).multiplyScalar(.5);
+   const o=mesh(new T.CylinderGeometry(r,r,delta.length(),6),neon,...mid);
+   o.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),delta.normalize());
+  };
+  if(id.startsWith('e_')){
+   const radius={e_twin:1.15,e_ion:1.65,e_fusion:1.9,e_nova:2.2}[id]+(heavy?1:0);
+   const x=heavy?-22:-25;
+   for(const side of [-1,1]){
+    const y=side*(heavy?15:8),z=heavy?-.5:-.7;
+    if(heavy)box(x+2,y,z,10,8,6,dark);
+    else tube(x+2,y,z,radius+.5,7,metal);
+    const offsets=id==='e_twin'?[-radius*.9,radius*.9]:[0];
+    for(const offset of offsets){
+     const r=radius*(offset?.62:1);
+     tube(x-2,y+offset,z,r+.4,5,alloy);
+     tube(x-4.55,y+offset,z,r,.14,dark);
+     ring(x-4.75,y+offset,z,r*.82);
+     if(id==='e_nova')ring(x-5.65,y+offset,z,r*1.14);
+     nozzles.push({x:x-(id==='e_nova'?5.8:4.9),y:y+offset,z,r:r*.72});
+    }
+    if(id==='e_ion')for(let i=0;i<3;i++)box(x+i*1.35,y,z+radius+.55,.45,radius*1.4,.3,neon);
+    if(id==='e_fusion'){orb(x+2,y,z+radius+.65,radius*.64);hoop(x+2,y,z+radius+.65,radius*.85,alloy);}
+   }
+  }else if(id.startsWith('w_')){
+   const span={w_razor:2,w_vane:0,w_prism:3,w_phantom:4}[id];
+   const sail=id==='w_prism'?new T.MeshPhysicalMaterial({color,roughness:.22,metalness:.3,transparent:true,opacity:.63,side:T.DoubleSide}):metal;
+   resources.add(sail);
+   for(const side of [-1,1]){
+    const pts=heavy?[[-20,19],[-16,26+span],[4,26+span],[12,20],[9,16],[-19,16]]:
+     [[-20,7],[-27,19+span],[-24,21+span],[-13,17],[4,9],[-3,7]];
+    plate(pts.map(([x,y])=>[x,y*side]),heavy?-1.5:-.9,heavy?2.6:.9,sail);
+    if(heavy){
+     for(let i=0;i<3;i++)box(-12+i*6,side*(23+span*.5),1.8,4,3,1.5,alloy);
+     rail([-14,side*(26+span),1.4],[3,side*(26+span),1.4],.23);
+    }else{
+     rail([-24,side*(21+span),.15],[-13,side*17,.15],.13);
+     rail([-13,side*17,.15],[3,side*9.2,.15],.13);
+    }
+    const ribs=id==='w_phantom'?3:id==='w_vane'?2:1;
+    for(let i=0;i<ribs;i++){
+     const y=side*((heavy?22:13)+i*2);
+     const rib=box(-15+i*2,y,heavy?2.4:.6,heavy?7:4,.65,heavy?1.4:.55,alloy);
+     rib.rotation.z=heavy?0:side*.6;
+    }
+   }
+  }else if(id.startsWith('m_')){
+   const count={m_heavy:1,m_rotary:6,m_array:4,m_siege:2}[id];
+   for(const side of [-1,1]){
+    const y=side*(heavy?12:8),z=heavy?9.5:1.15,x=heavy?1:5;
+    box(x,y,z-.55,heavy?11:9,heavy?7:3.4,heavy?4:2.4,dark);
+    if(heavy)box(x-2,y,z+1.6,8,6,2,metal);
+    else tube(x+1,y,z,1.1,6,metal);
+    for(let i=0;i<count;i++){
+     const angle=i*Math.PI*2/count;
+     const spread=count===1?0:(heavy?1.5:.65),by=y+Math.cos(angle)*spread,bz=z+Math.sin(angle)*spread;
+     const length=(id==='m_siege'?14:10)+(heavy?4:0);
+     const r=(count===1?.95:.42)*(heavy?1.65:1);
+     const start=x+2;
+     tube(start+length/2,by,bz,r,length,id==='m_siege'?metal:alloy);
+     ring(start+length,by,bz,r+.07,id==='m_siege'?neon:alloy);
+    }
+    box(x-1,y,z+(heavy?2.7:.8),heavy?6:3,.38,.25,neon);
+   }
+  }else{
+   const rows=id==='p_light'?2:3;
+   for(const side of [-1,1])for(let i=0;i<rows;i++){
+    const x=(heavy?-14:-15)+i*(heavy?9:5.8);
+    const y=side*(heavy?16:8);
+    const z=heavy?6.1:2.45;
+    const thick=id==='p_heavy'?(heavy?3:1.1):(heavy?1.55:.6);
+    const halfLength=heavy?4:2.55,halfWidth=heavy?3.3:1.65;
+    plate([[x-halfLength,y-halfWidth],[x+halfLength,y-halfWidth*.7],[x+halfLength,y+halfWidth*.7],[x-halfLength,y+halfWidth]],z,thick,id==='p_light'?alloy:metal);
+    if(id==='p_aegis'){
+     const r=heavy?1.65:.76;
+     hoop(x,y,z+thick+.3,r);
+     orb(x,y,z+thick+.4,r*.46);
+    }else{
+     box(x,y,z+thick+.16,heavy?3:1.6,.35,.25,id==='p_reactive'?neon:alloy);
+    }
+   }
+  }
+  return {root,nozzles,dispose(){for(const resource of resources)resource.dispose();}};
+ }
  if(id.startsWith('e_')){
   const cfg={e_twin:[[-10,1.7],[-5,1.7],[5,1.7],[10,1.7]],e_ion:[[-7,2.4],[7,2.4]],e_fusion:[[-9,1.8],[0,3.6],[9,1.8]],e_nova:[[-7,3.5],[7,3.5]]}[id];
   box(tail+2,0,0,5,26,2,dark);

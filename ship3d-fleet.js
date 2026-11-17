@@ -117,7 +117,7 @@ export function buildFleetShip(T,id,rec,parts={}){
  }
  let nozzles=[];
  if(parts.engine&&parts.engine!=='e_stock'){}else for(let i=0;i<(id==='wasp'?2:p.engines);i++){const y=id==='wasp'?(i===0?-8:8):(i-(p.engines-1)/2)*9;box(-L*.8,y,0,7,5,4);tube(-L*.9,y,0,2.2,4);ring(-L*.9-2,y,0,1.8);nozzles.push({x:-L*.9-2.2,y,z:0,r:1.6});}
- for(const [slot,pid]of Object.entries(parts))if(pid&&!pid.endsWith('_stock')){const a=buildFitting(T,pid,{color:rec.color,width:W*.55,tail:-L*.9});root.add(a.root);a.root.traverse(o=>{if(o.isMesh)(o.material.isMeshBasicMaterial?glowMeshes:bodyMeshes).push(o);});owned.add({dispose:a.dispose});if(slot==='engine')nozzles=a.nozzles;}
+ for(const [slot,pid]of Object.entries(parts))if(pid&&!pid.endsWith('_stock')){const a=buildFitting(T,pid,{color:rec.color,width:W*.55,tail:-L*.9,shipId:id});root.add(a.root);a.root.traverse(o=>{if(o.isMesh)(o.material.isMeshBasicMaterial?glowMeshes:bodyMeshes).push(o);});owned.add({dispose:a.dispose});if(slot==='engine')nozzles=a.nozzles;}
  const fm=new T.MeshBasicMaterial({color:rec.trail||rec.color,transparent:true,opacity:.55,blending:T.AdditiveBlending,depthWrite:false,toneMapped:false});owned.add(fm);
  for(const n of nozzles){const outer=mesh(new T.ConeGeometry(n.r,1,12,1,true),fm,n.x,n.y,n.z),inner=mesh(new T.ConeGeometry(n.r*.45,1,10,1,true),neon,n.x,n.y,n.z);outer.rotation.z=inner.rotation.z=Math.PI/2;bodyMeshes.splice(bodyMeshes.indexOf(outer),1);glowMeshes.push(outer);flames.push({...n,outer,inner});}
  return {root,bodyMeshes,glowMeshes,flames,disposables:[...owned]};
