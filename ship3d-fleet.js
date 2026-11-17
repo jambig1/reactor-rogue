@@ -54,6 +54,71 @@ export function buildFleetShip(T,id,rec,parts={}){
  if(id==='architect')for(const x of [-L*.65,L*.55])for(const side of [-1,1]){box(x,side*W*.8,2,6,6,4);box(x,side*W*.8,4.2,2,2,.3,neon);}
  if(id==='helios')for(const side of [-1,1])for(let k=0;k<5;k++)box(-L*.3+k*3,side*W*.7,1.2,.5,5,.2,neon);
  if(id==='scavenger'){box(-4,-W*.7,3,12,7,5,dark);box(-4,-W*.7,5.6,9,4,.3,steel);}
+ // Class-specific structures, independent of optional fitting assemblies.
+ const orb=(x,y,z,r,m=neon)=>mesh(new T.IcosahedronGeometry(r,1),m,x,y,z);
+ const hoop=(x,y,z,r,m=steel)=>mesh(new T.TorusGeometry(r,.35,8,32),m,x,y,z);
+ if(id==='wasp'){
+  plate([[L*.9,0],[L*.25,-3],[L*.05,0],[L*.25,3]],D*.8,1.2,steel);
+  for(const side of [-1,1]){plate([[-L*.6,side*5],[-L*.85,side*12],[-L*.55,side*10],[L*.25,side*5]],2,1,dark);
+   box(-L*.45,side*6,3,12,.35,.25,neon);tube(L*.45,side*4,2,.45,12);}
+ }
+ if(id==='bastion'){
+  for(const side of [-1,1]){plate([[-20,side*7],[-18,side*16],[8,side*16],[16,side*7]],3,4.2);
+   for(let k=0;k<4;k++){box(-14+k*6,side*12,7.5,4.7,6,.65,steel);box(-14+k*6,side*14,8,2,.4,.2,neon);}
+   box(4,side*9,8,8,5,3,dark);tube(14,side*9,9,1.35,18);ring(23,side*9,9,1.25,steel);}
+  box(-8,0,7,9,9,3,dark);for(let k=0;k<5;k++)box(-11+k*1.5,0,8.7,.5,7,.3,steel);
+ }
+ if(id==='harrier'){
+  for(const side of [-1,1]){plate([[4,side*6],[23,side*12],[25,side*9],[9,side*4]],2,2.2,steel);
+   box(12,side*8,4.5,10,.4,.25,neon);box(-9,side*9,4,10,5,2,dark);
+   for(let k=0;k<3;k++)tube(10,side*7+(k-1)*1.2,3,.6,10);}
+ }
+ if(id==='glacier'){
+  const ice=new T.MeshPhysicalMaterial({color:'#9edfff',metalness:.2,roughness:.16,transparent:true,opacity:.68,emissive:'#2f7299',emissiveIntensity:.2});owned.add(ice);
+  for(const side of [-1,1]){plate([[-15,side*6],[-2,side*17],[12,side*6],[-2,side*10]],3,2,steel);
+   for(let k=0;k<3;k++){const o=mesh(new T.ConeGeometry(2-k*.25,7+k,5),ice,-10+k*7,side*(9+k),5);o.rotation.x=side*.45;box(-10+k*7,side*9,4,3,.4,.3,neon);}}
+  hoop(-7,0,6,5);orb(-7,0,6,2.8,ice);
+ }
+ if(id==='tempest'){
+  for(const side of [-1,1]){const o=hoop(-5,side*12,4,5);o.rotation.x=side*.35;
+   orb(-5,side*12,4,2);for(let k=0;k<3;k++){box(-9+k*4,side*12,4,1,1,6,steel);box(-9+k*4,side*12,7.2,.7,.7,.25,neon);}
+   plate([[3,side*7],[17,side*18],[19,side*15],[8,side*5]],2,1.5);}
+ }
+ if(id==='scavenger'){
+  for(const side of [-1,1]){box(-6,side*15,3,15,8,5,dark);for(let k=0;k<4;k++)box(-12+k*4,side*15,6,1,7,.7,steel);}
+  box(8,-13,2,17,3,3,steel);box(15,-10,2,3,8,3,steel);
+  tube(8,13,4,3,12,dark);ring(14.2,13,4,2.7);
+  for(let k=0;k<3;k++)box(-7+k*3,-15,6.5,1,5,.25,neon);
+ }
+ if(id==='spectre'){
+  plate([[31,0],[-16,-6],[-9,0],[-16,6]],2,1.3,dark);
+  for(const side of [-1,1]){plate([[-20,side*5],[-26,side*14],[7,side*6],[19,side*2]],.8,1.1,steel);
+   box(-8,side*7,3,12,.22,.18,neon);plate([[-22,side*5],[-13,side*5],[-17,side*5.7]],3,4,dark);}
+  box(10,0,4.4,8,.3,.2,neon);
+ }
+ if(id==='architect'){
+  for(const side of [-1,1]){box(-1,side*18,5,28,2,2,steel);for(const x of [-14,12]){box(x,side*18,7,6,6,3,dark);hoop(x,side*18,9,2,neon);orb(x,side*18,9,.8);}}
+  plate([[-10,-7],[-10,7],[7,7],[10,0],[7,-7]],4,2.5);
+  for(let k=0;k<4;k++)box(-7+k*4,0,7,1,8,.3,steel);
+ }
+ if(id==='helios'){
+  const copper=new T.MeshStandardMaterial({color:'#76503d',metalness:.8,roughness:.35});owned.add(copper);
+  hoop(-8,0,6,6,copper);orb(-8,0,6,3);
+  for(const side of [-1,1])for(let k=0;k<5;k++){plate([[-15+k*5,side*6],[-18+k*5,side*17],[-15+k*5,side*18],[-12+k*5,side*6]],2,1,copper);box(-14+k*5,side*12,3.4,.45,7,.25,neon);}
+ }
+ if(id==='echo'){
+  for(const side of [-1,1]){hoop(-2,side*14,4,7,dark);hoop(-2,side*14,4,5.4,neon);hoop(-2,side*14,4,3.7,steel);orb(-2,side*14,4,1.7);
+   box(-2,side*8,3,12,4,2,steel);}
+  for(let k=0;k<3;k++)box(-15+k*4,0,6,1,6-k,.6,steel);
+ }
+ if(id==='sovereign'){
+  const gold=new T.MeshStandardMaterial({color:'#aa8a5e',metalness:.82,roughness:.32});owned.add(gold);
+  for(const side of [-1,1]){plate([[-25,side*8],[-20,side*20],[19,side*24],[13,side*16]],3,2.5,dark);
+   plate([[-21,side*10],[-18,side*12],[12,side*20],[14,side*19]],6,.5,gold);
+   for(let k=0;k<3;k++)plate([[-19+k*9,side*11],[-14+k*9,side*13],[-16+k*9,side*14]],5,5-k,gold);
+   box(-8,side*10,7,13,.35,.3,neon);}
+  hoop(-10,0,8,8,gold);hoop(-10,0,8,6,neon);orb(-10,0,8,3);plate([[25,0],[12,-3],[15,0],[12,3]],5,1,gold);
+ }
  let nozzles=[];
  if(parts.engine&&parts.engine!=='e_stock'){}else for(let i=0;i<p.engines;i++){const y=(i-(p.engines-1)/2)*9;box(-L*.8,y,0,7,5,4);tube(-L*.9,y,0,2.2,4);ring(-L*.9-2,y,0,1.8);nozzles.push({x:-L*.9-2.2,y,z:0,r:1.6});}
  for(const [slot,pid]of Object.entries(parts))if(pid&&!pid.endsWith('_stock')){const a=buildFitting(T,pid,{color:rec.color,width:W*.55,tail:-L*.9});root.add(a.root);a.root.traverse(o=>{if(o.isMesh)(o.material.isMeshBasicMaterial?glowMeshes:bodyMeshes).push(o);});owned.add({dispose:a.dispose});if(slot==='engine')nozzles=a.nozzles;}
