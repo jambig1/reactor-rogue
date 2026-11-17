@@ -15,8 +15,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - run: sudo apt-get update -qq && sudo apt-get install -y blender
-      - run: blender --background --factory-startup --threads 4 --python-exit-code 1 --python art/blender/wasp.py -- "$PWD/blender-export"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install bpy==4.5.16
+      - run: python art/blender/wasp.py -- "$PWD/blender-export"
+        env:
+          OMP_NUM_THREADS: '4'
       - uses: actions/upload-artifact@v4
         with:
           name: wasp-blender-proof
