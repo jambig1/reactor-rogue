@@ -25,99 +25,69 @@ export function buildFleetShip(T,id,rec,parts={}){
  const tube=(x,y,z,r,l,m=steel)=>{const o=mesh(new T.CylinderGeometry(r,r,l,16),m,x,y,z);o.rotation.z=Math.PI/2;return o;};
  const ring=(x,y,z,r,m=neon)=>{const o=mesh(new T.TorusGeometry(r,.2,6,24),m,x,y,z);o.rotation.y=Math.PI/2;return o;};
  const L=p.length,W=p.width,D=p.depth;
- plate([[-L*.8,-W*.32],[-L*.9,0],[-L*.8,W*.32],[L*.35,W*.3],[L,0],[L*.35,-W*.3]],-D*.5,D,dark);
- plate([[-L*.7,-W*.26],[-L*.75,W*.26],[L*.25,W*.25],[L*.95,0],[L*.25,-W*.25]],D*.2,D*.65);
- for(const side of [-1,1]){
-  const w=W, shapes={
-   dart:[[-L*.7,4],[-L*.9,w],[L*.1,w*.45],[L*.5,4]],
-   block:[[-L*.8,5],[-L*.8,w],[L*.5,w],[L*.7,7]],
-   fork:[[-L*.7,5],[-L*.8,w],[L*.8,w*.8],[L*.9,w*.55],[0,7]],
-   diamond:[[-L*.8,5],[0,w],[L*.7,6],[0,w*.45]],
-   crescent:[[-L*.85,5],[-L*.9,w],[0,w*.65],[L*.65,w],[L*.25,7]],
-   industrial:[[-L*.8,5],[-L*.8,w],[L*.35,w],[L*.4,8]],
-   stealth:[[-L*.8,4],[-L*.9,w],[L*.8,4]],
-   gantry:[[-L*.8,5],[-L*.8,w],[L*.8,w],[L*.8,w*.65],[-L*.4,w*.65],[-L*.4,5]],
-   solar:[[-L*.8,4],[-L*.4,w],[L*.65,w*.85],[L*.2,6]],
-   resonator:[[-L*.65,5],[-L*.5,w],[L*.5,w],[L*.7,6]],
-   royal:[[-L*.85,5],[-L*.9,w*.85],[L*.65,w],[L*.35,w*.65],[L*.8,9]]
-  };
-  if(!parts.wings||parts.wings==='w_stock')plate(shapes[p.wing].map(([x,y])=>[x,side*y]),-1,1.6);
-  box(-L*.25,side*W*.45,0,L*.9,4,D,steel);
-  box(-L*.2,side*W*.45,D*.65,L*.55,.35,.3,neon);
-  for(let k=0;k<4;k++)box(-L*.55+k*2,side*W*.45,D*.65+1,.6,3,.4,dark);
-  if(!parts.mount||parts.mount==='m_stock'){box(L*.1,side*W*.48,D*.3,7,3,2);tube(L*.35,side*W*.48,D*.5,.65,8);ring(L*.35+4,side*W*.48,D*.5,.6,steel);}
+ // Station-built volumes: full dorsal and ventral surfaces, with crisp chines.
+ function body(stations,y=0,z=0,m=hull){
+  const pos=[],ix=[];for(const [x,w,h,down]of stations)for(const [yy,zz]of [[-.6*w,h],[.6*w,h],[w,h*.4],[w,-down*.4],[.6*w,-down],[-.6*w,-down],[-w,-down*.4],[-w,h*.4]])pos.push(x,yy+y,zz+z);
+  for(let j=0;j<stations.length-1;j++)for(let k=0;k<8;k++){let q=j*8+k,n=j*8+(k+1)%8;ix.push(q,n+8,n,q,q+8,n+8);}
+  for(let k=1;k<7;k++){ix.push(0,k,k+1);let n=(stations.length-1)*8;ix.push(n,n+k+1,n+k);}
+  let g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setIndex(ix);let flat=g.toNonIndexed();g.dispose();flat.computeVertexNormals();
+  if(m===hull&&rec.patternCanvas){let p=flat.attributes.position,uv=[];for(let i=0;i<p.count;i++)uv.push((-p.getY(i)+40)/80,(p.getX(i)+40)/80);flat.setAttribute('uv',new T.Float32BufferAttribute(uv,2));}return mesh(flat,m);
  }
- plate([[-2,-2.8],[-4,0],[-2,2.8],[L*.5,0]],D,1.7,steel);
- plate([[0,-2],[0,2],[L*.42,0]],D+1.8,1.1,glass);
- box(1,0,D+3,1.4,.5,.2,neon);
- if(['echo','sovereign'].includes(id)){const o=mesh(new T.TorusGeometry(id==='echo'?6:8,.8,8,32),steel,-L*.35,0,D);mesh(new T.CylinderGeometry(3,3,1,24),neon,-L*.35,0,D).rotation.x=Math.PI/2;}
- if(id==='architect')for(const x of [-L*.65,L*.55])for(const side of [-1,1]){box(x,side*W*.8,2,6,6,4);box(x,side*W*.8,4.2,2,2,.3,neon);}
- if(id==='helios')for(const side of [-1,1])for(let k=0;k<5;k++)box(-L*.3+k*3,side*W*.7,1.2,.5,5,.2,neon);
- if(id==='scavenger'){box(-4,-W*.7,3,12,7,5,dark);box(-4,-W*.7,5.6,9,4,.3,steel);}
- // Class-specific structures, independent of optional fitting assemblies.
  const orb=(x,y,z,r,m=neon)=>mesh(new T.IcosahedronGeometry(r,1),m,x,y,z);
  const hoop=(x,y,z,r,m=steel)=>mesh(new T.TorusGeometry(r,.35,8,32),m,x,y,z);
+ const canopy=(x,y,z,len,w)=>{body([[x-len*.5,w*.6,.6,.4],[x-len*.15,w,2.7,.4],[x+len*.4,w*.6,2,.3],[x+len*.5,.4,.4,.2]],y,z,steel);body([[x-len*.4,w*.45,.5,.2],[x-len*.1,w*.82,2.4,.2],[x+len*.35,w*.45,1.8,.2]],y,z+.5,glass);};
+ const wing=(side,pts,z,d)=>{if(!parts.wings||parts.wings==='w_stock')plate(pts.map(([x,y])=>[x,side*y]),z,d);};
+ const gun=(x,y,z,r,len)=>{if(parts.mount&&parts.mount!=='m_stock')return;body([[x-5,2,2,1],[x+2,2.2,1.8,1],[x+4,1,1,.6]],y,z,dark);tube(x+len*.45,y,z,r,len);ring(x+len*.95,y,z,r,steel);};
  if(id==='wasp'){
-  plate([[L*.9,0],[L*.25,-3],[L*.05,0],[L*.25,3]],D*.8,1.2,steel);
-  for(const side of [-1,1]){plate([[-L*.6,side*5],[-L*.85,side*12],[-L*.55,side*10],[L*.25,side*5]],2,1,dark);
-   box(-L*.45,side*6,3,12,.35,.25,neon);tube(L*.45,side*4,2,.45,12);}
- }
- if(id==='bastion'){
-  for(const side of [-1,1]){plate([[-20,side*7],[-18,side*16],[8,side*16],[16,side*7]],3,4.2);
-   for(let k=0;k<4;k++){box(-14+k*6,side*12,7.5,4.7,6,.65,steel);box(-14+k*6,side*14,8,2,.4,.2,neon);}
-   box(4,side*9,8,8,5,3,dark);tube(14,side*9,9,1.35,18);ring(23,side*9,9,1.25,steel);}
-  box(-8,0,7,9,9,3,dark);for(let k=0;k<5;k++)box(-11+k*1.5,0,8.7,.5,7,.3,steel);
- }
- if(id==='harrier'){
-  for(const side of [-1,1]){plate([[4,side*6],[23,side*12],[25,side*9],[9,side*4]],2,2.2,steel);
-   box(12,side*8,4.5,10,.4,.25,neon);box(-9,side*9,4,10,5,2,dark);
-   for(let k=0;k<3;k++)tube(10,side*7+(k-1)*1.2,3,.6,10);}
- }
- if(id==='glacier'){
-  const ice=new T.MeshPhysicalMaterial({color:'#9edfff',metalness:.2,roughness:.16,transparent:true,opacity:.68,emissive:'#2f7299',emissiveIntensity:.2});owned.add(ice);
-  for(const side of [-1,1]){plate([[-15,side*6],[-2,side*17],[12,side*6],[-2,side*10]],3,2,steel);
-   for(let k=0;k<3;k++){const o=mesh(new T.ConeGeometry(2-k*.25,7+k,5),ice,-10+k*7,side*(9+k),5);o.rotation.x=side*.45;box(-10+k*7,side*9,4,3,.4,.3,neon);}}
-  hoop(-7,0,6,5);orb(-7,0,6,2.8,ice);
- }
- if(id==='tempest'){
-  for(const side of [-1,1]){const o=hoop(-5,side*12,4,5);o.rotation.x=side*.35;
-   orb(-5,side*12,4,2);for(let k=0;k<3;k++){box(-9+k*4,side*12,4,1,1,6,steel);box(-9+k*4,side*12,7.2,.7,.7,.25,neon);}
-   plate([[3,side*7],[17,side*18],[19,side*15],[8,side*5]],2,1.5);}
- }
- if(id==='scavenger'){
-  for(const side of [-1,1]){box(-6,side*15,3,15,8,5,dark);for(let k=0;k<4;k++)box(-12+k*4,side*15,6,1,7,.7,steel);}
-  box(8,-13,2,17,3,3,steel);box(15,-10,2,3,8,3,steel);
-  tube(8,13,4,3,12,dark);ring(14.2,13,4,2.7);
-  for(let k=0;k<3;k++)box(-7+k*3,-15,6.5,1,5,.25,neon);
- }
- if(id==='spectre'){
-  plate([[31,0],[-16,-6],[-9,0],[-16,6]],2,1.3,dark);
-  for(const side of [-1,1]){plate([[-20,side*5],[-26,side*14],[7,side*6],[19,side*2]],.8,1.1,steel);
-   box(-8,side*7,3,12,.22,.18,neon);plate([[-22,side*5],[-13,side*5],[-17,side*5.7]],3,4,dark);}
-  box(10,0,4.4,8,.3,.2,neon);
- }
- if(id==='architect'){
-  for(const side of [-1,1]){box(-1,side*18,5,28,2,2,steel);for(const x of [-14,12]){box(x,side*18,7,6,6,3,dark);hoop(x,side*18,9,2,neon);orb(x,side*18,9,.8);}}
-  plate([[-10,-7],[-10,7],[7,7],[10,0],[7,-7]],4,2.5);
-  for(let k=0;k<4;k++)box(-7+k*4,0,7,1,8,.3,steel);
- }
- if(id==='helios'){
-  const copper=new T.MeshStandardMaterial({color:'#76503d',metalness:.8,roughness:.35});owned.add(copper);
-  hoop(-8,0,6,6,copper);orb(-8,0,6,3);
-  for(const side of [-1,1])for(let k=0;k<5;k++){plate([[-15+k*5,side*6],[-18+k*5,side*17],[-15+k*5,side*18],[-12+k*5,side*6]],2,1,copper);box(-14+k*5,side*12,3.4,.45,7,.25,neon);}
- }
- if(id==='echo'){
-  for(const side of [-1,1]){hoop(-2,side*14,4,7,dark);hoop(-2,side*14,4,5.4,neon);hoop(-2,side*14,4,3.7,steel);orb(-2,side*14,4,1.7);
-   box(-2,side*8,3,12,4,2,steel);}
-  for(let k=0;k<3;k++)box(-15+k*4,0,6,1,6-k,.6,steel);
- }
- if(id==='sovereign'){
-  const gold=new T.MeshStandardMaterial({color:'#aa8a5e',metalness:.82,roughness:.32});owned.add(gold);
-  for(const side of [-1,1]){plate([[-25,side*8],[-20,side*20],[19,side*24],[13,side*16]],3,2.5,dark);
-   plate([[-21,side*10],[-18,side*12],[12,side*20],[14,side*19]],6,.5,gold);
-   for(let k=0;k<3;k++)plate([[-19+k*9,side*11],[-14+k*9,side*13],[-16+k*9,side*14]],5,5-k,gold);
-   box(-8,side*10,7,13,.35,.3,neon);}
-  hoop(-10,0,8,8,gold);hoop(-10,0,8,6,neon);orb(-10,0,8,3);plate([[25,0],[12,-3],[15,0],[12,3]],5,1,gold);
+  body([[-25,3,2.5,2],[-16,5,4,2.5],[-3,4,4.3,2],[15,2.8,2.5,1.3],[31,.25,.3,.25]]);
+  canopy(5,0,3.7,13,2.7);
+  for(const side of [-1,1]){wing(side,[[-24,3],[-22,17],[-17,18],[2,5]],-.7,1);body([[-20,1.2,1.5,1],[-6,1.8,2,1],[8,.6,.7,.6]],side*5,0,steel);gun(5,side*5,1,.45,17);box(-12,side*5,2.5,9,.25,.2,neon);}
+  hoop(-19,0,2,3.6); 
+ }else if(id==='bastion'){
+  body([[-22,9,4,4],[-14,15,8,5],[4,15,9,5],[18,11,6,4],[24,7,3,2]]);
+  canopy(12,0,7,9,3.7);
+  for(const side of [-1,1]){body([[-20,4,4,3],[-12,6,7,4],[10,6,6,4],[18,3,3,2]],side*17,0);wing(side,[[-20,10],[-19,25],[14,24],[20,11]],0,3);for(let k=0;k<4;k++)box(-13+k*6,side*17,7.4,4,7,1,steel);gun(1,side*12,9,1.6,23);box(-9,side*13,8.5,7,.5,.3,neon);}
+ }else if(id==='harrier'){
+  body([[-23,4,3,2],[-10,7,5,3],[5,6,4,2],[22,2,2,1]]);
+  canopy(5,0,4,10,3);
+  for(const side of [-1,1]){body([[-18,3,3,2],[0,4,4,2],[24,2.3,3,2],[29,1,1,1]],side*11,0);wing(side,[[-18,4],[-18,19],[0,14],[9,5]],-1,1.4);for(let k=0;k<3;k++)gun(13,side*11+(k-1)*1.3,3,.65,11);box(9,side*13,3,12,.3,.3,neon);}
+ }else if(id==='glacier'){
+  body([[-22,5,4,3],[-9,10,7,4],[7,9,6,4],[25,1,1,1]]);
+  canopy(9,0,6,9,3);
+  const ice=mat('#79adc9',.35,.2);
+  for(const side of [-1,1]){body([[-17,2,2,2],[-6,5,5,3],[6,3,3,2]],side*13,0,steel);wing(side,[[-18,7],[-2,25],[12,9],[0,13]],-1,2);for(let k=0;k<3;k++){const o=mesh(new T.ConeGeometry(2,8+k*2,5),ice,-13+k*6,side*10,7);o.rotation.x=side*.35;}gun(10,side*8,3,.9,10);}
+  hoop(-8,0,8,5);orb(-8,0,8,2.3);
+ }else if(id==='tempest'){
+  body([[-23,3,2,2],[-8,6,5,3],[7,4,4,2],[28,.5,.6,.4]]);canopy(9,0,4,11,2.5);
+  for(const side of [-1,1]){body([[-15,2,2,2],[-5,4,4,3],[8,2,2,2]],side*15,0,dark);wing(side,[[-21,4],[-24,23],[-9,18],[14,24],[7,7]],-1,1.3);const o=hoop(-4,side*15,5,5.5);o.rotation.x=side*.5;hoop(-4,side*15,5,4,neon);orb(-4,side*15,5,1.7);}
+ }else if(id==='scavenger'){
+  body([[-24,8,4,4],[-12,10,6,5],[6,9,5,4],[20,5,3,2]]);
+  canopy(8,-4,5,10,3);
+  body([[-19,5,4,3],[-8,6,6,4],[7,5,5,3]],-16,0,dark);
+  body([[-17,3,3,2],[-4,4,4,3],[12,2,2,1]],15,0,steel);
+  for(const side of [-1,1]){wing(side,[[-20,7],[-18,24],[4,24],[12,9]],-2,2);for(let k=0;k<4;k++)box(-15+k*4,side*16,6,1,7,.6,steel);}
+  box(10,18,2,15,3,3,steel);box(17,15,2,3,9,3,steel);gun(6,12,5,2,14);
+ }else if(id==='spectre'){
+  body([[-26,4,1.5,2],[-10,7,3,3],[6,5,3.8,2],[33,.2,.25,.2]]);
+  canopy(13,0,3.2,15,2.1);
+  for(const side of [-1,1]){wing(side,[[-26,4],[-29,19],[8,8],[24,2]],-.8,.8);body([[-24,1.5,2,1],[-15,2,4,1],[-5,.5,1,.4]],side*6,2,dark);box(-12,side*8,2.7,12,.18,.15,neon);gun(11,side*4,1,.4,18);}
+ }else if(id==='architect'){
+  for(const side of [-1,1]){body([[-22,4,4,3],[-12,5,6,4],[12,5,6,4],[22,3,3,2]],side*16,0);for(const x of [-14,12]){box(x,side*10,0,5,14,3,steel);box(x,side*17,7,6,6,3,dark);hoop(x,side*17,9,2.5,neon);orb(x,side*17,9,1);}}
+  body([[-10,5,3,3],[0,7,6,4],[15,5,4,3],[22,2,2,1]],0,3);canopy(8,0,8,9,3);
+  for(const side of [-1,1])wing(side,[[-20,12],[-20,24],[19,24],[19,20],[-12,20],[-12,12]],-2,1.5);
+ }else if(id==='helios'){
+  body([[-23,4,4,3],[-10,7,6,4],[8,5,4,3],[28,.5,.6,.5]]);canopy(12,0,4,10,2.5);
+  const copper=mat('#73503b',.8,.32);hoop(-9,0,7,6,copper);hoop(-9,0,7,4.7,neon);orb(-9,0,7,2.5);
+  for(const side of [-1,1]){wing(side,[[-22,5],[-13,24],[14,19],[7,7]],-1,1);for(let k=0;k<5;k++){const o=box(-16+k*5,side*13,2+k*.3,2,12,1,copper);o.rotation.x=side*.22;box(-16+k*5,side*13,3+k*.3,.4,10,.2,neon);}gun(7,side*7,2,.8,11);}
+ }else if(id==='echo'){
+  body([[-23,3,3,3],[-8,7,6,4],[9,5,5,3],[24,2,2,1]]);canopy(11,0,5,9,3);
+  for(const side of [-1,1]){body([[-10,3,3,3],[0,7,6,5],[10,3,3,3]],side*16,0,dark);box(0,side*8,1,10,12,3,steel);for(let k=0;k<3;k++)hoop(0,side*16,5+k*.8,7-k*1.5,k===1?neon:steel);orb(0,side*16,6,2);wing(side,[[-18,5],[-14,24],[4,25],[12,7]],-2,1.4);}
+ }else if(id==='sovereign'){
+  body([[-30,6,5,4],[-18,11,9,6],[1,10,10,5],[18,6,6,3],[34,.7,1,.5]]);
+  canopy(18,0,6,12,3);
+  const gold=mat('#aa8756',.85,.32);
+  for(const side of [-1,1]){body([[-25,4,4,3],[-12,5,7,4],[12,4,5,3],[24,1,1,1]],side*20,0,dark);wing(side,[[-28,7],[-26,28],[20,30],[12,19],[25,8]],-2,2);for(let k=0;k<3;k++){body([[-22+k*10,1.5,1,1],[-18+k*10,2,8-k,1],[-13+k*10,.5,2,1]],side*12,5,gold);}box(-8,side*13,7,17,.3,.3,neon);}
+  hoop(-12,0,11,8,gold);hoop(-12,0,11,6,neon);orb(-12,0,11,3);
  }
  let nozzles=[];
  if(parts.engine&&parts.engine!=='e_stock'){}else for(let i=0;i<p.engines;i++){const y=(i-(p.engines-1)/2)*9;box(-L*.8,y,0,7,5,4);tube(-L*.9,y,0,2.2,4);ring(-L*.9-2,y,0,1.8);nozzles.push({x:-L*.9-2.2,y,z:0,r:1.6});}
