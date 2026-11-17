@@ -1,6 +1,20 @@
 /* Authored fitting assemblies. Local axes: +X nose, +Z dorsal.
    This module is staged for fleet integration; it does not change equipment stats. */
 export const fittingIds = ['e_twin','e_ion','e_fusion','e_nova','w_razor','w_vane','w_prism','w_phantom','m_heavy','m_rotary','m_array','m_siege','p_reactive','p_light','p_heavy','p_aegis'];
+// Hardpoints follow each hull's structure. Entries use positive lateral distances
+// for mirrored hardware. Scavenger's loadout deliberately has asymmetric seating.
+const airframes={
+ vanguard:  {tail:-24,drive:9, wing:[-14,8,24,2,-22], weapon:[1,14,2.3], armour:[-13,8,3.1], style:'patrol'},
+ harrier:   {tail:-20,drive:11,wing:[-8,10,21,1,16], weapon:[12,11,3], armour:[-11,11,3.2], style:'assault'},
+ glacier:   {tail:-18,drive:13,wing:[-9,10,27,2,3], weapon:[0,13,4], armour:[-12,10,4.5], style:'cryo'},
+ tempest:   {tail:-17,drive:15,wing:[-11,13,27,1,10], weapon:[1,15,5], armour:[-10,6,3.9], style:'arc'},
+ scavenger: {tail:-20,drive:15,wing:[-13,14,26,3,-17],weapon:[4,15,4], armour:[-15,15,5], style:'salvage'},
+ spectre:   {tail:-25,drive:5, wing:[-13,4,21,0,-28], weapon:[4,5,.9], armour:[-16,5,2.3], style:'stealth'},
+ architect: {tail:-23,drive:16,wing:[-14,17,27,1,18],weapon:[8,16,7], armour:[-14,16,6], style:'carrier'},
+ helios:    {tail:-22,drive:7, wing:[-15,7,27,2,8], weapon:[3,7,2.6], armour:[-12,7,4], style:'solar'},
+ echo:      {tail:-16,drive:16,wing:[-9,14,26,2,1], weapon:[5,16,4], armour:[-14,7,4.5], style:'sonic'},
+ sovereign: {tail:-27,drive:20,wing:[-19,18,34,3,17],weapon:[8,20,5.7], armour:[-21,20,5.5], style:'rift'}
+};
 export function buildFitting(T,id,{color='#65fbd2',width=12,tail=-22,shipId}={}){
  if(!fittingIds.includes(id))throw new Error('Unknown fitting '+id);
  const root=new T.Group(),resources=new Set();root.name=id;
@@ -19,6 +33,83 @@ export function buildFitting(T,id,{color='#65fbd2',width=12,tail=-22,shipId}={})
  neon.color.set(palette[id]).multiplyScalar(2);
  const orb=(x,y,z,r,m=neon)=>mesh(new T.IcosahedronGeometry(r,1),m,x,y,z);
  const hoop=(x,y,z,r,m=neon)=>mesh(new T.TorusGeometry(r,.18,6,32),m,x,y,z);
+
+ const frame=airframes[shipId];
+ if(frame){
+  const {style}=frame, slender=style==='stealth', capital=style==='rift'||style==='carrier';
+  const fitColor=new T.Color(palette[id]).lerp(new T.Color(color),.43);
+  neon.color.copy(fitColor).multiplyScalar(2.2);
+  if(style==='rift'||style==='solar')alloy.color.set(style==='rift'?'#aa8756':'#916849');
+  const strip=(a,b,r=.16)=>{
+   const from=new T.Vector3(...a),to=new T.Vector3(...b),delta=to.clone().sub(from);
+   const rail=mesh(new T.CylinderGeometry(r,r,delta.length(),6),neon,...from.add(to).multiplyScalar(.5));
+   rail.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),delta.normalize());
+  };
+  for(const side of [-1,1]){
+   const offset=style==='salvage'&&side===-1?-3:0;
+   if(id.startsWith('e_')){
+    const x=frame.tail+offset,z=style==='carrier'?1:style==='arc'?-.2:-.65;
+    const y=side*frame.drive;
+    const radius={e_twin:1.5,e_ion:2.1,e_fusion:2.6,e_nova:3}[id]*(capital?1.22:slender?.7:1);
+    const length=id==='e_nova'?(style==='solar'?12:8):6;
+    if(capital||style==='salvage')box(x+2,y,z,length+3,2.65*radius,2.35*radius,dark);
+    else tube(x+2,y,z,radius+1,length+2,metal);
+    if(style==='sonic'||style==='arc'){ring(x+1,y,z,radius+1.05,alloy);ring(x-1,y,z,radius+1.15);}
+    const ports=id==='e_twin'?[-radius*.82,radius*.82]:[0];
+    for(const port of ports){
+     const r=ports.length===2?radius*.6:radius;
+     const lip=x-length/2;
+     tube(x,y+port,z,r+.25,length,alloy);
+     tube(lip-.12,y+port,z,r,.25,dark);
+     ring(lip-.3,y+port,z,r*.84);
+     if(id==='e_nova')ring(lip-1.4,y+port,z,r*1.12);
+     nozzles.push({x:lip-(id==='e_nova'?1.5:.4),y:y+port,z,r:r*.75});
+    }
+    if(id==='e_fusion'){orb(x+2,y,z+radius+.75,radius*.6);hoop(x+2,y,z+radius+.75,radius*.84,alloy);}
+    if(id==='e_ion')for(let j=0;j<3;j++)box(x+j*1.25,y,z+radius+1,.4,radius*1.5,.25,neon);
+   }else if(id.startsWith('w_')){
+    const [x,root,span,z,tip]=frame.wing,y=n=>side*n;
+    const edge=span+(id==='w_phantom'?3:id==='w_razor'?1:0);
+    const material=id==='w_prism'?new T.MeshPhysicalMaterial({color:fitColor,metalness:.3,roughness:.17,transparent:true,opacity:.66,side:T.DoubleSide}):metal;
+    resources.add(material);
+    const pts=capital?[[x,y(root-2)],[x-3,y(edge)],[tip,y(edge)],[tip+1,y(edge-4)],[tip-4,y(root)]]:
+     [[x,y(root-2)],[tip-5,y(edge-3)],[tip,y(edge)],[tip+6,y(edge-5)],[x+12,y(root)]];
+    const depth=style==='salvage'||capital?2.1:slender?.55:1;
+    plate(pts,z,depth,material);
+    const edgeEnd=capital?[tip+1,y(edge-4),z+depth]:[tip+6,y(edge-5),z+depth];
+    strip([tip,y(edge),z+depth],edgeEnd,.19);
+    if(id==='w_vane'||id==='w_phantom')for(let j=0;j<(id==='w_phantom'?3:2);j++){
+     const rib=box(x+(tip-x)*.45+j*2,y(root+(edge-root)*.55),z+depth+j*.2,5,.65,capital?2:1,alloy);
+     rib.rotation.z=side*(capital?.15:.55);
+    }
+    if(style==='sonic'||style==='arc')hoop((tip+x)/2,y((edge+root)/2),z+depth,2.2);
+   }else if(id.startsWith('m_')){
+    const [x,base,z]=frame.weapon,y=side*base,h=capital?1.3:slender?.67:1;
+    const barrels={m_heavy:1,m_rotary:5,m_array:3,m_siege:2}[id];
+    box(x-1,y,z-.6,capital?11:7,4*h,2.6*h,dark);
+    if(style==='sonic'||style==='arc'||style==='rift')ring(x+1,y,z,2.3*h);
+    for(let j=0;j<barrels;j++){
+     const phase=j*2*Math.PI/barrels,spread=barrels===1?0:1.3*h;
+     const yy=y+Math.cos(phase)*spread,zz=z+Math.sin(phase)*spread;
+     const length=(id==='m_siege'?16:10)*h;
+     const radius=(barrels===1?1.1:.54)*h;
+     if(slender){box(x+length/2,yy,zz,length,.85,1,alloy);strip([x,yy,zz+.6],[x+length,yy,zz+.6],.12);}
+     else {tube(x+length/2,yy,zz,radius,length,alloy);ring(x+length,yy,zz,radius);}
+    }
+   }else{
+    const [start,base,z]=frame.armour,y=side*base;
+    const thick=id==='p_heavy'?(capital?2.65:1.8):id==='p_light'?.48:1;
+    const rows=id==='p_light'?2:3;
+    for(let j=0;j<rows;j++){
+     const x=start+offset+j*(capital?8:6),w=capital?3.5:slender?1.5:2.45;
+     plate([[x-3,y-w],[x+2,y-w],[x+3,y-w*.47],[x+3,y+w],[x-2,y+w]],z,thick,id==='p_light'?alloy:metal);
+     if(id==='p_aegis'){hoop(x,y,z+thick+.15,w*.64);orb(x,y,z+thick+.22,w*.27);}
+     if(id==='p_reactive')box(x,y,z+thick+.18,2.65,.38,.25,neon);
+    }
+   }
+  }
+  return {root,nozzles,dispose(){for(const resource of resources)resource.dispose();}};
+ }
 
  if(shipId==='wasp'||shipId==='bastion'){
   const heavy=shipId==='bastion';

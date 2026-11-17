@@ -90,6 +90,11 @@ export function buildVanguard(T, rec, parts={}) {
     box(-11,side*22.2,1.55,1.5,.3,.25,accent);
     for(let j=0;j<3;j++)box(-14+j*1.2,side*20.1,1.85,.65,.12,.05,edge,side*.3);
   }
+  section([[8,2,.65,.1],[14,2.85,1.05,.1],[20,1.45,.6,.1],[24,.3,.25,.1]],steel,0,-1.6);
+  for(const side of [-1,1]){
+    box(-5,side*5.4,4.85,4.8,1.15,.28,dark);
+    for(let j=0;j<4;j++)box(-6.6+j*.94,side*5.4,5.05,.28,.88,.17,edge);
+  }
   // An actual raised canopy with an opaque smoked lens, metal sill and framing.
   section([[-3,2.3,.6,-.4],[1,3.7,2.4,-.3],[7,2.8,2.8,-.2],[13,.65,.4,-.1]],steel,0,5);
   section([[-2,1.9,.35,-.1],[1,3.12,2.22,-.1],[6.8,2.32,2.5,-.1],[11.7,.65,.45,-.1]],glass,0,5.55);
@@ -113,7 +118,7 @@ export function buildVanguard(T, rec, parts={}) {
     for(const m of [outer,inner]){owned.add(m.geometry);m.rotation.z=Math.PI/2;m.position.set(-23.8,y,-.5);root.add(m);glowMeshes.push(m);}
     flames.push({outer,inner,x:-23.8,y,z:-.5,r:1.65});}
   for(const [slot,id]of Object.entries(parts))if(id&&!id.endsWith('_stock')){
-    const f=buildFitting(T,id,{color:rec.color,width:14.1,tail:-22});root.add(f.root);
+    const f=buildFitting(T,id,{color:rec.color,width:14.1,tail:-22,shipId:'vanguard'});root.add(f.root);
     f.root.traverse(o=>{if(o.isMesh)(o.material.isMeshBasicMaterial?glowMeshes:bodyMeshes).push(o);});owned.add({dispose:f.dispose});
     if(slot==='engine')for(const n of f.nozzles){const outer=new T.Mesh(new T.ConeGeometry(n.r,1,16,1,true),fm),inner=new T.Mesh(new T.ConeGeometry(n.r*.45,1,12,1,true),core);for(const m of [outer,inner]){owned.add(m.geometry);m.rotation.z=Math.PI/2;m.position.set(n.x,n.y,n.z);root.add(m);glowMeshes.push(m);}flames.push({...n,outer,inner});}
   }
