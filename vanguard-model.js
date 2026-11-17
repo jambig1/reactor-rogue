@@ -20,7 +20,8 @@ export function buildVanguard(T, rec) {
   const glass=material('smoked cockpit glass','#123a51',.38,.12,{envMapIntensity:1.65});
   const warm=material('heat-stained nozzle rims','#66584e',.82,.42);
   const light = new T.MeshBasicMaterial({color:new T.Color(rec.trail||rec.color||'#65fbd2').multiplyScalar(1.25),toneMapped:false});owned.add(light);
-  const accent = new T.MeshBasicMaterial({color:new T.Color(rec.color||'#65fbd2').multiplyScalar(.8),toneMapped:false});owned.add(accent);
+  const accent = new T.MeshBasicMaterial({color:new T.Color(rec.color||'#65fbd2').multiplyScalar(2.1),toneMapped:false});owned.add(accent);
+  if(rec.patternCanvas){const tex=new T.CanvasTexture(rec.patternCanvas);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=4;owned.add(tex);hull.map=tex;hull.color.set('#ffffff');}
   const add=(g,m,x=0,y=0,z=0,rx=0,ry=0,rz=0)=>{
     const matrix=new T.Matrix4().compose(new T.Vector3(x,y,z),new T.Quaternion().setFromEuler(new T.Euler(rx,ry,rz)),new T.Vector3(1,1,1));
     g.applyMatrix4(matrix); if(!batches.has(m))batches.set(m,[]);batches.get(m).push(g);return g;
@@ -41,6 +42,7 @@ export function buildVanguard(T, rec) {
     return add(new T.ExtrudeGeometry(s,{depth,bevelEnabled:bevel>0,bevelThickness:bevel,bevelSize:bevel,bevelSegments:1,steps:1,curveSegments:1}),m,0,0,z);}
   const box=(x,y,z,sx,sy,sz,m,rz=0)=>add(new T.BoxGeometry(sx,sy,sz),m,x,y,z,0,0,rz);
   const cylinder=(x,y,z,r1,r2,l,m,n=16)=>add(new T.CylinderGeometry(r1,r2,l,n,1,false),m,x,y,z,0,0,-Math.PI/2);
+  const strip=(points,r=.15)=>{for(let i=1;i<points.length;i++){const a=new T.Vector3(...points[i-1]),b=new T.Vector3(...points[i]),d=b.clone().sub(a);const g=new T.CylinderGeometry(r,r,d.length(),6);g.applyQuaternion(new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),d.normalize()));g.translate(...a.add(b).multiplyScalar(.5));add(g,accent);}};
   const ring=(x,y,z,r,t,m)=>add(new T.TorusGeometry(r,t,6,24),m,x,y,z,0,Math.PI/2,0);
   section([[-22,3.2,1.4,-1.8],[-17,7.1,3.3,-3],[-6,10,4.8,-3.7],[5,8,5.5,-3.1],[15,5,3.7,-1.7],[26,.35,.35,-.35]],dark);
   section([[-19,3.8,2.4,-.2],[-12,7.6,4.6,-.5],[0,8.8,5.3,-.6],[12,5.5,4.5,-.4],[25,.4,.55,-.1]],hull);
@@ -51,6 +53,10 @@ export function buildVanguard(T, rec) {
     plate(pts([[-18,7],[-19,20],[-11,24],[1,12],[3,7]]),-.65,1.45,dark,.28);
     plate(pts([[-16.8,9],[-17.7,19.5],[-11,22.8],[-1,12],[1,8.5]]),.9,.65,hull,.32);
     plate(pts([[-15.9,17.7],[-16.5,19.4],[-11.1,21.6],[-8.4,19.1]]),1.9,.15,paint,.1);
+    strip([[-17,side*19.5,1.9],[-11,side*22.7,1.9],[-1,side*12,1.9]],.18);
+    strip([[-18,side*11.6,1.4],[-7,side*12,1.7],[0,side*10.9,1.2]],.14);
+    strip([[12,side*3.7,4.05],[18,side*2.2,2.7],[23,side*.7,1.05]],.13);
+    box(-10,side*9,4.45,3,.4,.2,accent);
     // Spars join the gun/engine assemblies to the core, under visible armour.
     box(-8,side*11,.3,13,5,2.6,steel,side*.12);
     section([[-22,2.6,2.3,-2.3],[-18,3.5,3.4,-2.9],[-7,3.3,3.8,-2.7],[0,2.4,2.3,-1.7],[4,.7,.8,-.6]],hull,side*9,-.6);
@@ -82,6 +88,8 @@ export function buildVanguard(T, rec) {
   // An actual raised canopy with an opaque smoked lens, metal sill and framing.
   section([[-3,2.3,.6,-.4],[1,3.7,2.4,-.3],[7,2.8,2.8,-.2],[13,.65,.4,-.1]],steel,0,5);
   section([[-2,1.9,.35,-.1],[1,3.12,2.22,-.1],[6.8,2.32,2.5,-.1],[11.7,.65,.45,-.1]],glass,0,5.55);
+  strip([[-2,-2.1,6.1],[1,-3.15,6.65],[6.8,-2.35,6.9],[11.7,-.65,6]],.12);
+  strip([[-2,2.1,6.1],[1,3.15,6.65],[6.8,2.35,6.9],[11.7,.65,6]],.12);
   box(.9,0,7.88,.35,3.9,.15,edge);
   box(-2.2,0,6,1,4.6,.6,hull);
   // Nose sensor aperture and segmented dorsal service hatch.
@@ -91,7 +99,7 @@ export function buildVanguard(T, rec) {
   // Merge static geometry by material to bound draw calls independent of detail count.
   for(const [mat,geos] of batches){let positions=[],normals=[];
     for(let g of geos){let q=g.index?g.toNonIndexed():g;const p=q.getAttribute('position'),n=q.getAttribute('normal');positions.push(...p.array);normals.push(...n.array);if(q!==g)q.dispose();g.dispose();}
-    let g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('normal',new T.Float32BufferAttribute(normals,3));g.computeBoundingSphere();owned.add(g);
+    let g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('normal',new T.Float32BufferAttribute(normals,3));g.computeBoundingSphere();if(mat===hull&&rec.patternCanvas){const p=g.attributes.position,uv=[];for(let i=0;i<p.count;i++)uv.push((-p.getY(i)+32)/64,(p.getX(i)+32)/64);g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));}owned.add(g);
     const mesh=new T.Mesh(g,mat);mesh.name=mat.name||'inset emitters';root.add(mesh);(mat===light||mat===accent?glowMeshes:bodyMeshes).push(mesh);
   }
   const fm=new T.MeshBasicMaterial({color:new T.Color(rec.trail||rec.color||'#65fbd2'),transparent:true,opacity:.42,blending:T.AdditiveBlending,depthWrite:false,toneMapped:false,side:T.DoubleSide});
