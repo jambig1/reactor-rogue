@@ -5,6 +5,7 @@
    reflections and a bloom glow, then renders on a transparent canvas laid over the hangar bay.
    Purely cosmetic and menu-only. Any failure returns null and the bay keeps its 2D ship. */
 
+import { buildVanguard, supportsVanguard } from './vanguard-model.js';
 export const THREE_URL = new URL('./vendor/three-0.187.0/three.module.js', import.meta.url).href;
 
 const QUAD_VERTEX = `precision highp float;
@@ -179,8 +180,17 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
   }
 
 
-  function build(rec) {
+  function build(rec, key) {
     clearModel();
+    if (supportsVanguard(key)) {
+      const authored = buildVanguard(T, rec);
+      model.add(authored.root);
+      disposables.push(...authored.disposables);
+      bodyMeshes.push(...authored.bodyMeshes); glowMeshes.push(...authored.glowMeshes);
+      flames = authored.flames;
+      pad.color.set(rec.color || '#65fbd2'); rim.color.set(rec.color || '#65fbd2');
+      return;
+    }
     let col = rec.color || '#65f7ef', shapes = rec.shapes.filter(s => s.pts.length >= 3 && (s.alpha > .3 || (s.glass && s.stroke))), base = -1, best = 0;
     shapes.forEach((s, i) => { s.area = Math.abs(polygonArea(s.pts)); s.box = bbox(s.pts); if (s.area > best && !s.glass) { best = s.area; base = i; } });
     shapes.forEach((s, i) => { let sz = Math.sqrt(s.area); s.pts = roundCorners(s.pts, i === base ? Math.min(2.6, sz * .09) : Math.min(1.5, sz * .12), i === base ? 5 : 3); });
@@ -261,9 +271,13 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
 
   const ship = {
     exhaust: [],
+    get diagnostics() { return { authored: supportsVanguard(built), geometries: renderer.info?.memory.geometries ?? 0, textures: renderer.info?.memory.textures ?? 0, programs: renderer.info?.programs?.length ?? 0 }; },
     get lost() { return lost; },
     // rec is rebuilt only when its key changes (hull, paint, parts)
-    setShip(key, rec) { if (key === built) return; built = key; try { build(rec); } catch (e) { console.warn('ship3d build', e); } },
+    setShip(key, rec) { if (key === built) return; try { build(rec, key); built = key; } catch (e) {
+      console.warn('ship3d build; restoring recorded model', e);
+      build(rec, 'legacy'); built = key;
+    } },
     resize(w, h, dpr) {
       if (w === W && h === H && dpr === ratio) return; W = Math.max(1, w); H = Math.max(1, h); ratio = dpr || 1;
       renderer.setPixelRatio(ratio); renderer.setSize(W, H, false);
@@ -315,3 +329,4 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
   canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); lost = true; });
   return ship;
 }
+
