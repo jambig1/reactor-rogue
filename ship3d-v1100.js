@@ -1,3 +1,5 @@
+import { buildBlenderShip, hasBlenderShip, loadBlenderShip } from './ship3d-blender.js';
+import {buildFleetShip,fleetProfiles} from './ship3d-fleet.js';
 /* Reactor Rogue 3D hangar ship, v1.1.
    Builds a real 3D model of the player's ship from the same 2D drawing the game uses:
    index.html records every polygon, circle and line the hull/part painters draw (in draw order),
@@ -180,10 +182,18 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
   }
 
 
+  function shipId(key) {
+    try { return JSON.parse(key)[0]; } catch { return undefined; }
+  }
+  const blenderModels = new Map(), requestedModels = new Set();
+  let activeRecord = null, disposed = false;
   function build(rec, key) {
     clearModel();
-    if (supportsVanguard(key)) {
-      const authored = buildVanguard(T, rec);
+    let identity,parts;try{const parsed=JSON.parse(key);identity=parsed[0];parts=parsed[2]||{};}catch{}
+    if (supportsVanguard(key)||fleetProfiles[identity]) {
+      const authored = blenderModels.has(identity)
+        ? buildBlenderShip(T,identity,blenderModels.get(identity),rec,parts)
+        : identity==='vanguard'?buildVanguard(T,rec,parts):buildFleetShip(T,identity,rec,parts);
       model.add(authored.root);
       disposables.push(...authored.disposables);
       bodyMeshes.push(...authored.bodyMeshes); glowMeshes.push(...authored.glowMeshes);
@@ -271,10 +281,29 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
 
   const ship = {
     exhaust: [],
-    get diagnostics() { return { authored: supportsVanguard(built), geometries: renderer.info?.memory.geometries ?? 0, textures: renderer.info?.memory.textures ?? 0, programs: renderer.info?.programs?.length ?? 0 }; },
+    get diagnostics() { return { blenderShip: model.children.some(object=>object.name.endsWith(' — Blender airframe')), authored: (()=>{try{return supportsVanguard(built)||!!fleetProfiles[JSON.parse(built)[0]]}catch{return false}})(), geometries: renderer.info?.memory.geometries ?? 0, textures: renderer.info?.memory.textures ?? 0, programs: renderer.info?.programs?.length ?? 0 }; },
     get lost() { return lost; },
     // rec is rebuilt only when its key changes (hull, paint, parts)
-    setShip(key, rec) { if (key === built) return; try { build(rec, key); built = key; } catch (e) {
+    setShip(key, rec) {
+      if (key === built) return;
+      activeRecord = rec;
+      const id = shipId(key);
+      if (hasBlenderShip(id) && !requestedModels.has(id)) {
+        requestedModels.add(id);
+        loadBlenderShip(id).then(asset => {
+          if (disposed) return;
+          blenderModels.set(id, asset);
+          if (shipId(built) === id) {
+            const currentKey = built;
+            built = '';
+            ship.setShip(currentKey, activeRecord);
+          }
+        }).catch(error => {
+          requestedModels.delete(id);
+          console.warn('Blender airframe unavailable', id, error);
+        });
+      }
+      try { build(rec, key); built = key; } catch (e) {
       console.warn('ship3d build; restoring recorded model', e);
       build(rec, 'legacy'); built = key;
     } },
@@ -324,7 +353,7 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       comp.uniforms.uNear.value = A.texture; comp.uniforms.uWide.value = C.texture; comp.uniforms.uStrength.value = f.glow ?? 1;
       quad.material = comp; renderer.setRenderTarget(null); renderer.render(qScene, qCam);
     },
-    dispose() { clearModel(); for (let t of [G, A, B, C, D]) t.dispose(); for (let m of [bright, blur, comp, blackMat]) m.dispose(); quadGeo.dispose(); renderer.dispose(); }
+    dispose() { disposed = true; activeRecord = null; clearModel(); for (let t of [G, A, B, C, D]) t.dispose(); for (let m of [bright, blur, comp, blackMat]) m.dispose(); quadGeo.dispose(); renderer.dispose(); }
   };
   canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); lost = true; });
   return ship;

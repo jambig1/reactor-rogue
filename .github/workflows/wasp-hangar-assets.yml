@@ -1,0 +1,62 @@
+name: Stage Blender Wasp test assets
+on:
+  push:
+    branches: [codex/wasp-blender-hangar]
+    paths:
+      - '.github/workflows/wasp-hangar-assets.yml'
+permissions:
+  actions: read
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: wasp-blender-proof
+          run-id: 44194416089
+          github-token: ${{ github.token }}
+          path: /tmp/detailed-wasp
+      - name: Bundle the loader and stage the Wasp model
+        run: |
+          npm install --no-save --package-lock=false three@0.187.0 esbuild@0.25.12
+          npx --no-install esbuild node_modules/three/examples/jsm/loaders/GLTFLoader.js --bundle --format=esm --external:three --outfile=/tmp/GLTFLoader.js
+          sed 's/from "three"/from ".\/three.module.js"/g' /tmp/GLTFLoader.js > vendor/three-0.187.0/GLTFLoader.js
+          mkdir -p art/blender
+          cp /tmp/detailed-wasp/Wasp.glb art/blender/Wasp.glb
+      - name: Validate Blender asset and fitting replacements
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import * as T from './vendor/three-0.187.0/three.module.js';
+          import { GLTFLoader } from './vendor/three-0.187.0/GLTFLoader.js';
+          import { buildBlenderWasp } from './ship3d-blender.js';
+          const data = fs.readFileSync('art/blender/Wasp.glb');
+          const { scene } = await new GLTFLoader().parseAsync(Uint8Array.from(data).buffer, '');
+          const rec = { color:'#69f5e1', patternCanvas:{} };
+          const stock = buildBlenderWasp(T, scene, rec, {});
+          const full = buildBlenderWasp(T, scene, rec, { engine:'e_nova', wings:'w_phantom', mount:'m_siege', plating:'p_aegis' });
+          assert.equal(stock.flames.length, 2);
+          assert.equal(full.flames.length, 2);
+          assert(stock.bodyMeshes.some(m => m.name.startsWith('Swept')));
+          assert(!full.bodyMeshes.some(m => m.name.startsWith('Swept')));
+          assert(full.bodyMeshes.some(m => m.name.startsWith('Main')));
+          assert(stock.glowMeshes.some(m => m.material.name === 'Wasp teal guidance lights'));
+          for (const ship of [stock,full]) {
+            const b = new T.Box3().setFromObject(ship.root);
+            assert(b.max.x>27 && b.min.x<-27);
+            assert(ship.bodyMeshes.some(m => m.material.map && m.geometry.attributes.uv));
+            for (const d of ship.disposables) d.dispose();
+          }
+          JS
+      - name: Push assets to the Wasp test branch
+        run: |
+          git add art/blender/Wasp.glb vendor/three-0.187.0/GLTFLoader.js
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Stage detailed Blender Wasp and its glTF loader'
+          git push origin HEAD:refs/heads/codex/wasp-blender-hangar
