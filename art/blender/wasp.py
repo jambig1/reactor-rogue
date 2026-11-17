@@ -5,6 +5,7 @@ from pathlib import Path
 
 import bpy
 from mathutils import Vector
+from mathutils.geometry import tessellate_polygon
 
 out = Path(sys.argv[sys.argv.index("--") + 1])
 out.mkdir(parents=True, exist_ok=True)
@@ -134,6 +135,103 @@ for side in [-1,1]:
     for i in range(2):
         x=-1.98+i*.16
         barrel(f"Squadron marking {side}.{i}",(x,y(1.55),.142),(x-.12,y(1.74),.16),.014,.014,white)
+
+# Surface details are projected onto the actual model, then sampled densely
+# enough to follow the curves without cutting through the pressure hull.
+paint=material("Muted blue-grey armour panels",(.09,.155,.19),.58,.37)
+ceramic=material("Slate ceramic underside tiles",(.07,.095,.115),.32,.48)
+signal=material("Desaturated ochre service markings",(.52,.31,.09),.46,.39)
+
+def skin_point(surfaces,x,y,side,lift):
+    hits=[]
+    for obj in surfaces:
+        found,point,_,_=obj.ray_cast(Vector((x,y,side*5)),Vector((0,0,-side)))
+        if found:
+            hits.append(point.z)
+    if not hits:
+        return None
+    z=max(hits) if side==1 else min(hits)
+    return (x,y,z+side*lift)
+
+def skin_strip(name,points,width,surfaces,side,mat,lift=.017):
+    verts,faces=[],[]
+    for a,b in zip(points,points[1:]):
+        dx,dy=b[0]-a[0],b[1]-a[1]
+        length=math.hypot(dx,dy)
+        if length<.001:
+            continue
+        ox,oy=-dy*width/(2*length),dx*width/(2*length)
+        steps=max(2,math.ceil(length/.09))
+        previous=None
+        for i in range(steps+1):
+            x,y=a[0]+dx*i/steps,a[1]+dy*i/steps
+            pair=[skin_point(surfaces,x+ox,y+oy,side,lift),
+                  skin_point(surfaces,x-ox,y-oy,side,lift)]
+            if all(pair):
+                current=len(verts)
+                verts.extend(pair)
+                if previous is not None:
+                    quad=(previous,previous+1,current+1,current)
+                    faces.append(quad if side==1 else quad[::-1])
+                previous=current
+            else:
+                previous=None
+    if faces:
+        mesh(name,verts,faces,mat)
+
+def skin_plate(name,points,surfaces,side,mat,lift=.025):
+    polygon=[Vector((x,y,0)) for x,y in points]
+    verts,faces=[],[]
+    def add_triangle(a,b,c,level):
+        if level:
+            ab,bc,ca=(a+b)/2,(b+c)/2,(c+a)/2
+            for triangle in [(a,ab,ca),(ab,b,bc),(ca,bc,c),(ab,bc,ca)]:
+                add_triangle(*triangle,level-1)
+            return
+        mapped=[skin_point(surfaces,v.x,v.y,side,lift) for v in (a,b,c)]
+        if any(point is None for point in mapped):
+            return
+        first=len(verts)
+        verts.extend(mapped)
+        order=(first,first+1,first+2)
+        faces.append(order if (b-a).cross(c-a).z*side>0 else order[::-1])
+    for a,b,c in tessellate_polygon([polygon]):
+        # Blender versions expose the result either as indices or vectors.
+        if isinstance(a,int):
+            a,b,c=polygon[a],polygon[b],polygon[c]
+        add_triangle(a,b,c,4)
+    if faces:
+        obj=mesh(name,verts,faces,mat)
+        for face in obj.data.polygons:
+            face.use_smooth=True
+    skin_strip(name+" / seal",points+[points[0]],.018,surfaces,side,dark,lift+.009)
+
+main=bpy.data.objects["Main interceptor pressure hull"]
+keel=bpy.data.objects["Ventral titanium keel"]
+belly=[main,keel]+[bpy.data.objects[f"Armoured belly access cover {side}"] for side in (-1,1)]
+for side in (-1,1):
+    y=lambda value: side*value
+    wing=[bpy.data.objects[f"Swept wing spar {side}"],bpy.data.objects[f"Carbon slat {side}"]]
+    drive=[bpy.data.objects[f"Drive nacelle {side}"]]
+    skin_plate(f"Shoulder armour {side}",[(-2.38,y(.24)),(-2.1,y(.45)),(-.98,y(.51)),(-.78,y(.35)),(-1.21,y(.24))],[main],1,paint)
+    skin_strip(f"Nose break {side}",[(1.18,y(.06)),(1.34,y(.30)),(1.78,y(.24)),(2.44,y(.13))],.026,[main],1,dark)
+    skin_strip(f"Forward identifier {side}",[(1.83,y(.13)),(2.01,y(.21))],.038,[main],1,white)
+    skin_plate(f"Wing access hatch {side}",[(-2.44,y(1.62)),(-2.35,y(2.1)),(-2.09,y(1.92)),(-1.96,y(1.57))],wing,1,paint)
+    skin_strip(f"Airbrake hinge {side}",[(-2.60,y(.99)),(-2.62,y(1.38)),(-2.64,y(1.71))],.033,wing,1,edge)
+    for i in range(4):
+        x=-2.22+i*.18
+        skin_strip(f"Nacelle vent {side}.{i}",[(x,y(.74)),(x+.04,y(1.02))],.043,drive,1,dark,.026)
+    for x in (-2.36,-2.23):
+        skin_strip(f"Nacelle warning stripe {side}.{x}",[(x,y(.78)),(x+.07,y(1.04))],.044,drive,1,signal,.03)
+    skin_plate(f"Belly skid plate {side}",[(-2.30,y(.18)),(-1.74,y(.44)),(-.94,y(.48)),(-.60,y(.32)),(-1.26,y(.19))],belly,-1,ceramic,.038)
+    skin_plate(f"Underside wing service cover {side}",[(-2.53,y(1.35)),(-2.40,y(2.15)),(-2.08,y(2.03)),(-1.66,y(1.45)),(-2.03,y(1.25))],wing,-1,paint,.033)
+    for i in range(5):
+        x=-1.52+i*.16
+        skin_strip(f"Ventral cooling grille {side}.{i}",[(x,y(.19)),(x+.035,y(.37))],.054,belly,-1,edge,.078)
+    skin_strip(f"Underside guidance trace {side}",[(-2.32,y(1.68)),(-2.30,y(1.44)),(-2.05,y(1.28))],.04,wing,-1,teal,.057)
+    # These bands encircle the exhaust instead of projecting onto its surface.
+    for i,(x,r) in enumerate([(-3.24,.304),(-3.06,.288),(-2.93,.274)]):
+        barrel(f"Nozzle collar {side}.{i}",(x-.024,y(.87),-.09),(x+.024,y(.87),-.09),r,r,dark if i==1 else edge)
 
 asset_objects=list(bpy.context.scene.objects)
 for obj in asset_objects:
