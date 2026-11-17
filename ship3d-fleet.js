@@ -39,10 +39,36 @@ export function buildFleetShip(T,id,rec,parts={}){
  const wing=(side,pts,z,d)=>{if(!parts.wings||parts.wings==='w_stock')plate(pts.map(([x,y])=>[x,side*y]),z,d);};
  const gun=(x,y,z,r,len)=>{if(parts.mount&&parts.mount!=='m_stock')return;body([[x-5,2,2,1],[x+2,2.2,1.8,1],[x+4,1,1,.6]],y,z,dark);tube(x+len*.45,y,z,r,len);ring(x+len*.95,y,z,r,steel);};
  if(id==='wasp'){
-  body([[-25,3,2.5,2],[-16,5,4,2.5],[-3,4,4.3,2],[15,2.8,2.5,1.3],[31,.25,.3,.25]]);
-  canopy(5,0,3.7,13,2.7);
-  for(const side of [-1,1]){wing(side,[[-24,3],[-22,17],[-17,18],[2,5]],-.7,1);body([[-20,1.2,1.5,1],[-6,1.8,2,1],[8,.6,.7,.6]],side*5,0,steel);gun(5,side*5,1,.45,17);box(-12,side*5,2.5,9,.25,.2,neon);}
-  hoop(-19,0,2,3.6); 
+  // Interceptor: continuous tapered body, shoulder intakes and twin underslung drives.
+  body([[-27,2.3,1.9,1.8],[-22,4.1,3.1,2.4],[-13,5.6,4.5,3.1],[-2,5.3,5.6,3],[9,4.1,4.8,2.3],[21,2.5,2.7,1.5],[31,.35,.55,.35]]);
+  body([[-23,1.8,.8,1],[-8,3.4,1,2],[13,2,.7,1.3],[26,.4,.3,.3]],0,-2.1,dark);
+  // The canopy rises from a broad sill and tapers into the nose, rather than floating above it.
+  body([[-6,3.3,.8,.5],[0,4,1.3,.5],[10,3,1,.4],[17,1.4,.4,.3]],0,4.6,steel);
+  body([[-5,2.7,.6,.4],[0,3.35,3.1,.4],[7,2.8,3.2,.3],[13,1.4,1.6,.2],[16,.4,.4,.2]],0,5.2,glass);
+  const seam=(points,r=.12)=>{for(let k=1;k<points.length;k++){const a=new T.Vector3(...points[k-1]),b=new T.Vector3(...points[k]),d=b.clone().sub(a),g=new T.CylinderGeometry(r,r,d.length(),6);g.applyQuaternion(new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),d.normalize()));g.translate(...a.add(b).multiplyScalar(.5));mesh(g,neon);}};
+  for(const side of [-1,1]){
+   // Broad wing roots physically connect the nacelles and outer wings to the body.
+   body([[-20,2,1.6,1.5],[-12,3.3,2.2,1.7],[0,3.6,1.6,1.4],[10,1.5,.8,.7]],side*7,-.4,steel);
+   body([[-25,1.8,2,2],[-20,3.2,3.3,2.7],[-9,3.3,3.7,2.9],[0,2.6,2.7,2],[7,1.1,1.1,1]],side*8,-.6);
+   // Dark inset intake with a metal lip, supported by the front of the drive housing.
+   tube(4.8,side*8,.2,1.65,1.2,dark);ring(5.5,side*8,.2,1.7,steel);ring(5.6,side*8,.2,1.1);
+   if(!parts.wings||parts.wings==='w_stock'){
+    wing(side,[[-22,7],[-26,19],[-21,22],[-12,17],[8,8]],-.9,1.1);
+    plate([[-21,side*9],[-23,side*18],[-20,side*19],[-8,side*12],[3,side*8]],.6,.45,steel);
+    seam([[-24,side*19,1],[-21,side*21,1],[-12,side*16,1],[4,side*8,1]],.15);
+    const fin=plate([[-23,0],[-21,7],[-17,5.5],[-12,0]],0,.5,dark);fin.rotateX(Math.PI/2);fin.position.set(0,side*7.5,2.5);
+    seam([[-21,side*7.5,9.4],[-17,side*7.5,7.8]],.13);
+   }
+   for(let k=0;k<5;k++){box(-18+k*1.6,side*8,3.3,.55,3.5,.4,dark);box(-18+k*1.6,side*8,3.55,.3,2.4,.12,steel);}
+   gun(7,side*12,1.2,.48,15);
+   seam([[-19,side*10.5,1],[-9,side*11,1.4],[1,side*9.5,1.1]],.13);
+   seam([[-4,side*2.8,6],[0,side*3.4,7.9],[7,side*2.9,8.1],[13,side*1.5,6.9]],.11);
+   seam([[16,side*1.6,3.6],[23,side*.9,2],[28,side*.4,1.1]],.1);
+  }
+  // Dorsal service spine, heat vents and small navigation lamps.
+  body([[-24,1.3,1,.4],[-17,2.1,1.4,.4],[-8,2,.8,.3]],0,4.2,dark);
+  for(let k=0;k<4;k++)box(-20+k*2,0,5.7,.7,2.5,.2,steel);
+  box(-11,0,5.3,2,1.5,.18,neon);box(23,0,2.65,1,.7,.2,neon);
  }else if(id==='bastion'){
   body([[-22,9,4,4],[-14,15,8,5],[4,15,9,5],[18,11,6,4],[24,7,3,2]]);
   canopy(12,0,7,9,3.7);
@@ -90,7 +116,7 @@ export function buildFleetShip(T,id,rec,parts={}){
   hoop(-12,0,11,8,gold);hoop(-12,0,11,6,neon);orb(-12,0,11,3);
  }
  let nozzles=[];
- if(parts.engine&&parts.engine!=='e_stock'){}else for(let i=0;i<p.engines;i++){const y=(i-(p.engines-1)/2)*9;box(-L*.8,y,0,7,5,4);tube(-L*.9,y,0,2.2,4);ring(-L*.9-2,y,0,1.8);nozzles.push({x:-L*.9-2.2,y,z:0,r:1.6});}
+ if(parts.engine&&parts.engine!=='e_stock'){}else for(let i=0;i<(id==='wasp'?2:p.engines);i++){const y=id==='wasp'?(i===0?-8:8):(i-(p.engines-1)/2)*9;box(-L*.8,y,0,7,5,4);tube(-L*.9,y,0,2.2,4);ring(-L*.9-2,y,0,1.8);nozzles.push({x:-L*.9-2.2,y,z:0,r:1.6});}
  for(const [slot,pid]of Object.entries(parts))if(pid&&!pid.endsWith('_stock')){const a=buildFitting(T,pid,{color:rec.color,width:W*.55,tail:-L*.9});root.add(a.root);a.root.traverse(o=>{if(o.isMesh)(o.material.isMeshBasicMaterial?glowMeshes:bodyMeshes).push(o);});owned.add({dispose:a.dispose});if(slot==='engine')nozzles=a.nozzles;}
  const fm=new T.MeshBasicMaterial({color:rec.trail||rec.color,transparent:true,opacity:.55,blending:T.AdditiveBlending,depthWrite:false,toneMapped:false});owned.add(fm);
  for(const n of nozzles){const outer=mesh(new T.ConeGeometry(n.r,1,12,1,true),fm,n.x,n.y,n.z),inner=mesh(new T.ConeGeometry(n.r*.45,1,10,1,true),neon,n.x,n.y,n.z);outer.rotation.z=inner.rotation.z=Math.PI/2;bodyMeshes.splice(bodyMeshes.indexOf(outer),1);glowMeshes.push(outer);flames.push({...n,outer,inner});}
