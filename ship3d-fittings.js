@@ -27,6 +27,95 @@ export function buildFitting(T,id,{color='#65fbd2',width=12,tail=-22,shipId}={})
    const o=mesh(new T.CylinderGeometry(r,r,delta.length(),6),neon,...mid);
    o.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),delta.normalize());
   };
+  // Signature equipment uses the existing unlock IDs and statistics.
+  // Wasp builds outwards and aft. Bastion builds upwards around its armoured deck.
+  if(id==='e_nova'){
+   if(heavy){
+    box(-21,0,1,10,28,8,dark);
+    for(const y of [-10,0,10]){
+     const radius=y===0?4.2:2.8;
+     box(-24,y,0,10,radius*2.35,radius*2.3,metal);
+     tube(-29,y,0,radius,3,alloy);
+     ring(-30.6,y,0,radius*.86);
+     tube(-30.7,y,0,radius*.55,.2,neon);
+     for(let k=0;k<3;k++)box(-25+k*2.3,y,radius*1.16,.7,radius*1.4,.3,neon);
+     nozzles.push({x:-31,y,z:0,r:radius*.73});
+    }
+   }else{
+    for(const side of [-1,1]){
+     const y=side*8;
+     tube(-24,y,-.6,2.6,10,metal);
+     tube(-30,y,-.6,1.9,5,alloy);
+     for(const x of [-28,-31,-33])ring(x,y,-.6,x===-33?2.25:2);
+     plate([[-24,y],[-37,y+side*2],[-34,y+side*5],[-26,y+side*3]],-.9,1,metal);
+     rail([-26,y+side*2,.35],[-35,y+side*3,.35],.18);
+     nozzles.push({x:-33.25,y,z:-.6,r:1.75});
+    }
+   }
+  }else if(id==='w_phantom'){
+   for(const side of [-1,1]){
+    const y=v=>v*side;
+    if(heavy){
+     plate([[-19,y(17)],[-21,y(27)],[-12,y(32)],[8,y(32)],[14,y(24)],[11,y(17)]],-3,4,metal);
+     for(const x of [-13,-4,5]){
+      box(x,y(26),2,7,8,2.5,alloy);
+      box(x,y(30),3.4,4,.6,.4,neon);
+     }
+     rail([-12,y(32),.65],[8,y(32),.65],.24);
+    }else{
+     plate([[-17,y(6)],[-28,y(24)],[-34,y(30)],[-22,y(26)],[-7,y(12)],[1,y(7)]],-.7,1,metal);
+     plate([[-22,y(15)],[-33,y(23)],[-35,y(24)],[-27,y(18)]],.4,.55,alloy);
+     rail([-33,y(29),.55],[-22,y(25),.55],.18);
+     rail([-22,y(25),.55],[-7,y(12),.55],.15);
+     const fin=plate([[-31,0],[-34,5],[-23,2],[-21,0]],0,.55,dark);
+     fin.rotation.x=side*Math.PI/2;
+     if(side<0)fin.scale.y=-1;
+     fin.position.set(0,y(25),.6);
+    }
+   }
+  }else if(id==='m_siege'){
+   for(const side of [-1,1]){
+    const y=side*(heavy?12:8);
+    if(heavy){
+     box(-3,y,8.6,14,7,4,dark);
+     box(0,y,12,12,8,4,metal);
+     for(const dy of [-1.8,1.8]){
+      tube(11,y+dy,12,1.43,18,alloy);
+      tube(20.2,y+dy,12,1.52,.7,dark);
+      ring(20.6,y+dy,12,1.3);
+     }
+     box(-2,y,14.2,6,3,.4,neon);
+    }else{
+     box(2,y,1.2,11,3,2,dark);
+     for(const dy of [-.72,.72]){
+      const offset=y+dy;
+      box(11,offset,1.35,20,.65,1.15,alloy);
+      rail([4,offset,2],[20.5,offset,2],.11);
+     }
+     box(16,y,1.35,1.3,2.1,1.15,metal);
+    }
+   }
+  }else if(id==='p_aegis'){
+   for(const side of [-1,1]){
+    if(heavy){
+     for(const x of [-15,1,13]){
+      const y=side*17;
+      plate([[x-4,y-3],[x+3,y-3],[x+5,y],[x+3,y+3],[x-4,y+3]],6,2.9,metal);
+      mesh(new T.CylinderGeometry(2.1,2.5,1.3,6),alloy,x,y,9.25).rotation.x=Math.PI/2;
+      hoop(x,y,10,1.9);
+      orb(x,y,10,.85);
+     }
+    }else{
+     const y=side*8;
+     plate([[-21,y-side*2],[-19,y+side*2.7],[-4,y+side*2.4],[1,y-side*1]],2,1.1,metal);
+     rail([-19,y+side*1.9,3.42],[-6,y+side*1.7,3.42],.16);
+     for(const x of [-17,-9])hoop(x,y,3.55,.84);
+    }
+   }
+  }
+  if(['e_nova','w_phantom','m_siege','p_aegis'].includes(id)){
+   return {root,nozzles,dispose(){for(const resource of resources)resource.dispose();}};
+  }
   if(id.startsWith('e_')){
    const radius={e_twin:1.15,e_ion:1.65,e_fusion:1.9,e_nova:2.2}[id]+(heavy?1:0);
    const x=heavy?-22:-25;
