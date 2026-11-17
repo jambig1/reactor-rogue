@@ -1,31 +1,44 @@
 import { buildFitting, fittingIds } from './ship3d-fittings.js';
+import { finishFitting } from './ship3d-fitting-finish.js';
 
 const unitScale = 9.6;
-const assetUrl = new URL('./art/blender/Wasp.glb', import.meta.url);
-let templatePromise;
+const models = new Set(['vanguard','wasp','bastion','harrier','glacier','tempest','scavenger','spectre','architect','helios','echo','sovereign']);
+const assets = new Map();
+export const hasBlenderShip = id => models.has(id);
 
-export function loadBlenderWasp() {
-  if (!templatePromise) {
-    templatePromise = import('./vendor/three-0.187.0/GLTFLoader.js')
-      .then(({ GLTFLoader }) => new GLTFLoader().loadAsync(assetUrl.href))
-      .then(asset => asset.scene);
+export function loadBlenderShip(id) {
+  if (!assets.has(id)) {
+    const url = new URL(`./art/blender/${id === 'wasp' ? 'Wasp' : id}.glb`, import.meta.url);
+    assets.set(id, import('./vendor/three-0.187.0/GLTFLoader.js')
+      .then(({ GLTFLoader }) => new GLTFLoader().loadAsync(url.href))
+      .then(({ scene }) => scene)
+      .catch(error => {
+        assets.delete(id);
+        throw error;
+      }));
   }
-  return templatePromise;
+  return assets.get(id);
 }
 
-function replacedByPart(name, parts) {
+function replacedByPart(name, parts, id) {
+  if (id !== 'wasp') {
+    const [role] = name.split(' ');
+    return (role === 'engine' && parts.engine && parts.engine !== 'e_stock')
+      || (role === 'wing' && parts.wings && parts.wings !== 'w_stock')
+      || (role === 'mount' && parts.mount && parts.mount !== 'm_stock');
+  }
   if (parts.engine && parts.engine !== 'e_stock' && /^(Outer nozzle|Nozzle throat|Reactor emitter|Nozzle collar)/.test(name)) return true;
   if (parts.wings && parts.wings !== 'w_stock' && /^(Swept wing spar|Carbon slat|Stabiliser|Wing tracer|Squadron marking|Wing access hatch|Airbrake hinge|Underside wing service cover|Underside guidance trace)/.test(name)) return true;
   return parts.mount && parts.mount !== 'm_stock' && /^(Long.range pulse cannon|Gun pylon)/.test(name);
 }
 
-export function buildBlenderWasp(T, template, record, parts) {
+export function buildBlenderShip(T, id, template, record, parts) {
   const root = new T.Group();
-  root.name = 'Wasp — Blender airframe';
+  root.name = id + ' — Blender airframe';
   const airframe = template.clone(true);
   // glTF is Y-up, whereas the hangar models use Blender's Z-up and +X nose.
   airframe.rotation.x = Math.PI / 2;
-  airframe.scale.setScalar(unitScale);
+  if (id === 'wasp') airframe.scale.setScalar(unitScale);
   root.add(airframe);
   root.updateMatrixWorld(true);
   const disposables = [];
@@ -39,10 +52,15 @@ export function buildBlenderWasp(T, template, record, parts) {
   }
   const remove = [], materials = new Map();
   const projected = new T.Vector3();
+  let outlets = [];
   airframe.traverse(object => {
+    if (object.userData.outletRadius) {
+      projected.setFromMatrixPosition(object.matrixWorld);
+      outlets.push({ x:projected.x, y:projected.y, z:projected.z, r:object.userData.outletRadius });
+    }
     if (!object.isMesh) return;
     // Blender sanitises node names on import. The prefixes are invariant.
-    if (replacedByPart(object.name.replaceAll('_', ' '), parts)) {
+    if (replacedByPart(object.name.replaceAll('_', ' '), parts, id)) {
       remove.push(object);
       return;
     }
@@ -52,12 +70,12 @@ export function buildBlenderWasp(T, template, record, parts) {
       material = source.clone();
       materials.set(source, material);
       disposables.push(material);
-      if (source.name === 'Wasp teal guidance lights') {
+      if (['Wasp teal guidance lights','Hull guidance'].includes(source.name)) {
         material.emissive.copy(trim);
         material.emissiveIntensity = 2.25;
         material.toneMapped = false;
       }
-      if (paint && source.name === 'Midnight ceramic') {
+      if (paint && ['Midnight ceramic','Hull paint'].includes(source.name)) {
         material.map = paint;
         material.color.set(0xffffff);
       }
@@ -79,10 +97,13 @@ export function buildBlenderWasp(T, template, record, parts) {
   });
   for (const object of remove) object.removeFromParent();
 
-  let outlets = [-1, 1].map(side => ({ x: -3.346 * unitScale, y: side * .87 * unitScale, z: -.09 * unitScale, r: 1.5 }));
-  for (const [slot, id] of Object.entries(parts)) {
-    if (!fittingIds.includes(id)) continue;
-    const fitting = buildFitting(T, id, { color: record.color, width: 8, tail: -25, shipId: 'wasp' });
+  if (id === 'wasp') outlets = [-1, 1].map(side => ({ x: -3.346 * unitScale, y: side * .87 * unitScale, z: -.09 * unitScale, r: 1.5 }));
+  for (const [slot, partId] of Object.entries(parts)) {
+    if (!fittingIds.includes(partId)) continue;
+    const width = outlets.reduce((maximum, {y}) => Math.max(maximum, Math.abs(y)), 0) || 8;
+    const tail = outlets.reduce((minimum, {x}) => Math.min(minimum, x), 0) + 4;
+    const base = buildFitting(T, partId, { color: record.color, width, tail, shipId: id });
+    const fitting = finishFitting(T, base, partId, record.color);
     root.add(fitting.root);
     fitting.root.traverse(mesh => {
       if (mesh.isMesh) (mesh.material.isMeshBasicMaterial ? glowMeshes : bodyMeshes).push(mesh);
