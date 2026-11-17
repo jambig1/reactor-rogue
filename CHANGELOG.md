@@ -169,7 +169,7 @@
 - Translucent parts such as Prism Sails are tinted crystal glass.
 - Your trail (plasma, ribbon, sparks) now streams out of each real engine nozzle and follows the 3D ship however it's spun or tumbled, with one trail per engine.
 - Drag left and right to spin it, and up and down to tumble it. Flick it and it keeps turning, then it settles back to its pose after a moment. Pinch (or use the mouse wheel) to zoom, and tap for a 3D barrel roll.
-- Hull patterns aren't shown on the 3D model yet; they still show in game.
+- Hull patterns and their selected colours now appear on the 3D hangar ship.
 - If 3D isn't available on a device, the bay falls back to the 2D ship automatically. The game itself is unchanged.
 
 ## 1.1.0 — Immersive star map

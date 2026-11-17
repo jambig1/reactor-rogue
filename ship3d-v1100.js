@@ -179,16 +179,49 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
   }
 
 
+  // The Canvas2D painter draws nose-up. Our geometry has the nose on +x and mirrors the source y.
+  function applyHullPaint(geometry, material, texture, span) {
+    const positions = geometry.getAttribute('position');
+    const uv = new Float32Array(positions.count * 2);
+    for (let i = 0; i < positions.count; i++) {
+      uv[i * 2] = .5 - positions.getY(i) / span;
+      uv[i * 2 + 1] = .5 + positions.getX(i) / span;
+    }
+    geometry.setAttribute('uv', new T.BufferAttribute(uv, 2));
+    material.map = texture;
+    material.onBeforeCompile = shader => {
+      shader.vertexShader = 'varying float vHullHeight;\n' + shader.vertexShader.replace(
+        '#include <begin_vertex>', '#include <begin_vertex>\nvHullHeight = position.z;'
+      );
+      shader.fragmentShader = 'varying float vHullHeight;\n' + shader.fragmentShader.replace(
+        '#include <map_fragment>',
+        `vec4 hullPaint = texture2D(map, vMapUv);
+        diffuseColor.rgb = mix(diffuseColor.rgb, hullPaint.rgb, hullPaint.a * step(0.0, vHullHeight));`
+      );
+    };
+  }
+
   function build(rec) {
     clearModel();
     let col = rec.color || '#65f7ef', shapes = rec.shapes.filter(s => s.pts.length >= 3 && (s.alpha > .3 || (s.glass && s.stroke))), base = -1, best = 0;
     shapes.forEach((s, i) => { s.area = Math.abs(polygonArea(s.pts)); s.box = bbox(s.pts); if (s.area > best && !s.glass) { best = s.area; base = i; } });
     shapes.forEach((s, i) => { let sz = Math.sqrt(s.area); s.pts = roundCorners(s.pts, i === base ? Math.min(2.6, sz * .09) : Math.min(1.5, sz * .12), i === base ? 5 : 3); });
     if (base < 0) return;
+    let patternTexture;
+    if (rec.pattern) {
+      patternTexture = new T.CanvasTexture(rec.pattern.canvas);
+      patternTexture.colorSpace = T.SRGBColorSpace;
+      disposables.push(patternTexture);
+    }
     let edgesBy = new Map(), addEdge = (c, path, w, k) => { let key = c + '|' + w + '|' + k; if (!edgesBy.has(key)) edgesBy.set(key, { c, w, k, paths: [] }); edgesBy.get(key).paths.push(path); };
     let B = shapes[base], span = Math.max(B.box.y1 - B.box.y0, B.box.x1 - B.box.x0), HH = Math.max(4, Math.min(9, span * .14)), surfaces = [], levels = [];
     let metal = (fill, main) => { let m = new T.MeshStandardMaterial({ color: new T.Color(fill || '#203346'), metalness: main ? .72 : .6, roughness: main ? .28 : .36, envMapIntensity: 1.0, emissive: new T.Color(col), emissiveIntensity: .02 }); disposables.push(m); return m; };
     let put = (geo, mat, glow) => { disposables.push(geo); let m = new T.Mesh(geo, mat); model.add(m); (glow ? glowMeshes : bodyMeshes).push(m); return m; };
+    const putMetal = (geo, shape, main) => {
+      const material = metal(shape.fill, main);
+      if (shape.hullPaint && patternTexture) applyHullPaint(geo, material, patternTexture, rec.pattern.span);
+      return put(geo, material, false);
+    };
     let zAt = (x, y) => { let z = -Infinity; for (let f of surfaces) { let h = f(x, y); if (h !== null && h > z) z = h; } return z === -Infinity ? 0 : z; };
     // 1) back-layer pieces (wings, fins, engine pods) as small rounded lofts; 2) the hull; 3) plating shells on top.
     let order = shapes.map((s, i) => i).filter(i => i < base).concat([base], shapes.map((s, i) => i).filter(i => i > base));
@@ -203,7 +236,7 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       }
       if (i <= base) {
         let main = i === base, H = main ? HH : Math.max(.9, Math.min(2.6, Math.sqrt(s.area) * .2)), L = loft(s.pts, H, main ? H * .45 : H * .6, main ? 'spine' : 'centre', main ? 8 : 4);
-        put(L.geo, metal(s.fill, main)); surfaces.push(L.height);
+        putMetal(L.geo, s, main); surfaces.push(L.height);
         if (s.stroke) { let w = main ? .62 : .42, k = main ? 1.6 : 1.3; addEdge(s.stroke, { pts: densify(s.pts, 3).map(([x, y]) => [x, y, 0]), closed: true }, w, k); }
         if (s.fill && /^#?(f|e|d)[0-9a-f]/i.test(s.fill.replace('#', '')) && s.area < 40) { let m = bodyMeshes.pop(); m.material = neon(s.fill, 1.4); glowMeshes.push(m); }
         continue;
@@ -213,7 +246,8 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       if (onSurf < s.pts.length * .3) {
         let H = Math.max(.9, Math.min(2.4, Math.sqrt(s.area) * .3)), L = loft(s.pts, H, H * .75, 'centre', 4);
         let glowy = s.fill && /^#?(f|e|d)[0-9a-f]/i.test(s.fill.replace('#', '')) && s.area < 40;
-        put(L.geo, glowy ? neon(s.fill, 1.4) : metal(s.fill, false), glowy); surfaces.push(L.height);
+        if (glowy) put(L.geo, neon(s.fill, 1.4), true); else putMetal(L.geo, s, false);
+        surfaces.push(L.height);
         if (s.stroke) addEdge(s.stroke, { pts: densify(s.pts, 2.5).map(([x, y]) => [x, y, 0]), closed: true }, .34, 1.2);
         continue;
       }
@@ -222,7 +256,7 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       let dark = (() => { let c = new T.Color(s.fill || '#000'); return c.r + c.g + c.b < .06; })() && s.area < 24;
       let lift = dark ? .1 + lv * .26 : .26 + lv * .26, sh = shell(s.pts, zAt, lift, dark ? .3 : .6 + lv * .26);
       let glowy = s.fill && /^#?(f|e|d)[0-9a-f]/i.test(s.fill.replace('#', '')) && s.area < 40;
-      put(sh.geo, glowy ? neon(s.fill, 1.4) : metal(s.fill, false), glowy);
+      if (glowy) put(sh.geo, neon(s.fill, 1.4), true); else putMetal(sh.geo, s, false);
       levels.push({ box: s.box, lv, area: s.area, pts: s.pts, lift });
       if (s.stroke) addEdge(s.stroke, { pts: sh.top, closed: true }, Math.max(.24, Math.min(.46, (s.lw || 1) * .28)), 1.2);
     }

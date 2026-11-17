@@ -2371,8 +2371,22 @@ function shipRecorder(){let M=[1,0,0,1,0,0],stack=[],path=[],sub=null,filled=nul
   clearRect(){},clip(){},setLineDash(){},getLineDash(){return []},fillText(){},strokeText(){},measureText:t=>({width:String(t).length*6}),drawImage(){},putImageData(){},
   createLinearGradient:()=>({addColorStop(){}}),createRadialGradient:()=>({addColorStop(){}}),createConicGradient:()=>({addColorStop(){}}),createPattern:()=>null,isPointInPath:()=>false};
  return {ctx:c,out}}
-function recordShip3D(pilot){let R=shipRecorder(),p={...pilot,pattern:'none'};try{drawIdentityHull(p,0,shipPainter(R.ctx),{preview:true,pilot:p,items:{},hullFace:0,face:0,dashTime:0,boostTime:0,ambushTime:0,phaseTime:0,flightVisual:{heading:0,thrust:0}})}catch(e){}
- let rec={shapes:R.out.shapes,lines:R.out.lines,color:p.color,trail:shipState().paint.trailColor||p.color,engines:[]};
+function recordShip3D(p){let R=shipRecorder(),paint=shipPainter(R.ctx),pattern=null,firstHullShape=0;
+ if(p.pattern&&p.pattern!=='none'){
+  paint.beginHullPaint=()=>{firstHullShape=R.out.shapes.length};
+  paint.recordHullPaint=(shape,kind,color)=>{try{
+   let canvas=document.createElement('canvas');canvas.width=canvas.height=256;
+   let g=canvas.getContext('2d');if(!g)return;
+   // Draw in the hull painter's original coordinates and map the same area onto the 3D surfaces.
+   let span=80,scale=canvas.width/span;
+   g.setTransform(scale,0,0,scale,canvas.width/2,canvas.height/2);
+   drawHullPattern(g,shape,kind,color);
+   for(let i=firstHullShape;i<R.out.shapes.length;i++)R.out.shapes[i].hullPaint=true;
+   pattern={canvas,span};
+  }catch(e){console.warn('3D hull paint unavailable',e)}};
+ }
+ try{drawIdentityHull(p,0,paint,{preview:true,pilot:p,items:{},hullFace:0,face:0,dashTime:0,boostTime:0,ambushTime:0,phaseTime:0,flightVisual:{heading:0,thrust:0}})}catch(e){}
+ let rec={shapes:R.out.shapes,lines:R.out.lines,color:p.color,trail:shipState().paint.trailColor||p.color,engines:[],pattern};
  try{let d=partOn(p,'engine');if(d){for(let nz of engineGeo(p,d.id).nozzles)rec.engines.push([-nz.y,nz.x,nz.w*1.2])}else{let M=hullMetrics(hullShapeOf(p)),y=p.id==='bastion'?16:9;rec.engines.push([-M.maxY+2,-y,2.2],[-M.maxY+2,y,2.2])}}catch(e){}
  return rec}
 const bay3d={state:'',ship:null,canvas:null,off:false};
@@ -2380,7 +2394,7 @@ function bay3dWanted(){return !bay3d.off&&typeof document!=='undefined'&&typeof 
 function bay3dStart(){if(bay3d.state||!bay3dWanted())return;bay3d.state='loading';try{let cv=document.createElement('canvas');cv.id='shipBay3d';cv.setAttribute('aria-hidden','true');bay3d.canvas=cv;import('./ship3d-v1100.js').then(m=>m.createShip3D(cv)).then(sh=>{if(!sh){bay3d.state='failed';return}bay3d.ship=sh;bay3d.state='ready'}).catch(e=>{console.warn('3D hangar ship unavailable',e);bay3d.state='failed'})}catch(e){bay3d.state='failed'}}
 function bay3dDraw(c,f){let S=bay3d.ship;if(bay3d.state!=='ready'||!S||S.lost||!bay3dWanted()){if(bay3d.canvas)bay3d.canvas.style.display='none';return false}
  let cv=bay3d.canvas;if(cv.parentNode!==c.parentNode)c.parentNode.insertBefore(cv,c.nextSibling);cv.style.display='block';
- let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor]);if(key!==bay3d.key){bay3d.key=key;S.setShip(key,recordShip3D(p))}
+ let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,p.pattern,p.patternColor,shipState().paint.trailColor]);if(key!==bay3d.key){bay3d.key=key;S.setShip(key,recordShip3D(p))}
  S.resize(c.clientWidth,c.clientHeight,Math.min(2,window.devicePixelRatio||1));S.render(f);return true}
 function bayPointer(e){let c=e.currentTarget,r=c.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,B=bayFx;B.ptrs=B.ptrs||{};if(e.type==='pointerdown')B.ptrs[e.pointerId]={x,y};else if(e.type==='pointermove'&&B.ptrs[e.pointerId])B.ptrs[e.pointerId]={x,y};else if(e.type==='pointerup'||e.type==='pointercancel')delete B.ptrs[e.pointerId];
  let ids=Object.keys(B.ptrs);if(bay3d.state==='ready'&&ids.length>=2){let a=B.ptrs[ids[0]],b=B.ptrs[ids[1]],d=Math.hypot(a.x-b.x,a.y-b.y);if(B.pinch)B.zoom=clamp((B.zoom||1)*d/B.pinch,.7,1.9);B.pinch=d;if(B.drag)B.drag.moved=99;return}B.pinch=0;
@@ -2936,7 +2950,7 @@ if(e.type>=2||e.boss){for(let side of [-1,1]){poly([[-9,side*8],[5,side*8],[10,s
 if(e.role==='rail'){poly([[-8,-5],[17,-5],[20,-3],[-8,-3]],'#7492a6',c,.6)}else if(['carrier','brood'].includes(e.role)){for(let side of [-1,1])for(let i=0;i<3;i++){ctx.fillStyle=c;ctx.fillRect(-9+i*6,side*14-1,3,2)}}else if(e.role==='minelayer'){for(let side of [-1,1])poly([[-16,side*10],[-12,side*7],[-8,side*10],[-12,side*13]],'#75604a',c,.7)}
 if(hp<.5){poly([[-7,-3],[-2,-1],[-6,3],[-9,2]],'#060d18');if(hp<.25){ctx.fillStyle='#ffc182';ctx.fillRect(-8,-1,2,2)}}ctx.restore()}
 
-function drawIdentityHull(p,t,paint=shipCanvasPainter,view=s){const {ctx,poly,circle,lineLocal}=paint;let c=p.color,id=p.id;ctx.save();ctx.rotate(Math.PI/2);ctx.shadowColor=id==='spectre'&&view.ambushTime>0?'#f6d7ff':c;ctx.shadowBlur=graphicsShadow(id==='spectre'&&view.ambushTime>0?20:12)*(p.glow??1);if(id==='spectre'&&view.phaseTime>0)ctx.globalAlpha=.6;let shape=fleetHullProfiles[id]||p.shape.split(' ').map(q=>q.split(',').map(Number));if(p.parts){let sb=ctx.shadowBlur;try{drawPartsGeo(paint,p,'back',shape,t)}catch(e){}ctx.shadowColor=c;ctx.shadowBlur=sb}poly(shape,'#203346',c,1.7);ctx.shadowBlur=graphicsShadow(0);
+function drawIdentityHull(p,t,paint=shipCanvasPainter,view=s){const {ctx,poly,circle,lineLocal}=paint;let c=p.color,id=p.id;ctx.save();ctx.rotate(Math.PI/2);ctx.shadowColor=id==='spectre'&&view.ambushTime>0?'#f6d7ff':c;ctx.shadowBlur=graphicsShadow(id==='spectre'&&view.ambushTime>0?20:12)*(p.glow??1);if(id==='spectre'&&view.phaseTime>0)ctx.globalAlpha=.6;let shape=fleetHullProfiles[id]||p.shape.split(' ').map(q=>q.split(',').map(Number));if(p.parts){let sb=ctx.shadowBlur;try{drawPartsGeo(paint,p,'back',shape,t)}catch(e){}ctx.shadowColor=c;ctx.shadowBlur=sb}paint.beginHullPaint?.();poly(shape,'#203346',c,1.7);ctx.shadowBlur=graphicsShadow(0);
 if(id==='wasp')for(let side of [-1,1])poly([[side*10,-6],[side*22,15],[side*15,20],[side*7,7]],'#264958',c,1);
 if(id==='vanguard'){poly([[-10,-8],[0,-15],[10,-8],[7,10],[-7,10]],'#335467',c,1);lineLocal(-13,0,-5,3,c,1);lineLocal(13,0,5,3,c,1)}
 if(id==='bastion')for(let side of [-1,1]){poly([[side*12,-18],[side*24,-10],[side*24,12],[side*12,17]],'#52606a',c,1.5);for(let j=0;j<3;j++){ctx.fillStyle='#182735';ctx.fillRect(side*17-2,-6+j*6,4,3)}}
@@ -2951,7 +2965,7 @@ if(id==='echo')for(let side of [-1,1]){circle(side*15,0,8,'#3f344f',c);circle(si
 if(id==='sovereign'){for(let side of [-1,1]){poly([[side*14,-13],[side*30,-20],[side*25,16],[side*16,23],[side*19,2]],'#30284f',c,1.2);poly([[side*20,-8],[side*25,-13],[side*22,11],[side*18,17]],'#6c5268','#ffda9d',.8);lineLocal(side*17,-9,side*15,12,'#ffe3ad',1.5);poly([[side*9,-17],[side*13,-24],[side*16,-14]],'#e8c584','#fff0c8',.6)}circle(0,3,12,'#a684ff',false);circle(0,3,9,'#11162c');circle(0,3,5,'#ffe5b7');poly([[0,21],[5,16],[0,29],[-5,16]],'#e2c792',c,1)}
 drawFleetHullFinish(p,paint);
 if(typeof ctx.clip==='function'&&typeof ctx.createLinearGradient==='function'){try{drawHullDetail(ctx,fleetHullProfiles[id]||p.shape.split(' ').map(q=>q.split(',').map(Number)),c,!!view.preview,!!(p.parts&&p.parts.engine&&(shipParts.find(x=>x.id===p.parts.engine)?.r||0)>0))}catch(e){}}
-if(p.pattern&&p.pattern!=='none'&&typeof ctx.clip==='function'){let shp=fleetHullProfiles[id]||p.shape.split(' ').map(q=>q.split(',').map(Number));drawHullPattern(ctx,shp,p.pattern,p.patternColor||c)}
+if(p.pattern&&p.pattern!=='none'&&typeof ctx.clip==='function'){if(paint.recordHullPaint)paint.recordHullPaint(shape,p.pattern,p.patternColor||c);else drawHullPattern(ctx,shape,p.pattern,p.patternColor||c)}
 if(p.parts)try{drawPartsGeo(paint,p,'front',shape,t)}catch(e){}
 poly([[0,-13],[5,-4],[0,1],[-5,-4]],'#071b2e',c,1);poly([[0,-10],[2,-4],[0,-2],[-2,-4]],'#d6f8ff');for(let side of [-1,1]){ctx.fillStyle='#6b8192';ctx.fillRect(side*8-3,11,6,5);ctx.fillStyle=c;ctx.fillRect(side*8-2,16,4,2)}ctx.restore()}
 
