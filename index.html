@@ -4733,7 +4733,7 @@ function pilotDesign(t,view=s,paint=shipCanvasPainter){
 const {ctx,poly,circle,hex}=paint;const s=view;
 if(!s.preview){ctx.save();ctx.translate(3,6);ctx.scale(1,.55);circle(0,0,s.pilot.id==='bastion'?28:19,'#00000088');ctx.restore();}
 let bankS=1-Math.abs(s.flightVisual?.bank||0)*.28;
-if(!s.preview&&s.pilot&&graphicsQuality!=='low'){
+if(!s.preview&&s.pilot&&graphics.preset!=='low'){
  const {sprite,paint:paintModel}=combatShipSprite(s.pilot);
  if(sprite){
   paintModel(ctx,sprite,t,{heading:paintHullHeading(s),bank:bankS,thrust:s.flightVisual?.thrust||0,
