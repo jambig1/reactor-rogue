@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 sys.path.insert(0,str(Path(__file__).parent))
 fleet=importlib.import_module("author-fleet")
@@ -106,98 +106,97 @@ def engine(ship, item, signal):
                     pipe("Afterburner braid",(x+2.6,yy,zz),(x+6.9,yy,zz),.13,.13,signal,8)
 
 
-def wing_line(wing, name, a, b, radius, mat, face=1):
-    # Each run follows one loft segment. Four steps keep it flush without
-    # doubling the number of small meshes in the exported wing pack.
-    points=[(a[0]+(b[0]-a[0])*j/4,a[1]+(b[1]-a[1])*j/4) for j in range(5)]
-    fleet.mark(wing,name,points,radius,mat,face)
+# One side of the equip-card silhouette in tip-span and nose-to-tail units.
+# The thin attachment below it is fitted separately to the ship.
+CARD_WINGS={
+    "w_phantom":[(0,0),(.10,.19),(.56,.36),(.83,.51),(.59,.57),(.54,.64),
+                 (.65,.74),(.86,.86),(1,1),(.77,.91),(.45,.79),(.18,.75),(0,.67),(.06,.33)],
+    "w_prism":[(0,0),(.24,.12),(.36,.29),(.73,.46),(1,1),(.72,.89),
+               (.23,.77),(.16,.57),(0,.48)],
+    "w_razor":[(0,0),(.14,.15),(.53,.42),(.95,.67),(.67,.64),(1,1),
+               (.67,.88),(.18,.72),(.16,.54),(0,.46)],
+    "w_vane":[(0,0),(.26,.11),(.34,.19),(.83,.33),(.90,.43),(.51,.43),
+              (.97,.56),(1,.66),(.58,.64),(.91,.79),(.95,.89),(.83,.92),(0,.74)],
+}
 
 
 def wing(ship,item,signal,proxy):
     original=fleet.WINGS.get(ship,WASP_WING)
-    yi,chord,_,_,z,xi=original[0]
-    yo,_,_,_,zo,xo=original[-1]
-    capital=ship in ("bastion","sovereign","architect")
-    # Let blades clear the retained armour/drone platforms and fuselage
-    # outriggers instead of disappearing beneath their stock footprints.
-    yo+= {"bastion":5.5,"architect":5.3,"sovereign":2.8,"harrier":2.25,"echo":2.0}.get(ship,0)
-    zo+= 1.1 if capital else 0
-    sweep=.78 if capital else 1.0
-    thickness=.66 if ship=="spectre" else 1
-    for side in (-1,1):
-        # Seat at the actual pressure-hull side. An inboard root and a solid
-        # shoulder overlap both the pressure hull and the wide blade station.
-        hit,p,_,_=proxy.ray_cast((xi,side*80,z),(0,-side,0))
-        if not hit:
-            raise ValueError(f"No wing socket on {ship} at {xi}, {z}")
-        socket=abs(p.y)
-        root_y=max(.25,socket-1.25)
-        shoulder_y=max(yi,socket+.85)
-        span=yo-shoulder_y
-        if item=="w_razor":
-            specs=[(.30,.65,.4,-.5),(.68,.37,.69,-2.6),(1.03,.035,2.2,-5.2)]
-        elif item=="w_vane":
-            specs=[(.30,.86,.12,1.4),(.69,.67,.5,1.2),(.97,.29,1.8,4.2)]
-        elif item=="w_prism":
-            specs=[(.33,.79,.15,1.8),(.75,.43,.42,3.1),(1.07,.042,2.8,2.6)]
-        else:
-            specs=[(.27,.69,.18,1.8),(.68,.56,.76,-3.3),(.86,.30,1.62,-5.4),(1.10,.035,2.8,-8.4)]
-        rows=[(root_y,min(chord*.65,7.3),1.06*thickness,.9*thickness,z,xi),
-              (shoulder_y,chord*.90,1.5*thickness,1.22*thickness,z,xi)]
-        rows.extend((shoulder_y+f*span,chord*k,(1.28-.71*f)*thickness,(.86-.44*f)*thickness,
-                     z+(zo-z)*f+dz,xi+(xo-xi)*f+dx*sweep) for f,k,dz,dx in specs)
-        if not (root_y < socket < rows[2][0]) or any(a[0]>=b[0] for a,b in zip(rows,rows[1:])):
-            raise ValueError(f"Invalid wing attachment on {ship}: {item}")
-        shell=loft("Control surface",rows,armour,power=.52,wing=True,mirror=side)
-        hinge=min(chord*.52,5.8)
-        pipe("Seated wing pivot",(xi-hinge,side*socket,z+.43),(xi+hinge,side*socket,z+.43),.53,.41,alloy,8)
-        pipe("Root actuator",(xi-1.5,side*(root_y+.45),z-.54),
-             (xi-2.5,side*(rows[2][0]+.2),rows[2][4]-.39),.33,.21,dark,8)
-        for a,b in zip(rows[1:],rows[2:]):
-            y,w,_,_,_,x=a
-            ey,ew,_,_,_,ex=b
-            trim=brass if item=="w_phantom" else alloy
-            for edge in (-1,1):
-                edge_in=.86
-                begin=(x+edge*w*edge_in,side*y)
-                end=(ex+edge*ew*edge_in,side*ey)
-                wing_line(shell,"Bevelled edge trim",begin,end,.26,trim)
-                if item in ("w_prism","w_phantom") or edge==1:
-                    wing_line(shell,"Long perimeter emitter",
-                                 (x+edge*w*.67,side*y),(ex+edge*ew*.67,side*ey),.17,signal)
-                wing_line(shell,"Underside edge line",begin,end,.115,signal,-1)
-        for row,end in zip(rows[1:-1],rows[2:]):
-            y,w,_,_,_,x=row
-            ey,ew,_,_,_,ex=end
-            dy=(ey-y)*.83
-            if item in ("w_prism","w_phantom"):
-                for family,mat in [(.68,prism if item=="w_prism" else ceramic),(.29,alloy if item=="w_prism" else brass)]:
-                    coords=[(x-w*family,y+.16),(x+w*family,y+.16),
-                            (x+(ex-x)*.83+ew*family,y+dy),(x+(ex-x)*.83-ew*family,y+dy)]
-                    finish_on_wing(shell,coords,side,mat,.19 if family>.5 else .32)
-            elif item=="w_vane" or (item=="w_razor" and row==rows[1]):
-                for shift in (-.50,0,.50) if item=="w_vane" else (-.47,.39):
-                    coords=[(x+w*(shift-.15),y+.19),(x+w*(shift+.13),y+.19),
-                            (ex+ew*(shift+.13),y+dy),(ex+ew*(shift-.15),y+dy)]
-                    finish_on_wing(shell,coords,side,alloy,.24)
-                fleet.stripe(shell,"Slat emitter",(x-w*.46,side*(y+.2)),(x+w*.57,side*(y+.2)),.19,signal)
-        if item=="w_phantom":
-            y,w,_,_,z,x=rows[3]
-            ey,_,_,_,ez,ex=rows[-1]
-            foil=loft("Trailing crescent hook",[(y,w*.42,.62,.44,z-.24,x-w*.56),
-                 (y+(ey-y)*.47,w*.30,.45,.33,z+.58,x-w*.78),
-                 (ey+.4,.34,.23,.19,ez-.14,ex+.3)],brass,power=.74,wing=True,mirror=side)
-            fleet.stripe(foil,"Crescent hook emitter",(x-w*.51,side*y),(ex+.3,side*(ey+.3)),.124,signal)
+    _,chord,_,_,z,centre=original[0]
+    tip,_,_,_,tip_z,tail=original[-1]
+    tip+={"bastion":5.5,"architect":5.3,"sovereign":2.8,"harrier":2.25,"echo":2.0}.get(ship,0)
+    hit,p,_,_=proxy.ray_cast((centre,80,z),(0,-1,0))
+    if not hit:
+        raise ValueError(f"No wing socket on {ship}")
+    socket=p.y
+    span=tip-socket
+    if span<4:
+        raise ValueError(f"No clearance for {ship} wings")
+    length=chord*1.82+max(0,centre-tail)*.16
+    nose=centre+length*.50
+    before=set(bpy.context.scene.objects)
 
+    def point(u,v,lift=0):
+        return (nose-length*v,socket+span*u,z+.32*u+(tip_z-z+1.0)*u*u+lift)
 
-def finish_on_wing(surface, coords, side, mat, lift):
-    points=[]
-    for x,y in coords:
-        hit,p,_,_=surface.ray_cast((x,y*side,80),(0,0,-1))
-        if not hit:
-            return
-        points.append((x,y*side,p.z+lift))
-    plate("Raised wing face insert",points,lift+.14,mat)
+    def panel(name,coords,depth,mat,lift=0):
+        return plate(name,[point(u,v,lift) for u,v in coords],depth,mat)
+
+    def trim(name,coords,radius,mat,lift=.13):
+        for a,b in zip(coords,coords[1:]):
+            pipe(name,point(*a,lift),point(*b,lift),radius,radius,mat,6)
+
+    outline=CARD_WINGS[item]
+    rim=brass if item=="w_phantom" else prism if item=="w_prism" else alloy
+    panel("Card-profile wing spar",outline,1.14 if ship!="spectre" else .76,armour)
+    # Internal tongue is embedded in the pressure hull. The spar crosses the
+    # card's near-vertical root without raising either wing at the hinge.
+    panel("Wing socket tongue",[(-1.42/span,.29),(.12,.30),(.23,.43),(.20,.62),
+                                (-1.42/span,.66)],1.4,armour,-.22)
+    trim("Fixed root hinge",[(0,.32),(.02,.63)],.39,alloy,.29)
+    trim("Bevelled perimeter",outline+outline[:1],.16,rim)
+    outlines=[(u*.963+.014,v*.965+.018) for u,v in outline]
+    trim("Guidance around the blade",outlines+outlines[:1],.085,signal,.20)
+    trim("Ventral silhouette",outlines+outlines[:1],.08,signal,-.72 if ship=="spectre" else -1.1)
+
+    if item=="w_phantom":
+        frame=[(.19,.31),(.53,.40),(.72,.50),(.50,.55),(.45,.63),(.57,.75),
+               (.81,.87),(.49,.76),(.21,.68)]
+        panel("Smoked cyan Phantom sail",frame,.28,ceramic,.19)
+        panel("Translucent cyan face",[(.21,.38),(.56,.48),(.45,.62),(.25,.68)],.15,cyan_glass,.24)
+        panel("Cyan trailing face",[(.45,.64),(.56,.75),(.77,.85),(.32,.72)],.15,cyan_glass,.24)
+        trim("Fine gold spar",frame+frame[:1],.08,brass,.27)
+        trim("Cyan energy veins",[(.21,.43),(.34,.48),(.45,.63),(.65,.77)],.08,cyan_glass,.36)
+        trim("Cyan energy veins",[(.24,.68),(.36,.59),(.53,.48)],.07,cyan_glass,.36)
+    elif item=="w_prism":
+        glass=[(.14,.41),(.34,.30),(.67,.51),(.86,.88),(.61,.79),(.25,.72)]
+        panel("Violet Prism sail",glass,.31,prism,.22)
+        for facet in [[(.16,.44),(.39,.41),(.47,.60)],[(.21,.68),(.47,.60),(.67,.77)],[(.47,.60),(.67,.53),(.80,.85)]]:
+            panel("Iridescent prism facet",facet,.14,cyan_glass,.29)
+        trim("Prism refracting seams",[(.19,.46),(.47,.60),(.75,.81)],.07,signal,.39)
+    elif item=="w_vane":
+        for v,u in ((.29,.36),(.48,.48),(.68,.47)):
+            face=[(.12,v-.12),(u,v-.07),(u+.30,v+.09),(u+.26,v+.14),(.12,v+.04)]
+            panel("Separate vane blade cap",face,.29,alloy,.24)
+            trim("Cyan slat edge",[face[0],face[1],face[2]],.095,signal,.35)
+    else:
+        panel("Raised Razor leading plate",[(.05,.10),(.22,.23),(.80,.62),(.64,.59),(.18,.39)],.31,alloy,.25)
+        trim("Razor red status bar",[(.11,.23),(.25,.33),(.36,.40)],.12,warning,.42)
+        for v in (.66,.70,.74):
+            trim("Teal Razor heat vent",[(.28,v),(.40,v+.04)],.085,cyan_glass,.18)
+
+    # Reflect the finished geometry, including bevels, in the ship centreline.
+    # Do not ray-cast/art-direct a second wing independently.
+    mirror=Matrix.Diagonal((1,-1,1,1))
+    for obj in set(bpy.context.scene.objects)-before:
+        bpy.context.view_layer.objects.active=obj
+        for modifier in list(obj.modifiers):
+            bpy.ops.object.modifier_apply(modifier=modifier.name)
+        twin=obj.copy()
+        twin.data=obj.data.copy()
+        twin.data.transform(mirror)
+        twin.data.flip_normals()
+        bpy.context.collection.objects.link(twin)
 
 
 def mount(ship,item,signal):
@@ -307,8 +306,8 @@ def plating(ship,item,signal,proxy):
                     ring("Aegis field projector",(x,y,cap),min(width*.22,.68),.114,signal,"top")
 
 
-def export_ship(ship):
-    global armour, alloy, dark, prism, brass, ceramic, reactor
+def export_ship(ship, wing_only=False):
+    global armour, alloy, dark, prism, brass, ceramic, reactor, cyan_glass, warning
     bpy.ops.wm.read_factory_settings(use_empty=True)
     armour=material("Fitting gunmetal",(.053,.083,.127),.63,.38)
     alloy=material("Brushed fitting edges",(.15,.22,.28),.72,.31)
@@ -316,10 +315,13 @@ def export_ship(ship):
     prism=material("Violet prismatic glass",(.23,.085,.50),.46,.19,.17)
     brass=material("Champagne gold edging",(.47,.27,.067),.74,.23)
     ceramic=material("Phantom blue-black enamel",(.048,.17,.18),.59,.26)
+    cyan_glass=material("Cyan energy laminate",(.10,.55,.64),.33,.21,.45)
+    warning=material("Razor red warning",(.97,.055,.064),.12,.34,1.9)
     reactor=material("Fusion amber core",(.96,.46,.07),.12,.32,2.7)
     proxy=loft("Plating reference",fleet.HULLS.get(ship,WASP_HULL),armour,
                power=.39 if ship in ("bastion","scavenger") else .55 if ship in ("architect","spectre") else .75)
-    for item in ENGINE+WING+MOUNT+PLATING:
+    slots=(("wings",WING),) if wing_only else (("engine",ENGINE),("wings",WING),("mount",MOUNT),("plating",PLATING))
+    for item in (item for _,ids in slots for item in ids):
         before=set(bpy.context.scene.objects)
         glow=material(f"{item} emitter",PALETTES[item],.1,.28,2.1)
         if item in ENGINE:
@@ -354,7 +356,7 @@ def export_ship(ship):
     bpy.data.objects.remove(proxy,do_unlink=True)
     ship_dir=DEST/ship
     ship_dir.mkdir(exist_ok=True)
-    for slot, ids in (("engine",ENGINE),("wings",WING),("mount",MOUNT),("plating",PLATING)):
+    for slot, ids in slots:
         bpy.ops.object.select_all(action="DESELECT")
         for item in ids:
             parent=bpy.data.objects[item]
@@ -367,4 +369,4 @@ def export_ship(ship):
 
 if __name__ == "__main__":
     for model in (*fleet.HULLS,"wasp"):
-        export_ship(model)
+        export_ship(model,"--wings-only" in sys.argv)

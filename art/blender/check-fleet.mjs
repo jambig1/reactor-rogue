@@ -46,6 +46,24 @@ for (const file of files) {
     const node=model.root.getObjectByName(fitting);
     assert.equal(node?.userData.fittingId,fitting,`${id} missing Blender fitting ${fitting}`);
     assert(node.children.some(child=>child.isMesh && child.geometry.attributes.normal));
+    if (fitting[0]==='w') {
+      node.updateWorldMatrix(true,true);
+      const halves=[new T.Box3(),new T.Box3()];
+      const v=new T.Vector3();
+      node.traverse(mesh=>{
+        if (!mesh.isMesh) return;
+        const positions=mesh.geometry.attributes.position;
+        for(let i=0;i<positions.count;i++){
+          v.fromBufferAttribute(positions,i).applyMatrix4(mesh.matrixWorld);
+          const side=v.y<0?0:1;
+          v.y=Math.abs(v.y);
+          halves[side].expandByPoint(v);
+        }
+      });
+      for(const limit of ['min','max']){
+        assert(halves[0][limit].distanceTo(halves[1][limit])<.035,`${id} ${fitting} ${limit} is asymmetric`);
+      }
+    }
     if (fitting[0]==='e') {
       assert.equal(model.flames.length,(id==='bastion'||id==='sovereign'||id==='scavenger' ? 3 : 2)*(fitting==='e_twin'?2:1));
       assert(model.flames.every(flame=>flame.x < -16 && flame.r > 0));
