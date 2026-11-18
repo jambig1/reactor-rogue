@@ -4,20 +4,36 @@ import { finishFitting } from './ship3d-fitting-finish.js';
 const unitScale = 9.6;
 const models = new Set(['vanguard','wasp','bastion','harrier','glacier','tempest','scavenger','spectre','architect','helios','echo','sovereign']);
 const assets = new Map();
+const fittingAssets = new Map();
 export const hasBlenderShip = id => models.has(id);
+export const fittingSlots = parts => Object.entries(parts).filter(([,id]) => fittingIds.includes(id)).map(([slot]) => slot);
+
+function loadScene(url) {
+  return import('./vendor/three-0.187.0/GLTFLoader.js')
+    .then(({ GLTFLoader }) => new GLTFLoader().loadAsync(new URL(url, import.meta.url).href))
+    .then(({ scene }) => scene);
+}
 
 export function loadBlenderShip(id) {
   if (!assets.has(id)) {
-    const url = new URL(`./art/blender/${id === 'wasp' ? 'Wasp' : id}.glb`, import.meta.url);
-    assets.set(id, import('./vendor/three-0.187.0/GLTFLoader.js')
-      .then(({ GLTFLoader }) => new GLTFLoader().loadAsync(url.href))
-      .then(({ scene }) => scene)
+    assets.set(id, loadScene(`./art/blender/${id === 'wasp' ? 'wasp-refit' : id}.glb`)
       .catch(error => {
         assets.delete(id);
         throw error;
       }));
   }
   return assets.get(id);
+}
+
+export function loadBlenderFittings(id, slot) {
+  const key = id + '/' + slot;
+  if (!fittingAssets.has(key)) {
+    fittingAssets.set(key, loadScene(`./art/blender/fittings/${key}.glb`).catch(error => {
+      fittingAssets.delete(key);
+      throw error;
+    }));
+  }
+  return fittingAssets.get(key);
 }
 
 function replacedByPart(name, parts, id) {
@@ -32,7 +48,7 @@ function replacedByPart(name, parts, id) {
   return parts.mount && parts.mount !== 'm_stock' && /^(Long.range pulse cannon|Gun pylon)/.test(name);
 }
 
-export function buildBlenderShip(T, id, template, record, parts) {
+export function buildBlenderShip(T, id, template, record, parts, catalog) {
   const root = new T.Group();
   root.name = id + ' — Blender airframe';
   const airframe = template.clone(true);
@@ -98,10 +114,40 @@ export function buildBlenderShip(T, id, template, record, parts) {
   for (const object of remove) object.removeFromParent();
 
   if (id === 'wasp') outlets = [-1, 1].map(side => ({ x: -3.346 * unitScale, y: side * .87 * unitScale, z: -.09 * unitScale, r: 1.5 }));
+  const width = outlets.reduce((maximum, {y}) => Math.max(maximum, Math.abs(y)), 0) || 8;
+  const tail = outlets.reduce((minimum, {x}) => Math.min(minimum, x), 0) + 4;
   for (const [slot, partId] of Object.entries(parts)) {
     if (!fittingIds.includes(partId)) continue;
-    const width = outlets.reduce((maximum, {y}) => Math.max(maximum, Math.abs(y)), 0) || 8;
-    const tail = outlets.reduce((minimum, {x}) => Math.min(minimum, x), 0) + 4;
+    const source = catalog?.get(slot)?.children.find(node => node.userData.fittingId === partId);
+    if (source) {
+      const fitting = source.clone(true);
+      fitting.name = partId;
+      fitting.rotation.x = Math.PI / 2;
+      root.add(fitting);
+      fitting.updateWorldMatrix(true, true);
+      const nozzles = [];
+      fitting.traverse(object => {
+        if (object.userData.outletRadius) {
+          projected.setFromMatrixPosition(object.matrixWorld);
+          nozzles.push({x:projected.x, y:projected.y, z:projected.z, r:object.userData.outletRadius});
+        }
+        if (!object.isMesh) return;
+        if (object.material.emissive?.getHex()) {
+          let material = materials.get(object.material);
+          if (!material) {
+            material = object.material.clone();
+            material.emissive.lerp(trim, .16);
+            material.toneMapped = false;
+            materials.set(object.material, material);
+            disposables.push(material);
+          }
+          object.material = material;
+          glowMeshes.push(object);
+        } else bodyMeshes.push(object);
+      });
+      if (slot === 'engine' && nozzles.length) outlets = nozzles;
+      continue;
+    }
     const base = buildFitting(T, partId, { color: record.color, width, tail, shipId: id });
     const fitting = finishFitting(T, base, partId, record.color);
     root.add(fitting.root);
