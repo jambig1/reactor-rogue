@@ -120,7 +120,7 @@ function endHero(win){let cleared=s.completed||win,sector=sectors.find(x=>x.id==
  if(s.newBestScore)chips.push(['gold','New best score']);if(s.newBestTime)chips.push(['gold','Longest run']);if(s.endlessRecordNew)chips.push(['gold','New endless record']);
  if(!test&&masteryRank(s.pilot.id)>(s.masteryRankBefore||1))chips.push(['violet','Mastery rank up']);
  if((s.blueprintsFound||[]).length)chips.push(['cyan',s.blueprintsFound.length+' blueprint'+(s.blueprintsFound.length>1?'s':'')]);
- if(!test&&(s.creditsEarned||0)>0)chips.push(['mint','+'+s.creditsEarned+' credits']);if(test)chips.push(['muted','Developer test · nothing saved']);
+ if(!test&&(s.creditsEarned||0)>0)chips.push(['mint','+'+s.creditsEarned+' credits']);for(let m of (s.missions||[]))if(m.done)chips.push(['gold','Mission ✓ '+escapeHTML(missionText(m))]);if(test)chips.push(['muted','Developer test · nothing saved']);
  let line=cleared?(f?.stage==='done'?'Final encounter destroyed in '+time(f.time||0):'Sector secured'):(cause?'Destroyed by <b>'+escapeHTML(cause)+'</b>':'Run ended')+(f?.stage==='active'?' · during the final encounter':s.enemies.some(e=>e.boss&&e.hp>0)?' · during a reactor fight':'');
  return '<section class="end-hero '+(cleared?'won':'lost')+'"><div class="end-hero-head"><span>'+escapeHTML(sector)+(s.endless?' · endless cycle '+endlessPressure().cycle:'')+'</span><strong>'+(cleared?(s.endless?'Endless run over':'Sector clear'):'Run over')+'</strong><p>'+line+'</p></div>'
   +'<div class="end-hero-stats">'+[['Survived',time(s.t)],['Level',s.lv],['Kills',s.kills.toLocaleString()],['Reactors',reactors]].map(([k,v])=>'<div><small>'+k+'</small><strong>'+v+'</strong></div>').join('')+'</div>'

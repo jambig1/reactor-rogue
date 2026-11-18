@@ -36,6 +36,8 @@
   "src/game/effects/gpu-layer.js",
   "src/game/game/frame-loop-sectors.js",
   "src/game/game/powerups-death.js",
-  "src/game/world/pods-rift-hive.js"
+  "src/game/world/pods-rift-hive.js",
+  "src/game/ui/missions.js",
+  "src/game/ui/outpost.js"
  ]
 }
