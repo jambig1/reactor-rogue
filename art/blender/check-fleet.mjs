@@ -18,6 +18,7 @@ const inspect = ship => {
   assert(b.min.x < -12 && b.max.x > 12 && b.min.z < -.6 && b.max.z > .75);
   assert(ship.bodyMeshes.some(mesh=>mesh.material.map && mesh.geometry.attributes.uv));
   for (const d of ship.disposables) d.dispose();
+  return b;
 };
 for (const file of files) {
   const id=file === 'wasp-refit.glb' ? 'wasp' : file.slice(0,-4);
@@ -40,7 +41,7 @@ for (const file of files) {
     const meshes=scene.children.filter(o=>o.isMesh);
     assert(meshes.length < 24 && meshes.some(o=>o.name.startsWith('wing')));
   }
-  inspect(buildBlenderShip(T,id,scene,record,{}));
+  const stock=inspect(buildBlenderShip(T,id,scene,record,{}));
   for (const fitting of fittingIds) {
     const model=buildBlenderShip(T,id,scene,record,{[slot[fitting[0]]]:fitting},catalog);
     const node=model.root.getObjectByName(fitting);
@@ -60,6 +61,8 @@ for (const file of files) {
           halves[side].expandByPoint(v);
         }
       });
+      const span=halves[0].max.y+halves[1].max.y;
+      assert(span >= (stock.max.y-stock.min.y)*1.10,`${id} ${fitting} is too narrow for the hull`);
       for(const limit of ['min','max']){
         assert(halves[0][limit].distanceTo(halves[1][limit])<.035,`${id} ${fitting} ${limit} is asymmetric`);
       }

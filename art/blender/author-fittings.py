@@ -132,7 +132,10 @@ def wing(ship,item,signal,proxy):
     span=tip-socket
     if span<4:
         raise ValueError(f"No clearance for {ship} wings")
-    length=chord*1.82+max(0,centre-tail)*.16
+    # Grow the exposed blade on both axes about its inboard socket. Compact
+    # hulls need more span than capital ships to make the wing read at bay scale.
+    span*= {"harrier":1.40,"spectre":1.36,"wasp":1.35,"sovereign":1.24,"bastion":1.26,"architect":1.28}.get(ship,1.32)
+    length=(chord*1.82+max(0,centre-tail)*.16)*1.20
     nose=centre+length*.50
     before=set(bpy.context.scene.objects)
 
