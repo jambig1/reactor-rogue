@@ -4725,7 +4725,7 @@ function combatShipSprite(pilot){
   import('./ship3d-flight.js').then(async renderer=>{
    const sprite=await renderer.loadFlightShip(pilot.id,recordShip3D(pilot),pilot.parts||{});
    if(sprite){entry.sprite=sprite;entry.paint=renderer.paintFlightShip}
-  }).catch(()=>{});
+  }).catch(error=>console.warn('Flight model unavailable; using the 2D ship',error));
  }
  return entry;
 }
@@ -4736,6 +4736,7 @@ let bankS=1-Math.abs(s.flightVisual?.bank||0)*.28;
 if(!s.preview&&s.pilot&&graphics.preset!=='low'){
  const {sprite,paint:paintModel}=combatShipSprite(s.pilot);
  if(sprite){
+  if(ctx.canvas.dataset.flightModel!==s.pilot.id)ctx.canvas.dataset.flightModel=s.pilot.id;
   paintModel(ctx,sprite,t,{heading:paintHullHeading(s),bank:bankS,thrust:s.flightVisual?.thrust||0,
    boost:s.dashTime>0||s.boostTime>0,phased:s.pilot.id==='spectre'&&s.phaseTime>0,reducedMotion});
   return;
