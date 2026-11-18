@@ -162,6 +162,15 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 1.3.0 — Combat ship matches the hangar, cleanup
+
+- **In-game ship:** combat is back to the neon 2D style, now shaped like your Blender hangar model. Each hull's top view (silhouette, canopy, armour, painted panels and guidance lights) is baked from its model by `art/blender/bake-combat.mjs` into the game, then drawn with a neon edge in your ship's colour. It appears instantly, with no swap from an old-style ship, and is easy to spot on dark backgrounds.
+- The aiming turret and armour plating show on your ship in combat again (the 3D combat sprite was hiding them). Engine flames come from the model's real nozzles.
+- **Hangar:** no more old-style ship appearing before the 3D one. While a model downloads the bay stays empty, then the ship beams in. Your current ship's model now starts downloading while you're on the main menu, so it's usually ready instantly. The stand-in models (`ship3d-fleet.js`, `vanguard-model.js`, `ship3d-details.js`) are removed.
+- **Test links behave like the real game:** removed the test-link shortcuts that unlocked every ship and fitting and added a test-ship picker.
+- **Star map:** on phones the sun sits partly off the top-left edge instead of behind Neon Expanse.
+- **Removed leftovers:** the 3D combat sprite (`ship3d-flight.js`), the Vanguard benchmark and review pages, their scripts and data, a stale test, and five GitHub workflows for old branches.
+
 ## 1.2.0 — 3D ship in the hangar
 
 - Your ship in the hangar bay is now a real 3D model, not a flat drawing. It's built automatically from the same design the game draws, so your hull, class, specialisation, paint colour and fitted parts all appear on it.
