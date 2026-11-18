@@ -2415,7 +2415,10 @@ function recordShip3D(pilot){let R=shipRecorder(),p={...pilot,pattern:'none'};tr
 const bay3d={state:'',ship:null,canvas:null,off:false};
 function bay3dWanted(){return !bay3d.off&&typeof document!=='undefined'&&typeof WebGLRenderingContext!=='undefined'&&!(typeof graphicsQuality!=='undefined'&&graphicsQuality==='low')}
 function bay3dStart(){if(bay3d.state||!bay3dWanted())return;bay3d.state='loading';try{let cv=document.createElement('canvas');cv.id='shipBay3d';cv.setAttribute('aria-hidden','true');bay3d.canvas=cv;import('./ship3d-v1100.js').then(m=>m.createShip3D(cv)).then(sh=>{if(!sh){bay3d.state='failed';return}bay3d.ship=sh;bay3d.state='ready'}).catch(e=>{console.warn('3D hangar ship unavailable',e);bay3d.state='failed'})}catch(e){bay3d.state='failed'}}
-function bay3dDraw(c,f){let S=bay3d.ship;if(bay3d.state!=='ready'||!S||S.lost||!bay3dWanted()){if(bay3d.canvas)bay3d.canvas.style.display='none';return false}
+function bay3dDraw(c,f){let S=bay3d.ship;
+ // while the 3D engine is still starting up, keep the bay empty (the ship beams in once it's ready) rather than flashing the 2D ship
+ if(bay3d.state==='loading'&&bay3dWanted()){bay3d.waiting=true;if(bay3d.canvas)bay3d.canvas.style.display='none';return true}
+ if(bay3d.state!=='ready'||!S||S.lost||!bay3dWanted()){if(bay3d.canvas)bay3d.canvas.style.display='none';return false}
  let cv=bay3d.canvas;if(cv.parentNode!==c.parentNode)c.parentNode.insertBefore(cv,c.nextSibling);cv.style.display='block';
  let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor]);if(key!==bay3d.key){
    let previous=bay3d.key&&JSON.parse(bay3d.key);
@@ -2434,8 +2437,10 @@ function bay3dDraw(c,f){let S=bay3d.ship;if(bay3d.state!=='ready'||!S||S.lost||!
  if(S.pending){bay3d.waiting=true;S.render({...f,appear:.001});return true}
  if(bay3d.waiting){bay3d.waiting=false;if(!reducedMotion){bayFx.beam=1.3;f.appear=.001}}
  S.render(f);return true}
+// Once the 3D engine is up, hand it the current ship so its model downloads and builds before the hangar opens.
+function bay3dWarm(){if(bay3d.state==='loading'){setTimeout(bay3dWarm,150);return}let S=bay3d.ship;if(bay3d.state!=='ready'||!S||bay3d.key)return;try{let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor]);bay3d.key=key;S.setShip(key,recordShip3D(p))}catch(e){}}
 // Start downloading the current ship's hangar model while the player is still on the menu.
-function prefetchHangarShip(){if(!bay3dWanted()||bay3d.prefetched)return;bay3d.prefetched=1;try{let p=bayPilot();import('./ship3d-blender.js').then(m=>{if(!m.hasBlenderShip(p.id))return;m.loadBlenderShip(p.id).catch(()=>{});for(let slot of m.fittingSlots(p.parts||{}))m.loadBlenderFittings(p.id,slot).catch(()=>{})}).catch(()=>{})}catch(e){}}
+function prefetchHangarShip(){if(!bay3dWanted()||bay3d.prefetched)return;bay3d.prefetched=1;try{bay3dStart();bay3dWarm()}catch(e){}try{let p=bayPilot();import('./ship3d-blender.js').then(m=>{if(!m.hasBlenderShip(p.id))return;m.loadBlenderShip(p.id).catch(()=>{});for(let slot of m.fittingSlots(p.parts||{}))m.loadBlenderFittings(p.id,slot).catch(()=>{})}).catch(()=>{})}catch(e){}}
 if(typeof window!=='undefined'&&typeof setTimeout==='function'&&typeof document!=='undefined'&&document.readyState!==undefined)setTimeout(()=>{try{prefetchHangarShip()}catch(e){}},1500);
 function bayPointer(e){let c=e.currentTarget,r=c.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,B=bayFx;B.ptrs=B.ptrs||{};if(e.type==='pointerdown')B.ptrs[e.pointerId]={x,y};else if(e.type==='pointermove'&&B.ptrs[e.pointerId])B.ptrs[e.pointerId]={x,y};else if(e.type==='pointerup'||e.type==='pointercancel')delete B.ptrs[e.pointerId];
  let ids=Object.keys(B.ptrs);if(bay3d.state==='ready'&&ids.length>=2){let a=B.ptrs[ids[0]],b=B.ptrs[ids[1]],d=Math.hypot(a.x-b.x,a.y-b.y);if(B.pinch)B.zoom=clamp((B.zoom||1)*d/B.pinch,.7,1.9);B.pinch=d;if(B.drag)B.drag.moved=99;return}B.pinch=0;
