@@ -4716,10 +4716,32 @@ function drawSectorBossArt(e,t){let clock=reducedMotion||e.freeze>0?0:t,charge=b
 function drawPresentedBoss(e,t){let design=bossPresentation(e),a=design.radial?(reducedMotion||e.freeze>0?0:t*.075):Number.isFinite(e.aim)&&e.charge>0?e.aim:Math.atan2(s.p.y-e.y,s.p.x-e.x);ctx.save();ctx.rotate(a);ctx.scale(e.r/50,e.r/50);if(!e.sectorBoss)drawBossArtV2(e,t);else if(bossDesigns[e.sectorBoss+'/'+e.kind])drawSectorBossArt(e,t);else drawIllustratedBossHull(e,t);ctx.restore();
  if(e.arrival>0){ctx.save();ctx.shadowBlur=0;ctx.lineWidth=1.5;ctx.strokeStyle='#c5d9e8';let r=e.r+12;for(let i=0;i<4;i++){ctx.save();ctx.rotate(i*Math.PI/2);ctx.beginPath();ctx.moveTo(r-4,-7);ctx.lineTo(r,-7);ctx.lineTo(r,7);ctx.lineTo(r-4,7);ctx.stroke();ctx.restore()}ctx.restore()}}
 function enemyDesign(e,t){if(e.objectiveTarget)return;ctx.save();drawContactRecoil(e);if(e.finalBoss)drawFinalBoss(e,t);else if(e.systemOwner)drawFinalSystem(e,t);else if(e.sporePod)drawSporePod(e,t);else if(e.wreckTurret)drawWreckTurret(e,t);else if(e.swarm)drawSwarmDrone(e,t);else if(e.boss)drawPresentedBoss(e,t);else drawEnemyShip(e,t);ctx.restore();if(!e.boss&&!e.systemOwner&&!e.sporePod&&!e.wreckTurret&&!e.swarm)drawSpecialist(e)}
+const combatShipSprites=new WeakMap();
+function combatShipSprite(pilot){
+ let entry=combatShipSprites.get(pilot);
+ if(!entry){
+  entry={};
+  combatShipSprites.set(pilot,entry);
+  import('./ship3d-flight.js').then(async renderer=>{
+   const sprite=await renderer.loadFlightShip(pilot.id,recordShip3D(pilot),pilot.parts||{});
+   if(sprite){entry.sprite=sprite;entry.paint=renderer.paintFlightShip}
+  }).catch(()=>{});
+ }
+ return entry;
+}
 function pilotDesign(t,view=s,paint=shipCanvasPainter){
 const {ctx,poly,circle,hex}=paint;const s=view;
 if(!s.preview){ctx.save();ctx.translate(3,6);ctx.scale(1,.55);circle(0,0,s.pilot.id==='bastion'?28:19,'#00000088');ctx.restore();}
-let bankS=1-Math.abs(s.flightVisual?.bank||0)*.28;ctx.save();ctx.rotate(paintHullHeading(s));ctx.scale(1,bankS);drawIdentityHull(s.pilot,t,paint,s);ctx.restore();ctx.save();ctx.rotate(paintHullHeading(s));ctx.scale(1,bankS);
+let bankS=1-Math.abs(s.flightVisual?.bank||0)*.28;
+if(!s.preview&&s.pilot&&graphicsQuality!=='low'){
+ const {sprite,paint:paintModel}=combatShipSprite(s.pilot);
+ if(sprite){
+  paintModel(ctx,sprite,t,{heading:paintHullHeading(s),bank:bankS,thrust:s.flightVisual?.thrust||0,
+   boost:s.dashTime>0||s.boostTime>0,phased:s.pilot.id==='spectre'&&s.phaseTime>0,reducedMotion});
+  return;
+ }
+}
+ctx.save();ctx.rotate(paintHullHeading(s));ctx.scale(1,bankS);drawIdentityHull(s.pilot,t,paint,s);ctx.restore();ctx.save();ctx.rotate(paintHullHeading(s));ctx.scale(1,bankS);
 let partEngine=false;try{partEngine=drawPartFlames(ctx,s.pilot,t,s.flightVisual?.thrust||0,s.dashTime>0||s.boostTime>0)}catch(e){}if(!reducedMotion&&!partEngine){let pulse=.5+.5*Math.sin(t*17),length=(s.dashTime>0||s.boostTime>0?28:4+(s.flightVisual?.thrust||0)*12)+pulse*4;for(let side of [-1,1]){let y=side*(s.pilot.id==='bastion'?16:9);ctx.save();ctx.globalAlpha=.3;poly([[-15,y-2],[-15-length,y],[-15,y+2]],s.pilot.color);ctx.globalAlpha=.75;poly([[-15,y-1],[-17-length*.6,y],[-15,y+1]],'#d4fff3');ctx.restore()}}
 ctx.shadowBlur=graphicsShadow(0);
 let heavy=['bastion','sovereign'].includes(s.pilot.id),light=s.pilot.id==='wasp',c=s.pilot.color
