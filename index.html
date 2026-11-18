@@ -1714,7 +1714,7 @@ function motionPress(el,down){if(!uiMotion.ok()||!el)return;try{gsap.to(el,down?
 if(typeof document!=='undefined'&&document.addEventListener){
  let pressed=null;document.addEventListener('pointerdown',ev=>{let b=ev.target&&ev.target.closest&&ev.target.closest('button,.card');if(!b||b.disabled||state==='play')return;pressed=b;motionPress(b,true)},{capture:true,passive:true});
  for(let t of ['pointerup','pointercancel','pointerleave'])document.addEventListener(t,()=>{if(pressed){motionPress(pressed,false);pressed=null}},{capture:true,passive:true});
- if(typeof addEventListener==='function')addEventListener('load',()=>{try{let m=document.getElementById('menu');if(m&&!m.classList.contains('hidden'))motionIn('menu')}catch(e){}});
+ if(typeof addEventListener==='function')addEventListener('load',()=>{try{let m=document.getElementById('menu');if(m&&!m.classList.contains('hidden')&&uiMotion.ok())motionMenu()}catch(e){}});// the menu has already animated in with CSS; only start the logo/Play idle effects, don't replay the entrance
  try{let watch=(id)=>{let el=document.getElementById(id);if(el&&typeof MutationObserver!=='undefined')new MutationObserver(()=>motionCards(el)).observe(el,{childList:true})};watch('choices');watch('specChoices')}catch(e){}}
 
 function show(id,on){let wasHidden=false;try{wasHidden=!!$(id).classList.contains?.('hidden')}catch(e){}$(id).classList.toggle('hidden',!on);if(on&&wasHidden&&typeof motionIn==='function')motionIn(id);if(['menu','preflight','paused','end','upgrade','reward','mutation','settings','records','hangar','specialise','breachSelect','breachReward','helpOverlay','merchant'].includes(id))syncMenuLayer()}

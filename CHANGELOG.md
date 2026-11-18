@@ -169,6 +169,7 @@
 - The gun stays fixed in place like in the hangar. Aim still follows your movement, or your cursor with a mouse. The item-armour indicators show on your ship in combat again (the 3D combat sprite was hiding them).
 - **Hangar:** no more old-style ship appearing before the 3D one. While a model downloads the bay stays empty, then the ship beams in. Your current ship's model now starts downloading while you're on the main menu, so it's usually ready instantly. The stand-in models (`ship3d-fleet.js`, `vanguard-model.js`, `ship3d-details.js`) are removed.
 - **Test links behave like the real game:** removed the test-link shortcuts that unlocked every ship and fitting and added a test-ship picker.
+- **Menu shows once:** opening the game no longer plays the main menu's entrance twice. The menu animates in once, and when the page finishes loading only the logo float and Play glow start.
 - **Star map:** on phones the sun sits partly off the top-left edge instead of behind Neon Expanse.
 - **Removed leftovers:** the 3D combat sprite (`ship3d-flight.js`), the Vanguard benchmark and review pages, their scripts and data, a stale test, and five GitHub workflows for old branches.
 
