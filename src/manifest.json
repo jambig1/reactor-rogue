@@ -1,0 +1,41 @@
+{
+ "styles": [
+  "src/styles/part-1.css",
+  "src/styles/part-2.css",
+  "src/styles/part-3.css",
+  "src/styles/part-4.css",
+  "src/styles/part-5.css",
+  "src/styles/part-6.css"
+ ],
+ "game": [
+  "src/game/ships/combat-sprite.js",
+  "src/game/combat/attack-art.js",
+  "src/game/combat/equipment.js",
+  "src/game/combat/weapon-icons-signatures.js",
+  "src/game/combat/evolution-arena.js",
+  "src/game/audio/music.js",
+  "src/game/ui/level-ups.js",
+  "src/game/ui/records-contracts.js",
+  "src/game/ui/star-map.js",
+  "src/game/hangar/bay-3d.js",
+  "src/game/hangar/bay-drones-radar-loadouts.js",
+  "src/game/ships/modular-hull.js",
+  "src/game/ships/specialisations-painter.js",
+  "src/game/ships/identity-hull.js",
+  "src/game/world/merchant.js",
+  "src/game/world/salvage-pickups.js",
+  "src/game/world/rewards-terrain.js",
+  "src/game/world/debris-upgrade-choices.js",
+  "src/game/core/profiles-saves.js",
+  "src/game/world/city-hazards.js",
+  "src/game/game/runs-objectives.js",
+  "src/game/world/scenery.js",
+  "src/game/enemies/enemy-ships.js",
+  "src/game/enemies/boss-art.js",
+  "src/game/combat/projectiles-explosions.js",
+  "src/game/effects/gpu-layer.js",
+  "src/game/game/frame-loop-sectors.js",
+  "src/game/game/powerups-death.js",
+  "src/game/world/pods-rift-hive.js"
+ ]
+}

@@ -61,8 +61,13 @@ Game art and the font are versioned WebP/WOFF files served beside `index.html`. 
 
 Run variety includes shuffled fleet operations, regular recovery windows and optional Relay Circuits. Complete a circuit to choose one run-only field protocol for close-range, long-range, cold-target or siege damage. Protocols replace one another and do not use equipment slots.
 
-Current playable version: **1.3.0**.
+Current playable version: **1.4.0**.
 
 ## Font attribution
 
 The game uses Exo 2. Its SIL Open Font License is included in [FONT-LICENSE-Exo2.txt](FONT-LICENSE-Exo2.txt).
+
+
+## Development
+
+`index.html` is generated: edit the files in `src/` and run `node build.mjs`. See `AGENTS.md`.

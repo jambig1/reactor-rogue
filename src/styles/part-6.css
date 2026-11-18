@@ -1,0 +1,131 @@
+/* v0.99 detail pass: panels */
+.bay-hud{position:absolute;left:50%;top:6px;transform:translateX(-50%);display:flex;gap:10px;font-size:7px;letter-spacing:2px;color:#65f7ef99;pointer-events:none;z-index:1}.bay-hud span:last-child{color:#7cf4a0}
+.bay{box-shadow:inset 0 0 0 1px #65f7ef22,inset 0 0 40px #000a,0 0 30px #65f7ef14}
+.bay-stats span{background:linear-gradient(180deg,#0f1d31,#070f1d);box-shadow:inset 0 1px 0 #ffffff12;padding:5px 2px 6px}
+.st-ico{display:block;width:16px;height:16px;margin-bottom:1px;opacity:.85}.st-ico svg,.st-ico img{width:16px;height:16px}
+.sv-ico{display:inline-block;width:16px;height:16px;vertical-align:-3px;margin-right:6px;opacity:.7}.sv-ico svg,.sv-ico img{width:16px;height:16px}.ship-views button[aria-pressed=true] .sv-ico{opacity:1}
+.tree-node,.part-row,.part-slot,.loadout,.spec-pick button{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.tree-node:after,.part-row:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,#ffffff05 0 1px,transparent 1px 3px);pointer-events:none}
+.tree-node{box-shadow:inset 0 1px 0 #ffffff14}
+.tn-ico{flex:none;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,color-mix(in srgb,var(--bc) 22%,#0a1529),#050b17);border:1px solid color-mix(in srgb,var(--bc) 40%,transparent);align-self:center}.tn-ico svg,.tn-ico img{width:26px;height:26px}
+.tree-node.locked .tn-ico,.tree-node.needclass .tn-ico,.tree-node.needspec .tn-ico{filter:grayscale(1);opacity:.6}
+.tree-node.owned .tn-ico{box-shadow:0 0 12px color-mix(in srgb,var(--bc) 55%,transparent)}
+.tree-tier.pair .tree-node{flex-direction:column;gap:6px}.tree-tier.pair .tn-ico{align-self:flex-start;width:32px;height:32px}.tree-tier.pair .tn-ico svg,.tree-tier.pair .tn-ico img{width:22px;height:22px}.tree-tier header{position:relative}.tree-tier header span:after{content:'';display:inline-block;width:40px;height:1px;margin-left:8px;vertical-align:middle;background:linear-gradient(90deg,currentColor,transparent)}
+.ship-screen h4{display:flex;align-items:center;gap:8px}.ship-screen h4:before{content:'';width:6px;height:6px;transform:rotate(45deg);background:#65f7ef}.ship-screen h4:after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#65f7ef55,transparent)}
+.tree-tabs button{clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));border-radius:4px}
+
+/* v0.99 part art */
+.part-slot .part-ico img{width:30px;height:30px;object-fit:contain}
+.part-row.has-art{grid-template-columns:56px 1fr auto}.part-row.has-art>.part-art{grid-column:1;grid-row:1/4;width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--rc) 50%,transparent))}
+.part-row.has-art>small,.part-row.has-art>b,.part-row.has-art>span{grid-column:2}.part-row.has-art>em,.part-row.has-art>.equip-btn{grid-column:3}
+.part-row.unknown>.part-art{filter:brightness(0) drop-shadow(0 0 1px #ffffff55);opacity:.7}
+
+/* v0.99 star map redesign */
+.star-map .planet,.star-map .planet:hover,.star-map .planet:focus,.star-map .planet:active{background:none!important;border:0!important;box-shadow:none!important;outline:none!important;min-width:0!important;min-height:0!important;padding:0!important}.star-map .planet:focus-visible .planet-tag{outline:2px solid #65f7ef}
+.star-map{border-radius:16px;overflow:hidden;border:1px solid #65f7ef22;box-shadow:inset 0 0 50px #000c}
+#starMapBg{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:0!important;pointer-events:none}
+.star-route{display:none}
+.planet{position:absolute;z-index:1;transform:translate(-50%,calc(var(--ps)/-2));width:150px;gap:6px}.planet.locked .planet-tag{padding:3px 8px}.planet.locked .planet-tag em{font-size:8.5px}
+.planet-orb{position:relative;display:block;width:var(--ps);height:var(--ps);border-radius:50%;background-color:#123;background-position:0 0,0% 50%;background-size:100% 100%,260% auto;background-repeat:no-repeat;background-blend-mode:screen,normal;filter:contrast(1.15) saturate(1.3);border:0;box-shadow:0 0 16px color-mix(in srgb,var(--pc) 60%,transparent),0 0 44px color-mix(in srgb,var(--pc) 25%,transparent);transition:width .35s,height .35s;flex:none}
+.planet-orb:after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 28%,#ffffff55 0,#ffffff00 32%),radial-gradient(circle at 78% 78%,#000000c0 0,#00000050 32%,#00000000 62%);box-shadow:inset -7px -7px 16px #000b,inset 3px 3px 8px color-mix(in srgb,var(--pc) 60%,transparent)}
+.planet-orb:before{content:'';position:absolute;inset:-5px;border-radius:50%;background:radial-gradient(circle,transparent 60%,color-mix(in srgb,var(--pc) 75%,transparent) 66%,transparent 73%);z-index:1}
+.planet-ring{position:absolute;left:-38%;top:38%;width:176%;height:26%;border-radius:50%;border:2px solid color-mix(in srgb,var(--pc) 70%,#fff);box-shadow:0 0 10px var(--pc);transform:rotate(-16deg);opacity:.75;z-index:2;clip-path:polygon(0 50%,100% 50%,100% 100%,0 100%)}
+.planet-target{position:absolute;left:50%;top:calc(var(--ps)/2);width:calc(var(--ps) + 30px);height:calc(var(--ps) + 30px);margin:calc(var(--ps)/-2 - 15px) 0 0 calc(var(--ps)/-2 - 15px);border-radius:50%;border:2px dashed #ffdc8d;opacity:.8;pointer-events:none}
+.planet-target:after{content:'';position:absolute;inset:8px;border-radius:50%;border:1px solid #ffdc8d55}
+.planet-tag{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 10px;border-radius:10px;background:#050b17cc;border:1px solid color-mix(in srgb,var(--pc) 35%,transparent);backdrop-filter:blur(2px)}
+.planet-tag small{font-size:8px;letter-spacing:2px;color:#91a6bb}.planet-tag b{font-size:12px;letter-spacing:.5px;color:#e8fbff}.planet-tag em{font-style:normal;font-size:9px;color:#91a6bb;max-width:150px;text-align:center;line-height:1.2}
+.planet.selected .planet-tag{border-color:#ffdc8d;box-shadow:0 0 14px #ffdc8d44}.planet.selected .planet-tag b{color:#ffdc8d}
+.planet.selected .planet-orb{transform:none}
+.planet.locked{opacity:1}.planet.locked .planet-orb{filter:grayscale(.85) brightness(.45);box-shadow:none}.planet.locked .planet-tag{opacity:.7}
+.planet-lock{position:absolute;top:calc(var(--ps)/2 - 9px);left:50%;transform:translateX(-50%);font-size:14px;font-style:normal;z-index:3;filter:drop-shadow(0 0 4px #000)}
+@media (prefers-reduced-motion:no-preference){.planet-orb{animation:planetSpin 46s ease-in-out infinite alternate}.planet-target{animation:targetSpin 9s linear infinite}@keyframes planetSpin{to{background-position:0 0,100% 50%}}@keyframes targetSpin{to{transform:rotate(360deg)}}.planet.selected .planet-orb{animation:planetSpin 46s ease-in-out infinite alternate}}
+.planet .pips i{width:6px;height:6px;transform:rotate(45deg);border-radius:1px}
+.mission-card{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center;padding:12px 14px;border-radius:14px;border:1px solid color-mix(in srgb,var(--pc) 45%,transparent);background:radial-gradient(120% 120% at 0% 0%,color-mix(in srgb,var(--pc) 18%,#0a1529),#050b17 70%);box-shadow:inset 0 0 0 1px #ffffff0a,0 0 26px color-mix(in srgb,var(--pc) 16%,transparent);text-align:left;position:relative;overflow:hidden}
+.mission-card:before,.mission-card:after{content:'';position:absolute;width:14px;height:14px;border:2px solid var(--pc);opacity:.7}.mission-card:before{left:6px;top:6px;border-right:0;border-bottom:0}.mission-card:after{right:6px;bottom:6px;border-left:0;border-top:0}
+.mission-card .planet-orb.big{grid-row:1/2}
+.mc-body small{font-size:9px;letter-spacing:2px;color:var(--pc)}.mc-body h3{margin:2px 0 4px;font-size:20px;letter-spacing:.5px}.mc-body p{margin:4px 0 0;font-size:12px;line-height:1.35;color:#b8c9da}
+.mc-threat{display:flex;align-items:center;gap:3px}.mc-threat span{font-size:8px;letter-spacing:2px;color:#91a6bb;margin-right:4px}.mc-threat i{width:14px;height:5px;border-radius:2px;background:#ffffff1a}.mc-threat i.on{background:linear-gradient(90deg,#ffdc8d,#ff8a5a);box-shadow:0 0 6px #ff8a5a88}
+.mc-bosses{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}.mc-bosses span{font-size:8px;letter-spacing:2px;color:#91a6bb}.mc-bosses em{font-style:normal;font-size:11px;padding:3px 8px;border-radius:7px;border:1px solid #ff7a8a55;color:#ffb0ba;background:#2a0f17}.mc-bosses em.down{border-color:#7cf4a055;color:#7cf4a0;background:#0f2a1f}
+.mc-progress{grid-column:1/-1;font-size:11px;color:#91a6bb;margin-top:6px}.mc-progress b{color:#ffdc8d}
+@media(max-width:650px){#preflightLoadout:has(.mission-card){position:sticky;top:0;z-index:4;background:#0b1424;padding-bottom:8px;box-shadow:0 10px 18px #050b17}}
+
+/* v0.99 star map: simpler */
+.planet-tag{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;backdrop-filter:none!important;text-shadow:0 1px 6px #000,0 0 2px #000}
+.planet-tag b{font-size:12px}.planet.selected .planet-tag b{color:#fff}
+.planet.locked .planet-tag em{display:none}.planet.locked .planet-tag b{color:#6f8296}
+.planet-target{border:1px solid #ffffff55!important;opacity:.7}.planet-target:after{display:none}
+.planet-orb{box-shadow:0 0 12px color-mix(in srgb,var(--pc) 45%,transparent)!important}.planet.locked .planet-orb{box-shadow:none!important}
+.planet-lock{font-size:11px;opacity:.7}
+.mission-card{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px;border-radius:12px;background:#0a1424;box-shadow:none;border:1px solid #ffffff14}
+.mission-card:before,.mission-card:after{display:none}
+.mc-body small{font-size:8px;letter-spacing:2px;color:#91a6bb}.mc-body h3{font-size:17px;margin:1px 0 2px;color:var(--pc)}.mc-body p{margin:0;font-size:11px;color:#91a6bb}
+.mc-bosses{grid-column:auto;margin:0;flex-direction:column;align-items:center;gap:4px;flex-wrap:nowrap}.mc-bosses{display:grid;grid-template-columns:repeat(3,8px);gap:4px}.mc-bosses i{width:8px;height:8px;border-radius:50%;background:#ffffff1f}.mc-bosses i.down{background:#ffdc8d;box-shadow:0 0 6px #ffdc8d88}.mc-bosses span{grid-column:1/-1;text-align:center;font-size:10px;letter-spacing:1px;color:#91a6bb}
+.star-map{border:0;box-shadow:none}
+
+/* v0.99 star map motion */
+@media (prefers-reduced-motion:no-preference){
+ .star-map .planet{animation:planetFloat 6s ease-in-out var(--f) infinite}
+ @keyframes planetFloat{50%{translate:0 -5px}}
+ .star-map.enter .planet{animation:planetIn .7s cubic-bezier(.2,.8,.2,1) var(--d) both,planetFloat 6s ease-in-out calc(var(--d) + .7s) infinite}
+ @keyframes planetIn{from{opacity:0;translate:0 18px;scale:.85}to{opacity:1;translate:0 0;scale:1}}
+ .star-map.enter .map-ship{animation:fadeIn .6s ease 1s both}@keyframes fadeIn{from{opacity:0}}
+ .planet.just .planet-orb{animation:planetPop .55s cubic-bezier(.2,1.4,.4,1),planetSpin 46s ease-in-out infinite alternate}
+ @keyframes planetPop{from{scale:.75;filter:brightness(1.8) contrast(1.15) saturate(1.3)}to{scale:1}}
+ .planet.just .planet-target{animation:targetIn .5s ease-out,targetSpin 9s linear .5s infinite}@keyframes targetIn{from{opacity:0;scale:1.4}}
+ .planet-tag{transition:color .3s}
+ .mission-card.swap .planet-orb{animation:planetPop .55s cubic-bezier(.2,1.4,.4,1),planetSpin 46s ease-in-out infinite alternate}
+ .mission-card.swap .mc-body,.mission-card.swap .mc-bosses{animation:cardIn .4s cubic-bezier(.2,.8,.2,1) both}.mission-card.swap .mc-bosses{animation-delay:.08s}
+ @keyframes cardIn{from{opacity:0;translate:14px 0}}
+ .map-ship{transition:left .9s cubic-bezier(.45,0,.2,1),top .9s cubic-bezier(.45,0,.2,1)}
+}
+
+/* v0.99 PC layout for ship screen and star map */
+.ss-left,.ss-right{display:contents}
+@media (min-width:1000px) and (min-height:560px){
+ .ship-screen{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:start}
+ .ss-left,.ss-right{display:block;min-width:0}
+ .ss-left{position:sticky;top:0}
+ .ss-left .bay{height:clamp(280px,calc(100vh - 530px),480px)}
+ .ss-left .bay-id h3{font-size:30px}
+ .ss-left .bay-stats{margin-top:10px}.ss-left .bay-stats span{padding:8px 4px}.ss-left .bay-stats b{font-size:16px}.ss-left .bay-stats small{font-size:9px}
+ .ss-right .ship-views{margin-top:0}
+ .ship-screen.view-parts .bay-stats{position:static!important;background:none!important;box-shadow:none!important;padding:0!important}
+ .preflight-header{display:grid;grid-template-columns:auto 1fr auto;align-items:end;column-gap:28px}.preflight-header .eyebrow{grid-column:1/-1}#preflightTitle{margin:2px 0 0}#preflightHint{display:none}.preflight-header .preflight-steps{grid-column:3;margin:0}
+ .star-map.wide{max-width:none;margin:0}
+ #preflightSectors:has(.star-map.wide){display:grid;grid-template-columns:1fr;gap:0}
+ .star-map.wide .planet{width:140px}
+ #preflightSectors:has(.star-map.wide) #preflightLoadout{max-width:560px;margin:0 0 14px}
+ #preflightSectors:has(.star-map.wide) #preflightLoadout .mission-card{position:static}
+}
+
+/* v1.0 crew + workshop */
+.bay-crew{display:flex;gap:5px;margin-top:6px}.bay-crew .crew-portrait{width:28px;height:28px;border-width:1.5px}.bay-crew .crew-ship{width:20px;height:20px}
+.crew-intro h3{margin:4px 0 2px}.crew-seats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px}
+.crew-seat{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 6px;border-radius:12px;border:1px dashed #ffffff2a;background:#071122;text-align:center;min-height:96px;justify-content:center}
+.crew-seat.filled{border:1px solid #65f7ef77;background:linear-gradient(160deg,#0f2236,#071122);box-shadow:0 0 14px #65f7ef22}.crew-seat.locked{opacity:.5}
+.crew-seat b{font-size:13px}.crew-seat small{font-size:10px;color:#91a6bb}
+.crew-portrait{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--cc) 25%,#0a1529),#050b17);border:2px solid color-mix(in srgb,var(--cc) 70%,transparent);box-shadow:0 0 12px color-mix(in srgb,var(--cc) 35%,transparent);flex:none}
+.crew-portrait.unknown{border-color:#ffffff22;color:#5f7488;font-size:20px;box-shadow:none;background:#071122}.crew-ship{width:34px;height:34px}
+.crew-list{display:flex;flex-direction:column;gap:8px}
+.crew-card{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;padding:10px 12px;border-radius:12px;border:1px solid #ffffff1a;background:linear-gradient(160deg,#0d1b30,#071122);color:#dff8ff;font:inherit;min-width:0;width:100%}
+.crew-card .crew-text{display:flex;flex-direction:column;gap:1px;min-width:0}.crew-card b{font-size:15px}.crew-card small{font-size:10px;letter-spacing:1.5px;color:#91a6bb;text-transform:uppercase}.crew-card span span,.crew-card .crew-text>span{font-size:12px;color:#c8d8e8}
+.crew-card em{font-style:normal;font-size:11px;letter-spacing:1px;color:#65f7ef;padding:6px 10px;border:1px solid #65f7ef55;border-radius:8px}
+.crew-card.on{border-color:#65f7ef;box-shadow:0 0 16px #65f7ef33}.crew-card.on em{background:#65f7ef;color:#06101f;font-weight:700}
+.crew-card.missing{opacity:.55}.crew-card.missing em{display:none}
+.ws-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.ws-row{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid color-mix(in srgb,var(--rc) 40%,transparent);background:linear-gradient(160deg,#0d1b30,#071122);text-align:left}
+.ws-row img{width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--rc) 50%,transparent))}.ws-row small{font-size:9px;letter-spacing:1.5px;color:var(--rc)}.ws-row b{display:block;font-size:15px}.ws-row b i{font-style:normal;color:#ffdc8d}.ws-row span{display:block;font-size:12px;color:#b8c9da}
+.ws-pips{display:flex!important;gap:4px;margin-top:4px}.ws-pips u{width:9px;height:9px;transform:rotate(45deg);border-radius:2px;background:#ffffff1f}.ws-pips u.on{background:var(--rc);box-shadow:0 0 6px var(--rc)}
+.ws-row button{min-width:0;flex:none;font-size:12px;padding:8px 12px;line-height:1.2}.ws-row button small{color:#ffdc8d;letter-spacing:0}
+
+/* v1.1 immersive star map */
+#shipBay3d{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;pointer-events:none}
+#starMapFg{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:3!important;pointer-events:none}
+.star-map{-webkit-mask-image:linear-gradient(#0000,#000 28px,#000 calc(100% - 40px),#0000);mask-image:linear-gradient(#0000,#000 28px,#000 calc(100% - 40px),#0000)}
+.star-map:after{content:'';position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(90deg,#02040b70,#0000 12%,#0000 88%,#02040b70)}
+.planet-orb{z-index:2}
+.moon-x{position:absolute;left:50%;top:calc(var(--ps)/2);width:0;height:0;z-index:3;pointer-events:none;animation:moonX 11s ease-in-out infinite alternate}
+.moon-y{position:absolute;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:radial-gradient(circle at 32% 30%,#fff 0,#c9d6e2 30%,#5a6b7c 70%,#1d2733);box-shadow:0 0 6px #cfe8ff66;animation:moonY 11s ease-in-out -5.5s infinite alternate}
+@keyframes moonX{from{transform:translateX(calc(var(--ps)*-.82))}to{transform:translateX(calc(var(--ps)*.82))}}
+@keyframes moonY{from{transform:translateY(calc(var(--ps)*-.2)) scale(.75);opacity:.55}to{transform:translateY(calc(var(--ps)*.2)) scale(1.1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.moon-x,.moon-y{animation:none}}
