@@ -118,6 +118,10 @@ def wing(ship,item,signal,proxy):
     yi,chord,_,_,z,xi=original[0]
     yo,_,_,_,zo,xo=original[-1]
     capital=ship in ("bastion","sovereign","architect")
+    # Let blades clear the retained armour/drone platforms and fuselage
+    # outriggers instead of disappearing beneath their stock footprints.
+    yo+= {"bastion":5.5,"architect":5.3,"sovereign":2.8,"harrier":2.25,"echo":2.0}.get(ship,0)
+    zo+= 1.1 if capital else 0
     sweep=.78 if capital else 1.0
     thickness=.66 if ship=="spectre" else 1
     for side in (-1,1):
