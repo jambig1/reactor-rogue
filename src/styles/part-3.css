@@ -1,0 +1,156 @@
+/* v0.72 menu polish ------------------------------------------------------------------------- */
+/* Sticky footers: a solid band below the bar fills the panel's bottom padding, so scrolled text no longer shows underneath. */
+#help,#end>.panel,.records-panel{padding-bottom:0!important}
+#help>.actions,#end>.panel>.actions,#records .panel>.actions:last-child,#records:has(.discovery) .panel>.actions:last-child{z-index:3;bottom:0!important;margin-bottom:0!important;padding-bottom:16px!important;box-shadow:0 -10px 18px #101e2e}
+#settingsPanel #closeSettings{box-shadow:0 -8px 20px #101e2e,0 0 0 8px #101e2e,0 40px 0 8px #101e2e}
+/* How to play: grouped sections under the intro. */
+#help .help-group{margin:26px 0 2px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#7ee8c8;border-bottom:1px solid #2d4357;padding-bottom:8px}
+#help>h2{margin-top:4px}
+/* Settings tabs wrap instead of disappearing off both edges. */
+#settingsTabs{flex-wrap:wrap!important;overflow:visible!important;justify-content:center}
+#settingsTabs button{flex-shrink:1}
+/* Records: one size for every tab and a single tab row, so switching tabs doesn't jump. */
+.records-panel{width:min(1040px,100%)!important;height:min(820px,calc(92dvh / var(--uiz,1)))}
+#records .panel>nav,#records:has(.discovery) .panel>nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;justify-content:stretch;margin:0 auto 12px;max-width:620px}
+#records .panel>nav button{min-width:0;white-space:normal}
+#records:has(.discovery) .panel>.eyebrow{display:block}
+#records:has(.discovery) #recordsTitle{text-align:center}
+@media(max-width:560px){#records .panel>nav button{min-height:40px;padding:8px 3px;font-size:10px}}
+/* Pause footer on wider screens: two even rows instead of a lone button. */
+@media(min-width:700px){#paused .pause-footer{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}#paused .pause-footer #resume{grid-column:span 2;min-width:0}}
+/* Large screens: scale every menu up so text is readable on a desktop monitor. Viewport-height limits are
+   divided by the zoom because zoom also scales vh/dvh lengths. */
+@media(min-width:1360px) and (min-height:800px){:root{--uiz:1.18}}
+@media(min-width:1600px) and (min-height:900px){:root{--uiz:1.3}}
+@media(min-width:1900px) and (min-height:1040px){:root{--uiz:1.4}}
+@media(min-width:2400px) and (min-height:1300px){:root{--uiz:1.75}}
+@media(min-width:1360px) and (min-height:800px){
+ .overlay>.panel,.overlay>div>.panel{zoom:var(--uiz)}
+ .overlay .panel,#help,#settingsPanel,.records-panel,.hangar-panel,#menu .panel{max-height:calc(94dvh / var(--uiz))!important}
+ #hangar .hangar-panel{height:min(800px,calc(94dvh / var(--uiz)))!important}
+ #settingsPanel{height:min(750px,calc(94dvh / var(--uiz)))!important}
+ #paused .panel{height:min(850px,calc((100dvh - 32px) / var(--uiz)))!important}
+ #preflight .preflight-panel{height:calc(92dvh / var(--uiz))!important}
+}
+/* The launch menu is taller than its width suggests: give it a gentler zoom so it always fits. */
+@media(min-width:1360px) and (min-height:800px){#menu .panel{zoom:1.08;max-height:calc(94dvh / 1.08)!important}}
+@media(min-width:1600px) and (min-height:900px){#menu .panel{zoom:1.15;max-height:calc(94dvh / 1.15)!important}}
+@media(min-width:1900px) and (min-height:1040px){#menu .panel{zoom:1.22;max-height:calc(94dvh / 1.22)!important}}
+@media(min-width:2400px) and (min-height:1300px){#menu .panel{zoom:1.5;max-height:calc(94dvh / 1.5)!important}}
+
+/* v0.73 menu trim ---------------------------------------------------------------------------- */
+/* Launch menu: Play, then four destinations; profile and website become small links. Arsenal lives in Records. */
+#arsenalMenu,#statsMenu,#arsenalPaused,#statsPaused,#arsenalEnd,#statsEnd{display:none!important}
+#menu .launch-console .actions #start{order:0}#menu #how{order:1}#menu #hangarMenu{order:2}#menu #leaderMenu{order:3}#menu #settingsMenu{order:4}
+#menu .launch-console .actions #profileMenu,#menu .launch-console .actions #websiteMenu{order:5;background:none!important;border:0!important;box-shadow:none!important;min-height:30px;padding:6px 4px!important;font-size:11px!important;color:#9fb6c9;text-decoration:underline;text-decoration-color:#9fb6c955;text-underline-offset:3px}
+#menu .launch-console .actions #profileMenu:hover,#menu .launch-console .actions #websiteMenu:hover{color:#dff6ff}
+#menu .launch-console .actions #websiteMenu{order:6}
+#menu .launch-console .actions button:not(#start):not(#profileMenu):not(#websiteMenu){min-height:46px;font-size:12px}
+/* Controls hint matches the device: touch screens see touch controls, everything else sees keys. */
+.flight-controls .ctl-touch{display:none}
+@media(hover:none) and (pointer:coarse){.flight-controls .ctl-keys{display:none}.flight-controls .ctl-touch{display:inline}}
+/* Pause footer: Resume wide, then Restart and Settings; Records and Hangar, with Back to start wide. */
+#paused .pause-footer #restart{order:1}#paused .pause-footer #settingsPaused{order:2}#paused .pause-footer #leaderPaused{order:3}#paused .pause-footer #hangarPaused{order:4}#paused .pause-footer #backPaused{order:5}
+@media(min-width:700px){#paused .pause-footer #backPaused{grid-column:span 2}}
+@media(max-width:699px){#paused .pause-footer #leaderPaused,#paused .pause-footer #hangarPaused{flex:1 1 40%}#paused .pause-footer #backPaused{flex:1 1 100%}}
+@media(min-width:700px){#paused .panel>.actions.pause-footer{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}#paused .pause-footer>button{width:auto!important;min-width:0!important;flex:none!important}#paused .pause-footer #resume{grid-column:span 2!important}}
+@media(max-width:699px){#end>.panel>.actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#end>.panel>.actions>button{min-width:0;margin:0}#end>.panel>.actions #continueEndless{grid-column:1/-1;order:-1}}
+
+/* v0.74 locked content ------------------------------------------------------------------------ */
+.unlock-meter{display:block;height:3px;border-radius:2px;background:#ffffff14;margin-top:5px;overflow:hidden;width:100%}
+.unlock-meter>i{display:block;height:100%;background:linear-gradient(90deg,#ffcf6a,#ff9f4a);border-radius:2px}
+.preflight-ship.locked,.roster-item.locked{opacity:.72;border-style:dashed!important}
+.preflight-ship.locked .roster-icon,.roster-item.locked .roster-icon{filter:grayscale(.85) brightness(.7)}
+.preflight-ship.locked,.roster-item.locked{position:relative}
+.preflight-ship.locked::after,.roster-item.locked::after{content:'';position:absolute;top:6px;right:6px;width:13px;height:13px;opacity:.85;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 7V5a3.5 3.5 0 0 1 7 0v2' fill='none' stroke='%23c9d6e2' stroke-width='1.6'/%3E%3Crect x='3' y='7' width='10' height='7.5' rx='1.6' fill='%23c9d6e2'/%3E%3C/svg%3E")}
+.preflight-ship.ready,.roster-item.ready{border-color:#ffcf6a!important;box-shadow:0 0 0 1px #ffcf6a55,0 0 14px #ffcf6a22}
+.preflight-ship.ready small,.roster-item.ready small{color:#ffcf6a}
+/* Locked sectors: greyed preview with a lock, and compact cards so the open sectors come first in view. */
+.preflight-sector.locked{opacity:1;cursor:not-allowed}
+.preflight-sector.locked .sector-scene{filter:grayscale(.85) brightness(.55)}
+.preflight-sector.locked b{color:#9fb0c0}
+.preflight-sector.locked>span{color:#ffcf6a}
+.lock-glyph{display:inline-block;width:11px;height:11px;margin-right:6px;vertical-align:-1px;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 7V5a3.5 3.5 0 0 1 7 0v2' fill='none' stroke='%23ffcf6a' stroke-width='1.6'/%3E%3Crect x='3' y='7' width='10' height='7.5' rx='1.6' fill='%23ffcf6a'/%3E%3C/svg%3E")}
+@media(max-width:600px){
+ .preflight-sector.locked{display:grid!important;grid-template-columns:96px 1fr;column-gap:12px;align-items:center;text-align:left;padding:8px!important;min-height:0}
+ .preflight-sector.locked .sector-scene{grid-row:1/3;width:96px!important;height:60px!important;object-fit:cover;border-radius:6px;margin:0!important}
+ .preflight-sector.locked>p{display:none}
+ .preflight-sector.locked b{margin:0;font-size:14px;align-self:end}
+ .preflight-sector.locked>span{margin:2px 0 0;font-size:10px;align-self:start}
+}
+#preflightNext{white-space:nowrap}
+.sector-card:disabled .sector-scene,.hangar-card.sector-card[disabled] .sector-scene{filter:grayscale(.9) brightness(.45)}
+
+/* v0.74 stats, medals and hangar roster ---------------------------------------------------- */
+.record-empty{border:1px dashed #3b5a70;border-radius:12px;padding:22px 18px;margin:6px 0 4px;background:#0c1828;text-align:center}
+.record-empty b{display:block;font-size:17px;color:#dff6ff;margin-bottom:6px}
+.record-empty p{margin:0;font-size:12px;color:#9fb6c9;line-height:1.6}
+.medal-shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:8px 0 14px}
+.medal{display:grid;grid-template-columns:44px 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;padding:10px;border-radius:12px;border:1px solid #2c4357;background:#0d1a2a}
+.medal .medal-icon{grid-row:1/3;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:14px;color:#5b6f80;border:2px solid #2c4357;background:#0a1320}
+.medal b{font-size:12px;color:#8ea2b3}
+.medal small{font-size:10px;color:#6f8597}
+.medal.earned{border-color:hsl(calc(160 - var(--tier) * 130) 70% 55% / .55);background:linear-gradient(135deg,hsl(calc(160 - var(--tier) * 130) 60% 18% / .55),#0d1a2a 70%)}
+.medal.earned .medal-icon{color:#0b1420;border-color:transparent;background:radial-gradient(circle at 35% 30%,#fff8,transparent 45%),hsl(calc(160 - var(--tier) * 130) 75% 58%);box-shadow:0 0 14px hsl(calc(160 - var(--tier) * 130) 80% 55% / .45)}
+.medal.earned b{color:#eaf6ff}
+.medal.earned small{color:hsl(calc(160 - var(--tier) * 130) 70% 72%)}
+@media(max-width:600px){
+ .medal-shelf{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .hangar-ships .ship-roster{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:none!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;overflow:visible!important;gap:6px}
+ .hangar-ships .ship-roster .roster-item{min-width:0;padding:7px 6px}
+ .hangar-ships .ship-roster .roster-item small{font-size:9px}
+}
+@media(max-width:600px){
+ .hangar-ships .ship-roster .roster-item{display:flex!important;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:8px 4px!important}
+ .hangar-ships .ship-roster .roster-item>span{display:block;width:100%;min-width:0}
+ .hangar-ships .ship-roster .roster-item b{display:block;font-size:10px;letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .hangar-ships .ship-roster .roster-item small{display:block;font-size:9px;white-space:nowrap}
+ .hangar-ships .ship-roster .roster-item.locked small{font-size:0}.hangar-ships .ship-roster .roster-item.locked small::after{content:'Locked';font-size:9px}
+}
+
+/* v0.75 jackpot cache reveal ------------------------------------------------------------------- */
+.jackpot-stage{position:relative;height:0;overflow:visible}
+#reward.jp-run .jackpot-stage,#reward.jp-done .jackpot-stage{height:auto;margin:4px 0 14px}
+.jp-stage-inner{--jp:#ffd36a;--jp2:#ff9a3a;position:relative;display:grid;justify-items:center;gap:8px;padding:6px 0 2px}
+.jp-stage-inner.cyan{--jp:#7ff0d0;--jp2:#3fb8ff}
+.jp-rays{position:absolute;left:50%;top:44px;width:260px;height:260px;margin:-130px 0 0 -130px;border-radius:50%;pointer-events:none;opacity:0;background:repeating-conic-gradient(from 0deg,color-mix(in srgb,var(--jp) 55%,transparent) 0 8deg,transparent 8deg 24deg);-webkit-mask:radial-gradient(circle,#000 18%,transparent 68%);mask:radial-gradient(circle,#000 18%,transparent 68%);animation:jpSpin 6s linear infinite}
+#reward.jp-open .jp-rays,#reward.jp-done .jp-rays{opacity:.75;transition:opacity .25s}
+.jp-box{position:relative;width:86px;height:70px;margin-top:6px}
+.jp-body{position:absolute;left:0;right:0;bottom:0;height:48px;border-radius:8px;background:linear-gradient(180deg,#3a3326,#1c1810);border:2px solid color-mix(in srgb,var(--jp) 70%,#000);box-shadow:inset 0 0 0 4px #00000040,0 0 18px color-mix(in srgb,var(--jp) 40%,transparent)}
+.jp-stage-inner.cyan .jp-body{background:linear-gradient(180deg,#22333d,#0e1a22)}
+.jp-body::before,.jp-body::after{content:'';position:absolute;top:6px;bottom:6px;width:6px;border-radius:3px;background:var(--jp);box-shadow:0 0 10px var(--jp)}
+.jp-body::before{left:12px}.jp-body::after{right:12px}
+.jp-lid{position:absolute;left:-4px;right:-4px;top:4px;height:22px;border-radius:7px 7px 4px 4px;background:linear-gradient(180deg,#4a4130,#2a2418);border:2px solid color-mix(in srgb,var(--jp) 80%,#000);transform-origin:12% 100%;z-index:2;transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
+.jp-stage-inner.cyan .jp-lid{background:linear-gradient(180deg,#2c414c,#16252e)}
+.jp-core{position:absolute;left:50%;top:26px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:radial-gradient(circle,#fff,var(--jp) 55%,transparent 72%);box-shadow:0 0 16px var(--jp);z-index:3}
+#reward.jp-run:not(.jp-open) .jp-box{animation:jpShake .16s linear infinite}
+#reward.jp-open .jp-lid,#reward.jp-done .jp-lid{transform:translateY(-14px) rotate(-38deg)}
+#reward.jp-open .jp-core,#reward.jp-done .jp-core{animation:jpBurst .5s ease-out forwards}
+.jp-reel{min-width:180px;padding:6px 18px;border-radius:999px;border:1px solid color-mix(in srgb,var(--jp) 50%,transparent);background:#0a1420;font:800 15px/1.2 "Exo 2",sans-serif;letter-spacing:.22em;color:var(--jp);text-align:center;text-shadow:0 0 12px color-mix(in srgb,var(--jp) 60%,transparent)}
+.jp-stage-inner.tier-bonus .jp-reel{background:linear-gradient(90deg,#0a1420,color-mix(in srgb,var(--jp) 22%,#0a1420),#0a1420)}
+.jp-stage-inner.tier-jackpot .jp-reel{color:#1a1206;background:linear-gradient(90deg,#ffe9a8,#ffc64a,#ff9a3a);border-color:#fff3c4;text-shadow:none;animation:jpPop .5s cubic-bezier(.2,1.8,.4,1)}
+.jp-stage-inner.tier-jackpot .jp-reel span::before{content:'★ '}.jp-stage-inner.tier-jackpot .jp-reel span::after{content:' ★'}
+.jp-bonus{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-height:0;opacity:0;transform:translateY(6px);transition:opacity .3s .15s,transform .3s .15s}
+#reward.jp-done .jp-bonus{opacity:1;transform:none}
+.jp-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:999px;background:#0d1b2a;border:1px solid color-mix(in srgb,var(--jp) 45%,transparent);font-size:11px;color:#dff6ff}
+.jp-chip b{color:var(--jp);font-weight:700}.jp-chip .equipment-icon,.jp-chip img,.jp-chip svg,.jp-chip canvas{width:20px!important;height:20px!important}
+.jp-stage-inner.tier-cache .jp-bonus{display:none}
+#reward.jp-run:not(.jp-done) #rewardChoices .card{opacity:0;transform:translateY(22px) scale(.92);pointer-events:none}
+#reward.jp-done #rewardChoices .card{animation:jpCardIn .42s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i,0) * 110ms)}
+#reward.jp-run:not(.jp-done){cursor:pointer}
+@keyframes jpSpin{to{transform:rotate(360deg)}}
+@keyframes jpShake{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate(-2px,1px) rotate(-2deg)}75%{transform:translate(2px,-1px) rotate(2deg)}}
+@keyframes jpBurst{0%{transform:scale(1);opacity:1}60%{transform:scale(4);opacity:.9}100%{transform:scale(2.2);opacity:.6}}
+@keyframes jpPop{0%{transform:scale(.6)}100%{transform:scale(1)}}
+@keyframes jpCardIn{0%{opacity:0;transform:translateY(22px) scale(.92)}100%{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.jp-rays,#reward.jp-run .jp-box{animation:none!important}}
+#reward #rewardHint,#reward #rewardTitle,#reward #rewardLabel{position:relative;z-index:2}.jp-rays{width:220px!important;height:220px!important;margin:-110px 0 0 -110px!important;z-index:0}.jp-box,.jp-reel,.jp-bonus{position:relative;z-index:1}
+
+.jp-box.painted{width:132px;height:118px;margin-top:0}
+.jp-box.painted .jp-img{position:absolute;left:50%;bottom:0;transform:translateX(-50%);filter:drop-shadow(0 6px 10px #000a);transition:opacity .18s,transform .35s cubic-bezier(.2,1.6,.4,1)}
+.jp-box.painted .jp-closed{width:118px}
+.jp-box.painted .jp-open{width:122px;opacity:0;transform:translateX(-50%) scale(.9)}
+#reward.jp-open .jp-box.painted .jp-closed,#reward.jp-done .jp-box.painted .jp-closed{opacity:0}
+#reward.jp-open .jp-box.painted .jp-open,#reward.jp-done .jp-box.painted .jp-open{opacity:1;transform:translateX(-50%) scale(1)}
+.jp-box.painted .jp-core{top:46px}
+#reward .jp-rays{top:62px}

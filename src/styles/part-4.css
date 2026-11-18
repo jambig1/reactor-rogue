@@ -1,0 +1,101 @@
+/* v0.76 launch cards ---------------------------------------------------------------------------- */
+#launchCardOverlay .panel{max-width:760px}
+#launchCardChoices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 8px}
+.launch-card{--lc:#7ff0d0;position:relative;display:flex!important;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:22px 14px 16px!important;min-height:250px;border:1px solid color-mix(in srgb,var(--lc) 55%,#1e3346)!important;border-radius:16px!important;background:radial-gradient(circle at 50% 22%,color-mix(in srgb,var(--lc) 26%,transparent),transparent 60%),linear-gradient(180deg,#132338,#0a1322)!important;box-shadow:inset 0 0 0 4px #0008,0 10px 30px #0006;animation:lcDeal .5s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i) * 120ms)}
+.launch-card::before{content:'';position:absolute;inset:7px;border:1px dashed color-mix(in srgb,var(--lc) 35%,transparent);border-radius:11px;pointer-events:none}
+.launch-card:hover,.launch-card:focus-visible{transform:translateY(-4px);box-shadow:inset 0 0 0 4px #0008,0 0 0 1px var(--lc),0 14px 34px color-mix(in srgb,var(--lc) 30%,#0008)}
+.lc-glyph{display:grid;place-items:center;width:62px;height:62px;border-radius:50%;font-size:30px;color:#0b1420;background:radial-gradient(circle at 35% 30%,#fff9,transparent 45%),var(--lc);box-shadow:0 0 22px color-mix(in srgb,var(--lc) 60%,transparent)}
+.launch-card strong{font-size:16px;color:#f0f8ff}
+.lc-up{font-size:12px;color:color-mix(in srgb,var(--lc) 70%,#fff);line-height:1.45}
+.lc-down{font-size:12px;color:#ff8f9a;line-height:1.45}
+.launch-card .tag{margin-top:auto;font-size:9px;letter-spacing:.16em;color:#7d91a3}
+.link-button{background:none!important;border:0!important;box-shadow:none!important;color:#9fb6c9;text-decoration:underline;text-underline-offset:3px;font-size:12px;padding:8px!important;margin:0 auto;display:block}
+@keyframes lcDeal{0%{opacity:0;transform:translateY(40px) rotate(-6deg) scale(.9)}100%{opacity:1;transform:none}}
+@media(max-width:600px){#launchCardChoices{grid-template-columns:1fr;gap:8px}#launchCardOverlay #launchCardChoices .launch-card{min-height:0;display:grid!important;grid-template-columns:52px 1fr;grid-template-rows:auto auto auto;column-gap:12px;text-align:left;align-items:center;padding:14px 12px!important}#launchCardChoices .launch-card .lc-glyph{grid-row:1/4;grid-column:1;width:50px;height:50px;font-size:24px}#launchCardChoices .launch-card>strong,#launchCardChoices .launch-card>.lc-up,#launchCardChoices .launch-card>.lc-down{grid-column:2}#launchCardChoices .launch-card .tag{display:none}}
+@media(prefers-reduced-motion:reduce){.launch-card{animation:none}}
+
+.lc-glyph.lc-art{width:96px;height:96px;background:radial-gradient(circle,color-mix(in srgb,var(--lc) 38%,transparent) 0,transparent 68%);box-shadow:none;font-size:0}
+.lc-glyph.lc-art img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 10px #000a);transition:transform .25s cubic-bezier(.2,1.6,.4,1)}
+.launch-card:hover .lc-glyph.lc-art img,.launch-card:focus-visible .lc-glyph.lc-art img{transform:scale(1.08) rotate(-4deg)}
+.lc-glyph.lc-art img{display:block}
+@media(max-width:600px){#launchCardChoices .launch-card .lc-glyph.lc-art{width:62px;height:62px;font-size:0;overflow:visible;align-self:center}}
+
+/* v0.77 crash report ----------------------------------------------------------------------------- */
+#crashOverlay .panel{max-width:640px;text-align:left}
+.crash-text{white-space:pre-wrap;word-break:break-word;font:11px/1.55 ui-monospace,Menlo,Consolas,monospace;background:#07101c;border:1px solid #2c4357;border-radius:10px;padding:12px;max-height:44dvh;overflow:auto;color:#cfe3f2;user-select:text;-webkit-user-select:text}
+#crashOverlay .actions{flex-wrap:wrap}
+#menu .launch-console .actions #crashMenu{order:7;grid-column:1/-1;background:none!important;border:0!important;box-shadow:none!important;min-height:28px;padding:4px!important;font-size:11px!important;color:#ff9f8a;text-decoration:underline;text-underline-offset:3px}
+
+@media(max-width:600px){.hangar-ships .ship-roster .roster-item.locked.lost small::after{content:'Lost pilot';color:#ffd27a}}
+
+.pu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.pu-card{position:relative;display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid color-mix(in srgb,var(--pu) 45%,#24364c);border-radius:12px;background:linear-gradient(160deg,color-mix(in srgb,var(--pu) 14%,#0d1626),#0a1220)}
+.pu-card h3{margin:0;font-size:14px;color:var(--pu)}.pu-card p{margin:0;font-size:11px;color:#a9bccd;min-height:28px}
+.pu-card .pu-icon{width:44px;height:44px;display:grid;place-items:center;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--pu) 55%,transparent))}.pu-card .pu-icon>*{width:44px;height:44px;max-width:44px;object-fit:contain}
+.pu-card .rank-pips i.filled{background:var(--pu);border-color:var(--pu)}
+.pu-card button{margin-top:auto}.pu-card.maxed{opacity:.85}.pu-card.maxed button{color:var(--pu)}
+.pu-refund{justify-content:center;margin-top:12px}
+#hangarContent .shop-intro:has(+.pu-grid),#hangarContent .pu-grid,#hangarContent .pu-refund{grid-column:1/-1}@media(min-width:900px){.pu-grid{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:600px){.pu-grid{grid-template-columns:repeat(2,1fr);gap:8px}.pu-card{padding:10px}.pu-card p{font-size:10.5px}}
+
+#vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 75% 70% at 50% 50%,transparent 58%,rgba(0,3,10,.26) 100%)}html.gfx-low #vignette{display:none}
+
+/* v0.96 phone HUD: one compact row of run info, one row of bars, nothing stacked on top of the boss bar. */
+@media(max-width:600px){
+ .hud{padding:max(8px,env(safe-area-inset-top)) 10px 8px!important;background:linear-gradient(#070c19c8,#070c1950 70%,transparent)!important}
+ .hud .brand{display:none!important}
+ .hud .top{gap:6px!important}
+ .hud .stats{margin-left:0!important;margin-right:auto;gap:9px!important;font-size:12px!important;align-items:center}
+ .hud .stats .run-objective{font-size:9px;letter-spacing:.5px;color:#9fd9c8;opacity:.9}
+ .hud .stats .run-wave{display:none}
+ #settingsHud,#pause{width:34px;height:34px;padding:0!important;font-size:15px;border-radius:10px}
+ .hud .bars{margin-top:6px!important;gap:8px!important;font-size:10px!important}
+ .hud .health{max-width:none!important;flex:1.3!important}
+ #creditHUD{display:none!important}
+ #comboHUD{top:70px!important;left:10px!important;min-width:0!important}
+ #comboHUD .combo-score{display:none!important}
+ #comboNumber{font-size:20px!important}
+ #comboLabel{font-size:8px}
+ .combo-track{width:56px!important}
+ #bossHUD{top:72px!important;width:54vw!important;left:calc(50% + 18px)!important}
+ #toast{top:118px!important}
+ #boosts{top:108px!important}
+}
+
+/* v1.0 ship & skills, star map */
+.ship-screen{text-align:left}
+.ship-head{display:flex;align-items:center;gap:14px;padding:12px;border:1px solid #65f7ef33;border-radius:12px;background:#0a1529aa}
+.ship-head-icon{width:64px;height:64px;flex:none}
+.ship-head small{font-size:10px;letter-spacing:2px;color:#91a6bb}.ship-head h3{margin:2px 0;font-size:20px}.ship-head p{margin:0;font-size:12px;color:#c8d8e8}
+.ship-head>div:nth-child(2){flex:1;min-width:0}
+.ship-xp,.ship-debrief{height:5px;background:#65f7ef22;border-radius:3px;margin-top:6px;overflow:hidden}.ship-xp i{display:block;height:100%;background:#65f7ef}
+.ship-pts{text-align:center;padding:6px 10px;border-radius:10px;background:#ffdc8d18;border:1px solid #ffdc8d55}.ship-pts b{display:block;font-size:24px;color:#ffdc8d}.ship-pts small{font-size:9px;letter-spacing:1px;color:#ffdc8d}
+.tree-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px 0 6px}
+.tree-tabs button{padding:8px 4px;font-size:12px;border-radius:10px;border:1px solid #ffffff22;background:#0a1529;color:#dff8ff;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tree-tabs button small{font-size:9px;color:#91a6bb}
+.tree-tabs button[aria-selected=true]{border-color:var(--bc);box-shadow:0 0 12px color-mix(in srgb,var(--bc) 40%,transparent);color:var(--bc)}
+.tree-tag{font-size:12px;color:var(--bc);margin:4px 0 10px;letter-spacing:.5px}
+.tree-nodes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tree-node{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:10px;border-radius:10px;border:1px solid #ffffff1f;background:#0a1529cc;color:#dff8ff;font:inherit;position:relative}
+.tree-node small{font-size:9px;letter-spacing:1.5px;color:#91a6bb}.tree-node b{font-size:14px}.tree-node span{font-size:12px;color:#b8c9da;line-height:1.3}.tree-node em{font-style:normal;font-size:10px;letter-spacing:1px;margin-top:auto;padding-top:4px;color:#91a6bb}
+.tree-node.class,.tree-node.key,.tree-node.spec{grid-column:1/-1}
+.tree-node.open{border-color:var(--bc);cursor:pointer}.tree-node.open em{color:var(--bc)}
+.tree-node.owned{border-color:var(--bc);background:color-mix(in srgb,var(--bc) 14%,#0a1529)}.tree-node.owned em{color:var(--bc)}
+.tree-node.locked,.tree-node.other,.tree-node.needclass,.tree-node.needspec{opacity:.5}
+.tree-node.key b{color:#ffdc8d}.tree-node.class b{color:var(--bc)}
+.spec-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.spec-pick button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px;border-radius:10px;border:1px solid #ffffff22;background:#06101f;color:#dff8ff;font:inherit;text-align:center}
+.spec-pick button[aria-pressed=true]{border-color:var(--bc);background:color-mix(in srgb,var(--bc) 18%,#06101f)}.spec-pick button:disabled{opacity:.55}.spec-pick button:not(:disabled){border-color:var(--bc)}
+.spec-icon{width:44px;height:44px}
+.tree-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;font-size:12px;color:#91a6bb}.tree-foot button{font-size:12px;padding:8px 10px}
+.star-map{position:relative;margin:4px auto 8px;width:100%;max-width:420px;grid-column:1/-1}#preflightSectorCards:has(.star-map){display:block}
+.star-route{position:absolute;inset:0;width:100%;height:100%}
+.planet{position:absolute;transform:translate(-50%,-34px);display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:#dff8ff;font:inherit;width:150px;padding:0;cursor:pointer}
+.planet-orb{width:58px;height:58px;border-radius:50%;background:#123 center/cover;border:2px solid #65f7ef88;box-shadow:0 0 16px #65f7ef44,inset -10px -8px 18px #000a}
+.planet b{font-size:12px;letter-spacing:.5px}.planet small{font-size:9px;color:#91a6bb;max-width:150px;text-align:center;line-height:1.2}
+.planet .pips{display:flex;gap:3px}.planet .pips i{width:7px;height:7px;border-radius:50%;background:#ffffff22}.planet .pips i.on{background:#ffdc8d;box-shadow:0 0 6px #ffdc8d}
+.planet.selected .planet-orb{border-color:#ffdc8d;box-shadow:0 0 22px #ffdc8daa,inset -10px -8px 18px #000a;transform:scale(1.12)}
+.planet.locked{opacity:.45;cursor:default}.planet.locked .planet-orb{filter:grayscale(1) brightness(.6)}
+@media (prefers-reduced-motion:no-preference){.planet.selected .planet-orb{animation:planetPulse 2.4s ease-in-out infinite}@keyframes planetPulse{50%{box-shadow:0 0 32px #ffdc8dcc,inset -10px -8px 18px #000a}}}
+.ship-debrief{height:auto;background:#0a1529;border:1px solid #65f7ef44;border-radius:10px;padding:10px 12px 0;margin:0 0 10px;display:flex;flex-direction:column;gap:3px;text-align:left}
+.ship-debrief b{font-size:14px}.ship-debrief span{font-size:12px;color:#c8d8e8}.ship-debrief em{font-style:normal;color:#ffdc8d}.ship-debrief i{display:block;height:4px;background:#65f7ef;margin:6px -12px 0}

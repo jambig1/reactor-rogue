@@ -162,6 +162,13 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 1.4.0 — Code split into source files
+
+- No gameplay or visual changes: the built game is identical to 1.3.0 apart from the version number and a comment.
+- The 1.2 MB single-file game is now 35 source files under `src/`: 29 game files grouped roughly by topic (combat, enemies, ships, hangar, world, UI, audio, effects, saves, runs) and 6 stylesheet files, plus the page template. `src/manifest.json` sets their order.
+- `node build.mjs` rebuilds `index.html` from them, joining the code into one script in the original order so behaviour can't change. `node build.mjs --check` and the new `TEST-BUILD.cjs` fail if `index.html` is edited directly or not rebuilt.
+- `AGENTS.md` / `CLAUDE.md` explain the workflow for anyone (or any AI) working on the project.
+
 ## 1.3.0 — Combat ship matches the hangar, cleanup
 
 - **In-game ship:** combat is back to the neon 2D style, now shaped like your Blender hangar model. Each hull's top view (silhouette, canopy, armour, painted panels and guidance lights) is baked from its model by `art/blender/bake-combat.mjs`, then drawn with a neon edge in your ship's colour. It appears instantly, with no swap from an old-style ship, and is easy to spot on dark backgrounds.
