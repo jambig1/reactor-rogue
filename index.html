@@ -2383,7 +2383,19 @@ function bay3dWanted(){return !bay3d.off&&typeof document!=='undefined'&&typeof 
 function bay3dStart(){if(bay3d.state||!bay3dWanted())return;bay3d.state='loading';try{let cv=document.createElement('canvas');cv.id='shipBay3d';cv.setAttribute('aria-hidden','true');bay3d.canvas=cv;import('./ship3d-v1100.js').then(m=>m.createShip3D(cv)).then(sh=>{if(!sh){bay3d.state='failed';return}bay3d.ship=sh;bay3d.state='ready'}).catch(e=>{console.warn('3D hangar ship unavailable',e);bay3d.state='failed'})}catch(e){bay3d.state='failed'}}
 function bay3dDraw(c,f){let S=bay3d.ship;if(bay3d.state!=='ready'||!S||S.lost||!bay3dWanted()){if(bay3d.canvas)bay3d.canvas.style.display='none';return false}
  let cv=bay3d.canvas;if(cv.parentNode!==c.parentNode)c.parentNode.insertBefore(cv,c.nextSibling);cv.style.display='block';
- let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor]);if(key!==bay3d.key){bay3d.key=key;S.setShip(key,recordShip3D(p))}
+ let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor]);if(key!==bay3d.key){
+   let previous=bay3d.key&&JSON.parse(bay3d.key);
+   if(!previous||previous[0]!==p.id||JSON.stringify(previous[2])!==JSON.stringify(p.parts)){
+     bayFx.rot=bayFx.pitch=bayFx.rotVel=bayFx.pitchVel=bayFx.roll=0;
+     bayFx.offX=bayFx.offY=0;bayFx.idle=1.6;
+     f.yaw=f.pitch=f.roll=0;f.x=c.clientWidth/2;
+   }
+   bay3d.key=key;S.setShip(key,recordShip3D(p));
+ }
+ if(!bayFx.drag&&bayFx.idle>1.6&&Math.abs(f.yaw)<.006&&Math.abs(f.pitch)<.006&&!bayFx.roll){
+   bayFx.rot=bayFx.pitch=bayFx.rotVel=bayFx.pitchVel=0;
+   f.yaw=f.pitch=f.roll=0;f.x=c.clientWidth/2;
+ }
  S.resize(c.clientWidth,c.clientHeight,Math.min(2,window.devicePixelRatio||1));S.render(f);return true}
 function bayPointer(e){let c=e.currentTarget,r=c.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,B=bayFx;B.ptrs=B.ptrs||{};if(e.type==='pointerdown')B.ptrs[e.pointerId]={x,y};else if(e.type==='pointermove'&&B.ptrs[e.pointerId])B.ptrs[e.pointerId]={x,y};else if(e.type==='pointerup'||e.type==='pointercancel')delete B.ptrs[e.pointerId];
  let ids=Object.keys(B.ptrs);if(bay3d.state==='ready'&&ids.length>=2){let a=B.ptrs[ids[0]],b=B.ptrs[ids[1]],d=Math.hypot(a.x-b.x,a.y-b.y);if(B.pinch)B.zoom=clamp((B.zoom||1)*d/B.pinch,.7,1.9);B.pinch=d;if(B.drag)B.drag.moved=99;return}B.pinch=0;
