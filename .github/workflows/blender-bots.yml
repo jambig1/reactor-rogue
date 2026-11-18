@@ -1,0 +1,29 @@
+name: Export Blender repair bot
+# Runs art/blender/author-bots.py in Blender's Python module and commits art/blender/repair-bot.glb
+# back to the same branch. Triggered by changes to the script, or by hand from the Actions tab.
+on:
+  push:
+    paths:
+      - 'art/blender/author-bots.py'
+      - '.github/workflows/blender-bots.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bots:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install bpy==4.5.16
+      - name: Export the repair bot from Blender
+        run: python art/blender/author-bots.py -- art/blender
+      - name: Commit the model
+        run: |
+          git add art/blender/repair-bot.glb
+          if git diff --cached --quiet; then echo "No change"; exit 0; fi
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Export the Blender repair bot [skip ci]'
+          git push origin HEAD:${{ github.ref_name }}

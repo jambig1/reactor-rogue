@@ -36,17 +36,25 @@ export function loadBlenderFittings(id, slot) {
   return fittingAssets.get(key);
 }
 
-function replacedByPart(name, parts, id) {
+// Which fitting slot a hull piece belongs to (shared with art/blender/bake-combat.mjs). null = core hull.
+export function slotOfObject(name, id) {
   if (id !== 'wasp') {
     const [role] = name.split(' ');
-    return (role === 'engine' && parts.engine && parts.engine !== 'e_stock')
-      || (role === 'wing' && parts.wings && parts.wings !== 'w_stock')
-      || (role === 'mount' && parts.mount && parts.mount !== 'm_stock');
+    return role === 'engine' ? 'engine' : role === 'wing' ? 'wings' : role === 'mount' ? 'mount' : null;
   }
-  if (parts.engine && parts.engine !== 'e_stock' && /^(Outer nozzle|Nozzle throat|Reactor emitter|Nozzle collar)/.test(name)) return true;
-  if (parts.wings && parts.wings !== 'w_stock' && /^(Swept wing spar|Carbon slat|Stabiliser|Wing tracer|Squadron marking|Wing access hatch|Airbrake hinge|Underside wing service cover|Underside guidance trace)/.test(name)) return true;
-  return parts.mount && parts.mount !== 'm_stock' && /^(Long.range pulse cannon|Gun pylon)/.test(name);
+  if (/^(Outer nozzle|Nozzle throat|Reactor emitter|Nozzle collar)/.test(name)) return 'engine';
+  if (/^(Swept wing spar|Carbon slat|Stabiliser|Wing tracer|Squadron marking|Wing access hatch|Airbrake hinge|Underside wing service cover|Underside guidance trace)/.test(name)) return 'wings';
+  if (/^(Long.range pulse cannon|Gun pylon)/.test(name)) return 'mount';
+  return null;
 }
+const stockPart = { engine: 'e_stock', wings: 'w_stock', mount: 'm_stock' };
+function replacedByPart(name, parts, id) {
+  const slot = slotOfObject(name, id);
+  return !!(slot && parts[slot] && parts[slot] !== stockPart[slot]);
+}
+
+// Any other Blender asset (e.g. the hangar repair bot).
+export const loadBlenderAsset = url => loadScene(url);
 
 export function buildBlenderShip(T, id, template, record, parts, catalog) {
   const root = new T.Group();
