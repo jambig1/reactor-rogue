@@ -5916,7 +5916,7 @@ function expGenAct(act, seed, sys) {
   // name every place: planets get a world name + numeral (orbit order), stations take the system's name
   let used = new Set();
   for (let row of rows) for (let n of row) {
-    let nm; do { nm = n.type === 'outpost' ? sysName + ' ' + ['Station', 'Relay', 'Depot', 'Outpost', 'Dock'][Math.floor(rng() * 5)] : n.type === 'distress' ? 'Beacon ' + expName(rng, 1).toUpperCase().slice(0, 2) + '-' + (10 + Math.floor(rng() * 89)) : n.type === 'unknown' ? 'Anomaly ' + expNumerals[Math.floor(rng() * 7)] : expName(rng) + ' ' + expNumerals[Math.floor(rng() * 6)]; } while (used.has(nm));
+    let nm, tries = 0; do { nm = n.type === 'outpost' ? sysName + ' ' + ['Station', 'Relay', 'Depot', 'Outpost', 'Dock'][Math.floor(rng() * 5)] : n.type === 'distress' ? 'Beacon ' + expName(rng, 1).toUpperCase().slice(0, 2) + '-' + (10 + Math.floor(rng() * 89)) : n.type === 'unknown' ? 'Anomaly ' + expNumerals[Math.floor(rng() * 7)] : expName(rng) + ' ' + expNumerals[Math.floor(rng() * 6)]; if (++tries > 8 && used.has(nm)) nm += ' ' + expNumerals[Math.min(6, tries - 9)] + (tries > 15 ? tries : ''); } while (used.has(nm) && tries < 40);
     used.add(nm); n.name = nm;
   }
   // at least one outpost on the last row
