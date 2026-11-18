@@ -72,7 +72,7 @@ def plate(name, points, thickness, mat):
     verts = points + [(x, y, z - thickness) for x, y, z in points]
     faces = [tuple(range(n)), tuple(range(n, n * 2))]
     faces += [(i, (i + 1) % n, (i + 1) % n + n, i + n) for i in range(n)]
-    return mesh(name, verts, faces, mat, chamfer=min(thickness * .23, .17))
+    return mesh(name, verts, faces, mat, chamfer=min(abs(thickness) * .23, .17))
 
 
 def pipe(name, a, b, r0, r1, mat, segments=12):
@@ -167,6 +167,51 @@ def armor_chevrons(surface, a, b, width):
         for n in range(3):
             x=b-1.25*n
             stripe(surface,"Stencilled inspection mark",(x,side*width*.45),(x-.4,side*width*.7),.115,marking,-1)
+
+
+def service_panel(surface, name, x, y, length, width, face, scale=1):
+    """Seat a beveled panel and inspection recess against the skinned hull."""
+    outline = [(-.5,-.28),(-.34,-.5),(.33,-.5),(.5,-.22),(.5,.23),(.33,.5),(-.38,.5),(-.5,.21)]
+    points=[]
+    for u,v in outline:
+        hit, p, _, _ = surface.ray_cast((x+u*length,y+v*width,80*face),(0,0,-face))
+        if not hit:
+            return
+        points.append(tuple(p))
+    n=len(points)
+    verts=[(u,v,z+face*scale*offset) for offset in (.23,-.13) for u,v,z in points]
+    faces=[tuple(range(n)),tuple(range(n,2*n))]
+    faces.extend((i,(i+1)%n,(i+1)%n+n,i+n) for i in range(n))
+    mesh(name,verts,faces,titanium,chamfer=.07*scale)
+    for j in (-1,0,1):
+        xx=x+j*length*.20
+        hit,p,_,_=surface.ray_cast((xx,y,80*face),(0,0,-face))
+        if not hit:
+            continue
+        z=p.z+face*.23*scale
+        pipe(name,(xx,y-width*.24,z),(xx+.12*scale,y+width*.24,z),.105*scale,.105*scale,graphite,6)
+
+
+def service_detail(ship, hull):
+    # Each station follows its role: wide thermal exhaust for capital ships,
+    # forward access on long-range hulls and compact aft bays on interceptors.
+    station={
+        "vanguard":(-7,4.9,5.4,2), "bastion":(-3,9.8,8,3.7),
+        "harrier":(3,3.1,4.4,1.65), "glacier":(-3,5.7,6.5,2.15),
+        "tempest":(-9,3.45,4.4,2.1), "scavenger":(-7,6.2,8.4,3.1),
+        "spectre":(6,2.55,5.7,1.25), "architect":(-3,4.35,7.2,2.45),
+        "helios":(-9,5.35,5.3,2.3), "echo":(-1,4.45,5.3,2),
+        "sovereign":(1,7.1,6.9,3.05),
+    }
+    x,y,l,w=station[ship]
+    for side in (-1,1):
+        service_panel(hull,"Machined dorsal service hatch",x,side*y,l,w,1)
+        service_panel(hull,"Ventral coolant cassette",x-2,side*y*.72,l*1.07,w*1.34,-1)
+        service_panel(hull,"Ventral access hatch",x+l*.95,side*y*.55,l*.59,w*.86,-1)
+        stripe(hull,"Ventral service indicator",(x-l*.36,side*y*.40),(x+l*.36,side*y*.40),.16,light,-1)
+        for j in (-1,0,1):
+            at=x+l*.68+j*.45
+            stripe(hull,"Dorsal bolt witness",(at,side*y*.80),(at+.19,side*y*.91),.09,marking)
 
 
 # Each row is an independently shaped pressure hull, not a scaled template.
@@ -371,6 +416,7 @@ def build(ship):
     marking = material("Service stencil",(.53,.62,.63),.26,.48)
     hull = loft("Pressure hull", HULLS[ship], paint,
                 power=.39 if ship in ("bastion","scavenger") else .55 if ship in ("architect","spectre") else .75)
+    service_detail(ship,hull)
     armor_chevrons(hull, -13, 11, min(s[1] for s in HULLS[ship][2:5])*.83)
     for side in (-1,1):
         stripe(hull,"Hull panel break",(-15,side*3),(13,side*2.5),.15,titanium)
@@ -385,6 +431,8 @@ def build(ship):
         end = (outer[-1],outer[0]*side)
         stripe(wing,"wing dorsal guide",(inner[-1]-inner[1]*.49,(inner[0]+1)*side),end,.20,light)
         stripe(wing,"wing ventral guide",(inner[-1],(inner[0]+1)*side),end,.17,light,-1)
+        y,chord,_,_,_,x=rows[1]
+        service_panel(wing,"wing ventral servo hatch",x+chord*.33,y*side,min(chord*.46,5),1.95,-1,.8)
         for row in rows[1:-1]:
             y,chord,_,_,_,x=row
             stripe(wing,"wing armour seam",(x-chord*.73,y*side),(x+chord*.62,y*side),.15,graphite)
@@ -433,6 +481,22 @@ def build(ship):
                              export_format="GLB", export_texcoords=False)
 
 
-for name in HULLS:
-    build(name)
+def build_wasp():
+    global titanium, graphite
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    bpy.ops.import_scene.gltf(filepath=str(Path(__file__).parent/"Wasp.glb"))
+    hull=bpy.data.objects["Main interceptor pressure hull"]
+    titanium=bpy.data.materials["Brushed titanium"]
+    graphite=bpy.data.materials["Graphite heat shields"]
+    for side in (-1,1):
+        service_panel(hull,"Wasp interceptor intake inspection", -1.50,side*.40,.62,.17,1,.1)
+        service_panel(hull,"Wasp flush ventral comms",.44,side*.26,.48,.15,-1,.1)
+        service_panel(hull,"Wasp sensor access",1.7,side*.16,.49,.12,1,.1)
+    bpy.ops.export_scene.gltf(filepath=str(DEST/"wasp-refit.glb"),export_extras=True,export_format="GLB")
+
+
+if __name__ == "__main__":
+    for name in HULLS:
+        build(name)
+    build_wasp()
 

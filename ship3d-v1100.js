@@ -1,4 +1,4 @@
-import { buildBlenderShip, hasBlenderShip, loadBlenderShip } from './ship3d-blender.js';
+import { buildBlenderShip, hasBlenderShip, loadBlenderShip, loadBlenderFittings, usesFittings } from './ship3d-blender.js';
 import {buildFleetShip,fleetProfiles} from './ship3d-fleet.js';
 /* Reactor Rogue 3D hangar ship, v1.1.
    Builds a real 3D model of the player's ship from the same 2D drawing the game uses:
@@ -182,17 +182,35 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
   }
 
 
-  function shipId(key) {
-    try { return JSON.parse(key)[0]; } catch { return undefined; }
+  function unpackShip(key) {
+    try { const parsed = JSON.parse(key); return [parsed[0], parsed[2] || {}]; }
+    catch { return [undefined, {}]; }
   }
   const blenderModels = new Map(), requestedModels = new Set();
+  const blenderFittings = new Map(), requestedFittings = new Set();
   let activeRecord = null, disposed = false;
+  function requestAsset(id, loader, cache, requested) {
+    if (requested.has(id)) return;
+    requested.add(id);
+    loader(id).then(asset => {
+      if (disposed) return;
+      cache.set(id, asset);
+      if (unpackShip(built)[0] === id) {
+        const currentKey = built;
+        built = '';
+        ship.setShip(currentKey, activeRecord);
+      }
+    }).catch(error => {
+      requested.delete(id);
+      console.warn('Blender ship asset unavailable', id, error);
+    });
+  }
   function build(rec, key) {
     clearModel();
-    let identity,parts;try{const parsed=JSON.parse(key);identity=parsed[0];parts=parsed[2]||{};}catch{}
+    const [identity, parts] = unpackShip(key);
     if (supportsVanguard(key)||fleetProfiles[identity]) {
       const authored = blenderModels.has(identity)
-        ? buildBlenderShip(T,identity,blenderModels.get(identity),rec,parts)
+        ? buildBlenderShip(T,identity,blenderModels.get(identity),rec,parts,blenderFittings.get(identity))
         : identity==='vanguard'?buildVanguard(T,rec,parts):buildFleetShip(T,identity,rec,parts);
       model.add(authored.root);
       disposables.push(...authored.disposables);
@@ -287,21 +305,10 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
     setShip(key, rec) {
       if (key === built) return;
       activeRecord = rec;
-      const id = shipId(key);
-      if (hasBlenderShip(id) && !requestedModels.has(id)) {
-        requestedModels.add(id);
-        loadBlenderShip(id).then(asset => {
-          if (disposed) return;
-          blenderModels.set(id, asset);
-          if (shipId(built) === id) {
-            const currentKey = built;
-            built = '';
-            ship.setShip(currentKey, activeRecord);
-          }
-        }).catch(error => {
-          requestedModels.delete(id);
-          console.warn('Blender airframe unavailable', id, error);
-        });
+      const [id, parts] = unpackShip(key);
+      if (hasBlenderShip(id)) {
+        requestAsset(id,loadBlenderShip,blenderModels,requestedModels);
+        if (usesFittings(parts)) requestAsset(id,loadBlenderFittings,blenderFittings,requestedFittings);
       }
       try { build(rec, key); built = key; } catch (e) {
       console.warn('ship3d build; restoring recorded model', e);
