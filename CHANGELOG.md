@@ -162,14 +162,14 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
-## 1.6.0 — Expeditions (roguelike route maps), step 1
+## 1.6.0 — Expeditions across star systems (roguelike route maps), step 1
 
-- **Every run is now an expedition** across 5 sectors (Neon Frontier, The Scatter, Forge Reaches, Bright Expanse, The Deep Dark), each a freshly generated branching route map, different every run. Pick your path node by node to the sector boss. Your build, level and hull carry between nodes, and dying ends the expedition.
-- **Node types:** Planet (survive about 2½ min), Elite planet (shorter, elites keep coming, +40 scrap and a free upgrade), Lost Signal outpost (repair 35% hull and open the scrap shop), Distress call (a fight with a stranded-pilot rescue pod), Unknown signal (a derelict cache with a free upgrade, a repair dock, a salvage field, or an ambush), and the Sector boss. The fifth sector ends with the final encounter: beat it to win, and endless is offered then.
-- Planets use the biome of their sector (Neon Expanse, Shattered Belt or Storm Relay, Cinder Foundry or Cryo Reach, Neon City or Solar Corona, Abyssal Rift, Hive Nebula or Ghost Fleet). Difficulty follows how deep you are, not total time, so long runs stay balanced. Beating a boss repairs 25% hull.
-- **Save & continue:** progress is saved between nodes. Use "Save & quit" on the map, then "Continue expedition" on the main menu.
-- The in-run merchant now appears only at Lost Signal outposts. Missions that count survival time use the whole expedition's time.
-- New `TEST-EXPEDITION.cjs` checks that 300 random maps are well-formed (no dead ends, no crossing paths, an outpost before every boss).
+- **Every run is now an expedition through 5 star systems.** Each system has a generated name (like "Phalonor System"), its own star colour and its own mix of world types, and gets harder the further out you go. Its route map is freshly generated and branches, so every run is a different journey. Pick your path planet by planet to the system's star. Your build, level and hull carry over, and dying ends the expedition.
+- **Places in a system, each uniquely named:** Hostile planets (survive about 2½ min, e.g. "Quinul IV · Asteroid belt"), Fortress worlds (elites keep coming, +40 scrap and a free upgrade), Lost Signal stations (repair 35% hull and open the scrap shop), Distress beacons (rescue a stranded pilot), Anomalies (a derelict cache, a repair dock, a salvage field, or an ambush), and the **System star**, whose reactor is the boss (beating it repairs 25% hull and jumps you to the next system). The fifth system's star is the final encounter: beat it to win, and endless is offered then.
+- Planets on the map use their real world artwork (Neon world, Asteroid belt, Storm world, Forge world, Ice world, City world, Solar world, Rift world, Hive world, Ship graveyard). Difficulty follows how deep you are, not total time, so long expeditions stay balanced.
+- **Save & continue:** progress is saved between stops. Use "Save & quit" on the map, then "Continue expedition" on the main menu.
+- The in-run merchant now appears only at Lost Signal stations. Missions that count survival time use the whole expedition's time.
+- New `TEST-EXPEDITION.cjs` checks that 300 random systems are well-formed (no dead ends, no crossing paths, a station before every star, unique planet names).
 
 ## 1.5.0 — Mission board, Lost Signal outpost and Neon Slots
 

@@ -876,6 +876,23 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 .exp-legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:#9fb4c8;justify-content:center}.exp-legend i{font-style:normal;color:var(--nc);margin-right:3px}
 .exp-foot{display:flex;justify-content:flex-end}
 .exp-continue{border-color:#ffb24a!important;color:#ffd59a!important}
+
+/* v1.6 systems & planets */
+.exp-scroll{background:radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--sc,#ffd56f) 22%,transparent) 0,transparent 32%),radial-gradient(ellipse at 50% 100%,#123045 0,#08111c 55%,#050a12)!important}
+.exp-node.t-planet,.exp-node.t-elite{border:0!important;background:none!important;overflow:visible}
+.exp-node .planet-orb{pointer-events:none}
+.exp-node.t-planet.can,.exp-node.t-elite.can{box-shadow:none;animation:none}
+.exp-node.t-planet.can .planet-orb,.exp-node.t-elite.can .planet-orb{animation:expPulseOrb 1.4s ease-in-out infinite}
+@keyframes expPulseOrb{50%{filter:drop-shadow(0 0 10px var(--nc)) brightness(1.15)}}
+.exp-node.t-planet.here .planet-orb,.exp-node.t-elite.here .planet-orb{box-shadow:0 0 0 3px #fff9,0 0 14px var(--nc)}
+.exp-fort{position:absolute;right:-6px;top:-6px;color:#ff7ab6;font-size:14px;text-shadow:0 0 6px #ff7ab6}
+.exp-star{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 40% 38%,#fff 0,var(--sc) 35%,color-mix(in srgb,var(--sc) 50%,#401000) 75%);box-shadow:0 0 18px var(--sc),0 0 40px color-mix(in srgb,var(--sc) 50%,transparent)}
+.exp-node.big{border:0!important;background:none!important}
+@media (prefers-reduced-motion:reduce){.exp-node.can .planet-orb{animation:none}}
+
+.exp-orb{display:block;width:38px;height:38px;position:relative}
+.exp-orb .planet-orb{position:absolute!important;inset:0!important;width:38px!important;height:38px!important;margin:0!important;transform:none!important}
+.exp-node span{margin-top:6px}
 </style><!-- Exo 2 font licence:
 Copyright 2013 The Exo 2 Project Authors (https://github.com/googlefonts/Exo-2.0)
 
@@ -5862,21 +5879,30 @@ if (typeof document !== 'undefined' && document.addEventListener) document.addEv
 // dying ends the expedition. The fifth sector ends with the final encounter; beat it to win (endless is offered then).
 // Progress is checkpointed between nodes so a long expedition can be continued later.
 var EXP_ACTS = 5, EXP_STEPS = 6;
-var expActBiomes = [['grid'], ['belt', 'storm'], ['foundry', 'cryo'], ['city', 'solar'], ['rift', 'hive', 'ghost']];
-var expActNames = ['Neon Frontier', 'The Scatter', 'Forge Reaches', 'Bright Expanse', 'The Deep Dark'];
+// Five star systems per expedition. Each system draws its planets from a tier of world types (harder further out),
+// and gets a generated name and star colour, so every expedition is a different journey.
+var expTierBiomes = [['grid', 'belt'], ['grid', 'belt', 'storm', 'foundry'], ['storm', 'foundry', 'cryo', 'city'], ['cryo', 'city', 'solar', 'rift'], ['solar', 'rift', 'hive', 'ghost']];
+var expActBiomes = expTierBiomes;   // kept for older saves/tests
+var expWorldKind = { grid: 'Neon world', belt: 'Asteroid belt', storm: 'Storm world', foundry: 'Forge world', cryo: 'Ice world', city: 'City world', solar: 'Solar world', rift: 'Rift world', hive: 'Hive world', ghost: 'Ship graveyard' };
+var expStarColours = ['#ffd56f', '#ff9a5a', '#9fd8ff', '#ff6b8a', '#c18aff', '#7dffb0', '#fff1c4'];
+var expSyl = ['ka', 'vor', 'el', 'tri', 'xa', 'nor', 've', 'spe', 'ra', 'quin', 'dra', 'lo', 'thy', 'sol', 'mir', 'ze', 'cas', 'ul', 'pha', 'ron', 'ix', 'ae', 'ny', 'kor'];
+function expName(rng, parts = 2) { let n = ''; for (let i = 0; i < parts; i++) n += expSyl[Math.floor(rng() * expSyl.length)]; return n[0].toUpperCase() + n.slice(1); }
+var expNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+function expGenSystem(act, seed) { let rng = expRng(seed), pool = expTierBiomes[act].slice().sort(() => rng() - .5).slice(0, act === 0 ? 2 : 3); return { name: expName(rng, 2 + (rng() < .3 ? 1 : 0)), star: expStarColours[Math.floor(rng() * expStarColours.length)], pool }; }
+function expSystem(e = s.exp) { return (e.systems && e.systems[e.act]) || { name: 'Unknown', star: '#ffd56f', pool: expTierBiomes[e.act] }; }
 var expNodeInfo = {
-  planet: { icon: '◉', name: 'Planet', c: '#65f7ef', desc: 'Survive the fight to clear the planet.' },
-  elite: { icon: '✷', name: 'Elite planet', c: '#ff7ab6', desc: 'Tougher fight with elites. Better loot.' },
-  outpost: { icon: '◈', name: 'Lost Signal', c: '#ffb24a', desc: 'Repair your hull and trade scrap.' },
-  distress: { icon: '✚', name: 'Distress call', c: '#7dffb0', desc: 'A stranded pilot needs rescue.' },
-  unknown: { icon: '?', name: 'Unknown signal', c: '#c18aff', desc: 'Anything could be out there.' },
-  boss: { icon: '☢', name: 'Sector boss', c: '#ffd56f', desc: 'Defeat the boss to leave the sector.' },
-  final: { icon: '✦', name: 'Final encounter', c: '#ff5a6e', desc: 'The last reactor. Win the expedition.' }
+  planet: { icon: '◉', name: 'Hostile planet', c: '#65f7ef', desc: 'Survive the fight to clear the planet.' },
+  elite: { icon: '✷', name: 'Fortress world', c: '#ff7ab6', desc: 'Tougher fight with elites. Better loot.' },
+  outpost: { icon: '◈', name: 'Lost Signal station', c: '#ffb24a', desc: 'Repair your hull and trade scrap.' },
+  distress: { icon: '✚', name: 'Distress beacon', c: '#7dffb0', desc: 'A stranded pilot needs rescue.' },
+  unknown: { icon: '?', name: 'Anomaly', c: '#c18aff', desc: 'Anything could be out there.' },
+  boss: { icon: '☀', name: 'System star', c: '#ffd56f', desc: 'The reactor guarding the star. Beat it to jump systems.' },
+  final: { icon: '✦', name: 'The last star', c: '#ff5a6e', desc: 'The final encounter. Win the expedition.' }
 };
 function expRng(seed) { let a = seed >>> 0; return () => { a = a + 0x6D2B79F5 >>> 0; let t = a; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 // ---- map generation: rows of 2–4 nodes, monotone (non-crossing) links, outposts before the boss ----
-function expGenAct(act, seed) {
-  let rng = expRng(seed), pool = expActBiomes[act], rows = [];
+function expGenAct(act, seed, sys) {
+  let rng = expRng(seed), pool = (sys && sys.pool) || expTierBiomes[act], rows = [], sysName = (sys && sys.name) || expName(rng);
   let pickType = k => {
     if (k === 0) return 'planet';
     if (k === EXP_STEPS - 1) return rng() < .55 ? 'outpost' : 'planet';
@@ -5886,6 +5912,12 @@ function expGenAct(act, seed) {
   for (let k = 0; k < EXP_STEPS; k++) {
     let n = k === 0 ? 3 : 2 + Math.floor(rng() * 3), cols = [0, 1, 2, 3].sort(() => rng() - .5).slice(0, n).sort((a, b) => a - b);
     rows.push(cols.map(x => ({ k, x: x + (rng() - .5) * .35, type: pickType(k), biome: pool[Math.floor(rng() * pool.length)], seed: Math.floor(rng() * 1e9), next: [] })));
+  }
+  // name every place: planets get a world name + numeral (orbit order), stations take the system's name
+  let used = new Set();
+  for (let row of rows) for (let n of row) {
+    let nm; do { nm = n.type === 'outpost' ? sysName + ' ' + ['Station', 'Relay', 'Depot', 'Outpost', 'Dock'][Math.floor(rng() * 5)] : n.type === 'distress' ? 'Beacon ' + expName(rng, 1).toUpperCase().slice(0, 2) + '-' + (10 + Math.floor(rng() * 89)) : n.type === 'unknown' ? 'Anomaly ' + expNumerals[Math.floor(rng() * 7)] : expName(rng) + ' ' + expNumerals[Math.floor(rng() * 6)]; } while (used.has(nm));
+    used.add(nm); n.name = nm;
   }
   // at least one outpost on the last row
   let last = rows[EXP_STEPS - 1]; if (!last.some(n => n.type === 'outpost')) last[Math.floor(rng() * last.length)].type = 'outpost';
@@ -5899,12 +5931,12 @@ function expGenAct(act, seed) {
       link(i, j);
     }
   }
-  let boss = { k: EXP_STEPS, x: 1.5, type: act === EXP_ACTS - 1 ? 'final' : 'boss', biome: pool[Math.floor(rng() * pool.length)], seed: Math.floor(rng() * 1e9), next: [] };
+  let boss = { k: EXP_STEPS, x: 1.5, type: act === EXP_ACTS - 1 ? 'final' : 'boss', biome: pool[Math.floor(rng() * pool.length)], seed: Math.floor(rng() * 1e9), next: [], name: sysName + (act === EXP_ACTS - 1 ? ' Omega' : ' Prime') };
   for (let n of rows[EXP_STEPS - 1]) n.next.push(0);
   rows.push([boss]);
   return { act, rows, at: null, visited: [] };
 }
-function expNew() { let seed = Math.floor(Math.random() * 2 ** 31); return { v: 1, seed, act: 0, map: expGenAct(0, seed + 1), node: null, phase: 'map', stageEnd: 0, cleared: 0 }; }
+function expNew() { let seed = Math.floor(Math.random() * 2 ** 31), systems = [0, 1, 2, 3, 4].map(a => expGenSystem(a, seed + 31 * a + 5)); return { v: 1, seed, systems, act: 0, map: expGenAct(0, seed + 1, systems[0]), node: null, phase: 'map', stageEnd: 0, cleared: 0 }; }
 function expNode(e = s.exp) { return e && e.node ? e.map.rows[e.node[0]][e.node[1]] : null; }
 function expReachable(e = s.exp) {
   let m = e.map; if (!e.node) return m.rows[0].map((_, i) => [0, i]);
@@ -5926,14 +5958,14 @@ function expBeginStage(n) {
   s.spawn = 1; s.elite = s.t + (n.type === 'elite' ? 6 : 55); s.nextBreach = s.t + 70; s.bossRecoveryUntil = 0; s.bossIndex = 3; s.podChecked = true;
   if (s.merchant) { s.merchant.next = 99; s.merchant.available = false; }
   e.phase = 'stage'; e.stageEnd = s.t + (n.type === 'elite' ? 110 : n.type === 'distress' ? 120 : n.type === 'unknown' ? 75 : 150);
-  let info = expNodeInfo[n.type], where = (typeof sectors !== 'undefined' && sectors.find(x => x.id === n.biome)?.name) || n.biome;
+  let info = expNodeInfo[n.type], where = (n.name || info.name) + ' · ' + (expWorldKind[n.biome] || n.biome);
   if (n.type === 'boss' || n.type === 'final') {
     e.stageEnd = Infinity;
     e.bossAt = s.t + 3;
   }
   if (n.type === 'distress') { let id = null; try { id = pilotPodFor(n.biome) || pilots.map(p => p.id).find(id => !(hangar.campaign?.rescued || []).includes(id) && id !== s.pilot.id && crewInfo[id]); } catch (err) {} e.podId = id; e.podAt = s.t + 8; }
   state = 'play'; resetInput(); expHideMap();
-  s.toast = 4; $('toast').textContent = info.name.toUpperCase() + ' / ' + where.toUpperCase() + (n.type === 'elite' ? ' · ELITES INBOUND' : n.type === 'boss' || n.type === 'final' ? ' · REACTOR DETECTED' : ' · SURVIVE');
+  s.toast = 4; $('toast').textContent = where.toUpperCase() + ' / ' + (n.type === 'elite' ? 'FORTRESS WORLD · ELITES INBOUND' : n.type === 'boss' || n.type === 'final' ? 'THE STAR\'S REACTOR AWAKENS' : n.type === 'distress' ? 'BEACON FOUND · RESCUE THE PILOT' : 'HOSTILES · SURVIVE');
   expSave();
 }
 function updateExpedition(dt) {
@@ -5962,11 +5994,11 @@ function expStageClear(actClear) {
   if (s.merchant) s.merchant.scrap += n.type === 'elite' ? 40 : 15;
   if (n.type === 'elite') s.xp = Math.max(s.xp, s.need);
   e.phase = 'clearing'; e.clearAt = performance.now() + 1600;
-  s.toast = 3; $('toast').textContent = actClear ? 'SECTOR ' + (e.act + 1) + ' CLEAR / JUMP CORRIDOR OPEN' : (expNodeInfo[n.type].name + ' clear').toUpperCase() + ' / +' + (n.type === 'elite' ? 40 : 15) + ' SCRAP';
+  s.toast = 3; $('toast').textContent = actClear ? (expSystem(e).name + ' SYSTEM CLEAR').toUpperCase() + ' / JUMP TO THE NEXT STAR' : ((n.name || expNodeInfo[n.type].name) + ' clear').toUpperCase() + ' / +' + (n.type === 'elite' ? 40 : 15) + ' SCRAP';
   try { sound('reward'); } catch (err) {}
   setTimeout(() => {
     if (!s || s.exp !== e || state === 'end') return;
-    if (actClear) { e.act++; e.map = expGenAct(e.act, e.seed + 1 + e.act * 7919); e.node = null; try { s.p.hp = Math.min(s.pilot.hp, s.p.hp + s.pilot.hp * .25); } catch (err) {} }
+    if (actClear) { e.act++; e.map = expGenAct(e.act, e.seed + 1 + e.act * 7919, e.systems && e.systems[e.act]); e.node = null; try { s.p.hp = Math.min(s.pilot.hp, s.p.hp + s.pilot.hp * .25); } catch (err) {} }
     expOpenMap();
   }, 1600);
 }
@@ -6011,20 +6043,24 @@ function ensureExpMap() {
 function expOpenMap() { if (!s || !s.exp) return; s.exp.phase = 'map'; state = 'route'; resetInput(); expSave(); expRenderMap(); ensureExpMap().classList.remove('hidden'); try { hud(); } catch (err) {} }
 function expHideMap() { let el = document.getElementById('expMap'); if (el) el.classList.add('hidden'); }
 function expRenderMap() {
-  let e = s.exp, m = e.map, el = ensureExpMap(), p = el.querySelector('.exp-panel'), reach = expReachable(e).map(x => x.join(',')), rowH = 74, H = (m.rows.length) * rowH + 30;
+  let e = s.exp, m = e.map, el = ensureExpMap(), p = el.querySelector('.exp-panel'), reach = expReachable(e).map(x => x.join(',')), rowH = 98, H = (m.rows.length) * rowH + 30;
   let pos = (r, i) => { let n = m.rows[r][i]; return { x: 12 + n.x / 3 * 76, y: H - 40 - r * rowH }; };
   let lines = '';
   m.rows.forEach((row, r) => row.forEach((n, i) => n.next.forEach(j => { let a = pos(r, i), b = pos(r + 1, j), on = e.node && e.node[0] === r && e.node[1] === i, done = m.visited.includes(r + ',' + i); lines += '<line x1="' + a.x + '%" y1="' + a.y + '" x2="' + b.x + '%" y2="' + b.y + '" class="' + (on ? 'live' : done ? 'done' : '') + '"/>'; })));
   let nodes = m.rows.map((row, r) => row.map((n, i) => {
     let key = r + ',' + i, info = expNodeInfo[n.type], q = pos(r, i), here = e.node && e.node.join(',') === key, can = reach.includes(key), done = m.visited.includes(key), big = n.type === 'boss' || n.type === 'final';
-    let biome = (typeof sectors !== 'undefined' && sectors.find(x => x.id === n.biome)?.name) || n.biome;
-    return '<button class="exp-node' + (can ? ' can' : '') + (here ? ' here' : '') + (done ? ' done' : '') + (big ? ' big' : '') + '" style="left:' + q.x + '%;top:' + q.y + 'px;--nc:' + info.c + '"' + (can ? ' data-exp-node="' + key + '"' : ' disabled') + ' aria-label="' + info.name + ' · ' + biome + '"><i>' + info.icon + '</i><span>' + info.name + (n.type === 'planet' || n.type === 'elite' || big ? '<em>' + biome + '</em>' : '') + '</span></button>';
+    let kind = expWorldKind[n.biome] || n.biome, world = n.type === 'planet' || n.type === 'elite', star = expSystem(e).star;
+    // planets show their world artwork; the boss is the system's star; other stops keep a symbol
+    let face = world ? (typeof planetOrb === 'function' ? '<b class="exp-orb">' + planetOrb(n.biome, 38) + '</b>' : '<i>' + info.icon + '</i>') + (n.type === 'elite' ? '<b class="exp-fort">✷</b>' : '')
+      : big ? '<i class="exp-star" style="--sc:' + (n.type === 'final' ? '#ff5a6e' : star) + '"></i>' : '<i>' + info.icon + '</i>';
+    let sub = world ? kind + (n.type === 'elite' ? ' · fortress' : '') : big ? (n.type === 'final' ? 'Final encounter' : 'System star · boss') : info.name;
+    return '<button class="exp-node t-' + n.type + (can ? ' can' : '') + (here ? ' here' : '') + (done ? ' done' : '') + (big ? ' big' : '') + '" style="left:' + q.x + '%;top:' + q.y + 'px;--nc:' + info.c + '"' + (can ? ' data-exp-node="' + key + '"' : ' disabled') + ' aria-label="' + escapeHTML((n.name || info.name) + ' · ' + sub) + '">' + face + '<span>' + escapeHTML(n.name || info.name) + '<em>' + sub + '</em></span></button>';
   }).join('')).join('');
   let hp = Math.max(0, Math.round(s.p.hp)), mx = Math.round(s.pilot.hp);
-  p.innerHTML = '<header class="exp-head"><div><div class="eyebrow">EXPEDITION · SECTOR ' + (e.act + 1) + ' / ' + EXP_ACTS + '</div><h2>' + expActNames[e.act] + '</h2></div><div class="exp-stats"><span>Hull <b>' + hp + '/' + mx + '</b></span><span>Level <b>' + s.lv + '</b></span><span>Scrap <b>' + (s.merchant?.scrap || 0) + '</b></span></div></header>' +
-    (expEventNote ? '<p class="exp-note">' + escapeHTML(expEventNote) + '</p>' : '<p class="fine">Choose your next jump. Paths branch: plan a route to the boss.</p>') +
-    '<div class="exp-scroll"><div class="exp-map" style="height:' + H + 'px"><svg class="exp-lines" width="100%" height="' + H + '">' + lines + '</svg>' + nodes + '</div></div>' +
-    '<div class="exp-legend">' + ['planet', 'elite', 'outpost', 'distress', 'unknown', 'boss'].map(t => '<span style="--nc:' + expNodeInfo[t].c + '"><i>' + expNodeInfo[t].icon + '</i>' + expNodeInfo[t].name + '</span>').join('') + '</div>' +
+  p.innerHTML = '<header class="exp-head"><div><div class="eyebrow">EXPEDITION · SYSTEM ' + (e.act + 1) + ' / ' + EXP_ACTS + '</div><h2>' + escapeHTML(expSystem(e).name) + ' System</h2></div><div class="exp-stats"><span>Hull <b>' + hp + '/' + mx + '</b></span><span>Level <b>' + s.lv + '</b></span><span>Scrap <b>' + (s.merchant?.scrap || 0) + '</b></span></div></header>' +
+    (expEventNote ? '<p class="exp-note">' + escapeHTML(expEventNote) + '</p>' : '<p class="fine">Choose your next jump. Routes branch: plan your way to the star at the heart of the system.</p>') +
+    '<div class="exp-scroll" style="--sc:' + expSystem(e).star + '"><div class="exp-map" style="height:' + H + 'px"><svg class="exp-lines" width="100%" height="' + H + '">' + lines + '</svg>' + nodes + '</div></div>' +
+    '<div class="exp-legend">' + ['planet', 'elite', 'outpost', 'distress', 'unknown', 'boss'].map(t => '<span style="--nc:' + expNodeInfo[t].c + '"><i>' + (t === 'planet' ? '🪐\uFE0E' : t === 'boss' ? '☀\uFE0E' : expNodeInfo[t].icon) + '</i>' + expNodeInfo[t].name + '</span>').join('') + '</div>' +
     '<footer class="exp-foot"><button data-exp-quit="1">Save &amp; quit</button></footer>';
   expEventNote = '';
   // scroll so the reachable row is in view
