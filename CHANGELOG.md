@@ -162,6 +162,14 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 1.5.0 — Mission board, Lost Signal outpost and Neon Slots
+
+- **Mission board** (hangar, Missions tab): three missions on offer, one each of Easy, Medium and Hard, with goals like defeating a sector's boss, surviving minutes, a combo, rescues, breaches, evolving weapons, or a boss without taking a hit. Accept up to two. A "MISSION COMPLETE" pop-up appears the moment you achieve one. Rewards are paid when the run ends: 60/120/220 credits and 80/160/300 ship XP, and Hard missions also drop a part. Completed missions are replaced, accepted ones show on the star map and results screen, and new missions cost 20 credits. The old contracts are now the **Achievements** list underneath.
+- **Lost Signal outpost** on the star map: tap the orange station to visit. It sells three ship parts you don't own yet for credits (Rare 120, Epic 260, Legendary 520), with new stock after every run.
+- **Neon Slots** at the outpost: bet 10/25/50 credits on three reels. Three of a kind pays ×20 (Reactor) down to ×4 (Crew), and any pair ×2; Skulls pay nothing. It returns about 92% over time. In-game credits only.
+- **In-run merchant no longer interrupts fights:** when the Lost Signal arrives, a "◈ INCOMING TRANSMISSION" button lights up (with a toast) and you open the scrap shop when you choose. It still pauses combat while open.
+- New `TEST-MISSIONS.cjs`. The merchant tests are updated for the new behaviour.
+
 ## 1.4.0 — Code split into source files
 
 - No gameplay or visual changes: the built game is identical to 1.3.0 apart from the version number and a comment.
