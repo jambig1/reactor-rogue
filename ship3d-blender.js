@@ -53,6 +53,9 @@ function replacedByPart(name, parts, id) {
   return !!(slot && parts[slot] && parts[slot] !== stockPart[slot]);
 }
 
+// Any other Blender asset (e.g. the hangar repair bot).
+export const loadBlenderAsset = url => loadScene(url);
+
 export function buildBlenderShip(T, id, template, record, parts, catalog) {
   const root = new T.Group();
   root.name = id + ' — Blender airframe';

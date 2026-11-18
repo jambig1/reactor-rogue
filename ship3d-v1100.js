@@ -1,4 +1,4 @@
-import { buildBlenderShip, hasBlenderShip, loadBlenderShip, loadBlenderFittings, fittingSlots } from './ship3d-blender.js';
+import { buildBlenderShip, hasBlenderShip, loadBlenderShip, loadBlenderFittings, fittingSlots, loadBlenderAsset } from './ship3d-blender.js';
 /* Reactor Rogue 3D hangar ship, v1.1.
    Builds a real 3D model of the player's ship from the same 2D drawing the game uses:
    index.html records every polygon, circle and line the hull/part painters draw (in draw order),
@@ -205,6 +205,126 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       if (unpackShip(built)[0] === id) { const currentKey = built; built = ''; ship.setShip(currentKey, activeRecord); }
     });
   }
+
+  // ---- Hangar repair bots: the Blender model (art/blender/repair-bot.glb, made by author-bots.py) ----
+  // They live in the ship's frame (so they turn with it), fly to real points on the hull found by ray casting,
+  // hover just off the surface and reach the torch down until it touches the exact spot, then weld.
+  const bots = { template: null, list: [], targets: [], body: [], glow: [], group: new T.Group(), lt: null, sparks: null, seams: [], seamIx: 0 };
+  pivot.add(bots.group);
+  const UP = new T.Vector3(0, 1, 0), DOWN = new T.Vector3(0, -1, 0), tmpA = new T.Vector3(), tmpB = new T.Vector3(), tmpQ2 = new T.Quaternion();
+  {
+    const N = 160, pos = new Float32Array(N * 3), col = new Float32Array(N * 3), g = new T.BufferGeometry();
+    g.setAttribute('position', new T.BufferAttribute(pos, 3)); g.setAttribute('color', new T.BufferAttribute(col, 3));
+    const mat = new T.PointsMaterial({ size: .8, vertexColors: true, transparent: true, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false });
+    const pts = new T.Points(g, mat); pts.frustumCulled = false; bots.group.add(pts); bots.glow.push(pts);
+    bots.sparks = { pts, pos, col, p: Array.from({ length: N }, () => ({ life: 0, age: 1, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0 })), next: 0 };
+    const seamGeo = new T.CircleGeometry(.55, 18);
+    for (let i = 0; i < 8; i++) { const sm = new T.Mesh(seamGeo, new T.MeshBasicMaterial({ color: new T.Color('#ffb24a').multiplyScalar(2), transparent: true, opacity: 0, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false, side: T.DoubleSide })); sm.visible = false; bots.group.add(sm); bots.glow.push(sm); bots.seams.push({ m: sm, age: 9 }); }
+  }
+  function sampleTargets() {
+    bots.targets = [];
+    const meshes = bodyMeshes.filter(o => o.isMesh); if (!meshes.length) return;
+    pivot.updateMatrixWorld(true);
+    const box = new T.Box3(); for (const o of meshes) box.expandByObject(o);
+    const lo = pivot.worldToLocal(box.min.clone()), hi = pivot.worldToLocal(box.max.clone());
+    const x0 = Math.min(lo.x, hi.x), x1 = Math.max(lo.x, hi.x), z0 = Math.min(lo.z, hi.z), z1 = Math.max(lo.z, hi.z), y1 = Math.max(lo.y, hi.y) + 20;
+    const ray = new T.Raycaster(), inv = pivot.quaternion.clone().invert();
+    for (let i = 0; i < 160 && bots.targets.length < 26; i++) {
+      const side = i % 5 === 4;   // mostly from above, some from the sides
+      const o = side ? new T.Vector3(x0 + Math.random() * (x1 - x0), (Math.random() - .3) * 3, (Math.random() < .5 ? z0 - 20 : z1 + 20)) : new T.Vector3(x0 + Math.random() * (x1 - x0), y1, z0 + Math.random() * (z1 - z0));
+      const d = side ? new T.Vector3(0, 0, o.z < 0 ? 1 : -1) : DOWN.clone();
+      ray.set(pivot.localToWorld(o.clone()), d.clone().applyQuaternion(pivot.quaternion));
+      const hit = ray.intersectObjects(meshes, false)[0]; if (!hit || !hit.face) continue;
+      const p = pivot.worldToLocal(hit.point.clone()), n = hit.face.normal.clone().transformDirection(hit.object.matrixWorld).applyQuaternion(inv).normalize();
+      if (n.y < (side ? -.2 : .3)) continue;
+      if (bots.targets.some(q => q.p.distanceTo(p) < 4.5)) continue;
+      bots.targets.push({ p, n });
+    }
+  }
+  function spawnBots() {
+    if (!bots.template || bots.list.length) return;
+    for (let i = 0; i < 2; i++) {
+      const obj = bots.template.clone(true), b = { obj, ext: 0, phase: 'rest', t: Math.random() * .6, dur: 0, target: null, from: new T.Vector3(), goal: new T.Vector3(), yaw: 0 };
+      obj.scale.setScalar(3);
+      obj.traverse(o => {
+        const name = (o.name || '').replace(/[_\s]/g, '');
+        if (name === 'BotArm') b.arm = o; else if (name === 'BotTorch') b.torch = o;
+        if (!o.isMesh) return;
+        o.material = o.material.clone();
+        if (name === 'BotEye' || name === 'BotAntennaTip') { b.eyes = b.eyes || []; b.eyes.push(o.material); }
+        (o.material.emissive && o.material.emissive.getHex() ? bots.glow : bots.body).push(o);
+      });
+      if (b.arm) b.shoulder = b.arm.position.clone();
+      b.light = new T.PointLight(0xffb24a, 0, 18, 1.6); bots.group.add(b.light);
+      b.pos = new T.Vector3((i ? -1 : 1) * 14, 9, 6); obj.position.copy(b.pos);
+      bots.group.add(obj); bots.list.push(b);
+    }
+  }
+  loadBlenderAsset('./art/blender/repair-bot.glb').then(scene => { bots.template = scene; spawnBots(); }).catch(() => {});
+  function emitSpark(at, n) {
+    const S = bots.sparks, q = S.p[S.next = (S.next + 1) % S.p.length], sp = 4 + Math.random() * 7;
+    q.x = at.x; q.y = at.y; q.z = at.z; q.age = 0; q.life = .25 + Math.random() * .4;
+    q.vx = n.x * sp + (Math.random() - .5) * 9; q.vy = n.y * sp + (Math.random() - .5) * 9; q.vz = n.z * sp + (Math.random() - .5) * 9;
+  }
+  function updateBots(t, hidden) {
+    const dt = bots.lt === null ? 0 : Math.max(0, Math.min(.05, t - bots.lt)); bots.lt = t;
+    bots.group.visible = !hidden && bots.list.length > 0;
+    if (!bots.group.visible) return;
+    pivot.updateMatrixWorld(true);
+    const grav = tmpA.set(0, -20, 0).applyQuaternion(tmpQ2.copy(pivot.quaternion).invert()).clone();
+    for (const b of bots.list) {
+      b.t += dt;
+      if (b.phase === 'rest' && b.t > .35 && bots.targets.length) {
+        const other = bots.list.find(o => o !== b && o.target);
+        let pick = null; for (let k = 0; k < 8; k++) { const c = bots.targets[Math.floor(Math.random() * bots.targets.length)]; if (!other || c.p.distanceTo(other.target.p) > 9) { pick = c; break; } pick = c; }
+        b.target = pick; b.from.copy(b.pos); b.goal.copy(pick.p).addScaledVector(pick.n, 5.6).addScaledVector(UP, 1.2);
+        b.dur = Math.max(.9, b.from.distanceTo(b.goal) / 14); b.phase = 'fly'; b.t = 0;
+      }
+      let look = null;
+      if (b.phase === 'fly') {
+        const u = Math.min(1, b.t / b.dur), e = u * u * (3 - 2 * u), lift = Math.min(9, b.from.distanceTo(b.goal) * .35) + 2;
+        b.pos.lerpVectors(b.from, b.goal, e).addScaledVector(UP, Math.sin(Math.PI * u) * lift);
+        look = tmpB.copy(b.goal).sub(b.from);
+        b.ext = Math.max(0, b.ext - dt * 4);
+        if (u >= 1) { b.phase = 'weld'; b.t = 0; b.dur = 1.6 + Math.random() * 1.2; }
+      } else if (b.phase === 'weld') {
+        b.pos.copy(b.goal).addScaledVector(UP, Math.sin(t * 5 + b.dur) * .12);
+        look = tmpB.copy(b.target.p).sub(b.pos);
+        b.ext = Math.min(1, b.ext + dt * 3.5);
+        if (b.ext > .95) {
+          for (let k = 0; k < 2; k++) if (Math.random() < dt * 70) emitSpark(b.target.p, b.target.n);
+          b.light.position.copy(b.target.p).addScaledVector(b.target.n, .6); b.light.intensity = 2.2 + Math.random() * 2.4;
+          if (!b.seam) { const sm = bots.seams[bots.seamIx = (bots.seamIx + 1) % bots.seams.length]; sm.age = -b.dur; sm.m.visible = true; sm.m.position.copy(b.target.p).addScaledVector(b.target.n, .08); sm.m.quaternion.setFromUnitVectors(new T.Vector3(0, 0, 1), b.target.n); b.seam = sm; }
+        }
+        if (b.t > b.dur) { b.phase = 'rest'; b.t = 0; b.light.intensity = 0; b.seam = null; }
+      } else { b.ext = Math.max(0, b.ext - dt * 4); b.light.intensity = 0; b.pos.addScaledVector(UP, Math.sin(t * 3) * .01); }
+      if (b.phase !== 'weld') b.light.intensity = 0;
+      for (const em of b.eyes || []) em.emissive.set(b.phase === 'weld' && b.ext > .9 ? '#ffb24a' : '#62ffee');
+      b.obj.position.copy(b.pos);
+      if (look && look.lengthSq() > .01) { const want = Math.atan2(-look.z, look.x); let d = want - b.yaw; d = Math.atan2(Math.sin(d), Math.cos(d)); b.yaw += d * Math.min(1, dt * 6); }
+      b.obj.rotation.set(0, b.yaw, b.phase === 'fly' ? -.18 : 0);
+      b.obj.updateMatrixWorld(true);
+      // arm reaches from the shoulder to the exact hull point; torch sits on the end, tip touching
+      if (b.arm && b.torch) {
+        const reach = b.target ? b.obj.worldToLocal(pivot.localToWorld(b.target.p.clone())) : b.shoulder.clone().add(new T.Vector3(0, -1, 0));
+        const dir = reach.sub(b.shoulder), dist = dir.length(); dir.normalize();
+        const rest = new T.Vector3(.25, -1, 0).normalize(), aim = rest.clone().lerp(dir, b.ext).normalize();
+        const len = Math.max(.25, (dist - .34 / 1.0) * b.ext + .45 * (1 - b.ext));
+        b.arm.quaternion.setFromUnitVectors(DOWN, aim); b.arm.scale.set(1, len, 1);
+        b.torch.position.copy(b.shoulder).addScaledVector(aim, len); b.torch.quaternion.copy(b.arm.quaternion);
+      }
+    }
+    // sparks (ship-frame physics) and fading weld seams
+    const S = bots.sparks;
+    S.p.forEach((q, i) => {
+      if (q.age < q.life) { q.age += dt; q.vx += grav.x * dt; q.vy += grav.y * dt; q.vz += grav.z * dt; q.x += q.vx * dt; q.y += q.vy * dt; q.z += q.vz * dt; }
+      const a = q.age < q.life ? 1 - q.age / q.life : 0;
+      S.pos[i * 3] = q.x; S.pos[i * 3 + 1] = a > 0 ? q.y : -1e5; S.pos[i * 3 + 2] = q.z;   // spent sparks out of view (they'd draw black on the transparent layer)
+      S.col[i * 3] = 2.4 * a; S.col[i * 3 + 1] = (a > .5 ? 2.1 : 1.1) * a; S.col[i * 3 + 2] = (a > .6 ? 1.2 : .25) * a;
+    });
+    S.pts.geometry.attributes.position.needsUpdate = true; S.pts.geometry.attributes.color.needsUpdate = true;
+    for (const sm of bots.seams) { sm.age += dt; const k = sm.age < 0 ? .9 + Math.random() * .1 : Math.max(0, 1 - sm.age / 2.5); sm.m.material.opacity = k; sm.m.visible = k > .01; }
+  }
   function build(rec, key) {
     clearModel();
     const [identity, parts] = unpackShip(key);
@@ -219,6 +339,7 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       bodyMeshes.push(...authored.bodyMeshes); glowMeshes.push(...authored.glowMeshes);
       flames = authored.flames;
       pad.color.set(rec.color || '#65fbd2'); rim.color.set(rec.color || '#65fbd2');
+      sampleTargets();
       return;
     }
     let col = rec.color || '#65f7ef', shapes = rec.shapes.filter(s => s.pts.length >= 3 && (s.alpha > .3 || (s.glass && s.stroke))), base = -1, best = 0;
@@ -283,6 +404,7 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
     }
     for (let e of edgesBy.values()) { let m = edgeMesh(e.paths, e.c, e.w, 0, e.k); if (m) model.add(m); }
     pad.color.set(col); rim.color.set(col);
+    sampleTargets();
   }
 
   // Bloom: render only the glowing parts (bodies drawn black as occluders), blur at 1/2 and 1/4 size, add on top.
@@ -342,6 +464,7 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       qYaw.setFromAxisAngle(Y, -(f.yaw || 0)); qPitch.setFromAxisAngle(X, f.pitch || 0); qRoll.setFromAxisAngle(Z, f.roll || 0);
       tmpQ.copy(qPitch).multiply(qYaw).multiply(qRoll); pivot.quaternion.copy(tmpQ);
       let s = f.appear ?? 1; pivot.scale.setScalar(Math.max(.001, s));
+      updateBots(f.t || 0, ship.pending || s < .98 || f.bots === false);
       for (let fl of flames) {
         let flick = 1 + Math.sin(f.t * 31 + fl.x) * .08 + Math.sin(f.t * 17) * .06, L = (4 + (f.thrust || 0) * 9) * flick;
         fl.outer.scale.set(1, L, 1); fl.outer.position.x = fl.x - L / 2; fl.inner.scale.set(1, L * .6, 1); fl.inner.position.x = fl.x - L * .3;
@@ -356,7 +479,7 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       });
       if (f.bloom === false) return;
       // glow-only pass
-      let swapped = bodyMeshes.map(m => [m, m.material]); for (let [m] of swapped) m.material = blackMat;
+      let swapped = bodyMeshes.concat(bots.body).map(m => [m, m.material]); for (let [m] of swapped) m.material = blackMat;
       let env = scene.environment; scene.environment = null;
       renderer.setRenderTarget(G); renderer.clear(true, true, true); renderer.render(scene, camera);
       for (let [m, mat] of swapped) m.material = mat; scene.environment = env;

@@ -26,7 +26,7 @@ def material(name, colour, metallic=.5, rough=.35, glow=0):
     return mat
 
 
-SHELL = material("Bot enamel shell", (.78, .83, .88), .35, .28)
+SHELL = material("Bot enamel shell", (.42, .48, .55), .5, .3)
 VISOR = material("Bot smoked visor", (.015, .03, .05), .3, .06)
 DARK = material("Bot graphite joints", (.05, .07, .09), .7, .45)
 TRIM = material("Bot service orange", (1.0, .42, .06), .25, .38)
