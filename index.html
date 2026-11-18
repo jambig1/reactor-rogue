@@ -2434,9 +2434,11 @@ function bay3dDraw(c,f){let S=bay3d.ship;
    f.yaw=f.pitch=f.roll=0;f.x=c.clientWidth/2;
  }
  S.resize(c.clientWidth,c.clientHeight,Math.min(2,window.devicePixelRatio||1));
- if(S.pending){bay3d.waiting=true;S.render({...f,appear:.001});return true}
+ if(S.pending){bay3d.waiting=true;bay3d.shipExhaustOk=false;S.render({...f,appear:.001});return true}
  if(bay3d.waiting){bay3d.waiting=false;if(!reducedMotion){bayFx.beam=1.3;f.appear=.001}}
- S.render(f);return true}
+ S.render(f);bay3d.shipExhaustOk=true;return true}
+// True while the hangar's 3D ship hasn't arrived yet: nothing ship-attached (trail, build effects) should show.
+function bayShipWaiting(){return bay3dWanted()&&(bay3d.state==='loading'||(bay3d.state==='ready'&&!!bay3d.ship&&(bay3d.ship.pending||bay3d.waiting)))}
 // Once the 3D engine is up, hand it the current ship so its model downloads and builds before the hangar opens.
 function bay3dWarm(){if(bay3d.state==='loading'){setTimeout(bay3dWarm,150);return}let S=bay3d.ship;if(bay3d.state!=='ready'||!S||bay3d.key)return;try{let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor]);bay3d.key=key;S.setShip(key,recordShip3D(p))}catch(e){}}
 // Start downloading the current ship's hangar model while the player is still on the menu.
@@ -2468,7 +2470,7 @@ function drawShipBay(now){let c=typeof document!=='undefined'&&document.getEleme
  // engine trail: points are emitted at the engine and drift backwards, so spinning curls the exhaust
  let st=sh.paint.trail||'standard',tc=sh.paint.trailColor||col,ex=shx-fx*17*k,ey=shy-fy*17*k,flow=(110+boost*160)*k/1.4;
  // emitters: the 3D model's real nozzles when it's showing, otherwise the 2D tail
- let X3=is3d&&bay3d.ship.exhaust&&bay3d.ship.exhaust.length?bay3d.ship.exhaust:null,EM=X3?X3.map(e=>({x:e.x,y:e.y,dx:e.dx,dy:e.dy})):[{x:ex,y:ey,dx:-fx,dy:-fy}];
+ let X3=is3d&&bay3d.ship.exhaust&&bay3d.ship.exhaust.length?bay3d.shipExhaustOk&&bay3d.ship.exhaust:null,EM=bayShipWaiting()?[]:X3?X3.map(e=>({x:e.x,y:e.y,dx:e.dx,dy:e.dy})):[{x:ex,y:ey,dx:-fx,dy:-fy}];
  if(!B.multi||B.multi.length!==EM.length)B.multi=EM.map(()=>[]);
  if(!reducedMotion&&st!=='standard'&&dt>0){EM.forEach((e,i)=>{let L=B.multi[i];L.push({x:e.x,y:e.y,vx:e.dx*flow+(Math.random()-.5)*6,vy:e.dy*flow+(Math.random()-.5)*6,age:0});for(let q of L){q.age+=dt;q.x+=q.vx*dt;q.y+=q.vy*dt}B.multi[i]=L.filter(q=>q.age<(st==='ribbon'?.75:.5)).slice(-80)});
   if(st==='sparks')for(let e of EM)for(let n=0;n<Math.ceil((2+boost*3)/EM.length);n++){let a=Math.atan2(e.dy,e.dx)+(Math.random()-.5)*.9,sp=(70+Math.random()*110)*k/1.4*Math.min(1,Math.hypot(e.dx,e.dy)+.25);B.sparks.push({x:e.x,y:e.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,age:0,life:.35+Math.random()*.4})}
@@ -2484,7 +2486,7 @@ function drawShipBay(now){let c=typeof document!=='undefined'&&document.getEleme
  // the ship
  let drew3d=false;try{let rp=B.roll>0?(1-B.roll/.7):0;drew3d=bay3dDraw(c,{x:shx,y:shy,scale:k*1.15*(B.zoom||1),yaw:B.rot,pitch:B.pitch||0,roll:rp?(rp<.5?2*rp*rp:1-Math.pow(-2*rp+2,2)/2)*TAU:0,appear:B.beam>0?Math.min(1,(1.3-B.beam)/.5):1,thrust:.9+boost+((bayFx.build||{}).items?.speed?.8:0),t:reducedMotion?0:t,glow:Math.max(.4,pilot.glow??1)})}catch(e){drew3d=false}
  if(!drew3d){g.save();g.translate(shx,shy);g.rotate(B.rot);if(B.beam>0){let q=Math.min(1,(1.3-B.beam)/.5);g.scale(q,q);g.globalAlpha=q}g.scale(k*1.15*Math.abs(rollK)<.08?.08*k*1.15:k*1.15*rollK,k*1.15);g.rotate(-Math.PI/2);try{pilotDesign(t,{preview:true,pilot,items:{},hullFace:0,face:0,dashTime:boost,boostTime:0,ambushTime:0,phaseTime:0,flightVisual:{heading:0,thrust:.9+boost+((bayFx.build||{}).items?.speed?.8:0)}},shipPainter(g))}catch(e){}g.restore()}
- if(!reducedMotion){try{drawBayModules(g,t,dt,shx,shy,k*1.15,B.rot,col);if(!drew3d)drawBayDrones(g,t,dt,shx,shy,k*1.15,w,h)}catch(e){}}try{drawBayScan(g,t,dt,shx,shy,k*1.15,w,h)}catch(e){}try{drawRadar(dt)}catch(e){}
+ if(!reducedMotion&&!bayShipWaiting()){try{drawBayModules(g,t,dt,shx,shy,k*1.15,B.rot,col);if(!drew3d)drawBayDrones(g,t,dt,shx,shy,k*1.15,w,h)}catch(e){}}try{drawBayScan(g,t,dt,shx,shy,k*1.15,w,h)}catch(e){}try{drawRadar(dt)}catch(e){}
  // effects: unlock bursts, equip clunks, class-change beam and flash
  {let B=bayFx;B.flash=Math.max(0,B.flash-dt*2.2);B.beam=Math.max(0,B.beam-dt);g.save();g.globalCompositeOperation='lighter';
   if(B.beam>0){let a=Math.min(1,B.beam/.4),bw=(30+40*(1-B.beam/1.3))*k;let bg=g.createLinearGradient(shx-bw,0,shx+bw,0);bg.addColorStop(0,col+'00');bg.addColorStop(.5,col+'cc');bg.addColorStop(1,col+'00');g.globalAlpha=a*.8;g.fillStyle=bg;g.fillRect(shx-bw,0,bw*2,h);g.globalAlpha=a;g.fillStyle='#ffffff';g.fillRect(shx-2,0,4,h)}
