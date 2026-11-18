@@ -68,7 +68,7 @@ function drawBakedMount(ctx,pilot){let im=bakedMountImage(pilot);if(!im||!ctx.dr
 // outright when memory runs out, with no error at all, so a small snapshot is saved every few seconds and the
 // session is marked clean whenever the page is hidden or closed normally. An unclean session on the next load
 // becomes a "closed unexpectedly" report.
-const crashVersion='1.5.0',crashMon={frames:0,lastFrames:0,fps:0,errors:[],session:null,pending:null};
+const crashVersion='1.6.0',crashMon={frames:0,lastFrames:0,fps:0,errors:[],session:null,pending:null};
 function crashStore(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
 function crashReports(){let r=crashStore('rr_crash_reports');return Array.isArray(r)?r:[]}
 function addCrashReport(r){let list=crashReports();list.unshift(r);crashStore('rr_crash_reports',list.slice(0,6));return r}

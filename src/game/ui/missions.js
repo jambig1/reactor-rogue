@@ -5,7 +5,7 @@ var missionTierNames = ['Easy', 'Medium', 'Hard'];
 var missionRewards = [{ credits: 60, xp: 80, part: false }, { credits: 120, xp: 160, part: false }, { credits: 220, xp: 300, part: true }];
 var missionKinds = [
   { k: 'kills', tiers: [150, 300, 600], text: n => 'Defeat ' + n + ' enemies in one run', val: r => r.kills || 0 },
-  { k: 'survive', tiers: [240, 420, 600], text: n => 'Survive ' + n / 60 + ' minutes', val: r => r.t || 0 },
+  { k: 'survive', tiers: [240, 420, 600], text: n => 'Survive ' + n / 60 + ' minutes', val: r => r.runT || r.t || 0 },
   { k: 'combo', tiers: [15, 25, 40], text: n => 'Reach a ×' + n + ' combo', val: r => r.comboPeak || 0 },
   { k: 'level', tiers: [12, 18, 25], text: n => 'Reach level ' + n, val: r => r.lv || 0 },
   { k: 'breach', tiers: [1, 2, 3], text: n => 'Clear ' + n + ' reactor breach' + (n > 1 ? 'es' : ''), val: r => r.metrics?.breaches || 0 },

@@ -162,6 +162,15 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 1.6.0 — Expeditions across star systems (roguelike route maps), step 1
+
+- **Every run is now an expedition through 5 star systems.** Each system has a generated name (like "Phalonor System"), its own star colour and its own mix of world types, and gets harder the further out you go. Its route map is freshly generated and branches, so every run is a different journey. Pick your path planet by planet to the system's star. Your build, level and hull carry over, and dying ends the expedition.
+- **Places in a system, each uniquely named:** Hostile planets (survive about 2½ min, e.g. "Quinul IV · Asteroid belt"), Fortress worlds (elites keep coming, +40 scrap and a free upgrade), Lost Signal stations (repair 35% hull and open the scrap shop), Distress beacons (rescue a stranded pilot), Anomalies (a derelict cache, a repair dock, a salvage field, or an ambush), and the **System star**, whose reactor is the boss (beating it repairs 25% hull and jumps you to the next system). The fifth system's star is the final encounter: beat it to win, and endless is offered then.
+- Planets on the map use their real world artwork (Neon world, Asteroid belt, Storm world, Forge world, Ice world, City world, Solar world, Rift world, Hive world, Ship graveyard). Difficulty follows how deep you are, not total time, so long expeditions stay balanced.
+- **Save & continue:** progress is saved between stops. Use "Save & quit" on the map, then "Continue expedition" on the main menu.
+- The in-run merchant now appears only at Lost Signal stations. Missions that count survival time use the whole expedition's time.
+- New `TEST-EXPEDITION.cjs` checks that 300 random systems are well-formed (no dead ends, no crossing paths, a station before every star, unique planet names).
+
 ## 1.5.0 — Mission board, Lost Signal outpost and Neon Slots
 
 - **Mission board** (hangar, Missions tab): three missions on offer, one each of Easy, Medium and Hard, with goals like defeating a sector's boss, surviving minutes, a combo, rescues, breaches, evolving weapons, or a boss without taking a hit. Accept up to two. A "MISSION COMPLETE" pop-up appears the moment you achieve one. Rewards are paid when the run ends: 60/120/220 credits and 80/160/300 ship XP, and Hard missions also drop a part. Completed missions are replaced, accepted ones show on the star map and results screen, and new missions cost 20 credits. The old contracts are now the **Achievements** list underneath.

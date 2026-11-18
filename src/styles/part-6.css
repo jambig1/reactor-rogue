@@ -181,3 +181,47 @@
 .slot-spin{width:100%;max-width:260px}
 .slot-pays{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px;margin-top:12px;font-size:12px;color:#9fb4c8}.slot-pays i{font-style:normal;letter-spacing:1px}
 .outpost-foot{display:flex;justify-content:flex-end;margin-top:12px}
+
+/* v1.6 expedition route map */
+.exp-panel{width:min(620px,96vw);max-height:94vh;display:flex;flex-direction:column;gap:8px}
+.exp-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}.exp-head h2{margin:2px 0 0}
+.exp-stats{display:flex;gap:10px;font-size:12px;color:#9fb4c8}.exp-stats b{color:#e8f6ff}
+.exp-note{margin:0;padding:8px 12px;border-radius:10px;background:#2a1a3f;border:1px solid #c18aff66;color:#e7d6ff;text-align:center}
+.exp-scroll{flex:1;min-height:260px;overflow-y:auto;border-radius:14px;background:radial-gradient(ellipse at 50% 100%,#123045 0,#08111c 55%,#050a12);border:1px solid #ffffff12}
+.exp-map{position:relative;margin:0 6px}
+.exp-lines{position:absolute;inset:0;pointer-events:none}
+.exp-lines line{stroke:#ffffff26;stroke-width:2;stroke-dasharray:3 6}
+.exp-lines line.done{stroke:#65f7ef66;stroke-dasharray:none}
+.exp-lines line.live{stroke:#65f7efcc;stroke-dasharray:none;filter:drop-shadow(0 0 4px #65f7ef)}
+.exp-node{position:absolute!important;transform:translate(-50%,-50%);width:44px;height:44px;min-height:0!important;padding:0!important;border-radius:50%!important;border:2px solid color-mix(in srgb,var(--nc) 55%,transparent)!important;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--nc) 30%,#0b1622),#060c14)!important;color:var(--nc)!important;outline:none!important;display:grid;place-items:center;z-index:1}
+.exp-node i{font-style:normal;font-size:19px;line-height:1;text-shadow:0 0 8px currentColor}
+.exp-node span{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:2px;white-space:nowrap;font-size:10px;color:#cfdbe7;text-align:center;line-height:1.15;pointer-events:none}
+.exp-node span em{display:block;font-style:normal;color:#7f93a8;font-size:9px}
+.exp-node.big{width:58px;height:58px}.exp-node.big i{font-size:26px}
+.exp-node[disabled]{opacity:.42;cursor:default}
+.exp-node.done{opacity:.55}
+.exp-node.here{opacity:1;box-shadow:0 0 0 3px #fff8,0 0 14px var(--nc)}
+.exp-node.can{opacity:1;cursor:pointer;animation:expPulse 1.4s ease-in-out infinite;box-shadow:0 0 14px color-mix(in srgb,var(--nc) 60%,transparent)}
+.exp-node.can:hover{transform:translate(-50%,-50%) scale(1.08)}
+@keyframes expPulse{50%{box-shadow:0 0 24px var(--nc)}}
+@media (prefers-reduced-motion:reduce){.exp-node.can{animation:none}}
+.exp-legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:#9fb4c8;justify-content:center}.exp-legend i{font-style:normal;color:var(--nc);margin-right:3px}
+.exp-foot{display:flex;justify-content:flex-end}
+.exp-continue{border-color:#ffb24a!important;color:#ffd59a!important}
+
+/* v1.6 systems & planets */
+.exp-scroll{background:radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--sc,#ffd56f) 22%,transparent) 0,transparent 32%),radial-gradient(ellipse at 50% 100%,#123045 0,#08111c 55%,#050a12)!important}
+.exp-node.t-planet,.exp-node.t-elite{border:0!important;background:none!important;overflow:visible}
+.exp-node .planet-orb{pointer-events:none}
+.exp-node.t-planet.can,.exp-node.t-elite.can{box-shadow:none;animation:none}
+.exp-node.t-planet.can .planet-orb,.exp-node.t-elite.can .planet-orb{animation:expPulseOrb 1.4s ease-in-out infinite}
+@keyframes expPulseOrb{50%{filter:drop-shadow(0 0 10px var(--nc)) brightness(1.15)}}
+.exp-node.t-planet.here .planet-orb,.exp-node.t-elite.here .planet-orb{box-shadow:0 0 0 3px #fff9,0 0 14px var(--nc)}
+.exp-fort{position:absolute;right:-6px;top:-6px;color:#ff7ab6;font-size:14px;text-shadow:0 0 6px #ff7ab6}
+.exp-star{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 40% 38%,#fff 0,var(--sc) 35%,color-mix(in srgb,var(--sc) 50%,#401000) 75%);box-shadow:0 0 18px var(--sc),0 0 40px color-mix(in srgb,var(--sc) 50%,transparent)}
+.exp-node.big{border:0!important;background:none!important}
+@media (prefers-reduced-motion:reduce){.exp-node.can .planet-orb{animation:none}}
+
+.exp-orb{display:block;width:38px;height:38px;position:relative}
+.exp-orb .planet-orb{position:absolute!important;inset:0!important;width:38px!important;height:38px!important;margin:0!important;transform:none!important}
+.exp-node span{margin-top:6px}

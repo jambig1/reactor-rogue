@@ -72,7 +72,7 @@ const finalBossDefs={grid:{name:'OMEGA REACTOR',c:'#7ffbe0'},belt:{name:'THE SCR
 const finalSystemNames={shield:'SHIELD SYSTEM',cannon:'CANNON SYSTEM',lance:'LANCE SYSTEM'};
 function finalBossDef(){return finalBossDefs[s.sector]||finalBossDefs.grid}
 function finalBoss(){return s.enemies.find(e=>e.finalBoss&&e.hp>0)}
-function queueFinalEncounter(){if(s.completed||s.endless||s.finalEncounter)return;s.finalEncounter={stage:'approach',at:s.t+22,warned:false}}
+function queueFinalEncounter(){if(s.exp||s.completed||s.endless||s.finalEncounter)return;s.finalEncounter={stage:'approach',at:s.t+22,warned:false}}
 function updateFinalEncounter(){let f=s.finalEncounter;if(!f||f.stage!=='approach'||s.completed||s.endless)return;let left=f.at-s.t;if(left<=12&&!f.warned){f.warned=true;s.toast=5;$('toast').textContent='FINAL ENCOUNTER / '+finalBossDef().name+' · '+Math.max(1,Math.ceil(left))+'s'}if(left<=0&&!terrainBoss())spawnFinalBoss()}
 function finalSystems(e,kinds,orbit,arrival){kinds.forEach((kind,i)=>{if(s.enemies.length>=240)return;let slot=i*TAU/kinds.length+Math.PI/kinds.length,hp=({shield:1100,cannon:800,lance:1000})[kind]+s.lv*18;s.enemies.push({systemOwner:e,system:kind,name:finalSystemNames[kind],type:2,stationary:true,slot,orbit,x:e.x+Math.cos(slot)*orbit,y:e.y+Math.sin(slot)*orbit,r:kind==='shield'?21:19,hp,max:hp,v:0,d:10,xp:20,c:e.c,armour:.15,slow:0,freeze:0,tick:0,arrival,podCD:1.4+i*.9,podCharge:0,podAim:0})})}
 function spawnFinalBoss(){let f=s.finalEncounter;if(s.endless||s.completed||terrainBoss()||f?.stage==='active'||f?.stage==='done')return null;let def=finalBossDef(),hp=20000+s.lv*200;sound('boss');s.bossSpawned=true;
