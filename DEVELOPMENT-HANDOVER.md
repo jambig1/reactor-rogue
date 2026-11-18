@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 1.5.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 1.6.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -179,15 +179,15 @@ Tactics v0.94: `vendor/yuka-0.7.8/yuka.js` (IIFE `window.YUKA`, defer). `tacticH
 Pacing v0.95: `earlyLevelEase(l)` scales `levelXPRequirement` (min 3); early spawn interval `min(.75-.0018t, .42+.0019t)`; bolt cooldown .56. Evolutions: `upgradeSynergy` shows evolution rows for owned weapons too; `evoRelevant` + `rollChoices` swap (55%) the third card for an evolution-relevant one; `s.evoAnnounced` banner pulls `s.elite` to t+10. Attack-parity baseline (`/home/claude/work/prev-index.html`) was given the same bolt cadence.
 
 
-### 1.5.0
+### 1.6.0
 `swarmEase()` multiplies the ordinary spawn interval by 1+(alive-110)/55 above 110 non-boss enemies (not in endless). Phone HUD rules live in the `v0.96 phone HUD` media block (max-width 600px) at the end of the main stylesheet.
 
 
-### 1.5.0
+### 1.6.0
 Matter.js (vendor/matter-js-0.20.0, classic defer script) drives cosmetic wreckage in `wreck` (outside `s`): `wreckSpawn`/`wreckImpulse` are called from `fxExplosion`, which `combatExplosion` calls; `wreckStep`+`drawWreck` run in the draw loop. pixi-filters 6.1.5 is bundled into vendor/pixi.js-8.23.0/pixi.js (see vendor/pixi-filters-6.1.5/README.txt for the esbuild entry); pixi-layer-v0970.js adds `shockwave`, `hurt`, `freeze`, `tick`. Hooks: `fxShockwave`, `fxHurt` (in hurtPlayer), startDeath.
 
 
-### 1.5.0 — one ship
+### 1.6.0 — one ship
 Ship system lives just before `let hangar=loadHangar()`: `shipBranches`, `shipNodes` (fx callbacks build a bonus object), `shipState()` (hangar.ship, v1), `nodeState`/`buyShipNode`/`respecShip`, `applyShipTree()` (called after applyPowerUps in start) and `applyShipTreeItems()` (after initShipIdentity). Hooks: critChance (+s.tree.crit), dash cooldown (s.tree.dashCd), hurtPlayer (s.tree.taken), weapon damage of the starter (s.tree.starter). Ship XP is awarded incrementally in commitHangar via the `shipxp` checkpoint. Preflight step 1 renders `renderShipScreen()` into #pilotPicker; step 2 renders `renderStarMap()` into #preflightSectorCards. `shipOwned()` also accepts `treePilot()`. Classic roster code (hangar ship licences, mastery) still exists but is no longer reachable from launch.
 
 Phase 2: `shipParts`/`partSlots`/`partState()` (hangar.ship.parts {owned,eq}, hangar.ship.paint) live with the ship code; part fx feed the same bonus object (`wslots`/`pslots` → `s.slots`, read by `slotCap(kind)` in pool(), the HUD racks and discovery). Boss part drops happen in commitHangar (checkpointed by old.bosses). `affinityPick` in rollChoices nudges card 2 toward `classAffinity[cls]` 40% of the time. Trails: `drawShipTrail` (cosmetic, outside s).

@@ -162,6 +162,15 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 1.6.0 — Expeditions (roguelike route maps), step 1
+
+- **Every run is now an expedition** across 5 sectors (Neon Frontier, The Scatter, Forge Reaches, Bright Expanse, The Deep Dark), each a freshly generated branching route map, different every run. Pick your path node by node to the sector boss. Your build, level and hull carry between nodes, and dying ends the expedition.
+- **Node types:** Planet (survive about 2½ min), Elite planet (shorter, elites keep coming, +40 scrap and a free upgrade), Lost Signal outpost (repair 35% hull and open the scrap shop), Distress call (a fight with a stranded-pilot rescue pod), Unknown signal (a derelict cache with a free upgrade, a repair dock, a salvage field, or an ambush), and the Sector boss. The fifth sector ends with the final encounter: beat it to win, and endless is offered then.
+- Planets use the biome of their sector (Neon Expanse, Shattered Belt or Storm Relay, Cinder Foundry or Cryo Reach, Neon City or Solar Corona, Abyssal Rift, Hive Nebula or Ghost Fleet). Difficulty follows how deep you are, not total time, so long runs stay balanced. Beating a boss repairs 25% hull.
+- **Save & continue:** progress is saved between nodes. Use "Save & quit" on the map, then "Continue expedition" on the main menu.
+- The in-run merchant now appears only at Lost Signal outposts. Missions that count survival time use the whole expedition's time.
+- New `TEST-EXPEDITION.cjs` checks that 300 random maps are well-formed (no dead ends, no crossing paths, an outpost before every boss).
+
 ## 1.5.0 — Mission board, Lost Signal outpost and Neon Slots
 
 - **Mission board** (hangar, Missions tab): three missions on offer, one each of Easy, Medium and Hard, with goals like defeating a sector's boss, surviving minutes, a combo, rescues, breaches, evolving weapons, or a boss without taking a hit. Accept up to two. A "MISSION COMPLETE" pop-up appears the moment you achieve one. Rewards are paid when the run ends: 60/120/220 credits and 80/160/300 ship XP, and Hard missions also drop a part. Completed missions are replaced, accepted ones show on the star map and results screen, and new missions cost 20 credits. The old contracts are now the **Achievements** list underneath.
