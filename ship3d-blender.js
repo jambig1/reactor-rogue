@@ -6,7 +6,7 @@ const models = new Set(['vanguard','wasp','bastion','harrier','glacier','tempest
 const assets = new Map();
 const fittingAssets = new Map();
 export const hasBlenderShip = id => models.has(id);
-export const usesFittings = parts => parts && Object.values(parts).some(id => fittingIds.includes(id));
+export const fittingSlots = parts => Object.entries(parts).filter(([,id]) => fittingIds.includes(id)).map(([slot]) => slot);
 
 function loadScene(url) {
   return import('./vendor/three-0.187.0/GLTFLoader.js')
@@ -25,14 +25,15 @@ export function loadBlenderShip(id) {
   return assets.get(id);
 }
 
-export function loadBlenderFittings(id) {
-  if (!fittingAssets.has(id)) {
-    fittingAssets.set(id, loadScene(`./art/blender/fittings/${id}.glb`).catch(error => {
-      fittingAssets.delete(id);
+export function loadBlenderFittings(id, slot) {
+  const key = id + '/' + slot;
+  if (!fittingAssets.has(key)) {
+    fittingAssets.set(key, loadScene(`./art/blender/fittings/${key}.glb`).catch(error => {
+      fittingAssets.delete(key);
       throw error;
     }));
   }
-  return fittingAssets.get(id);
+  return fittingAssets.get(key);
 }
 
 function replacedByPart(name, parts, id) {
@@ -117,7 +118,7 @@ export function buildBlenderShip(T, id, template, record, parts, catalog) {
   const tail = outlets.reduce((minimum, {x}) => Math.min(minimum, x), 0) + 4;
   for (const [slot, partId] of Object.entries(parts)) {
     if (!fittingIds.includes(partId)) continue;
-    const source = catalog?.children.find(node => node.userData.fittingId === partId);
+    const source = catalog?.get(slot)?.children.find(node => node.userData.fittingId === partId);
     if (source) {
       const fitting = source.clone(true);
       fitting.name = partId;
@@ -135,7 +136,7 @@ export function buildBlenderShip(T, id, template, record, parts, catalog) {
           let material = materials.get(object.material);
           if (!material) {
             material = object.material.clone();
-            material.emissive.lerp(trim, .38);
+            material.emissive.lerp(trim, .16);
             material.toneMapped = false;
             materials.set(object.material, material);
             disposables.push(material);

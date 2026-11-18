@@ -18,10 +18,10 @@ WING=("w_razor","w_vane","w_prism","w_phantom")
 MOUNT=("m_heavy","m_rotary","m_array","m_siege")
 PLATING=("p_reactive","p_light","p_heavy","p_aegis")
 PALETTES={
-    "e_twin":(.95,.35,.11),"e_ion":(.10,.59,1),"e_fusion":(1,.62,.13),"e_nova":(1,.18,.085),
-    "w_razor":(.85,.12,.23),"w_vane":(.1,.92,.69),"w_prism":(.56,.25,1),"w_phantom":(.41,.15,1),
-    "m_heavy":(1,.4,.12),"m_rotary":(.98,.59,.18),"m_array":(.23,.65,1),"m_siege":(1,.23,.12),
-    "p_reactive":(.9,.30,.12),"p_light":(.11,.82,.57),"p_heavy":(.35,.54,.84),"p_aegis":(.14,.62,1),
+    "e_twin":(.14,.61,1),"e_ion":(.32,.39,1),"e_fusion":(.67,.26,1),"e_nova":(1,.51,.095),
+    "w_razor":(.2,.69,1),"w_vane":(.1,.92,.69),"w_prism":(.56,.25,1),"w_phantom":(1,.58,.13),
+    "m_heavy":(.20,.56,1),"m_rotary":(.22,.63,1),"m_array":(.66,.25,1),"m_siege":(.09,.91,.83),
+    "p_reactive":(.9,.30,.12),"p_light":(.24,.58,1),"p_heavy":(.63,.26,1),"p_aegis":(.14,.62,1),
 }
 
 WASP_HULL=[(-29,2.6,2.1,2.2,0),(-26,5.2,3.5,3.8,0),(-17,7,5.2,4.4,0),
@@ -68,6 +68,9 @@ def engine(ship, item, signal):
                 nozzle(x,yy,z,r*.58,12,signal)
                 outlet(x-.15,yy,z,r*.36,index*2+side+1)
                 pipe("Duplex scavenger line",(x+2,yy,z+r*.55),(x+7.8,yy,z+r*.85),.16,.23,alloy,8)
+            for j in range(3):
+                pipe("Twin blue intake bars",(x+4.5,y+(j-1)*r*.24,z+r*.94),
+                     (x+7.6,y+(j-1)*r*.24,z+r*.93),.14,.14,signal,6)
         else:
             outer=r*(1.08 if item=="e_nova" else .86 if item=="e_ion" else 1)
             nozzle(x,y,z,outer,8 if item=="e_fusion" else 16,signal)
@@ -79,14 +82,23 @@ def engine(ship, item, signal):
                     pipe("Longitudinal ion braid",(x+2,yy,zz),(x+9,yy,zz),.22,.12,signal,8)
                 for jj in (3,6,8):
                     ring("Ion cage spacer",(x+jj,y,z),r*1.1,.15,alloy)
+                for j in range(4):
+                    pipe("Violet ion grille",(x+3.8+j*.93,y-r*.61,z+r*.94),
+                         (x+3.8+j*.93,y+r*.61,z+r*.94),.15,.15,signal,6)
             elif item=="e_fusion":
-                pipe("Fusion shield cell",(x+3.2,y,z+r*.76),(x+8.7,y,z+r*.76),r*.57,r*.47,signal,10)
-                for xx in (3.5,5.15,7,8.55):
-                    ring("Reactor containment rib",(x+xx,y,z+r*.76),r*.63,.21,alloy)
+                cx=x+5.7
+                pipe("Fusion reaction chamber",(cx,y,z+r*.72),(cx,y,z+r*1.30),r*.84,r*.75,dark,12)
+                ring("Violet reactor perimeter",(cx,y,z+r*1.3),r*.75,.17,signal,"top")
+                pipe("Amber reaction window",(cx,y,z+r*1.31),(cx,y,z+r*1.41),r*.48,r*.39,reactor,12)
                 for side in (-1,1):
                     pipe("Reactor feed",(x+3,y+side*r*.78,z-r*.54),(x+10,y+side*r*.78,z-r*.54),.22,.16,alloy,8)
             else:
                 ring("Afterburner constrictor",(x+.7,y,z),r*1.11,.18,signal)
+                ring("Gold nozzle flange",(x+.49,y,z),r*1.13,.23,brass)
+                for side in (-1,1):
+                    plate("Afterburner shoulder fin",[(x+2,y+side*r*.65,z+r*.7),
+                          (x+2.6,y+side*r*1.35,z+.5),(x+8.7,y+side*r*.89,z+r*1.07),
+                          (x+7.2,y+side*r*.58,z+r*.89)],.37,brass)
                 for sector in range(6):
                     a=math.tau*sector/6
                     yy,zz=y+math.cos(a)*r*.97,z+math.sin(a)*r*.97
@@ -94,50 +106,94 @@ def engine(ship, item, signal):
                     pipe("Afterburner braid",(x+2.6,yy,zz),(x+6.9,yy,zz),.13,.13,signal,8)
 
 
-def wing(ship,item,signal):
+def wing_line(wing, name, a, b, radius, mat, face=1):
+    # Each run follows one loft segment. Four steps keep it flush without
+    # doubling the number of small meshes in the exported wing pack.
+    points=[(a[0]+(b[0]-a[0])*j/4,a[1]+(b[1]-a[1])*j/4) for j in range(5)]
+    fleet.mark(wing,name,points,radius,mat,face)
+
+
+def wing(ship,item,signal,proxy):
     original=fleet.WINGS.get(ship,WASP_WING)
     yi,chord,_,_,z,xi=original[0]
     yo,_,_,_,zo,xo=original[-1]
-    span=yo-yi
+    capital=ship in ("bastion","sovereign","architect")
+    sweep=.78 if capital else 1.0
+    thickness=.66 if ship=="spectre" else 1
     for side in (-1,1):
+        # Seat at the actual pressure-hull side. An inboard root and a solid
+        # shoulder overlap both the pressure hull and the wide blade station.
+        hit,p,_,_=proxy.ray_cast((xi,side*80,z),(0,-side,0))
+        if not hit:
+            raise ValueError(f"No wing socket on {ship} at {xi}, {z}")
+        socket=abs(p.y)
+        root_y=max(.25,socket-1.25)
+        shoulder_y=max(yi,socket+.85)
+        span=yo-shoulder_y
         if item=="w_razor":
-            specs=[(0,1,z,xi),(.24,.67,z+.45,xi*.76+xo*.24),(.75,.27,zo+.8,xo-1.7),(1.04,.07,zo+2.8,xo-4)]
+            specs=[(.30,.65,.4,-.5),(.68,.37,.69,-2.6),(1.03,.035,2.2,-5.2)]
         elif item=="w_vane":
-            specs=[(0,.95,z,xi),(.34,.83,z+.4,xi*.67+xo*.33),(.76,.45,zo+1.05,xo+2),(1,.30,zo+1.7,xo+3.2)]
+            specs=[(.30,.86,.12,1.4),(.69,.67,.5,1.2),(.97,.29,1.8,4.2)]
         elif item=="w_prism":
-            specs=[(0,.87,z,xi),(.35,.81,z-.2,xi*.65+xo*.35),(.72,.58,zo+.28,xo+1.8),(1.07,.06,zo+3.3,xo+1.5)]
+            specs=[(.33,.79,.15,1.8),(.75,.43,.42,3.1),(1.07,.042,2.8,2.6)]
         else:
-            specs=[(0,.96,z-.2,xi),(.19,.70,z,xi*.76+xo*.24),(.64,.44,zo+.68,xo-1.1),(1.09,.05,zo+2.1,xo-6)]
-        thickness=.66 if ship=="spectre" else 1
-        rows=[(max(.3,yi-1.6) if i==0 else yi+f*span,chord*k,
-               thickness*(1.4-.65*f),thickness*(1-.45*f),zz,xx)
-              for i,(f,k,zz,xx) in enumerate(specs)]
-        surface=loft("Control surface",rows,armour,power=.58,wing=True,mirror=side)
-        for y,w,_,_,_,x in rows[1:-1]:
-            fleet.stripe(surface,"Leading structural inlay",(x+w*.69,side*(y-1.7)),(x+w*.43,side*(y+1.5)),.135,signal)
-            fleet.stripe(surface,"Underside actuator guide",(x-w*.48,side*(y-1.45)),(x+w*.49,side*(y+.65)),.115,alloy,-1)
-        if item=="w_vane":
-            y,w,_,_,z,x=rows[2]
-            for offset in (-2.6,0,2.6):
-                plate("Articulating stabiliser slat",[(x+offset-1,side*(y-2),z+.62),
-                      (x+offset-.6,side*(y+2.1),z+1.75),(x+offset+.56,side*(y+2.15),z+1.6),
-                      (x+offset+.81,side*(y-2),z+.53)],.42,alloy)
-        elif item=="w_prism":
-            y,w,_,_,z,x=rows[1]
-            for j in (-1,0,1):
-                x0=x+j*w*.39
-                plate("Prismatic capacitor tile",[(x0-1.35,side*(y-1.5),z+.95),(x0+.65,side*(y-1.35),z+1.15),
-                      (x0+1.2,side*(y+1.55),z+1.15),(x0-.89,side*(y+1.6),z+1.04)],.40,prism)
-                pipe("Capacitor bus",(x0-.8,side*(y-.6),z+1.21),(x0-.35,side*(y+.77),z+1.22),.105,.1,signal,6)
-        elif item=="w_phantom":
-            winglet=[(y,min(w,chord)*.42,.46,.41,zz-.87,xx-w*.64)
-                     for y,w,_,_,zz,xx in rows[1:]]
-            blade=loft("Split stealth winglet",winglet,alloy,power=.6,wing=True,mirror=side)
-            y,w,_,_,_,x=winglet[1]
-            fleet.stripe(blade,"Stealth emitter",(x-w*.6,side*(y-.6)),(x+w*.47,side*(y+1)),.14,signal,-1)
-        else:
-            for y,w,_,_,_,x in rows[1:-1]:
-                fleet.stripe(surface,"Razor abrasion strip",(x+w*.67,side*(y-1)),(x+w*.84,side*y),.23,alloy)
+            specs=[(.27,.69,.18,1.8),(.68,.56,.76,-3.3),(.86,.30,1.62,-5.4),(1.10,.035,2.8,-8.4)]
+        rows=[(root_y,min(chord*.65,7.3),1.06*thickness,.9*thickness,z,xi),
+              (shoulder_y,chord*.90,1.5*thickness,1.22*thickness,z,xi)]
+        rows.extend((shoulder_y+f*span,chord*k,(1.28-.71*f)*thickness,(.86-.44*f)*thickness,
+                     z+(zo-z)*f+dz,xi+(xo-xi)*f+dx*sweep) for f,k,dz,dx in specs)
+        if not (root_y < socket < rows[2][0]) or any(a[0]>=b[0] for a,b in zip(rows,rows[1:])):
+            raise ValueError(f"Invalid wing attachment on {ship}: {item}")
+        shell=loft("Control surface",rows,armour,power=.52,wing=True,mirror=side)
+        hinge=min(chord*.52,5.8)
+        pipe("Seated wing pivot",(xi-hinge,side*socket,z+.43),(xi+hinge,side*socket,z+.43),.53,.41,alloy,8)
+        pipe("Root actuator",(xi-1.5,side*(root_y+.45),z-.54),
+             (xi-2.5,side*(rows[2][0]+.2),rows[2][4]-.39),.33,.21,dark,8)
+        for a,b in zip(rows[1:],rows[2:]):
+            y,w,_,_,_,x=a
+            ey,ew,_,_,_,ex=b
+            trim=brass if item=="w_phantom" else alloy
+            for edge in (-1,1):
+                edge_in=.86
+                begin=(x+edge*w*edge_in,side*y)
+                end=(ex+edge*ew*edge_in,side*ey)
+                wing_line(shell,"Bevelled edge trim",begin,end,.26,trim)
+                if item in ("w_prism","w_phantom") or edge==1:
+                    wing_line(shell,"Long perimeter emitter",
+                                 (x+edge*w*.67,side*y),(ex+edge*ew*.67,side*ey),.17,signal)
+                wing_line(shell,"Underside edge line",begin,end,.115,signal,-1)
+        for row,end in zip(rows[1:-1],rows[2:]):
+            y,w,_,_,_,x=row
+            ey,ew,_,_,_,ex=end
+            dy=(ey-y)*.83
+            if item in ("w_prism","w_phantom"):
+                for family,mat in [(.68,prism if item=="w_prism" else ceramic),(.29,alloy if item=="w_prism" else brass)]:
+                    coords=[(x-w*family,y+.16),(x+w*family,y+.16),
+                            (x+(ex-x)*.83+ew*family,y+dy),(x+(ex-x)*.83-ew*family,y+dy)]
+                    finish_on_wing(shell,coords,side,mat,.19 if family>.5 else .32)
+            elif item=="w_vane" or (item=="w_razor" and row==rows[1]):
+                for shift in (-.50,0,.50) if item=="w_vane" else (-.47,.39):
+                    coords=[(x+w*(shift-.15),y+.19),(x+w*(shift+.13),y+.19),
+                            (ex+ew*(shift+.13),y+dy),(ex+ew*(shift-.15),y+dy)]
+                    finish_on_wing(shell,coords,side,alloy,.24)
+                fleet.stripe(shell,"Slat emitter",(x-w*.46,side*(y+.2)),(x+w*.57,side*(y+.2)),.19,signal)
+        if item=="w_phantom":
+            y,w,_,_,z,x=rows[3]
+            ey,_,_,_,ez,ex=rows[-1]
+            foil=loft("Trailing crescent hook",[(y,w*.42,.62,.44,z-.24,x-w*.56),
+                 (y+(ey-y)*.47,w*.30,.45,.33,z+.58,x-w*.78),
+                 (ey+.4,.34,.23,.19,ez-.14,ex+.3)],brass,power=.74,wing=True,mirror=side)
+            fleet.stripe(foil,"Crescent hook emitter",(x-w*.51,side*y),(ex+.3,side*(ey+.3)),.124,signal)
+
+
+def finish_on_wing(surface, coords, side, mat, lift):
+    points=[]
+    for x,y in coords:
+        hit,p,_,_=surface.ray_cast((x,y*side,80),(0,0,-1))
+        if not hit:
+            return
+        points.append((x,y*side,p.z+lift))
+    plate("Raised wing face insert",points,lift+.14,mat)
 
 
 def mount(ship,item,signal):
@@ -157,6 +213,8 @@ def mount(ship,item,signal):
                 ring("Heavy vent ring",(x+1+j*1.02,yy,z0),1.18*height,.18,dark)
         elif item=="m_rotary":
             muzzle=x+length*.73+3.3
+            pipe("Rotary drum shroud",(x-2.6,yy,z0),(x+2.25,yy,z0),1.49*height,1.64*height,alloy,12)
+            ring("Rotary blue drive seal",(x-2.56,yy,z0),1.28*height,.16,signal)
             pipe("Rotary central spindle",(x+1,yy,z0),(muzzle,yy,z0),.42,.32,alloy,12)
             for j in range(5):
                 a=j*math.tau/5
@@ -166,6 +224,8 @@ def mount(ship,item,signal):
             for xx in (x+2,muzzle-2.8,muzzle-.75):
                 ring("Timing collar",(xx,yy,z0),1.03*height,.27,signal if xx==x+2 else dark)
         elif item=="m_array":
+            pipe("Overslung cross-feed",(x+2,yy-1.95*height,z0+.4),(x+2,yy+1.95*height,z0+.4),.61,.61,alloy,8)
+            pipe("Overslung violet rail",(x+2,yy-1.65*height,z0+.98),(x+2,yy+1.65*height,z0+.98),.14,.14,signal,6)
             for index in (-1,0,1):
                 yp=yy+index*height
                 end=x+6+length*.50-(1.66*abs(index))
@@ -179,6 +239,9 @@ def mount(ship,item,signal):
                 loft("Siege accelerator rail",[(x+1,.62,.53,.51,z0),(x+4,.54,.86,.56,z0+.22),
                      (end-1.3,.39,.59,.39,z0+.24),(end,.34,.37,.37,z0+.21)],alloy,yp,.36)
                 pipe("Siege charging bus",(x+4,yp,z0+1),(end-.6,yp,z0+.75),.125,.085,signal,6)
+                for offset in (1.6,2.8,4):
+                    ring("Siege turquoise capacitor winding",(x+offset,yp,z0),.64,.13,signal)
+                ring("Gold bracing ring",(end-1.3,yp,z0+.23),.55,.135,brass)
             for xx in (x+4,x+7,x+10):
                 pipe("Siege rail separator",(xx,yy-.81*height,z0+.87),(xx,yy+.81*height,z0+.87),.19,.19,dark,6)
 
@@ -190,7 +253,7 @@ def plating(ship,item,signal,proxy):
     if len(roots)>n:
         roots=roots[1:n+1]
     for side in (-1,1):
-        for j,(x,w,_,_,_) in enumerate(roots):
+        for x,w,_,_,_ in roots:
             y=w*side*(.47 if item!="p_light" else .61)
             length=3.4 if item=="p_light" else 4.7 if item=="p_reactive" else 5.2 if item=="p_aegis" else 6.2
             width=min(w*.51,3.8) if item=="p_heavy" else min(w*.4,2.7)
@@ -199,31 +262,57 @@ def plating(ship,item,signal,proxy):
                 if not hit:
                     continue
                 z=p.z
-                cap=z+face*(.59 if item=="p_heavy" else .32)
-                points=[(x+u*length,y+v*width,cap) for u,v in [(-.5,-.26),(-.34,-.5),(.37,-.5),
-                        (.5,-.24),(.46,.29),(.3,.5),(-.35,.5),(-.5,.22)]]
-                plate("Armour cassette frame",points,cap-z+.48 if face==1 else -.54,alloy if item=="p_light" else armour)
+                height=.69 if item=="p_heavy" else .39
+                cap=z+face*height
+                outline=[(-.50,-.25),(-.32,-.50),(.33,-.50),(.50,-.26),(.50,.26),(.33,.50),(-.32,.50),(-.50,.25)]
+                def point(u,v,rise=0):
+                    px,py=x+u*length,y+v*width
+                    ok,at,_,_=proxy.ray_cast((px,py,80*face),(0,0,-face))
+                    return (px,py,(at.z if ok else z)+face*(height+rise))
+                def traced(arr,mat,r):
+                    for a,b in zip(arr,arr[1:]):
+                        pipe("Armour perimeter",point(*a),point(*b),r,r,mat,6)
+                if item=="p_light":
+                    traced(outline+outline[:1],alloy,.17)
+                    for end in outline[::2]:
+                        traced([(0,0),end],alloy,.115)
+                    for u,v in outline[::2]:
+                        px,py,pz=point(u,v)
+                        pipe("Blue light-frame fixing",(px,py,pz-face*.13),(px,py,pz+face*.15),.23,.16,signal,6)
+                    continue
+                skin=[point(u,v) for u,v in outline]
+                plate("Conformal armour cassette",skin,.74*face,armour)
                 if item=="p_reactive":
-                    for u in (-.29,0,.29):
-                        pipe("Reactive cell breaker",(x+u*length,y-width*.24,cap),(x+u*length+.26,y+width*.24,cap),.135,.135,signal,6)
-                elif item=="p_light":
-                    pipe("Exposed light frame tension rod",(x-length*.32,y-width*.28,cap),(x+length*.32,y+width*.28,cap),.13,.13,signal,8)
+                    # The card's orange hex lattice is raised above blue-steel backing.
+                    traced(outline+outline[:1],alloy,.13)
+                    for shift in (-.23,.23):
+                        hexagon=[(shift+.225*math.cos(i*math.tau/6),.34*math.sin(i*math.tau/6))
+                                 for i in range(6)]
+                        traced(hexagon+hexagon[:1],signal,.089)
                 elif item=="p_heavy":
-                    pipe("Heavy plate locking crossbar",(x-.26,y-width*.37,cap),(x+.26,y+width*.37,cap),.18,.18,dark,8)
-                    for yy in (-.31,.31):
-                        pipe("Heavy plate witness mark",(x-length*.29,y+yy*width,cap),(x-length*.15,y+yy*width,cap),.09,.09,signal,6)
+                    shield=[(-.44,-.22),(-.29,-.35),(.31,-.35),(.45,-.13),
+                            (.45,.13),(.31,.35),(-.29,.35),(-.44,.22)]
+                    plate("Layered heavy armour strike face",[point(u,v,.26) for u,v in shield],face*.43,alloy)
+                    for k in (-1,1):
+                        traced([(-.42,k*.34),(-.14,k*.34),(0,k*.22),(.22,k*.22),(.43,k*.37)],signal,.12)
                 else:
-                    ring("Aegis field projector",(x,y,cap),min(width*.36,.98),.145,signal,"top")
-                    pipe("Aegis ceramic centre",(x,y,cap-face*.08),(x,y,cap+face*.12),width*.20,width*.18,alloy,8)
+                    traced(outline+outline[:1],brass,.19)
+                    traced([(-.49,0),(-.21,-.07),(0,0),(.21,.07),(.49,0)],signal,.13)
+                    for k in (-1,1):
+                        traced([(-.41,0),(-.24,k*.32),(.21,k*.31),(.40,0)],brass,.135)
+                    ring("Aegis field projector",(x,y,cap),min(width*.22,.68),.114,signal,"top")
 
 
 def export_ship(ship):
-    global armour, alloy, dark, prism
+    global armour, alloy, dark, prism, brass, ceramic, reactor
     bpy.ops.wm.read_factory_settings(use_empty=True)
     armour=material("Fitting gunmetal",(.053,.083,.127),.63,.38)
     alloy=material("Brushed fitting edges",(.15,.22,.28),.72,.31)
     dark=material("Machined graphite",(.017,.022,.034),.43,.43)
-    prism=material("Prismatic ceramic",(.21,.15,.43),.57,.20)
+    prism=material("Violet prismatic glass",(.23,.085,.50),.46,.19,.17)
+    brass=material("Champagne gold edging",(.47,.27,.067),.74,.23)
+    ceramic=material("Phantom blue-black enamel",(.048,.17,.18),.59,.26)
+    reactor=material("Fusion amber core",(.96,.46,.07),.12,.32,2.7)
     proxy=loft("Plating reference",fleet.HULLS.get(ship,WASP_HULL),armour,
                power=.39 if ship in ("bastion","scavenger") else .55 if ship in ("architect","spectre") else .75)
     for item in ENGINE+WING+MOUNT+PLATING:
@@ -232,7 +321,7 @@ def export_ship(ship):
         if item in ENGINE:
             engine(ship,item,glow)
         elif item in WING:
-            wing(ship,item,glow)
+            wing(ship,item,glow,proxy)
         elif item in MOUNT:
             mount(ship,item,glow)
         else:
@@ -259,7 +348,17 @@ def export_ship(ship):
             items[0].name=f"{item} {mat}"
             items[0].parent=parent
     bpy.data.objects.remove(proxy,do_unlink=True)
-    bpy.ops.export_scene.gltf(filepath=str(DEST/f"{ship}.glb"),export_extras=True,export_format="GLB",export_texcoords=False)
+    ship_dir=DEST/ship
+    ship_dir.mkdir(exist_ok=True)
+    for slot, ids in (("engine",ENGINE),("wings",WING),("mount",MOUNT),("plating",PLATING)):
+        bpy.ops.object.select_all(action="DESELECT")
+        for item in ids:
+            parent=bpy.data.objects[item]
+            parent.select_set(True)
+            for obj in parent.children_recursive:
+                obj.select_set(True)
+        bpy.ops.export_scene.gltf(filepath=str(ship_dir/f"{slot}.glb"),use_selection=True,
+                                 export_extras=True,export_format="GLB",export_texcoords=False)
 
 
 if __name__ == "__main__":

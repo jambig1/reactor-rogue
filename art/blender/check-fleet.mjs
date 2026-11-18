@@ -25,10 +25,17 @@ for (const file of files) {
   const bytes = await readFile(new URL(file,directory));
   assert(bytes.byteLength < 2_000_000, `${id} exceeds the two megabyte budget`);
   const {scene} = await loader.parseAsync(Uint8Array.from(bytes).buffer,'');
-  const fittingBytes = await readFile(new URL(`fittings/${id}.glb`,directory));
-  assert(fittingBytes.byteLength < 2_000_000, `${id} fitting pack exceeds the two megabyte budget`);
-  const {scene:catalog} = await loader.parseAsync(Uint8Array.from(fittingBytes).buffer,'');
-  assert.deepEqual(catalog.children.map(node=>node.userData.fittingId).sort(),[...fittingIds].sort());
+  const catalog=new Map();
+  let largestFittingPack=0;
+  for (const name of Object.values(slot)) {
+    const fittingBytes=await readFile(new URL(`fittings/${id}/${name}.glb`,directory));
+    assert(fittingBytes.byteLength < 1_600_000,`${id} ${name} pack exceeds the download budget`);
+    largestFittingPack=Math.max(largestFittingPack,fittingBytes.byteLength);
+    const {scene}=await loader.parseAsync(Uint8Array.from(fittingBytes).buffer,'');
+    const expected=fittingIds.filter(fitting=>slot[fitting[0]]===name).sort();
+    assert.deepEqual(scene.children.map(node=>node.userData.fittingId).sort(),expected);
+    catalog.set(name,scene);
+  }
   if (id !== 'wasp') {
     const meshes=scene.children.filter(o=>o.isMesh);
     assert(meshes.length < 24 && meshes.some(o=>o.name.startsWith('wing')));
@@ -51,6 +58,6 @@ for (const file of files) {
   const fitted=buildBlenderShip(T,id,scene,record,
     {engine:'e_nova',wings:'w_phantom',mount:'m_siege',plating:'p_aegis'},catalog);
   inspect(fitted);
-  console.log(`${id}: ${Math.round(bytes.byteLength/1024)} KiB hull, ${Math.round(fittingBytes.byteLength/1024)} KiB fitting pack, stock + 16 fittings + full loadout verified`);
+  console.log(`${id}: ${Math.round(largestFittingPack/1024)} KiB largest slot pack; stock + 16 fittings + full loadout verified`);
 }
 

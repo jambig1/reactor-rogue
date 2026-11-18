@@ -1,4 +1,4 @@
-import { buildBlenderShip, hasBlenderShip, loadBlenderShip, loadBlenderFittings, usesFittings } from './ship3d-blender.js';
+import { buildBlenderShip, hasBlenderShip, loadBlenderShip, loadBlenderFittings, fittingSlots } from './ship3d-blender.js';
 import {buildFleetShip,fleetProfiles} from './ship3d-fleet.js';
 /* Reactor Rogue 3D hangar ship, v1.1.
    Builds a real 3D model of the player's ship from the same 2D drawing the game uses:
@@ -189,20 +189,20 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
   const blenderModels = new Map(), requestedModels = new Set();
   const blenderFittings = new Map(), requestedFittings = new Set();
   let activeRecord = null, disposed = false;
-  function requestAsset(id, loader, cache, requested) {
-    if (requested.has(id)) return;
-    requested.add(id);
-    loader(id).then(asset => {
+  function requestAsset(id, key, loader, receive, requested) {
+    if (requested.has(key)) return;
+    requested.add(key);
+    loader().then(asset => {
       if (disposed) return;
-      cache.set(id, asset);
+      receive(asset);
       if (unpackShip(built)[0] === id) {
         const currentKey = built;
         built = '';
         ship.setShip(currentKey, activeRecord);
       }
     }).catch(error => {
-      requested.delete(id);
-      console.warn('Blender ship asset unavailable', id, error);
+      requested.delete(key);
+      console.warn('Blender ship asset unavailable', key, error);
     });
   }
   function build(rec, key) {
@@ -307,8 +307,14 @@ export async function createShip3D(canvas, loadThree = () => import(THREE_URL)) 
       activeRecord = rec;
       const [id, parts] = unpackShip(key);
       if (hasBlenderShip(id)) {
-        requestAsset(id,loadBlenderShip,blenderModels,requestedModels);
-        if (usesFittings(parts)) requestAsset(id,loadBlenderFittings,blenderFittings,requestedFittings);
+        requestAsset(id,id,()=>loadBlenderShip(id),asset=>blenderModels.set(id,asset),requestedModels);
+        for (const slot of fittingSlots(parts)) {
+          const key = id + '/' + slot;
+          requestAsset(id,key,()=>loadBlenderFittings(id,slot),asset=>{
+            if (!blenderFittings.has(id)) blenderFittings.set(id,new Map());
+            blenderFittings.get(id).set(slot,asset);
+          },requestedFittings);
+        }
       }
       try { build(rec, key); built = key; } catch (e) {
       console.warn('ship3d build; restoring recorded model', e);
