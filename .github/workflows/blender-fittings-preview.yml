@@ -32,8 +32,7 @@ jobs:
       - name: Publish GLBs to the test branch
         run: |
           git rm art/blender/level-wing-preview.patch
-          git show f6e27b2c2f258c7c4ffe0627f5f755884d607cd9:.github/workflows/blender-fittings-preview.yml > .github/workflows/blender-fittings-preview.yml
-          git add index.html art/blender/fittings/*/wings.glb .github/workflows/blender-fittings-preview.yml
+          git add index.html art/blender/fittings/*/wings.glb
           if git diff --cached --quiet; then exit 0; fi
           git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Export the detailed Blender hulls and all 16 fittings'
           git push origin HEAD:refs/heads/codex/blender-detail-and-fittings
