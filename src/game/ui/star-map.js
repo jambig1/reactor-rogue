@@ -103,7 +103,7 @@ function drawShipTrail(t){if(!s||!s.paintTrail||s.paintTrail==='standard'||reduc
  for(let p of trailFx.sparks){let k=1-p.age/p.life;ctx.globalAlpha=k;ctx.fillStyle=k>.6?'#fff3c4':c;ctx.beginPath();ctx.arc(p.x,p.y,1.2+k*1.6,0,TAU);ctx.fill()}
  for(let g of trailFx.ghosts){let k=1-g.age/.4;ctx.save();ctx.translate(g.x,g.y);ctx.rotate(g.a);ctx.globalAlpha=k*.45;if(hullBake(s.pilot.id)){ctx.globalAlpha=k*.3;if(drawBakedHull(ctx,s.pilot)){ctx.restore();continue}}ctx.strokeStyle=c;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(16,0);ctx.lineTo(-12,-11);ctx.lineTo(-6,0);ctx.lineTo(-12,11);ctx.closePath();ctx.stroke();ctx.restore()}
  ctx.restore()}
-let shipView='skills',partSlotView='engine';
+let shipView='gear',partSlotView='engine';
 function renderPartsView(){let ps=partState(),T=shipTreeBonus(),slot=partSlotView;
  let slots='<div class="part-slots">'+partSlots.map(q=>{let d=equippedPart(q.id);return '<button class="part-slot" data-part-slot="'+q.id+'" aria-pressed="'+(q.id===slot)+'" style="--rc:'+partRarity[d.r].c+'"><span class="part-ico"><img src="'+partSrc(d.id)+'" alt=""></span><small>'+q.name.toUpperCase()+'</small><b>'+d.name+'</b><em>'+partRarity[d.r].name+'</em></button>'}).join('')+'</div>';
  let sum='<p class="part-sum">'+(partPreview?'Previewing <b>'+(shipParts.find(x=>x.id===partPreview)?.name||'')+'</b> · changes show in the stats above':'Tap a part to preview its stats · bosses drop new parts')+'</p>';

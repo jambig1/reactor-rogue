@@ -6,7 +6,8 @@
   "src/styles/part-4.css",
   "src/styles/part-5.css",
   "src/styles/part-6.css",
-  "src/styles/part-7.css"
+  "src/styles/part-7.css",
+  "src/styles/part-8.css"
  ],
  "game": [
   "src/game/ships/combat-sprite.js",
@@ -44,6 +45,7 @@
   "src/game/ui/missions.js",
   "src/game/ui/outpost.js",
   "src/game/ui/holo-hud.js",
-  "src/game/ui/touch-layout.js"
+  "src/game/ui/touch-layout.js",
+  "src/game/ui/ship-hub.js"
  ]
 }

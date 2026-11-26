@@ -1116,6 +1116,120 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 }
 html:is(.gfx-lite,.gfx-reduced-motion) .holo-deco *,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel:before,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) #menu .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel>button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) .hud .track:after,html:is(.gfx-lite,.gfx-reduced-motion) #dashButton:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card:before,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card .rarity-label,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card .rarity-label:before{animation:none!important}
 html:is(.gfx-lite,.gfx-reduced-motion) .hd-scan,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel:before,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) #menu .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel>button.primary:after{display:none}
+
+/* ===== SHIP HUB (v1.7) — ship screen: bay centrepiece, equipment, inspector, stats ===== */
+/* bigger bay: the ship is the centrepiece */
+@media(min-width:651px){
+  .ship-screen{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)!important;gap:20px!important}
+  .ss-left .bay{height:clamp(320px,calc(100vh - 360px),660px)!important}
+}
+/* slot chips around the ship */
+.bay-slots{position:absolute;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:3;pointer-events:none}
+.bay-slots.left{left:10px}.bay-slots.right{right:10px;align-items:flex-end}
+.bay-slot{pointer-events:auto;display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:118px;max-width:150px;padding:6px 10px;border-radius:0!important;
+  border:1px solid color-mix(in srgb,var(--rc) 55%,transparent)!important;background:linear-gradient(90deg,color-mix(in srgb,var(--rc) 22%,transparent),#04101fb0)!important;
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);text-align:left;color:#e6f6ff;backdrop-filter:blur(3px)}
+.bay-slots.right .bay-slot{align-items:flex-end;text-align:right}
+.bay-slot small{font-size:9px;letter-spacing:1.8px;color:var(--rc);font-weight:800}
+.bay-slot b{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.bay-slot.on,.bay-slot:hover{border-color:var(--rc)!important;box-shadow:0 0 14px color-mix(in srgb,var(--rc) 45%,transparent)}
+.new-dot{display:inline-block;min-width:14px;padding:0 4px;border-radius:7px;background:#ff6fd8;color:#16061a;font-style:normal;font-size:9px;line-height:14px;text-align:center}
+.hub-inspect{margin:8px 0 0;width:100%;padding:8px 12px!important;font-size:12px;letter-spacing:1px}
+
+/* tab bar */
+.hub-views{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:6px;padding-bottom:2px}
+.hub-views::-webkit-scrollbar{display:none}
+.hub-views button{flex:1 0 auto;padding:8px 10px!important;font-size:11px!important;letter-spacing:1px!important;position:relative;display:flex;align-items:center;gap:6px;justify-content:center}
+.hub-views .sv-ico{width:16px;height:16px;display:inline-flex}.hub-views .sv-ico svg,.hub-views .sv-ico img{width:16px;height:16px}
+.hub-badge{position:absolute;top:2px;right:4px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#ff6fd8;color:#16061a;font:800 10px/16px var(--game-font);font-style:normal;letter-spacing:0}
+
+/* equipment */
+.gear-slots{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:12px 0 8px}
+.gear-slots button{position:relative;display:flex;align-items:center;gap:6px;padding:6px!important;min-height:52px;text-align:left;border-radius:0!important;text-transform:none!important;letter-spacing:0!important;
+  border:1px solid color-mix(in srgb,var(--rc) 40%,transparent)!important;background:#06142a!important}
+.gear-slots button[aria-selected=true]{border-color:var(--rc)!important;background:linear-gradient(180deg,color-mix(in srgb,var(--rc) 22%,transparent),#06142a)!important;box-shadow:inset 0 -2px var(--rc)}
+.gear-slots img{width:34px;height:34px;object-fit:contain;flex:none}
+.gear-slots span{min-width:0;display:flex;flex-direction:column}
+.gear-slots small{font-size:8px;letter-spacing:1.5px;color:var(--rc)}
+.gear-slots b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gear-role{margin:4px 0 8px;font-size:12px;color:#a9bdcf;line-height:1.4}.gear-role b{color:#e6f6ff}.gear-role span{float:right;color:var(--holo,#45e4ff)}
+.gear-tools{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.gear-tools{flex-wrap:nowrap}
+.gear-tools input,.gear-tools select{flex:1 1 90px;min-width:0;background:#04101f;color:#dff6ff;border:1px solid #45e4ff40;padding:8px 10px;font:inherit;font-size:12px}
+.gear-tools input{flex:2 1 150px}
+@media(max-width:650px){.gear-tools{flex-wrap:wrap}}
+.gear-body{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+@media(min-width:1280px){.gear-body{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);align-items:start}}
+.gear-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;align-content:start;max-height:min(52vh,520px);overflow:auto;padding-right:2px}
+.gear-tile{position:relative;display:flex;align-items:center;gap:8px;padding:6px 8px!important;text-align:left;border-radius:0!important;text-transform:none!important;letter-spacing:0!important;
+  border:1px solid color-mix(in srgb,var(--rc) 35%,transparent)!important;background:linear-gradient(90deg,color-mix(in srgb,var(--rc) 12%,transparent),#05122400)!important;min-height:58px}
+.gear-tile:hover,.gear-tile.sel{border-color:var(--rc)!important;box-shadow:0 0 12px color-mix(in srgb,var(--rc) 35%,transparent)}
+.gear-tile.sel{background:linear-gradient(90deg,color-mix(in srgb,var(--rc) 26%,transparent),#05122400)!important}
+.gear-tile.equipped:after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--rc)}
+.gt-art{width:44px;height:44px;flex:none;display:grid;place-items:center}.gt-art img{max-width:44px;max-height:44px}
+.gear-tile.unknown .gt-art img{filter:brightness(0) drop-shadow(0 0 1px color-mix(in srgb,var(--rc) 70%,transparent));opacity:.8}
+.gt-meta{display:flex;flex-direction:column;min-width:0;gap:1px}
+.gt-meta small{font-size:8px;letter-spacing:1.4px;color:var(--rc);font-weight:800}
+.gt-meta b{font-size:12px;color:#e8f6ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gear-tile.unknown .gt-meta b{color:#7d93a8}
+.gt-src{font-size:10px;color:#7d93a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gt-pips,.ws-pips{display:flex;gap:3px;margin-top:2px}.gt-pips u,.ws-pips u{width:9px;height:4px;background:#ffffff1c;text-decoration:none}.gt-pips u.on,.ws-pips u.on{background:var(--rc)}.ws-pips u.ms{outline:1px solid #ffffff30}
+.gt-new{position:absolute;top:4px;right:6px;font:800 8px var(--game-font);letter-spacing:1px;color:#16061a;background:#ff6fd8;padding:1px 4px;font-style:normal}
+.gt-fav{position:absolute;bottom:4px;right:6px;color:#ffd76a;font-style:normal;font-size:12px}
+
+/* inspector */
+.gear-inspect{border:1px solid color-mix(in srgb,var(--rc) 45%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--rc) 10%,transparent),#04101f 60%);padding:12px 14px;display:grid;grid-template-columns:96px minmax(0,1fr);gap:4px 12px;align-items:start}
+.gear-inspect>*:not(.gi-art):not(.gi-head){grid-column:1/-1}
+.gear-inspect.empty{display:block;color:#7d93a8}
+.gi-art{width:96px;height:96px;display:grid;place-items:center;background:radial-gradient(circle,color-mix(in srgb,var(--rc) 22%,transparent),transparent 70%)}
+.gi-art img{max-width:96px;max-height:96px}
+.gear-inspect.unknown .gi-art img{filter:brightness(0) drop-shadow(0 0 2px var(--rc))}
+.gi-head small{font-size:9px;letter-spacing:2px;color:var(--rc);font-weight:800}
+.gi-head h3{margin:2px 0 4px;font-size:20px;color:#f2fbff}
+.gi-lore{margin:0;font-size:12px;color:#93a9bd;font-style:italic;line-height:1.4}
+.gi-stats{margin:8px 0 4px;font-size:13px;color:#dff6ff;font-weight:600}
+.gi-sig{border-left:3px solid var(--rc);background:color-mix(in srgb,var(--rc) 10%,transparent);padding:8px 10px;display:flex;flex-direction:column;gap:2px;margin:4px 0}
+.gi-sig b{color:var(--rc);font-size:12px;letter-spacing:1px;text-transform:uppercase}.gi-sig span{font-size:12.5px;color:#e6f6ff;line-height:1.4}.gi-sig small{font-size:11px;color:#93a9bd}
+.gi-compare{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}
+.gi-compare th{font-size:9px;letter-spacing:1.5px;color:#7d93a8;text-align:left;font-weight:700;padding:2px 4px;text-transform:uppercase}
+.gi-compare td{padding:4px;border-top:1px solid #ffffff10;color:#cfe6f5}
+.gi-compare td:last-child{font-weight:800;text-align:right}
+.gi-compare tr.up td:last-child{color:#7dffb3}.gi-compare tr.down td:last-child{color:#ff7a9a}
+.gi-compare tr.down td:first-child{color:#ffb3c4}
+.gi-eq{font-size:12px;color:#7dffb3;margin:6px 0}
+.gi-lose{font-size:12px;color:#ffb3c4;margin:2px 0}
+.gi-syn{list-style:none;margin:6px 0;padding:0;display:flex;flex-direction:column;gap:3px}
+.gi-syn li{font-size:12px;padding-left:16px;position:relative;color:#cfe6f5;line-height:1.35}
+.gi-syn li:before{content:'◆';position:absolute;left:0;color:#7dffb3;font-size:9px;top:2px}.gi-syn li.warn:before{content:'▲';color:#ffb36a}
+.gi-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;align-items:center}
+.gi-actions button{padding:9px 14px!important;font-size:12px!important}
+.gi-eqd{color:#7dffb3;font-weight:800;letter-spacing:1px;font-size:12px}.gi-max{color:#ffd76a;font-size:12px}
+.gi-src{margin:4px 0 0}
+
+/* stats inspection */
+.hub-stats section{margin-bottom:8px}
+.hs-row{display:grid;grid-template-columns:minmax(120px,1fr) auto;gap:2px 10px;padding:5px 0;border-bottom:1px solid #ffffff0d;align-items:baseline}
+.hs-label{font-size:12px;color:#a9bdcf}.hs-label i{font-style:normal;color:#45e4ff;cursor:help}
+.hs-row b{font-size:14px;color:#f2fbff;text-align:right}
+.hs-parts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px}
+.hs-parts em{font-style:normal;font-size:10.5px;padding:1px 6px;border:1px solid #ffffff18;color:#9fb4c8}
+.hs-parts em.up{color:#7dffb3;border-color:#7dffb340}.hs-parts em.down{color:#ff9ab0;border-color:#ff7a9a40}
+.ws-next{display:block;font-size:11px;color:#7dffb3;margin-top:2px}
+.hub-intro{margin:10px 0}
+.crew-syn{list-style:none;padding:0;margin:0;font-size:12px;color:#a9bdcf;display:flex;flex-direction:column;gap:4px}.crew-syn b{color:#e6f6ff}
+
+/* phones: sticky bay on top, slot chips become a strip along its bottom edge */
+@media(max-width:650px){
+  .ship-screen .ss-left .bay,.ship-screen .bay{position:sticky;top:0;z-index:3;height:clamp(200px,36vh,300px)!important}
+  .bay-slots{display:none}   /* the slot strip under the bay does this job on phones */
+  .gear-slots{grid-template-columns:repeat(5,minmax(64px,1fr));overflow-x:auto}
+  .gear-slots button{flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:64px;gap:2px}.gear-slots b{display:none}.gear-slots img{width:28px;height:28px}.gear-slots small{font-size:7.5px;letter-spacing:1px}
+  .gear-grid{grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:minmax(150px,62%);max-height:none;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding-bottom:4px}
+  .gear-tile{scroll-snap-align:start}
+  .gear-inspect{grid-template-columns:72px minmax(0,1fr)}.gi-art,.gi-art img{width:72px;height:72px;max-width:72px;max-height:72px}
+  .gi-compare{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.bay-slot,.gear-tile{transition:none}}
 </style><!-- Exo 2 font licence:
 Copyright 2013 The Exo 2 Project Authors (https://github.com/googlefonts/Exo-2.0)
 
@@ -2574,7 +2688,7 @@ function shipDebrief(){if(!s||s.dev?.test)return '';let sh=shipState(),g=s.shipG
 // Ship & skills screen (preflight step 1) and the star map (step 2).
 let treeBranch='interceptor',respecArmed=false;
 function renderShipScreen(){let sh=shipState(),pid=treePilot(),p=pilots.find(x=>x.id===pid)||pilots[1],b=shipBranches.find(x=>x.id===treeBranch)||shipBranches[0],pct=Math.round(sh.xp/shipNeed(sh.lvl)*100);
- partState();let lvlPct=Math.round(sh.xp/shipNeed(sh.lvl)*100),head='<div class="bay"><canvas id="shipBay" aria-label="Your ship"></canvas><div class="bay-hud" aria-hidden="true"><span>HANGAR 07</span><span>'+(bayFx.launch>0?'LAUNCHING':'DOCKED')+'</span></div><button class="tilt-btn'+(tiltOn?' on':'')+'" data-tilt="1" aria-label="Tilt to look around">'+(tiltOn?'TILT ON':'TILT')+'</button><div class="bay-id"><small>'+(sh.name?shipClassName()+' · ':'')+(sh.spec?(shipBranches.find(x=>x.specs.includes(sh.spec))?.name||'')+' SPEC':sh.cls?'CLASS':'BASE HULL')+'</small>'+(renamingShip?'<input id="shipNameInput" maxlength="16" value="'+(sh.name||'').replace(/"/g,'')+'" placeholder="Name your ship">':'<h3>'+shipDisplayName().replace(/</g,'')+'<button class="rename" data-ship-rename="1" aria-label="Rename ship">✎</button></h3>')+(crewAssigned().length?'<div class="bay-crew">'+crewAssigned().map(id=>'<span title="'+crewName(id)+' · '+crewInfo[id].role+'">'+crewPortrait(id)+'</span>').join('')+'</div>':'')+'</div><div class="bay-lvl" style="--pct:'+lvlPct+'"><b>'+sh.lvl+'</b><small>LEVEL</small></div><div class="bay-pts'+(sh.pts?' hot':'')+'"><b>'+sh.pts+'</b><small>POINTS</small></div><div class="bay-xp"><i style="width:'+lvlPct+'%"></i><span>'+sh.xp+' / '+shipNeed(sh.lvl)+' XP to level '+(sh.lvl+1)+'</span></div></div>'+shipStatChips();let tabs='<nav class="tree-tabs" role="tablist">'+shipBranches.map(x=>'<button role="tab" data-tree-branch="'+x.id+'" aria-selected="'+(x.id===b.id)+'" style="--bc:'+x.color+'">'+shipIcon({...(pilots.find(q=>q.id===x.pilot)||pilots[1]),color:x.color},'tab-icon')+x.name+'<small>'+branchSpent(x.id)+' pts'+(sh.cls===x.id?' · CLASS':'')+'</small></button>').join('')+'</nav>';
+ partState();let lvlPct=Math.round(sh.xp/shipNeed(sh.lvl)*100),head='<div class="bay"><canvas id="shipBay" aria-label="Your ship"></canvas><div class="bay-hud" aria-hidden="true"><span>HANGAR 07</span><span>'+(bayFx.launch>0?'LAUNCHING':'DOCKED')+'</span></div><button class="tilt-btn'+(tiltOn?' on':'')+'" data-tilt="1" aria-label="Tilt to look around">'+(tiltOn?'TILT ON':'TILT')+'</button><div class="bay-id"><small>'+(sh.name?shipClassName()+' · ':'')+(sh.spec?(shipBranches.find(x=>x.specs.includes(sh.spec))?.name||'')+' SPEC':sh.cls?'CLASS':'BASE HULL')+'</small>'+(renamingShip?'<input id="shipNameInput" maxlength="16" value="'+(sh.name||'').replace(/"/g,'')+'" placeholder="Name your ship">':'<h3>'+shipDisplayName().replace(/</g,'')+'<button class="rename" data-ship-rename="1" aria-label="Rename ship">✎</button></h3>')+(crewAssigned().length?'<div class="bay-crew">'+crewAssigned().map(id=>'<span title="'+crewName(id)+' · '+crewInfo[id].role+'">'+crewPortrait(id)+'</span>').join('')+'</div>':'')+'</div><div class="bay-lvl" style="--pct:'+lvlPct+'"><b>'+sh.lvl+'</b><small>LEVEL</small></div><div class="bay-pts'+(sh.pts?' hot':'')+'"><b>'+sh.pts+'</b><small>POINTS</small></div>'+hubBaySlots()+'<div class="bay-xp"><i style="width:'+lvlPct+'%"></i><span>'+sh.xp+' / '+shipNeed(sh.lvl)+' XP to level '+(sh.lvl+1)+'</span></div></div>'+shipStatChips()+'<button class="hub-inspect" data-hub-stats="1" aria-pressed="'+(shipView==='stats')+'">'+(shipView==='stats'?'Close stats':'Inspect all stats ›')+'</button>';let tabs='<nav class="tree-tabs" role="tablist">'+shipBranches.map(x=>'<button role="tab" data-tree-branch="'+x.id+'" aria-selected="'+(x.id===b.id)+'" style="--bc:'+x.color+'">'+shipIcon({...(pilots.find(q=>q.id===x.pilot)||pilots[1]),color:x.color},'tab-icon')+x.name+'<small>'+branchSpent(x.id)+' pts'+(sh.cls===x.id?' · CLASS':'')+'</small></button>').join('')+'</nav>';
  let nodeHtml=d=>{let st=nodeState(d),r=sh.nodes[d.id]||0,label={owned:'OWNED',locked:'Needs '+d.req+' points in '+b.name,other:'Respec to change class',needclass:'Become '+b.name+' first',needspec:'Specialise first',nopoints:'Need a skill point',open:'TAP TO UNLOCK'}[st];
   if(d.kind==='spec'){let chosen=sh.spec&&b.specs.includes(sh.spec);return '<div class="tree-node spec '+(chosen?'owned':st)+'"><div class="spec-pick">'+b.specs.map(id=>{let q=pilots.find(x=>x.id===id);return '<button data-tree-spec="'+id+'" '+(st==='open'?'':'disabled')+' aria-pressed="'+(sh.spec===id)+'">'+(q?shipIcon(q,'spec-icon'):'')+'<b>'+pilotName(id)+'</b><span>'+specInfo[id]+'</span></button>'}).join('')+'</div><em>'+(chosen?'SPECIALISED':st==='open'?'PICK ONE · 1 POINT':label)+'</em></div>'}
   let pips=d.max>1?'<i class="pips">'+Array.from({length:d.max},(_,i)=>'<u class="'+(i<r?'on':'')+'"></u>').join('')+'</i>':'';
@@ -2584,7 +2698,7 @@ function renderShipScreen(){let sh=shipState(),pid=treePilot(),p=pilots.find(x=>
  let N=k=>shipNodes.filter(d=>d.b===b.id&&d.kind===k);
  let rows=tier('Upgrades',0,N('stat'),'pair')+tier('Class',6,N('class'))+tier('Modules',7,N('notable'),'pair')+tier('Specialisation',9,N('spec'))+tier('Keystone',10,N('key'));
  let cost=respecCost(),foot='<div class="tree-foot"><button id="treeRespec" '+(shipSpent()?'':'disabled')+'>'+(respecArmed?'Tap again: refund all for '+cost+' credits':'Refund points · '+cost+' credits')+'</button><span>'+hangar.credits+' credits</span></div>';
- let views='<nav class="ship-views">'+[['skills','Skills','scholar'],['parts','Parts','armour'],['paint','Paint','area']].map(([id,n,ic])=>'<button data-ship-view="'+id+'" aria-pressed="'+(shipView===id)+'"><i class="sv-ico">'+equipmentIcon(ic)+'</i>'+n+'</button>').join('')+'</nav>';let radar='<div class="radar-card"><canvas id="radar" aria-label="Build shape"></canvas></div>';let body=shipView==='parts'?radar+renderPartsView()+renderLoadouts():shipView==='paint'?renderPaintView():radar+tabs+'<p class="tree-tag">'+b.tag+' · '+branchSpent(b.id)+' points spent</p><div class="tree-path">'+rows+'</div>'+foot;return '<div class="ship-screen view-'+shipView+(swipeDir?' swipe-'+swipeDir:'')+'" style="--bc:'+b.color+'"><div class="ss-left">'+head+'</div><div class="ss-right">'+views+body+'</div></div>'}
+ if(shipView==='parts')shipView='gear';let views=hubNav();let radar='<div class="radar-card"><canvas id="radar" aria-label="Build shape"></canvas></div>';let hb=hubBody(),body=hb!==null?hb:shipView==='paint'?renderPaintView():radar+tabs+'<p class="tree-tag">'+b.tag+' · '+branchSpent(b.id)+' points spent</p><div class="tree-path">'+rows+'</div>'+foot;return '<div class="ship-screen view-'+shipView+(swipeDir?' swipe-'+swipeDir:'')+'" style="--bc:'+b.color+'"><div class="ss-left">'+head+'</div><div class="ss-right">'+views+body+'</div></div>'}
 // v1.7 SHIP EQUIPMENT CATALOGUE. One source of truth for every ship part: the inventory, comparison, workshop,
 // 3D preview, drops and the actual run all read these definitions. Stats are structured (`st`), so descriptions,
 // comparisons and gameplay can never disagree. Part ids are unchanged from v0.99/v1.0, so saves carry over.
@@ -2886,7 +3000,7 @@ function drawShipTrail(t){if(!s||!s.paintTrail||s.paintTrail==='standard'||reduc
  for(let p of trailFx.sparks){let k=1-p.age/p.life;ctx.globalAlpha=k;ctx.fillStyle=k>.6?'#fff3c4':c;ctx.beginPath();ctx.arc(p.x,p.y,1.2+k*1.6,0,TAU);ctx.fill()}
  for(let g of trailFx.ghosts){let k=1-g.age/.4;ctx.save();ctx.translate(g.x,g.y);ctx.rotate(g.a);ctx.globalAlpha=k*.45;if(hullBake(s.pilot.id)){ctx.globalAlpha=k*.3;if(drawBakedHull(ctx,s.pilot)){ctx.restore();continue}}ctx.strokeStyle=c;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(16,0);ctx.lineTo(-12,-11);ctx.lineTo(-6,0);ctx.lineTo(-12,11);ctx.closePath();ctx.stroke();ctx.restore()}
  ctx.restore()}
-let shipView='skills',partSlotView='engine';
+let shipView='gear',partSlotView='engine';
 function renderPartsView(){let ps=partState(),T=shipTreeBonus(),slot=partSlotView;
  let slots='<div class="part-slots">'+partSlots.map(q=>{let d=equippedPart(q.id);return '<button class="part-slot" data-part-slot="'+q.id+'" aria-pressed="'+(q.id===slot)+'" style="--rc:'+partRarity[d.r].c+'"><span class="part-ico"><img src="'+partSrc(d.id)+'" alt=""></span><small>'+q.name.toUpperCase()+'</small><b>'+d.name+'</b><em>'+partRarity[d.r].name+'</em></button>'}).join('')+'</div>';
  let sum='<p class="part-sum">'+(partPreview?'Previewing <b>'+(shipParts.find(x=>x.id===partPreview)?.name||'')+'</b> · changes show in the stats above':'Tap a part to preview its stats · bosses drop new parts')+'</p>';
@@ -3068,7 +3182,7 @@ function drawBayDrones(g,t,dt,shx,shy,kk,w,h){let B=bayFx;if(!B.crew)B.crew=[{a:
  g.globalCompositeOperation='lighter';for(let q of B.welds){q.age+=dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=120*dt;let a=1-q.age/q.life;if(a<=0)continue;g.globalAlpha=a;g.fillStyle=a>.5?'#fff6c8':'#ffb03a';g.fillRect(q.x,q.y,1.6,1.6)}B.welds=B.welds.filter(q=>q.age<q.life).slice(-80);g.restore()}
 function drawBayScan(g,t,dt,shx,shy,kk,w,h){let B=bayFx;if(!(B.scan>0))return;B.scan+=dt;let dur=1.3,q=Math.min(1,B.scan/dur),y=q*h;if(B.scan>dur+2.6){B.scan=0;return}g.save();
  if(q<1){g.globalCompositeOperation='lighter';let lg=g.createLinearGradient(0,y-26,0,y);lg.addColorStop(0,'#65f7ef00');lg.addColorStop(1,'#65f7ef55');g.fillStyle=lg;g.fillRect(0,y-26,w,26);g.fillStyle='#bffcff';g.fillRect(0,y-1,w,2)}
- let st=shipStatValues(shipTreeBonus()),eng=equippedPart('engine').name.split(' ')[0].toUpperCase(),labels=[[h*.44,'HULL '+st.hull,-1],[h*.56,'ENGINE · '+eng,1],[h*.68,'SLOTS '+st.wslots+'/'+st.pslots,-1]];
+ let st=shipStatValues(shipTreeBonus()),eng=equippedPart('engine').name.split(' ')[0].toUpperCase(),labels=[];   // v1.7: the bay's slot chips show this now
  g.globalCompositeOperation='source-over';g.font='600 9px "Exo 2",sans-serif';g.textBaseline='middle';for(let [ly,txt,side] of labels){let seen=(y-ly)/h;if(seen<0)continue;let a=Math.min(1,seen*6)*Math.min(1,(dur+2.6-B.scan)/.6),tw=g.measureText(txt).width,lx=side<0?14:w-14,end=side<0?lx+tw+6:lx-tw-6,hull=shx+side*30*kk;g.globalAlpha=a;g.fillStyle='#071122cc';g.fillRect(side<0?lx-4:lx-tw-4,ly-7,tw+8,14);g.strokeStyle='#65f7ef99';g.lineWidth=1;g.beginPath();g.moveTo(end,ly);g.lineTo(hull,ly);g.stroke();g.fillStyle='#65f7ef';g.beginPath();g.arc(hull,ly,1.8,0,TAU);g.fill();g.fillStyle='#bffcff';g.textAlign=side<0?'left':'right';g.fillText(txt,lx,ly)}
  g.restore()}
 
@@ -6414,4 +6528,107 @@ function wireTouchLayout(){
   applyTouchLayout();
 }
 wireTouchLayout();
+
+// v1.7 SHIP HUB. The pre-flight ship screen is the one place to manage the ship: Equipment, Skills, Crew,
+// Workshop, Appearance, Loadouts and Collection, plus an engineering Stats inspection. The 3D bay stays the
+// centrepiece; slot chips around it jump straight to that slot. Everything reads the shared catalogue
+// (equipment-catalogue.js) and stats sheet (ship-stats.js), so numbers match the run exactly.
+const hubViews=[['gear','Equipment','armour'],['skills','Skills','scholar'],['crew','Crew','seeker'],['workshop','Workshop','power'],['paint','Appearance','area'],['loadouts','Loadouts','blade'],['collection','Collection','luck']];
+let gearSel='',gearFilter='all',gearRarity='all',gearSort='rarity',gearQuery='';
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// Playstyle tags each class, specialisation, crew member and skill leans towards (for synergy hints).
+const classTags={interceptor:['evasive','dash','crit','glass'],juggernaut:['tank','shield','close','control','sustain'],gunship:['sustained','artillery','thermal','crit','aggressive'],carrier:['drones','salvage','area','control']};
+const specTags={harrier:['close','dash'],spectre:['glass','crit','dash'],sovereign:['tank','control'],glacier:['control','tank'],tempest:['area','sustained'],helios:['thermal','area'],architect:['drones','control'],echo:['control','dash']};
+const crewTags={harrier:['sustained','aggressive'],bastion:['tank'],tempest:['sustained'],helios:['area','thermal'],glacier:['tank'],architect:['sustain','tank'],scavenger:['salvage'],spectre:['evasive','dash'],echo:['salvage','control'],sovereign:['salvage']};
+const crewSpeciality={harrier:'Weapons',bastion:'Defence',tempest:'Weapons',helios:'Reactor',glacier:'Defence',architect:'Engineering',scavenger:'Salvage',spectre:'Navigation',echo:'Navigation',sovereign:'Command'};
+const nodeTags={i_reflex:['dash'],i_burn:['evasive'],i_thrust:['evasive'],i_crit:['crit'],i_key:['glass'],j_shield:['shield'],j_spikes:['close'],j_hull:['tank'],j_armour:['tank'],j_key:['tank'],g_crit:['crit'],g_area:['area'],g_dmg:['sustained'],g_rate:['sustained'],g_key:['aggressive'],c_drones:['drones'],c_sats:['drones'],c_magnet:['salvage'],c_greed:['salvage'],c_key:['drones']};
+const tagNames={evasive:'evasive',dash:'dash',crit:'critical hits',glass:'glass cannon',tank:'tank',shield:'shields',close:'close range',control:'crowd control',sustain:'recovery',sustained:'sustained fire',artillery:'artillery',thermal:'heat weapons',aggressive:'aggression',drones:'drones',salvage:'salvage',area:'area damage'};
+
+// Up to four short, specific hints about how a part fits the current build. Warnings are included.
+function partSynergies(d){if(!d)return [];let sh=shipState(),out=[],tags=d.tags||[];
+ let cls=sh.cls,ct=classTags[cls]||[],hit=tags.filter(t=>ct.includes(t));if(hit.length)out.push({good:1,t:'Suits your '+(shipBranches.find(x=>x.id===cls)?.name||'')+' class ('+hit.map(t=>tagNames[t]).join(', ')+').'});
+ if(sh.spec){let st=specTags[sh.spec]||[],h=tags.filter(t=>st.includes(t));if(h.length)out.push({good:1,t:pilotName(sh.spec)+' specialisation likes '+h.map(t=>tagNames[t]).join(' and ')+'.'})}
+ for(let id of crewAssigned()){let h=tags.filter(t=>(crewTags[id]||[]).includes(t));if(h.length){out.push({good:1,t:'Crew: '+crewName(id)+' ('+crewInfo[id].role+') backs '+tagNames[h[0]]+'.'});break}}
+ for(let q of partSlots){if(q.id===d.slot)continue;let o=equippedPart(q.id),h=tags.filter(t=>(o.tags||[]).includes(t));if(h.length&&o.r>0){out.push({good:1,t:'Pairs with your '+o.name+' ('+tagNames[h[0]]+').'});break}}
+ let nodes=sh.nodes||{};for(let [nid,nt] of Object.entries(nodeTags))if(nodes[nid]&&tags.some(t=>nt.includes(t))){out.push({good:1,t:'Builds on your '+shipNodes.find(x=>x.id===nid).name+' skill.'});break}
+ // Specific interactions worth knowing.
+ let starter=shipBasePilot().starter;
+ if(d.sig==='solarFang')out.push(thermalWeapons.includes(starter)?{good:1,t:'Your starting '+(defs.find(x=>x.id===starter)?.name||'weapon')+' is a heat/energy weapon: +30%.'}:{good:0,t:'Your starting '+(defs.find(x=>x.id===starter)?.name||'weapon')+' is not heat/energy: −10% until you pick heat weapons.'});
+ if(d.sig==='capacitor'&&nodes.j_shield)out.push({good:0,t:'Overlaps with your Shield Generator skill: both fit the same Energy Shield.'});
+ if(d.sig==='siegeLock'&&(ct.includes('evasive')||nodes.i_reflex))out.push({good:0,t:'Siege Lock rewards standing still; your build likes to keep moving.'});
+ if(d.sig==='bulwark'&&nodes.i_key)out.push({good:0,t:'Glass Cannon cuts hull by 40%; Bulwark wants you in the thick of it.'});
+ if(d.st&&d.st.wslots!==undefined){let cur=equippedPart('mount').st.wslots;if(d.st.wslots!==cur)out.push({good:d.st.wslots>cur?1:0,t:(d.st.wslots>cur?'+':'')+(d.st.wslots-cur)+' weapon slot'+(Math.abs(d.st.wslots-cur)>1?'s':'')+' compared with your current mount.'})}
+ if(d.st&&d.st.pslots!==undefined){let cur=equippedPart('plating').st.pslots;if(d.st.pslots!==cur)out.push({good:d.st.pslots>cur?1:0,t:(d.st.pslots>cur?'+':'')+(d.st.pslots-cur)+' passive slot'+(Math.abs(d.st.pslots-cur)>1?'s':'')+' compared with your current plating.'})}
+ return out.slice(0,5)}
+
+// Chips around the 3D bay: the five slots, colour-coded by the equipped part's rarity. Tap to manage that slot.
+function hubBaySlots(){let ps=partState(),side=(ids,cls)=>'<div class="bay-slots '+cls+'">'+ids.map(id=>{let q=partSlots.find(x=>x.id===id),d=equippedPart(id),n=shipParts.filter(x=>x.slot===id&&partIsNew(x.id)).length;return '<button class="bay-slot'+(shipView==='gear'&&partSlotView===id?' on':'')+'" data-hub-slot="'+id+'" style="--rc:'+partRarity[d.r].c+'" aria-label="'+q.name+': '+esc(d.name)+'"><small>'+q.name.toUpperCase()+(n?' <i class="new-dot">'+n+'</i>':'')+'</small><b>'+esc(d.name)+'</b></button>'}).join('')+'</div>';
+ return side(['wings','engine','reactor'],'left')+side(['mount','plating'],'right')}
+
+function hubNav(){return '<nav class="ship-views hub-views" role="tablist">'+hubViews.map(([id,n,ic])=>{let badge=id==='gear'?shipParts.filter(x=>partIsNew(x.id)).length:id==='skills'?shipState().pts:0;return '<button role="tab" data-ship-view="'+id+'" aria-selected="'+(shipView===id)+'" aria-pressed="'+(shipView===id)+'"><i class="sv-ico">'+equipmentIcon(ic)+'</i>'+n+(badge?'<em class="hub-badge">'+badge+'</em>':'')+'</button>'}).join('')+'</nav>'}
+
+// ---- Equipment ----
+function gearList(slot){let ps=partState(),q=gearQuery.trim().toLowerCase();let list=shipParts.filter(d=>d.slot===slot);
+ list=list.filter(d=>{let own=!!ps.owned[d.id];if(gearFilter==='owned'&&!own)return false;if(gearFilter==='new'&&!partIsNew(d.id))return false;if(gearFilter==='fav'&&!ps.fav[d.id])return false;if(gearFilter==='missing'&&own)return false;if(gearRarity!=='all'&&d.r!==+gearRarity)return false;if(q&&!(own&&d.name.toLowerCase().includes(q))&&!(d.tags||[]).some(t=>(tagNames[t]||t).includes(q)))return false;return true});
+ let key={rarity:d=>-d.r*100-partLevel(d.id),level:d=>-partLevel(d.id)*10-d.r,recent:d=>-(ps.acq[d.id]||0),name:d=>0}[gearSort]||(d=>0);
+ list.sort((a,b)=>(ps.eq[slot]===b.id)-(ps.eq[slot]===a.id)||(!!ps.owned[b.id])-(!!ps.owned[a.id])||key(a)-key(b)||a.name.localeCompare(b.name));return list}
+function gearTile(d){let ps=partState(),own=!!ps.owned[d.id],eq=ps.eq[d.slot]===d.id,lv=partLevel(d.id),rc=partRarity[d.r];
+ return '<button class="gear-tile'+(own?'':' unknown')+(eq?' equipped':'')+(gearSel===d.id?' sel':'')+'" data-gear-pick="'+d.id+'" style="--rc:'+rc.c+'" data-name="'+esc(own?d.name.toLowerCase():'')+'">'+
+  '<span class="gt-art"><img src="'+partSrc(d.id)+'" alt="" loading="lazy"></span>'+
+  '<span class="gt-meta"><small>'+rc.name.toUpperCase()+(eq?' · EQUIPPED':'')+'</small><b>'+(own?esc(d.name):'Undiscovered')+'</b>'+
+  (own?'<span class="gt-pips">'+(d.r>0?[1,2,3,4,5].map(k=>'<u class="'+(k<=lv?'on':'')+'"></u>').join(''):'')+'</span>':'<span class="gt-src">'+esc(partSrcLabel(d))+'</span>')+'</span>'+
+  (partIsNew(d.id)?'<em class="gt-new">NEW</em>':'')+(ps.fav[d.id]?'<em class="gt-fav" aria-label="Favourite">★</em>':'')+'</button>'}
+function gearInspector(d){if(!d)return '<div class="gear-inspect empty"><p>Select a part to inspect it.</p></div>';let ps=partState(),own=!!ps.owned[d.id],eq=ps.eq[d.slot]===d.id,lv=partLevel(d.id),rc=partRarity[d.r],slot=partSlots.find(q=>q.id===d.slot);
+ if(!own)return '<div class="gear-inspect unknown" style="--rc:'+rc.c+'"><div class="gi-art"><img src="'+partSrc(d.id)+'" alt=""></div><div class="gi-head"><small>'+rc.name.toUpperCase()+' · '+slot.name.toUpperCase()+'</small><h3>Undiscovered part</h3><p class="gi-src">Where to look: <b>'+esc(partSrcLabel(d))+'</b></p><p class="fine">'+rc.role+'</p></div></div>';
+ let cmp=eq?[]:partComparison(d.id),sig=d.sig&&partSigs[d.sig];
+ let rows=cmp.length?'<table class="gi-compare"><thead><tr><th>Stat</th><th>Now</th><th></th><th>With this</th><th>Change</th></tr></thead><tbody>'+cmp.map(r=>'<tr class="'+(r.better?'up':'down')+'"><td>'+r.label+'</td><td>'+r.fmt(r.cur)+'</td><td>→</td><td>'+r.fmt(r.next)+'</td><td>'+(r.better?'▲':'▼')+' '+fmtDelta(r)+'</td></tr>').join('')+'</tbody></table>':eq?'<p class="gi-eq">Equipped. Its effect is included in your stats.</p>':'<p class="fine">No stat change compared with your current '+slot.name.toLowerCase()+'.</p>';
+ let cur=equippedPart(d.slot),lost=!eq&&cur.sig&&cur.sig!==d.sig?'<p class="gi-lose">You would lose <b>'+partSigs[cur.sig].name+'</b> from '+esc(cur.name)+'.</p>':'';
+ let syn=partSynergies(d).map(x=>'<li class="'+(x.good?'good':'warn')+'">'+esc(x.t)+'</li>').join('');
+ let up=d.r>0?(lv>=5?'<span class="gi-max">Fully upgraded</span>':'<button class="gi-up" data-gear-upgrade="'+d.id+'" '+(hangar.credits<partUpgradeCost(d)?'disabled':'')+'>Upgrade to +'+(lv+1)+' · '+partUpgradeCost(d)+' credits</button>'):'';
+ return '<div class="gear-inspect" style="--rc:'+rc.c+'"><div class="gi-art"><img src="'+partSrc(d.id)+'" alt=""></div><div class="gi-head"><small>'+rc.name.toUpperCase()+' · '+slot.name.toUpperCase()+(lv?' · +'+lv:'')+'</small><h3>'+esc(d.name)+'</h3><p class="gi-lore">'+esc(d.lore||'')+'</p></div>'+
+  '<p class="gi-stats">'+esc(partStatLine(d,lv))+'</p>'+rows+lost+(sig?'<div class="gi-sig"><b>'+sig.name+'</b><span>'+sig.desc+'</span><small>'+(lv>=5?'Upgraded: ':'At +5: ')+sig.lv5+'</small></div>':'')+(syn?'<ul class="gi-syn">'+syn+'</ul>':'')+
+  '<div class="gi-actions">'+(eq?'<span class="gi-eqd">✓ Equipped</span>':'<button class="primary" data-gear-equip="'+d.id+'">Equip</button>')+up+'<button class="gi-favb" data-gear-fav="'+d.id+'" aria-pressed="'+!!ps.fav[d.id]+'">'+(ps.fav[d.id]?'★ Favourite':'☆ Favourite')+'</button></div>'+
+  '<p class="gi-src fine">Source: '+esc(partSrcLabel(d))+(ps.acq[d.id]?' · found '+new Date(ps.acq[d.id]).toLocaleDateString():'')+'</p></div>'}
+function fmtDelta(r){let d=r.delta;if(['hull','armour','speed','wslots','pslots','dashes'].includes(r.id))return (d>0?'+':'')+Math.round(d);if(r.id==='dashCd')return (d>0?'+':'')+(Math.round(d*10)/10)+' s';if(r.id==='regen')return (d>0?'+':'')+(Math.round(d*100)/100)+'/s';return (d>0?'+':'')+Math.round(d*100)+'%'}
+function renderGearView(){let ps=partState(),slot=partSlotView;if(!partSlots.some(q=>q.id===slot))slot=partSlotView='engine';let q=partSlots.find(x=>x.id===slot),list=gearList(slot);if(!gearSel||shipParts.find(x=>x.id===gearSel)?.slot!==slot)gearSel=ps.eq[slot];
+ let slots='<div class="gear-slots" role="tablist">'+partSlots.map(x=>{let d=equippedPart(x.id),n=shipParts.filter(p=>p.slot===x.id&&partIsNew(p.id)).length;return '<button role="tab" data-hub-slot="'+x.id+'" aria-selected="'+(x.id===slot)+'" style="--rc:'+partRarity[d.r].c+'"><img src="'+partSrc(d.id)+'" alt=""><span><small>'+x.name.toUpperCase()+'</small><b>'+esc(d.name)+'</b></span>'+(n?'<em class="hub-badge">'+n+'</em>':'')+'</button>'}).join('')+'</div>';
+ let owned=shipParts.filter(d=>d.slot===slot&&ps.owned[d.id]).length,total=shipParts.filter(d=>d.slot===slot).length;
+ let tools='<div class="gear-tools"><input id="gearSearch" type="search" placeholder="Search parts or playstyle" value="'+esc(gearQuery)+'" aria-label="Search parts">'+
+  '<select data-gear-set="filter" aria-label="Show">'+[['all','All'],['owned','Owned'],['new','New'],['fav','Favourites'],['missing','Undiscovered']].map(([v,n])=>'<option value="'+v+'"'+(gearFilter===v?' selected':'')+'>'+n+'</option>').join('')+'</select>'+
+  '<select data-gear-set="rarity" aria-label="Rarity"><option value="all">Any rarity</option>'+partRarity.map((r,i)=>'<option value="'+i+'"'+(gearRarity===String(i)?' selected':'')+'>'+r.name+'</option>').join('')+'</select>'+
+  '<select data-gear-set="sort" aria-label="Sort">'+[['rarity','Sort: rarity'],['level','Sort: upgrade level'],['recent','Sort: recently found'],['name','Sort: name']].map(([v,n])=>'<option value="'+v+'"'+(gearSort===v?' selected':'')+'>'+n+'</option>').join('')+'</select></div>';
+ return slots+'<p class="gear-role"><b>'+q.name+'</b> · '+q.role+' <span>'+owned+' / '+total+' found</span></p>'+tools+'<div class="gear-body"><div class="gear-grid">'+(list.length?list.map(gearTile).join(''):'<p class="fine">Nothing matches these filters.</p>')+'</div>'+gearInspector(shipParts.find(x=>x.id===gearSel))+'</div>'}
+
+// ---- Engineering stats ----
+function renderStatsView(){let sheet=shipStatSheet(),groups=[...new Set(sheet.map(r=>r.group))];
+ return '<div class="hub-stats"><p class="fine">Permanent ship statistics at launch, from your hull, skills, crew and parts. Level-up upgrades during a run add on top of these.</p>'+groups.map(g=>'<section><h4>'+g+'</h4>'+sheet.filter(r=>r.group===g).map(r=>'<div class="hs-row"><span class="hs-label">'+r.label+(r.help?' <i title="'+esc(r.help)+'">?</i>':'')+'</span><b>'+r.fmt(r.value)+'</b><span class="hs-parts">'+r.parts.slice(1).map(p=>'<em class="'+((r.lower?p.d<0:p.d>0)?'up':'down')+'">'+esc(p.name)+' '+fmtDelta({id:r.id,delta:p.d})+'</em>').join('')+'</span></div>').join('')+'</section>').join('')+'</div>'}
+
+// ---- Workshop (inline, with exact next-level preview and milestones) ----
+function renderWorkshopView(){let ps=partState(),owned=shipParts.filter(d=>d.r>0&&ps.owned[d.id]).sort((a,b)=>(ps.eq[b.slot]===b.id)-(ps.eq[a.slot]===a.id)||b.r-a.r);
+ if(!owned.length)return '<p class="fine">Find parts from bosses and the Lost Signal outpost, then upgrade them here.</p>';
+ return '<p class="fine hub-intro">Upgrades scale a part\'s helpful values by 12% per level (never its drawbacks) and stay with the part, so nothing is lost when you swap. +3 adds a polished finish; +5 upgrades signature mechanics. '+hangar.credits.toLocaleString()+' credits.</p><div class="ws-list hub-ws">'+owned.map(d=>{let lv=partLevel(d.id),max=lv>=5,cost=partUpgradeCost(d),eq=ps.eq[d.slot]===d.id,next=max?'':'<span class="ws-next">Next: '+esc(partStatLine(d,lv+1))+(lv+1===3?' · polished finish':'')+(lv+1===5&&d.sig?' · '+partSigs[d.sig].name+': '+partSigs[d.sig].lv5:'')+'</span>';
+  return '<div class="ws-row" style="--rc:'+partRarity[d.r].c+'"><img src="'+partSrc(d.id)+'" alt=""><div><small>'+partRarity[d.r].name.toUpperCase()+' · '+partSlots.find(q=>q.id===d.slot).name.toUpperCase()+(eq?' · EQUIPPED':'')+'</small><b>'+esc(d.name)+' <i>+'+lv+'</i></b><span>'+esc(partStatLine(d,lv))+'</span>'+next+'<span class="ws-pips">'+[1,2,3,4,5].map(k=>'<u class="'+(k<=lv?'on':'')+(k===3||k===5?' ms':'')+'"></u>').join('')+'</span></div><button data-gear-upgrade="'+d.id+'" '+(max||hangar.credits<cost?'disabled':'')+'>'+(max?'MAX':'Upgrade<br><small>'+cost+' credits</small>')+'</button></div>'}).join('')+'</div>'}
+
+// ---- Crew (inline, with specialities and which builds they help) ----
+function renderCrewView(){let html=crewQuarters();let rows=crewOwned().map(id=>'<li><b>'+crewName(id)+'</b> · '+crewSpeciality[id]+' · '+crewInfo[id].perk+' · suits '+(crewTags[id]||[]).map(t=>tagNames[t]).join(', ')+'</li>').join('');
+ return html+(rows?'<h4>Crew and your build</h4><ul class="crew-syn">'+rows+'</ul>':'')}
+
+// ---- Dispatch ----
+function hubBody(){if(shipView==='gear')return renderGearView();if(shipView==='stats')return renderStatsView();if(shipView==='workshop')return renderWorkshopView();if(shipView==='crew')return renderCrewView();if(shipView==='loadouts')return typeof renderLoadoutsView==='function'?renderLoadoutsView():renderLoadouts();if(shipView==='collection')return typeof renderCollectionView==='function'?renderCollectionView():'';return null}
+
+function hubClick(e){let t=e.target.closest('[data-hub-slot],[data-gear-pick],[data-gear-equip],[data-gear-fav],[data-gear-upgrade],[data-hub-stats],[data-hangar-action]');if(!t||!t.closest('#pilotPicker'))return;
+ if(t.dataset.hubSlot){shipView='gear';partSlotView=t.dataset.hubSlot;gearSel='';partPreview=''}
+ else if(t.dataset.gearPick){let d=shipParts.find(x=>x.id===t.dataset.gearPick),ps=partState();gearSel=d.id;markPartSeen(d.id);partPreview=ps.owned[d.id]&&ps.eq[d.slot]!==d.id?d.id:'';try{sound('ui')}catch(_){}}
+ else if(t.dataset.gearEquip){let d=shipParts.find(x=>x.id===t.dataset.gearEquip);if(equipPart(d.id)){partPreview='';bayFx.scan=.001;bayBurst(partRarity[d.r].c,14+d.r*8,d.slot);sound(d.r>=4?'evolve':'cacheOpen')}}
+ else if(t.dataset.gearFav){togglePartFav(t.dataset.gearFav);sound('ui')}
+ else if(t.dataset.gearUpgrade){let d=shipParts.find(x=>x.id===t.dataset.gearUpgrade);if(upgradePart(d.id)){sound('level');bayBurst(partRarity[d.r].c,18,d.slot)}}
+ else if(t.dataset.hubStats){shipView=shipView==='stats'?'gear':'stats';partPreview=''}
+ else if(t.dataset.hangarAction){hangarAction(t.dataset.hangarAction,t.dataset.id)}
+ else return;
+ e.preventDefault();e.stopPropagation();selectedPilot=preflightShip=treePilot();renderPreflight()}
+function hubChange(e){let t=e.target;if(!t.closest||!t.closest('#pilotPicker'))return;if(t.dataset&&t.dataset.gearSet){let k=t.dataset.gearSet,v=t.value;if(k==='filter')gearFilter=v;if(k==='rarity')gearRarity=v;if(k==='sort')gearSort=v;renderPreflight()}}
+// Searching filters tiles in place so the field keeps focus while typing.
+function hubInput(e){let t=e.target;if(t.id!=='gearSearch')return;gearQuery=t.value;let q=gearQuery.trim().toLowerCase();for(let el of document.querySelectorAll('#pilotPicker .gear-tile')){let d=shipParts.find(x=>x.id===el.dataset.gearPick),own=partState().owned[d.id];el.hidden=!!q&&!(own&&d.name.toLowerCase().includes(q))&&!(d.tags||[]).some(x=>(tagNames[x]||x).includes(q))}}
+if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',hubClick,true);document.addEventListener('change',hubChange);document.addEventListener('input',hubInput)}
 </script><script src="site-app.js" defer></script><script src="cloud-config.js" defer></script><script src="cloud-save.js" defer></script></body></html>
