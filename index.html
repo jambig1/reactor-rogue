@@ -1230,6 +1230,47 @@ html:is(.gfx-lite,.gfx-reduced-motion) .hd-scan,html:is(.gfx-lite,.gfx-reduced-m
   .gi-compare{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){.bay-slot,.gear-tile{transition:none}}
+
+/* test flight strip */
+.hub-sim{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 8px;padding:8px 10px;border:1px dashed #45e4ff55;background:#45e4ff08}
+.hub-sim b{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#45e4ff}.hub-sim span{flex:1 1 200px;font-size:11.5px;color:#93a9bd}
+.hub-sim button{padding:7px 12px!important;font-size:11px!important}
+/* discovery reveal */
+.part-reveal{z-index:30}
+.pr-panel{width:min(520px,100%);text-align:center;border-color:var(--rc)!important}
+.pr-art{width:180px;height:176px;margin:8px auto 2px;display:grid;place-items:center;background:radial-gradient(circle,color-mix(in srgb,var(--rc) 35%,transparent),transparent 68%)}
+.pr-art img{max-width:170px;max-height:166px}
+.pr-rar{display:block;font-size:11px;letter-spacing:3px;color:var(--rc);font-weight:800}
+.part-reveal h2{color:var(--rc)!important;margin:2px 0 6px!important}
+.pr-stats{font-size:14px;color:#e6f6ff;font-weight:600;margin:4px 0 8px}
+.pr-panel .gi-sig{text-align:left}
+.pr-more{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.pr-more span{display:flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid color-mix(in srgb,var(--rc) 50%,transparent);font-size:11px;text-align:left}
+.pr-more img{width:28px;height:28px}.pr-more small{display:block;color:var(--rc);font-size:9px;letter-spacing:1px}
+@media(prefers-reduced-motion:no-preference){html:not(.gfx-reduced-motion) .part-reveal:not(.hidden) .pr-art img{animation:prIn .6s cubic-bezier(.2,.9,.3,1.3) both}
+ html:not(.gfx-reduced-motion) .part-reveal[data-r="4"]:not(.hidden) .pr-art,html:not(.gfx-reduced-motion) .part-reveal[data-r="5"]:not(.hidden) .pr-art{animation:prPulse 1.8s ease-in-out infinite}}
+@keyframes prIn{from{transform:scale(.6) rotate(-8deg);opacity:0}}
+@keyframes prPulse{50%{filter:drop-shadow(0 0 18px var(--rc))}}
+/* loadouts */
+.lo-list{display:flex;flex-direction:column;gap:6px}
+.lo-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;padding:8px;border:1px solid #45e4ff30;background:#05132a}
+.lo-row.warn{border-color:#ffb36a66}
+.lo-art{display:flex;gap:2px;grid-row:1/3}.lo-art img{width:30px;height:30px;object-fit:contain;border-bottom:2px solid var(--rc)}
+.lo-meta b{font-size:13px;color:#e8f6ff}.lo-meta small{display:block;font-size:11px;color:#93a9bd;line-height:1.35}
+.lo-name{width:100%;background:#04101f;color:#e8f6ff;border:1px solid #45e4ff60;padding:4px 6px;font:inherit}
+.lo-act{grid-column:2;display:flex;gap:4px;flex-wrap:wrap}.lo-act button{padding:5px 9px!important;font-size:10.5px!important;letter-spacing:.5px!important}
+.lo-new{margin-top:8px;width:100%}
+/* collection */
+.col-head{display:flex;gap:16px;align-items:center;margin:10px 0}
+.col-ring{--p:0;width:112px;height:112px;flex:none;border-radius:50%;display:grid;place-items:center;text-align:center;background:radial-gradient(closest-side,#06142a 78%,transparent 80% 100%),conic-gradient(#ff6fd8 calc(var(--p)*1%),#ffffff14 0)}
+.col-ring b{font-size:22px;color:#f2fbff;display:block}.col-ring small{font-size:8px;letter-spacing:1px;color:#93a9bd;text-transform:uppercase}
+.col-bars{flex:1;display:flex;flex-direction:column;gap:5px}
+.col-slot{display:grid;grid-template-columns:80px 1fr 44px;gap:8px;align-items:center;font-size:11.5px;color:#a9bdcf}.col-slot i{height:6px;background:#ffffff12}.col-slot u{display:block;height:100%;background:linear-gradient(90deg,#45e4ff,#ff6fd8)}.col-slot b{text-align:right;color:#e6f6ff}
+.col-rar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}.col-rar span{font-size:10.5px;padding:4px 8px;border:1px solid color-mix(in srgb,var(--rc) 55%,transparent);color:var(--rc)}.col-rar b{margin-right:4px;color:#f2fbff}
+.col-sectors{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
+.col-sector{padding:8px;border:1px solid #45e4ff26;background:#05132a;display:flex;flex-direction:column;gap:4px}.col-sector b{font-size:12px;color:#e8f6ff}.col-sector small{font-size:10.5px;color:#7d93a8}
+.col-sector span{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#7d93a8}.col-sector span img{width:26px;height:26px;filter:brightness(0) drop-shadow(0 0 1px var(--rc))}.col-sector span.got{color:var(--rc)}.col-sector span.got img{filter:none}
+.col-titles{display:flex;gap:6px;flex-wrap:wrap}.col-title{display:flex;flex-direction:column;padding:6px 12px!important;font-size:11.5px!important}.col-title small{font-size:9px;opacity:.7}.col-title.on{border-color:#ff6fd8!important;color:#ffd1f3!important}
 </style><!-- Exo 2 font licence:
 Copyright 2013 The Exo 2 Project Authors (https://github.com/googlefonts/Exo-2.0)
 
@@ -2688,7 +2729,7 @@ function shipDebrief(){if(!s||s.dev?.test)return '';let sh=shipState(),g=s.shipG
 // Ship & skills screen (preflight step 1) and the star map (step 2).
 let treeBranch='interceptor',respecArmed=false;
 function renderShipScreen(){let sh=shipState(),pid=treePilot(),p=pilots.find(x=>x.id===pid)||pilots[1],b=shipBranches.find(x=>x.id===treeBranch)||shipBranches[0],pct=Math.round(sh.xp/shipNeed(sh.lvl)*100);
- partState();let lvlPct=Math.round(sh.xp/shipNeed(sh.lvl)*100),head='<div class="bay"><canvas id="shipBay" aria-label="Your ship"></canvas><div class="bay-hud" aria-hidden="true"><span>HANGAR 07</span><span>'+(bayFx.launch>0?'LAUNCHING':'DOCKED')+'</span></div><button class="tilt-btn'+(tiltOn?' on':'')+'" data-tilt="1" aria-label="Tilt to look around">'+(tiltOn?'TILT ON':'TILT')+'</button><div class="bay-id"><small>'+(sh.name?shipClassName()+' · ':'')+(sh.spec?(shipBranches.find(x=>x.specs.includes(sh.spec))?.name||'')+' SPEC':sh.cls?'CLASS':'BASE HULL')+'</small>'+(renamingShip?'<input id="shipNameInput" maxlength="16" value="'+(sh.name||'').replace(/"/g,'')+'" placeholder="Name your ship">':'<h3>'+shipDisplayName().replace(/</g,'')+'<button class="rename" data-ship-rename="1" aria-label="Rename ship">✎</button></h3>')+(crewAssigned().length?'<div class="bay-crew">'+crewAssigned().map(id=>'<span title="'+crewName(id)+' · '+crewInfo[id].role+'">'+crewPortrait(id)+'</span>').join('')+'</div>':'')+'</div><div class="bay-lvl" style="--pct:'+lvlPct+'"><b>'+sh.lvl+'</b><small>LEVEL</small></div><div class="bay-pts'+(sh.pts?' hot':'')+'"><b>'+sh.pts+'</b><small>POINTS</small></div>'+hubBaySlots()+'<div class="bay-xp"><i style="width:'+lvlPct+'%"></i><span>'+sh.xp+' / '+shipNeed(sh.lvl)+' XP to level '+(sh.lvl+1)+'</span></div></div>'+shipStatChips()+'<button class="hub-inspect" data-hub-stats="1" aria-pressed="'+(shipView==='stats')+'">'+(shipView==='stats'?'Close stats':'Inspect all stats ›')+'</button>';let tabs='<nav class="tree-tabs" role="tablist">'+shipBranches.map(x=>'<button role="tab" data-tree-branch="'+x.id+'" aria-selected="'+(x.id===b.id)+'" style="--bc:'+x.color+'">'+shipIcon({...(pilots.find(q=>q.id===x.pilot)||pilots[1]),color:x.color},'tab-icon')+x.name+'<small>'+branchSpent(x.id)+' pts'+(sh.cls===x.id?' · CLASS':'')+'</small></button>').join('')+'</nav>';
+ partState();let lvlPct=Math.round(sh.xp/shipNeed(sh.lvl)*100),head='<div class="bay"><canvas id="shipBay" aria-label="Your ship"></canvas><div class="bay-hud" aria-hidden="true"><span>HANGAR 07</span><span>'+(bayFx.launch>0?'LAUNCHING':'DOCKED')+'</span></div><button class="tilt-btn'+(tiltOn?' on':'')+'" data-tilt="1" aria-label="Tilt to look around">'+(tiltOn?'TILT ON':'TILT')+'</button><div class="bay-id"><small>'+(sh.title?esc(sh.title).toUpperCase()+' · ':'')+(sh.name?shipClassName()+' · ':'')+(sh.spec?(shipBranches.find(x=>x.specs.includes(sh.spec))?.name||'')+' SPEC':sh.cls?'CLASS':'BASE HULL')+'</small>'+(renamingShip?'<input id="shipNameInput" maxlength="16" value="'+(sh.name||'').replace(/"/g,'')+'" placeholder="Name your ship">':'<h3>'+shipDisplayName().replace(/</g,'')+'<button class="rename" data-ship-rename="1" aria-label="Rename ship">✎</button></h3>')+(crewAssigned().length?'<div class="bay-crew">'+crewAssigned().map(id=>'<span title="'+crewName(id)+' · '+crewInfo[id].role+'">'+crewPortrait(id)+'</span>').join('')+'</div>':'')+'</div><div class="bay-lvl" style="--pct:'+lvlPct+'"><b>'+sh.lvl+'</b><small>LEVEL</small></div><div class="bay-pts'+(sh.pts?' hot':'')+'"><b>'+sh.pts+'</b><small>POINTS</small></div>'+hubBaySlots()+'<div class="bay-xp"><i style="width:'+lvlPct+'%"></i><span>'+sh.xp+' / '+shipNeed(sh.lvl)+' XP to level '+(sh.lvl+1)+'</span></div></div>'+shipStatChips()+'<button class="hub-inspect" data-hub-stats="1" aria-pressed="'+(shipView==='stats')+'">'+(shipView==='stats'?'Close stats':'Inspect all stats ›')+'</button>';let tabs='<nav class="tree-tabs" role="tablist">'+shipBranches.map(x=>'<button role="tab" data-tree-branch="'+x.id+'" aria-selected="'+(x.id===b.id)+'" style="--bc:'+x.color+'">'+shipIcon({...(pilots.find(q=>q.id===x.pilot)||pilots[1]),color:x.color},'tab-icon')+x.name+'<small>'+branchSpent(x.id)+' pts'+(sh.cls===x.id?' · CLASS':'')+'</small></button>').join('')+'</nav>';
  let nodeHtml=d=>{let st=nodeState(d),r=sh.nodes[d.id]||0,label={owned:'OWNED',locked:'Needs '+d.req+' points in '+b.name,other:'Respec to change class',needclass:'Become '+b.name+' first',needspec:'Specialise first',nopoints:'Need a skill point',open:'TAP TO UNLOCK'}[st];
   if(d.kind==='spec'){let chosen=sh.spec&&b.specs.includes(sh.spec);return '<div class="tree-node spec '+(chosen?'owned':st)+'"><div class="spec-pick">'+b.specs.map(id=>{let q=pilots.find(x=>x.id===id);return '<button data-tree-spec="'+id+'" '+(st==='open'?'':'disabled')+' aria-pressed="'+(sh.spec===id)+'">'+(q?shipIcon(q,'spec-icon'):'')+'<b>'+pilotName(id)+'</b><span>'+specInfo[id]+'</span></button>'}).join('')+'</div><em>'+(chosen?'SPECIALISED':st==='open'?'PICK ONE · 1 POINT':label)+'</em></div>'}
   let pips=d.max>1?'<i class="pips">'+Array.from({length:d.max},(_,i)=>'<u class="'+(i<r?'on':'')+'"></u>').join('')+'</i>':'';
@@ -3456,7 +3497,7 @@ function renderHangar(){let live=['pause','end'].includes(hangarReturn)||hangarR
  for(let el of document.querySelectorAll('[data-hangar-tab]'))el.setAttribute('aria-selected',el.dataset.hangarTab===hangarTab);
  if(!['crew','workshop','tools','contracts','loadout'].includes(hangarTab))hangarTab='crew';retirePowerUps();if(hangarTab==='crew')html=crewQuarters();if(hangarTab==='workshop')html=workshop();if(hangarTab==='tools')html=toolShop();
  if(hangarTab==='contracts')html=renderMissionBoard()+renderContractBoard();
- if(hangarTab==='loadout'){for(let [kind,list] of [['module',modules]])html+='<h3>REACTOR MODULE · ONE SLOT</h3><div class="hangar-grid">'+list.map(x=>{let open=equipmentOpen(x.id),owned=hangar.owned.includes(x.id),selected=hangar[kind]===x.id;return '<button class="hangar-card '+(selected?'equipped':'')+'" data-hangar-action="'+kind+'" data-id="'+x.id+'" '+(!open||!owned&&hangar.credits<x.cost?'disabled':'')+'><b>'+x.name+'</b><p>'+x.desc+'</p><small>'+(!open?'Blueprint locked':selected?'EQUIPPED':owned?'Equip':x.cost+' credits · Fabricate & equip')+'</small></button>'}).join('')+'</div>';}
+ if(hangarTab==='loadout'){html='<section class="crew-intro"><h3>Reactor cores are now a ship slot</h3><p class="fine">Reactors moved into your ship\'s equipment in v1.7. Any Reactor module you owned is now a reactor part, and the one you had fitted is still fitted. Open Play → Your ship → Equipment → Reactor to swap cores, compare them and upgrade them.</p></section>'}
  if(hangarTab==='sectors')html=sectors.map(x=>'<button class="hangar-card sector-card '+(hangar.sector===x.id?'equipped':'')+'" data-hangar-action="sector" data-id="'+x.id+'" '+(!sectorOpen(x.id)?'disabled':'')+'>'+sectorPreview(x.id)+'<b style="color:'+x.color+'">'+x.name+'</b><p>'+x.desc+'</p><p class="sector-roster"><strong>SECTOR BOSSES</strong><br>'+(sectorBossDefs[x.id]||bossDefs).map(b=>b.name).join(' · ')+endlessBestLine(x.id)+'</p><small>'+(!sectorOpen(x.id)?'<em class="lock-glyph" aria-hidden="true"></em>LOCKED · '+sectorLockText(x.id):hangar.sector===x.id?'SELECTED':'Select sector')+'</small></button>').join('');$('hangarContent').innerHTML=html;$('hangarContent').className=hangarTab==='sectors'?'hangar-grid sector-grid':hangarTab==='ships'?'hangar-ships':['tools','loadout','contracts'].includes(hangarTab)?'':'hangar-grid'}
 function updateLaunchSummary(){let sec=sectors.find(x=>x.id===hangar.sector)||sectors[0],p=pilots.find(x=>x.id===selectedPilot)||pilots[1];$('launchSummary').innerHTML=[['SHIP',shipDisplayName().replace(/</g,'')+(shipState().name?' ('+shipClassName()+')':'')+' · LV '+shipState().lvl+(shipState().pts?' · '+shipState().pts+' PTS':'')],['PLANET',sec.name],['CREDITS',hangar.credits]].map(([label,value])=>'<span><small>'+label+'</small><b>'+value+'</b></span>').join('')}
 
@@ -3819,7 +3860,7 @@ let devUnlocked=devRemembered(),devLaunch=null;
 const devPassword='ReactorBert';
 function devRemembered(){try{return localStorage.getItem('rr_dev_remember')==='1'}catch(e){return false}}
 function devRemember(on){try{localStorage.setItem('rr_dev_remember',on?'1':'0')}catch(e){}}
-function initDevRun(){s.dev={test:!!devLaunch,god:false,freeze:false,infiniteAbility:false,speed:1};devLaunch=null}
+function initDevRun(){s.dev={test:!!devLaunch,god:false,freeze:false,infiniteAbility:false,speed:1};devLaunch=null;try{$('devRunBadge').textContent='DEV TEST · NO PROGRESSION'}catch(e){}}
 function devRunActive(){return !!s&&state==='settings'&&settingsReturn==='pause'}
 function devMark(){if(!devUnlocked||!devRunActive())return false;s.dev.test=true;s.hangarReport='Developer test - new progress and records are not saved.';return true}
 function devNotice(message){$('devNotice').textContent=message}
@@ -4400,7 +4441,7 @@ $('pauseBuildTab').onclick=()=>setPauseTab('build');
 $('pauseWeaponsTab').onclick=()=>setPauseTab('weapons');
 $('pauseOverviewTab').onclick=()=>setPauseTab('overview');$('pauseEvolutionTab').onclick=()=>setPauseTab('evolutions');
 function pause(){show('devRunBadge',false);if(state==='play'){state='pause';resetInput();renderPauseOverview();setPauseTab('overview');show('paused',true)}else if(state==='pause'){state='play';show('paused',false)}}
-function finish(win){bankEndlessRecord();{let prev=Number(best.score)||0,prevT=Number(best.time)||0;s.newBestScore=!s.dev?.test&&s.score>prev&&prev>0;s.newBestTime=!s.dev?.test&&s.t>prevT&&prevT>0}show('devRunBadge',false);show('merchantCall',false);show('scrapHUD',false);recordRun(win?'victory':'defeated');sound(win?'win':'lose');show('continueEndless',win);state='end';resetInput();if(!s.dev?.test){best.time=Math.max(best.time,s.t);best.kills=Math.max(best.kills,s.kills);best.score=Math.max(Number(best.score)||0,s.score);try{profileStorage.setItem('neonSwarm02',JSON.stringify(best))}catch(e){storage=false}}bestText();$('runDebrief').innerHTML=endHero(win)+progressDebrief()+endlessDebrief();$('endLabel').textContent=win?'SECTOR SECURED':'SIGNAL LOST';$('endTitle').textContent=win?'Jump corridor open.':'One more run?';$('continueEndless').textContent='Re-enter sector · endless →';$('endStats').innerHTML=(s.dev?.test?'':shipDebrief()+contractResults())+'<details class="end-details"><summary>Run details · route, stats and weapon performance</summary>'+renderEndSummary(true)+runDebrief(win)+weaponReport()+'</details>';$('weaponResults').innerHTML='';show('end',true)}
+function finish(win){bankEndlessRecord();{let prev=Number(best.score)||0,prevT=Number(best.time)||0;s.newBestScore=!s.dev?.test&&s.score>prev&&prev>0;s.newBestTime=!s.dev?.test&&s.t>prevT&&prevT>0}show('devRunBadge',false);show('merchantCall',false);show('scrapHUD',false);recordRun(win?'victory':'defeated');sound(win?'win':'lose');show('continueEndless',win);state='end';resetInput();if(!s.dev?.test){best.time=Math.max(best.time,s.t);best.kills=Math.max(best.kills,s.kills);best.score=Math.max(Number(best.score)||0,s.score);try{profileStorage.setItem('neonSwarm02',JSON.stringify(best))}catch(e){storage=false}}bestText();$('runDebrief').innerHTML=endHero(win)+progressDebrief()+endlessDebrief();$('endLabel').textContent=win?'SECTOR SECURED':'SIGNAL LOST';$('endTitle').textContent=win?'Jump corridor open.':'One more run?';$('continueEndless').textContent='Re-enter sector · endless →';$('endStats').innerHTML=(s.dev?.test?'':shipDebrief()+contractResults())+'<details class="end-details"><summary>Run details · route, stats and weapon performance</summary>'+renderEndSummary(true)+runDebrief(win)+weaponReport()+'</details>';$('weaponResults').innerHTML='';show('end',true);try{partRevealAfterRun()}catch(e){}}
 const heavyLimits={brutes:8,elites:2};
 function spawn(type,specialist=false){if(s.enemies.length>=240)return null;if(type===3&&s.enemies.filter(e=>e.hp>0&&e.type===3&&!e.boss).length>=heavyLimits.elites)return null;if(type===2&&!specialist&&s.enemies.filter(e=>e.hp>0&&e.type===2&&!e.role&&!e.boss).length>=heavyLimits.brutes)type=Math.random()<.5?1:0;let a=rand(0,TAU),r=Math.hypot(W,H)/2+70,x=s.p.x+Math.cos(a)*r,y=s.p.y+Math.sin(a)*r;let data=[{r:11,hp:16,v:62,xp:1,c:'#ff6788',d:9},{r:9,hp:30,v:108,xp:5,c:'#78edac',d:12},{r:20,hp:160,v:40,xp:15,c:'#b996ff',d:20},{r:30,hp:650+7*s.t,v:47,xp:50,c:'#ffce70',d:28}][type],hp=(type===3?data.hp:data.hp*(1+s.t/180))*endlessPressure().health,e={...data,x,y,type,max:hp,hp,slow:0,freeze:0,tick:0};if(!specialist&&(['belt','storm','foundry','cryo','city'].includes(s.sector)||extraSectors[s.sector])){let serial=s.sectorHullIndex||0;s.sectorHullIndex=serial+1;if(serial%3!==2)e.sectorHull=s.sector}s.enemies.push(e);return e}
 
@@ -6598,7 +6639,7 @@ function renderGearView(){let ps=partState(),slot=partSlotView;if(!partSlots.som
   '<select data-gear-set="filter" aria-label="Show">'+[['all','All'],['owned','Owned'],['new','New'],['fav','Favourites'],['missing','Undiscovered']].map(([v,n])=>'<option value="'+v+'"'+(gearFilter===v?' selected':'')+'>'+n+'</option>').join('')+'</select>'+
   '<select data-gear-set="rarity" aria-label="Rarity"><option value="all">Any rarity</option>'+partRarity.map((r,i)=>'<option value="'+i+'"'+(gearRarity===String(i)?' selected':'')+'>'+r.name+'</option>').join('')+'</select>'+
   '<select data-gear-set="sort" aria-label="Sort">'+[['rarity','Sort: rarity'],['level','Sort: upgrade level'],['recent','Sort: recently found'],['name','Sort: name']].map(([v,n])=>'<option value="'+v+'"'+(gearSort===v?' selected':'')+'>'+n+'</option>').join('')+'</select></div>';
- return slots+'<p class="gear-role"><b>'+q.name+'</b> · '+q.role+' <span>'+owned+' / '+total+' found</span></p>'+tools+'<div class="gear-body"><div class="gear-grid">'+(list.length?list.map(gearTile).join(''):'<p class="fine">Nothing matches these filters.</p>')+'</div>'+gearInspector(shipParts.find(x=>x.id===gearSel))+'</div>'}
+ return slots+testFlightButtons()+'<p class="gear-role"><b>'+q.name+'</b> · '+q.role+' <span>'+owned+' / '+total+' found</span></p>'+tools+'<div class="gear-body"><div class="gear-grid">'+(list.length?list.map(gearTile).join(''):'<p class="fine">Nothing matches these filters.</p>')+'</div>'+gearInspector(shipParts.find(x=>x.id===gearSel))+'</div>'}
 
 // ---- Engineering stats ----
 function renderStatsView(){let sheet=shipStatSheet(),groups=[...new Set(sheet.map(r=>r.group))];
@@ -6631,4 +6672,66 @@ function hubChange(e){let t=e.target;if(!t.closest||!t.closest('#pilotPicker'))r
 // Searching filters tiles in place so the field keeps focus while typing.
 function hubInput(e){let t=e.target;if(t.id!=='gearSearch')return;gearQuery=t.value;let q=gearQuery.trim().toLowerCase();for(let el of document.querySelectorAll('#pilotPicker .gear-tile')){let d=shipParts.find(x=>x.id===el.dataset.gearPick),own=partState().owned[d.id];el.hidden=!!q&&!(own&&d.name.toLowerCase().includes(q))&&!(d.tags||[]).some(x=>(tagNames[x]||x).includes(q))}}
 if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',hubClick,true);document.addEventListener('change',hubChange);document.addEventListener('input',hubInput)}
+
+// v1.7 SHIP PROGRESSION: discovery reveal, named loadouts, the equipment collection and test flights.
+// All of it reads the shared catalogue; none of it creates a new currency.
+
+// ---- Discovery reveal (after a run that found new parts). Skippable, one screen, rarity-coloured. ----
+function partRevealAfterRun(){if(typeof document==='undefined'||!document.body||!s||s.dev?.test)return;let fresh=(s.partDrops||[]).filter(x=>x.fresh&&x.part).sort((a,b)=>b.part.r-a.part.r);if(!fresh.length)return;
+ let top=fresh[0],d=top.part,rc=partRarity[d.r],sig=d.sig&&partSigs[d.sig],slot=partSlots.find(q=>q.id===d.slot);
+ let el=document.getElementById('partReveal');if(!el){el=document.createElement('div');el.id='partReveal';el.className='overlay part-reveal';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','New ship part');document.body.appendChild(el)}
+ el.style.setProperty('--rc',rc.c);el.dataset.r=d.r;
+ el.innerHTML='<div class="panel pr-panel"><div class="eyebrow">'+(fresh.length>1?fresh.length+' NEW SHIP PARTS':'NEW SHIP PART')+' · '+esc(top.source||'Recovered')+'</div>'+
+  '<div class="pr-art"><img src="'+partSrc(d.id)+'" alt=""></div><small class="pr-rar">'+rc.name.toUpperCase()+' · '+slot.name.toUpperCase()+'</small><h2>'+esc(d.name)+'</h2><p class="pr-stats">'+esc(partStatLine(d,0))+'</p>'+
+  (sig?'<div class="gi-sig"><b>'+sig.name+'</b><span>'+sig.desc+'</span></div>':'')+'<p class="gi-lore">'+esc(d.lore||'')+'</p>'+
+  (fresh.length>1?'<div class="pr-more">'+fresh.slice(1).map(x=>'<span style="--rc:'+partRarity[x.part.r].c+'"><img src="'+partSrc(x.part.id)+'" alt=""><b>'+esc(x.part.name)+'</b><small>'+partRarity[x.part.r].name+'</small></span>').join('')+'</div>':'')+
+  '<div class="actions"><button id="prSkip">Continue</button><button class="primary" id="prInspect">Inspect and fit →</button></div></div>';
+ el.classList.remove('hidden');try{sound(d.r>=4?'evolve':d.r>=2?'cacheOpen':'reward')}catch(e){}
+ let close=()=>{el.classList.add('hidden')};$('prSkip').onclick=close;el.onclick=e=>{if(e.target===el)close()};
+ $('prInspect').onclick=()=>{close();shipView='gear';partSlotView=d.slot;gearSel=d.id;gearFilter='all';try{if(typeof openPreflight==='function'){backToStart();openPreflight()}}catch(e){}};
+ try{$('prInspect').focus()}catch(e){}}
+
+// ---- Named loadouts: parts, appearance and crew. Skills are not swapped (they cost points to change). ----
+function shipLoadouts(){let sh=shipState();if(!Array.isArray(sh.loadouts2)){sh.loadouts2=[];for(let L of sh.loadouts||[])if(L&&L.eq)sh.loadouts2.push({name:(L.label||'Loadout').slice(0,24),eq:{...L.eq},paint:{...(L.paint||{})},crew:[]})}return sh.loadouts2}
+let loadoutMsg='',loadoutRename=-1;
+function snapshotLoadout(name){let ps=partState(),sh=shipState();return {name:(name||'Loadout').slice(0,24),eq:{...ps.eq},paint:JSON.parse(JSON.stringify(sh.paint||{})),crew:[...crewAssigned()]}}
+function saveNewLoadout(){let L=shipLoadouts();if(L.length>=8)return false;L.push(snapshotLoadout(shipClassName()+' · '+equippedPart('engine').name.split(' ')[0]+' '+(L.length+1)));saveHangar();return true}
+function applyLoadout(i){let L=shipLoadouts()[i];if(!L)return null;let ps=partState(),missing=[];for(let q of partSlots){let id=L.eq?.[q.id];if(!id)continue;if(ps.owned[id])ps.eq[q.id]=id;else missing.push(shipParts.find(x=>x.id===id)?.name||id)}
+ let sh=shipState();sh.paint={...sh.paint,...(L.paint||{})};if(Array.isArray(L.crew)){let own=crewOwned();sh.crew=L.crew.filter(id=>own.includes(id)).slice(0,crewSeats());let gone=L.crew.filter(id=>!own.includes(id));if(gone.length)missing.push(...gone.map(crewName))}saveHangar();return missing}
+function renderLoadoutsView(){let L=shipLoadouts();
+ return '<p class="fine hub-intro">A loadout saves your parts, appearance and crew. Skills stay as they are, because changing them costs a refund. Parts you no longer own are skipped and listed.</p>'+(loadoutMsg?'<p class="build-status">'+esc(loadoutMsg)+'</p>':'')+
+  '<div class="lo-list">'+L.map((x,i)=>{let parts=partSlots.map(q=>shipParts.find(p=>p.id===x.eq?.[q.id])).filter(Boolean),bad=parts.filter(p=>!partState().owned[p.id]);return '<div class="lo-row'+(bad.length?' warn':'')+'"><div class="lo-art">'+parts.map(p=>'<img src="'+partSrc(p.id)+'" alt="" title="'+esc(p.name)+'" style="--rc:'+partRarity[p.r].c+'">').join('')+'</div><div class="lo-meta">'+(loadoutRename===i?'<input class="lo-name" data-lo-name="'+i+'" maxlength="24" value="'+esc(x.name)+'">':'<b>'+esc(x.name)+'</b>')+'<small>'+parts.filter(p=>p.r>0).map(p=>esc(p.name)).join(' · ')+(x.crew?.length?' · crew: '+x.crew.map(crewName).join(', '):'')+(bad.length?' · missing: '+bad.map(p=>esc(p.name)).join(', '):'')+'</small></div><div class="lo-act"><button class="primary" data-lo-load="'+i+'">Load</button><button data-lo-save="'+i+'" title="Overwrite with your current ship">Save</button><button data-lo-dup="'+i+'" '+(L.length>=8?'disabled':'')+'>Duplicate</button><button data-lo-ren="'+i+'">Rename</button><button data-lo-del="'+i+'" aria-label="Delete loadout">✕</button></div></div>'}).join('')+'</div>'+
+  '<button class="lo-new" data-lo-new="1" '+(L.length>=8?'disabled':'')+'>+ Save current ship as a new loadout ('+L.length+' / 8)</button>'}
+
+// ---- Collection: completion, sources and titles (titles are cosmetic, never stat bonuses). ----
+const collectionTitles=[[25,'Scavenger'],[50,'Field Engineer'],[75,'Quartermaster'],[100,'Shipwright Prime']];
+function collectionPct(){let ps=partState(),all=shipParts.filter(d=>d.r>0);return Math.round(all.filter(d=>ps.owned[d.id]).length/all.length*100)}
+function renderCollectionView(){let ps=partState(),pct=collectionPct(),sh=shipState();
+ let bySlot=partSlots.map(q=>{let all=shipParts.filter(d=>d.slot===q.id&&d.r>0),got=all.filter(d=>ps.owned[d.id]).length;return '<div class="col-slot"><span>'+q.name+'</span><i><u style="width:'+Math.round(got/all.length*100)+'%"></u></i><b>'+got+' / '+all.length+'</b></div>'}).join('');
+ let byRar=partRarity.slice(1).map((r,i)=>{let all=shipParts.filter(d=>d.r===i+1),got=all.filter(d=>ps.owned[d.id]).length;return '<span style="--rc:'+r.c+'"><b>'+got+'/'+all.length+'</b>'+r.name+'</span>'}).join('');
+ let sectorsHtml=[...new Set(shipParts.filter(d=>d.src!=='any'&&d.src!=='start').map(d=>d.src))].map(sec=>{let list=shipParts.filter(d=>d.src===sec);return '<div class="col-sector"><b>'+esc(sectorName(sec))+'</b>'+list.map(d=>'<span class="'+(ps.owned[d.id]?'got':'')+'" style="--rc:'+partRarity[d.r].c+'"><img src="'+partSrc(d.id)+'" alt="">'+(ps.owned[d.id]?esc(d.name):'Unknown '+partRarity[d.r].name.toLowerCase()+' '+partSlots.find(q=>q.id===d.slot).name.toLowerCase())+'</span>').join('')+'<small>'+(sectorOpen(sec)?'Its bosses can drop these; each boss there without one raises the chance, guaranteed within 6.':'Sector locked.')+'</small></div>'}).join('');
+ let titles=collectionTitles.map(([n,t])=>{let got=pct>=n;return '<button class="col-title'+(sh.title===t?' on':'')+'" data-col-title="'+t+'" '+(got?'':'disabled')+'>'+(got?'':'🔒 ')+t+'<small>'+n+'%</small></button>'}).join('');
+ return '<div class="col-head"><div class="col-ring" style="--p:'+pct+'"><b>'+pct+'%</b><small>collected</small></div><div class="col-bars">'+bySlot+'</div></div><div class="col-rar">'+byRar+'</div>'+
+  '<h4>Sector equipment</h4><p class="fine">Common to Legendary parts can drop from any boss and turn up at the Lost Signal outpost. Some parts only exist in one sector:</p><div class="col-sectors">'+sectorsHtml+'</div>'+
+  '<h4>Titles</h4><p class="fine">Shown under your ship\'s name. Cosmetic only.</p><div class="col-titles">'+titles+(sh.title?'<button class="col-title" data-col-title="">No title</button>':'')+'</div>'}
+
+// ---- Test flight: your current ship, no credits, XP, parts, records or missions (it is a developer test run). ----
+function startTestFlight(kind){if(!['preflight','hangar','menu'].includes(state))return false;let pilot=treePilot(),sector=sectorOpen(hangar.sector)?hangar.sector:'grid';
+ for(let id of ['preflight','hangar','menu','end','records','settings'])try{show(id,false)}catch(e){}
+ if(kind==='boss'){quickTest('boss',null,false,{pilot,sector})}else{devLaunch={pilot,sector};start()}
+ if(!s)return false;s.dev.test=true;s.dev.sim=true;s.hangarReport='Test flight. No credits, ship XP, parts, records or missions are earned.';try{$('devRunBadge').textContent='TEST FLIGHT · NO REWARDS'}catch(e){}return true}
+function testFlightButtons(){return '<div class="hub-sim"><b>Test flight</b><span>Fly this exact ship with no rewards and no risk. Quit from the pause menu to come back.</span><button data-sim="waves">Waves</button><button data-sim="boss">Boss duel</button></div>'}
+
+function progressionClick(e){let t=e.target.closest('[data-lo-load],[data-lo-save],[data-lo-dup],[data-lo-ren],[data-lo-del],[data-lo-new],[data-col-title],[data-sim]');if(!t||!t.closest('#pilotPicker'))return;let L=shipLoadouts(),i;
+ if(t.dataset.loLoad!==undefined){let miss=applyLoadout(+t.dataset.loLoad);loadoutMsg=miss&&miss.length?'Loaded "'+L[+t.dataset.loLoad].name+'". Not available any more, kept your current: '+miss.join(', ')+'.':'Loaded "'+L[+t.dataset.loLoad].name+'".';bayFx.scan=.001;bayBurst('#65f7ef',30);sound('cacheOpen')}
+ else if(t.dataset.loSave!==undefined){i=+t.dataset.loSave;L[i]={...snapshotLoadout(L[i].name)};saveHangar();loadoutMsg='Saved your current ship into "'+L[i].name+'".';sound('reward')}
+ else if(t.dataset.loDup!==undefined){i=+t.dataset.loDup;if(L.length<8){L.splice(i+1,0,{...JSON.parse(JSON.stringify(L[i])),name:(L[i].name+' copy').slice(0,24)});saveHangar();loadoutMsg='Duplicated. Load it, change things, then Save.'}}
+ else if(t.dataset.loRen!==undefined){loadoutRename=+t.dataset.loRen}
+ else if(t.dataset.loDel!==undefined){i=+t.dataset.loDel;if(t.dataset.armed){L.splice(i,1);saveHangar();loadoutMsg='Loadout deleted.'}else{t.dataset.armed='1';t.textContent='Delete?';e.preventDefault();e.stopPropagation();return}}
+ else if(t.dataset.loNew){if(saveNewLoadout()){loadoutMsg='Saved as a new loadout.';sound('reward')}}
+ else if(t.dataset.colTitle!==undefined){shipState().title=t.dataset.colTitle;saveHangar();sound('ui')}
+ else if(t.dataset.sim){e.preventDefault();e.stopPropagation();startTestFlight(t.dataset.sim);return}
+ e.preventDefault();e.stopPropagation();renderPreflight()}
+function progressionChange(e){let t=e.target;if(t.dataset&&t.dataset.loName!==undefined){let L=shipLoadouts(),i=+t.dataset.loName;if(L[i]){L[i].name=(t.value.trim()||L[i].name).slice(0,24);saveHangar()}loadoutRename=-1;renderPreflight()}}
+if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',progressionClick,true);document.addEventListener('change',progressionChange)}
 </script><script src="site-app.js" defer></script><script src="cloud-config.js" defer></script><script src="cloud-save.js" defer></script></body></html>

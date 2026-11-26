@@ -46,6 +46,7 @@
   "src/game/ui/outpost.js",
   "src/game/ui/holo-hud.js",
   "src/game/ui/touch-layout.js",
-  "src/game/ui/ship-hub.js"
+  "src/game/ui/ship-hub.js",
+  "src/game/ui/ship-progression.js"
  ]
 }

@@ -164,6 +164,23 @@
 
 ## Unreleased
 
+### Ship customisation overhaul
+
+- **One ship hub.** Play → Your ship is now where you manage everything: Equipment, Skills, Crew, Workshop, Appearance, Loadouts and Collection, plus a full Stats inspection. Your ship sits in a larger 3D bay with slot chips around it; tap one to manage that slot. Selecting a part previews it on the model.
+- **Equipment inventory.** Search by name or playstyle, filter (owned, new, favourites, undiscovered), filter by rarity and sort by rarity, upgrade level, recently found or name. New parts are marked, favourites starred, and undiscovered parts show a silhouette and where to find them.
+- **Honest comparisons.** Inspecting a part shows its exact stats, its signature mechanic, and a current → proposed table with every gain and loss (including weapon/passive slots and any signature you would lose), plus hints about how it fits your class, specialisation, crew, skills and other parts, including warnings.
+- **Stats you can trust.** The Stats view breaks every permanent stat down by hull, skills, crew and each part, using the same calculation the run uses (checked by a new test).
+- **Reactor slot.** A fifth slot for reactor cores. Your old Reactor module carries over: owned modules become reactor parts and the fitted one stays fitted.
+- **Six rarity tiers with distinct jobs**: Common, Uncommon, Rare, Epic, Legendary, Exotic. Epic and above add signature mechanics, e.g. Afterburn (dashes leave a burning wake), Siege Lock (brace by holding still), Bulwark (less damage the more enemies are close), Gravity Well, Solar Fang, Aegis Pulse, Chitin Mend, Coolant Loop, Critical Mass. Upgrading a part to +5 improves its signature.
+- **11 new parts**, including sector exotics that only drop from that sector's bosses: Phantom Drive (Ghost Fleet), Graviton Wings (Abyssal Rift), Solar Fang Mount (Solar Corona), Titan Bastion Plating (Cinder Foundry), plus Hive Chitin, Sustain Core, Overload Reactor and more. A pity counter guarantees a sector's part within six of its boss kills; unowned parts are strongly preferred in drops.
+- **New 3D fittings** for the new parts on all 12 hulls, and every plating now reinforces the hull with a dorsal armour spine. The in-run ship shows them too. New parts' cards are rendered from their own 3D models, so the card matches what you fit.
+- **Discovery reveal.** Finding a new part shows a short, skippable reveal with its art, rarity, stats, signature and where it came from, with a shortcut to inspect and fit it.
+- **Named loadouts** (up to 8): parts, appearance and crew. Duplicate, rename, overwrite and delete; loading skips and lists anything you no longer own.
+- **Collection**: completion by slot and rarity, sector-only parts and where they drop, and cosmetic titles at 25/50/75/100%.
+- **Test flight**: fly your exact ship (signatures included) against waves or a boss with no credits, XP, parts, records or missions earned.
+- Workshop shows exactly what the next level gives and marks the +3 and +5 milestones; upgrades never make drawbacks worse and stay with the part.
+- Fixed: the Lost Signal outpost could not weigh six rarity tiers; TEST-MISSIONS was flaky.
+
 - **Move the touch buttons:** Settings → Movement → *Move touch buttons* lets you drag Dash (and Fire, when firing is manual) wherever your thumbs rest. Positions are saved with your profile, follow screen rotation, always stay fully on screen, and *Reset to default* puts them back. Keyboard users can nudge a button with the arrow keys.
 - The ability card (for example DOUBLE DASH) no longer overlaps the loadout dock; it sits just above it whatever the dock's height.
 - **itch.io build fixed:** `build-itch.sh` now includes the files the game loads on demand (3D hangar code, model loader, ship and fitting models, hangar backdrop, combat ship sprites). Before, the itch version showed the flat fallback ship in the hangar and lost the detailed combat ship. The stale v0.98 zip is no longer stored in the repository.
