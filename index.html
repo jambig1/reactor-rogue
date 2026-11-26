@@ -3164,7 +3164,16 @@ const partArtSize={"m_stock": [196, 228], "m_heavy": [153, 256], "m_rotary": [17
 const partArtPlace={engine:{w:26,x:0,y:25},wings:{w:64,x:0,y:3},plating:{w:21,x:0,y:3},mount:{w:13,x:0,y:-21}};
 const partImgs={};
 function partImg(id){if(typeof Image==='undefined')return null;if(!partImgs[id]){let im=new Image();im.decoding='async';im.src='part-'+id+'-v0990.webp';partImgs[id]=im}return partImgs[id]}
-function partSrc(id){return 'part-'+id+'-v0990.webp'}
+// Card art: painted art for the original parts; parts added in v1.7 are rendered from their own 3D models
+// (so the card matches what is fitted); reactor cores get a generated emblem, as they sit inside the hull.
+const partArtV1700=['e_phantom','w_graviton','m_solarfang','p_chitin','p_titan'];
+function partSrc(id){if(id&&id[0]==='r'&&id[1]==='_')return reactorEmblem(id);return 'part-'+id+(partArtV1700.includes(id)?'-v1700':'-v0990')+'.webp'}
+const reactorLook={r_stock:[6,0,'#9fdcff'],r_survey:[10,4,'#78e99e'],r_hot:[8,8,'#ff9a4a'],r_capacitor:[12,0,'#6daaff'],r_sustain:[16,6,'#9fe8ff'],r_overload:[6,12,'#ffb04a']};
+function reactorEmblem(id){let [seg,rays,c]=reactorLook[id]||reactorLook.r_stock,d=shipParts.find(x=>x.id===id),rc=partRarity[d?.r||0].c,arcs='',spokes='';
+ for(let i=0;i<seg;i++){let a0=i/seg*Math.PI*2+.08,a1=(i+1)/seg*Math.PI*2-.08,R=96;arcs+='<path d="M'+(128+Math.cos(a0)*R).toFixed(1)+' '+(125+Math.sin(a0)*R).toFixed(1)+' A'+R+' '+R+' 0 0 1 '+(128+Math.cos(a1)*R).toFixed(1)+' '+(125+Math.sin(a1)*R).toFixed(1)+'"/>'}
+ for(let i=0;i<rays;i++){let a=i/rays*Math.PI*2;spokes+='<line x1="'+(128+Math.cos(a)*44).toFixed(1)+'" y1="'+(125+Math.sin(a)*44).toFixed(1)+'" x2="'+(128+Math.cos(a)*78).toFixed(1)+'" y2="'+(125+Math.sin(a)*78).toFixed(1)+'"/>'}
+ let svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 250"><defs><radialGradient id="g"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="'+c+'"/><stop offset="1" stop-color="'+c+'" stop-opacity="0"/></radialGradient></defs><circle cx="128" cy="125" r="112" fill="#0b1626" stroke="#2c4258" stroke-width="6"/><circle cx="128" cy="125" r="84" fill="#101e30" stroke="#3a5672" stroke-width="3"/><g fill="none" stroke="'+rc+'" stroke-width="9" stroke-linecap="round">'+arcs+'</g><g stroke="'+c+'" stroke-width="5" opacity=".75">'+spokes+'</g><circle cx="128" cy="125" r="58" fill="url(#g)"/><circle cx="128" cy="125" r="22" fill="#fff" opacity=".9"/></svg>';
+ return 'data:image/svg+xml,'+encodeURIComponent(svg)}
 function hullShapeOf(pilot){return fleetHullProfiles[pilot.id]||pilot.shape.split(' ').map(q=>q.split(',').map(Number))}
 // Fit each part to this hull: anchors come from the hull outline (nose, widest point, rear).
 function partFit(pilot,slot,id){let sh=hullShapeOf(pilot),minY=Math.min(...sh.map(q=>q[1])),maxY=Math.max(...sh.map(q=>q[1])),span=Math.max(...sh.map(q=>Math.abs(q[0])))*2,wide=sh.reduce((a,q)=>Math.abs(q[0])>Math.abs(a[0])?q:a,sh[0]),sz=partArtSize[id]||[256,256],ar=sz[1]/sz[0],w;

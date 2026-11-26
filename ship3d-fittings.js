@@ -1,7 +1,7 @@
 import {roundedBox, roundedOutline} from './ship3d-surfaces.js';
 /* Authored fitting assemblies. Local axes: +X nose, +Z dorsal.
    This module is staged for fleet integration; it does not change equipment stats. */
-export const fittingIds = ['e_twin','e_ion','e_fusion','e_nova','w_razor','w_vane','w_prism','w_phantom','m_heavy','m_rotary','m_array','m_siege','p_reactive','p_light','p_heavy','p_aegis'];
+export const fittingIds = ['e_twin','e_ion','e_fusion','e_nova','e_phantom','w_razor','w_vane','w_prism','w_phantom','w_graviton','m_heavy','m_rotary','m_array','m_siege','m_solarfang','p_reactive','p_light','p_heavy','p_aegis','p_chitin','p_titan'];
 // Hardpoints follow each hull's structure. Entries use positive lateral distances
 // for mirrored hardware. Scavenger's loadout deliberately has asymmetric seating.
 const airframes={

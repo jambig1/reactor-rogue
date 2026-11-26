@@ -81,6 +81,6 @@ for (const file of files) {
   const fitted=buildBlenderShip(T,id,scene,record,
     {engine:'e_nova',wings:'w_phantom',mount:'m_siege',plating:'p_aegis'},catalog);
   inspect(fitted);
-  console.log(`${id}: ${Math.round(largestFittingPack/1024)} KiB largest slot pack; stock + 16 fittings + full loadout verified`);
+  console.log(`${id}: ${Math.round(largestFittingPack/1024)} KiB largest slot pack; stock + ${fittingIds.length} fittings + full loadout verified`);
 }
 
