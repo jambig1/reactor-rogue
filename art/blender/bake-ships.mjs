@@ -43,7 +43,8 @@ if (blender) {
   const models = [...fs.readdirSync(path.join(root, dest)).filter(f => f.endsWith('.glb') && !['Wasp.glb', 'repair-bot.glb'].includes(f)).map(f => path.join(dest, f)),
     ...fs.readdirSync(path.join(root, dest, 'fittings')).flatMap(s => fs.readdirSync(path.join(root, dest, 'fittings', s)).filter(f => f.endsWith('.glb')).map(f => path.join(dest, 'fittings', s, f)))];
   let cli;
-  try { cli = [process.execPath, path.join(path.dirname(createRequire(import.meta.url).resolve('@gltf-transform/cli/package.json')), 'bin', 'cli.js')]; }
+  // The package only exports dist/cli.mjs; its command-line entry is bin/cli.js beside dist/.
+  try { cli = [process.execPath, path.join(path.dirname(createRequire(import.meta.url).resolve('@gltf-transform/cli')), '..', 'bin', 'cli.js')]; }
   catch { cli = ['npx', '--yes', '@gltf-transform/cli@' + GLTF_TRANSFORM]; }
   console.log(`\n== Compress ${models.length} models (meshopt)`);
   for (const f of models) run('compress ' + f, cli[0], [...cli.slice(1), 'meshopt', f, f], true);
