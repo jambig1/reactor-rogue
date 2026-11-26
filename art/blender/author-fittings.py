@@ -191,7 +191,9 @@ def wing(ship,item,signal,proxy):
     # Reflect the finished geometry, including bevels, in the ship centreline.
     # Do not ray-cast/art-direct a second wing independently.
     mirror=Matrix.Diagonal((1,-1,1,1))
-    for obj in set(bpy.context.scene.objects)-before:
+    # Sorted, not set order: copies are auto-numbered (.001, .002...) in the order made, and the export
+    # joins pieces by name, so set order made every export shuffle the wing's vertices.
+    for obj in sorted(set(bpy.context.scene.objects)-before,key=lambda o:o.name):
         bpy.context.view_layer.objects.active=obj
         for modifier in list(obj.modifiers):
             bpy.ops.object.modifier_apply(modifier=modifier.name)

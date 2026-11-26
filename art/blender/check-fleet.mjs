@@ -2,15 +2,17 @@ import assert from 'node:assert/strict';
 import {readFile, readdir} from 'node:fs/promises';
 import * as T from '../../vendor/three-0.187.0/three.module.js';
 import {GLTFLoader} from '../../vendor/three-0.187.0/GLTFLoader.js';
+import {MeshoptDecoder} from '../../vendor/three-0.187.0/meshopt_decoder.module.js';
 import {buildBlenderShip, hasBlenderShip} from '../../ship3d-blender.js';
 import {fittingIds} from '../../ship3d-fittings.js';
 
 const directory = new URL('./',import.meta.url);
-const files = (await readdir(directory)).filter(file=>file.endsWith('.glb') && file !== 'Wasp.glb');
+// Ships only: Wasp.glb is the original the refit is built from, repair-bot.glb is the hangar bot.
+const files = (await readdir(directory)).filter(file=>file.endsWith('.glb') && !['Wasp.glb','repair-bot.glb'].includes(file));
 assert.equal(files.length,12);
 const slot = {e:'engine',w:'wings',m:'mount',p:'plating'};
 const record = {color:'#58f0c8',trail:'#fc57a8',patternCanvas:{}};
-const loader = new GLTFLoader();
+const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 const inspect = ship => {
   assert(ship.flames.length>0 && ship.bodyMeshes.length>0 && ship.glowMeshes.length>0);
   const b = new T.Box3().setFromObject(ship.root);
