@@ -19,7 +19,7 @@ function dash(fromBuffer=false,bufferedDirection=null){if(state!=='play')return 
  else if(s.pilot.id==='architect'){s.beacons=[{x:s.p.x,y:s.p.y,life:4,tick:0}];}
  else if(s.pilot.id==='harrier'||s.pilot.id==='helios'){s.boostTime=2}
  else if(s.pilot.id==='tempest'){let ox=s.p.x,oy=s.p.y;s.p.x+=s.dashX*175;s.p.y+=s.dashY*175;s.p.inv=Math.max(s.p.inv,.3);line({x:ox,y:oy},s.p,s.pilot.color,3,.22);s.fx.push({type:'ring',x:s.p.x,y:s.p.y,r:100,c:s.pilot.color,life:.35,max:.35});for(let e of s.enemies)if(e.hp>0&&dist(e,s.p)<100+e.r)hit(e,40,'blink')}
- else{s.dashTime=m.duration;s.p.inv=Math.max(s.p.inv,m.duration+.08);if(s.pilot.id==='echo')sonicBurst(Math.max(1,support('sonic')),false)}
+ else{s.dashTime=m.duration;s.p.inv=Math.max(s.p.inv,m.duration+.08);sigOnDash();if(s.pilot.id==='echo')sonicBurst(Math.max(1,support('sonic')),false)}
  if(s.mutations.dynamo){gasBlast(s.p.x,s.p.y,150,220,false);s.fx.push({type:'ring',x:s.p.x,y:s.p.y,r:150,c:'#69f5e1',life:.4,max:.4});for(let e of s.enemies)if(dist(e,s.p)<150){e.slow=2;hit(e,75,'dash')}}if(['tempest','sovereign'].includes(s.pilot.id))s.abilityLanding={x:s.p.x,y:s.p.y,a:s.hullFace,life:.25};emit(s.p.x,s.p.y,s.pilot.color,16,180);hud();return true}
 
 $('dashButton').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation?.();dash(false,abilityButtonDirection())});$('dashButton').addEventListener('click',e=>{if(e.detail===0)dash(false,abilityButtonDirection())});

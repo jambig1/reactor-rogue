@@ -65,7 +65,7 @@ function payRunMissions() {
     if (!m.done || m.paid) continue; m.paid = true;
     let r = missionReward(m); hangar.credits += r.credits; s.missionCredits = (s.missionCredits || 0) + r.credits;
     try { let lv = shipGainXP(r.xp); s.shipGain = { xp: (s.shipGain?.xp || 0) + r.xp, lv: (s.shipGain?.lv || 0) + lv }; } catch (e) {}
-    if (r.part) try { (s.partDrops || (s.partDrops = [])).push(grantPart(rollPartDrop(Math.min(9, 2 + m.tier)))); } catch (e) {}
+    if (r.part) try { (s.partDrops || (s.partDrops = [])).push(grantPart(rollPartDrop(Math.min(9, 2 + m.tier)), 'Mission reward')); } catch (e) {}
     let st = missionState(), i = st.board.findIndex(x => x.id === m.id);
     if (i >= 0) { st.board.splice(i, 1); st.done++; st.board.push(makeMission(m.tier, st.board.map(x => x.k))); st.board.sort((a, b) => a.tier - b.tier); }
   }

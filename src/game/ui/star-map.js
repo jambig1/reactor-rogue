@@ -83,36 +83,9 @@ function drawStarMap(now){let c=typeof document!=='undefined'&&document.getEleme
 // v0.99 phase 2: SHIP PARTS, PAINT AND TRAILS. Four part slots (engine, wings, gun mount, plating). Parts come in
 // rarities and change stats; the gun mount sets how many weapon slots you have and the plating sets passive
 // slots. Bosses drop parts (duplicates are scrapped for credits). Paint and engine trails are cosmetic.
-const partSlots=[{id:'engine',name:'Engine',icon:'speed'},{id:'wings',name:'Wings',icon:'crit'},{id:'mount',name:'Gun mount',icon:'power'},{id:'plating',name:'Plating',icon:'armour'}];
-const partRarity=[{name:'Stock',c:'#9fb4c8',scrap:0},{name:'Rare',c:'#6daaff',scrap:40},{name:'Epic',c:'#c18aff',scrap:90},{name:'Legendary',c:'#ffcf64',scrap:200}];
-const shipParts=[
- {id:'e_stock',slot:'engine',r:0,name:'Stock Thrusters',desc:'Reliable. No bonuses.'},
- {id:'e_twin',slot:'engine',r:1,name:'Twin-Burner',desc:'+8% speed · dashes recharge 15% faster',fx:T=>{T.speed+=.08;T.dashCd*=.85}},
- {id:'e_ion',slot:'engine',r:1,name:'Ion Drive',desc:'+6% speed · +15% pickup radius',fx:T=>{T.speed+=.06;T.magnet+=.15}},
- {id:'e_fusion',slot:'engine',r:2,name:'Fusion Core',desc:'+12% speed · +10 max hull',fx:T=>{T.speed+=.12;T.hp+=10}},
- {id:'e_nova',slot:'engine',r:3,name:'Nova Afterburner',desc:'+16% speed · dashes recharge 30% faster · −10 max hull',fx:T=>{T.speed+=.16;T.dashCd*=.7;T.hp-=10}},
- {id:'w_stock',slot:'wings',r:0,name:'Stock Wings',desc:'Reliable. No bonuses.'},
- {id:'w_razor',slot:'wings',r:1,name:'Razor Fins',desc:'+4% critical hit chance',fx:T=>{T.crit+=.04}},
- {id:'w_vane',slot:'wings',r:1,name:'Stabiliser Vanes',desc:'+6% attack area',fx:T=>{T.area+=.06}},
- {id:'w_prism',slot:'wings',r:2,name:'Prism Sails',desc:'+7% crit chance · +8% area · −4% speed',fx:T=>{T.crit+=.07;T.area+=.08;T.speed-=.04}},
- {id:'w_phantom',slot:'wings',r:3,name:'Phantom Wings',desc:'+12% crit chance · +6% speed',fx:T=>{T.crit+=.12;T.speed+=.06}},
- {id:'m_stock',slot:'mount',r:0,name:'Standard Hardpoints',desc:'6 weapon slots.',fx:T=>{T.wslots=6}},
- {id:'m_heavy',slot:'mount',r:1,name:'Heavy Mount',desc:'5 weapon slots · +15% damage',fx:T=>{T.wslots=5;T.dmg+=.15}},
- {id:'m_rotary',slot:'mount',r:1,name:'Rotary Rack',desc:'6 weapon slots · weapons cycle 6% faster',fx:T=>{T.wslots=6;T.rate+=.06}},
- {id:'m_array',slot:'mount',r:2,name:'Overslung Array',desc:'7 weapon slots · −8% damage',fx:T=>{T.wslots=7;T.dmg-=.08}},
- {id:'m_siege',slot:'mount',r:3,name:'Siege Battery',desc:'7 weapon slots · +10% damage',fx:T=>{T.wslots=7;T.dmg+=.1}},
- {id:'p_stock',slot:'plating',r:0,name:'Standard Plating',desc:'6 passive slots.',fx:T=>{T.pslots=6}},
- {id:'p_reactive',slot:'plating',r:1,name:'Reactive Plating',desc:'6 passive slots · +1 armour',fx:T=>{T.pslots=6;T.armour+=1}},
- {id:'p_light',slot:'plating',r:1,name:'Light Frame',desc:'4 passive slots · +10% speed · +6% damage',fx:T=>{T.pslots=4;T.speed+=.1;T.dmg+=.06}},
- {id:'p_heavy',slot:'plating',r:2,name:'Heavy Plating',desc:'6 passive slots · +25 max hull · −6% speed',fx:T=>{T.pslots=6;T.hp+=25;T.speed-=.06}},
- {id:'p_aegis',slot:'plating',r:3,name:'Aegis Shell',desc:'7 passive slots · +1 armour · +15 max hull',fx:T=>{T.pslots=7;T.armour+=1;T.hp+=15}}];
+// Part slots, rarities and the catalogue now live in src/game/ships/equipment-catalogue.js.
 const paintColours=['','#65fbd2','#7ff0ff','#6daaff','#c18aff','#ff7ad9','#ff6a8e','#ffb070','#ffdc8d','#a6efae','#e8f4ff'];
 const trailStyles=[{id:'standard',name:'Standard',lvl:1},{id:'plasma',name:'Plasma stream',lvl:1},{id:'sparks',name:'Spark shower',lvl:3},{id:'ribbon',name:'Rainbow ribbon',lvl:5},{id:'ghost',name:'Afterimages',lvl:8}];
-function partState(){let sh=shipState();if(!sh.parts||typeof sh.parts!=='object'){let owned={e_stock:1,w_stock:1,m_stock:1,p_stock:1};let rares=shipParts.filter(x=>x.r===1);owned[rares[Math.floor(Math.random()*rares.length)].id]=1;sh.parts={owned,eq:{engine:'e_stock',wings:'w_stock',mount:'m_stock',plating:'p_stock'}}}if(!sh.paint||typeof sh.paint!=='object')sh.paint={hull:'',trail:'standard',trailColor:''};return sh.parts}
-function equippedPart(slot){let ps=partState(),id=ps.eq[slot];return shipParts.find(x=>x.id===id&&ps.owned[id])||shipParts.find(x=>x.slot===slot&&x.r===0)}
-function equipPart(id){let ps=partState(),d=shipParts.find(x=>x.id===id);if(!d||!ps.owned[id])return false;ps.eq[d.slot]=id;saveHangar();return true}
-function rollPartDrop(tier){let w=[0,60-tier*3,30+tier*2,10+tier],tot=w.reduce((a,b)=>a+b,0),n=Math.random()*tot,r=1;for(let i=1;i<4;i++){n-=w[i];if(n<=0){r=i;break}}let pool=shipParts.filter(x=>x.r===r);return pool[Math.floor(Math.random()*pool.length)]}
-function grantPart(d){let ps=partState();if(ps.owned[d.id]){let c=partRarity[d.r].scrap;hangar.credits+=c;return {part:d,scrap:c}}ps.owned[d.id]=1;return {part:d,scrap:0}}
 function slotCap(kind){return kind==='weapon'?(s?.slots?.weapon||6):(s?.slots?.support||6)}
 const classAffinity={interceptor:['rapid','scatter','speed','crit','velocity','phase','rocket','laser','harpoon'],juggernaut:['shield','armour','hull','thorns','regen','repulse','cannon','mines','intercept'],gunship:['bolt','power','crit','area','clock','laser','chain','arc','nova','singularity'],carrier:['seeker','blade','mines','gravity','magnet','scholar','luck','toxic','buoy']};
 function affinityPick(selected,pool0){let cls=s?.dev?.test?'':(hangar?.ship?.cls||'');let ids=classAffinity[cls];if(!ids||selected.length<3||selected.some(d=>ids.includes(d.id))||Math.random()>.4)return selected;let rel=pool0.filter(d=>ids.includes(d.id)&&!selected.includes(d));if(rel.length)selected[1]=rel[Math.floor(Math.random()*rel.length)];return selected}

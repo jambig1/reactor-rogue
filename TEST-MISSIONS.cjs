@@ -17,7 +17,7 @@ for(let i=0;i<40;i++){run("hangar.missions=null");assert(!run("missionState().bo
 run("hangar.missions=null;missionState()");let ids=run('missionState().board.map(m=>m.id)');assert(run('toggleMission('+ids[0]+')'));assert(run('toggleMission('+ids[1]+')'));assert(!run('toggleMission('+ids[2]+')'),'third cannot be accepted');assert.equal(run('activeMissions().length'),2);
 // a run: force a kill mission into the active set, complete it, bank it
 run("let st=missionState();st.board[1]={id:st.next++,k:'kills',tier:1,n:5,active:true};saveHangar()");fresh();assert.equal(run('s.missions.length'),2);
-let c0=run('hangar.credits');run('s.kills=6;checkRunMissions()');assert(run("s.missions.find(m=>m.k==='kills').done"));assert(run("$('toast').textContent").includes('MISSION COMPLETE'));
+let c0=run('hangar.credits');run('s.kills=6;checkRunMissions()');assert(run("s.missions.find(m=>m.k==='kills'&&m.n===5).done"));assert(run("$('toast').textContent").includes('MISSION COMPLETE'));
 run("commitHangar('defeated')");assert.equal(run('hangar.credits')-c0>=120,true,'medium mission pays 120 credits');run("commitHangar('defeated')");let c1=run('hangar.credits');run("commitHangar('defeated')");assert.equal(run('hangar.credits'),c1,'paid once');
 assert.equal(run('missionState().done'),1);assert.equal(run('missionState().board.length'),3);assert(!run("missionState().board.some(m=>m.k==='kills'&&m.n===5)"),'completed mission replaced');
 // reroll keeps accepted missions and costs credits
