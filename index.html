@@ -872,30 +872,30 @@ body,input,select,textarea,button{font-family:var(--game-font)}
   border-image:var(--holo-frame) 40 / 40px stretch;
   clip-path:var(--chamfer-panel);
   background:
+    repeating-linear-gradient(-55deg,#45e4ff8c 0 3px,transparent 3px 7px) right 22px top 9px/64px 5px no-repeat,
     linear-gradient(var(--holo-faint) 1px,transparent 1px) 0 0/26px 26px,
     linear-gradient(90deg,var(--holo-faint) 1px,transparent 1px) 0 0/26px 26px,
     radial-gradient(ellipse at 50% 0,#0f3552cc,transparent 60%),
     linear-gradient(180deg,#081c33f0,#040d1df5)!important;
   box-shadow:inset 0 0 60px #45e4ff12,inset 0 1px #45e4ff22!important;
 }
-/* inner hazard strip, top right */
-.overlay .panel:before{
-  inset:9px 22px auto auto!important;width:64px;height:5px;border:0!important;border-radius:0!important;
-  background:repeating-linear-gradient(-55deg,var(--holo) 0 3px,transparent 3px 7px);opacity:.55;
-}
-/* top light bar: a travelling spark along the frame */
+/* top light bar (static) and a travelling spark along it. The spark moves with transform, so the
+   GPU slides it; animating background-position would repaint the panel's top edge every frame. */
 .overlay .panel:after{
   left:22px!important;right:12px!important;top:0!important;height:2px!important;
-  background:linear-gradient(90deg,transparent,var(--holo) 45%,#fff 50%,var(--holo) 55%,transparent) 0 0/30% 100% no-repeat,linear-gradient(90deg,transparent,#45e4ff55 20% 80%,transparent)!important;
-  animation:holoSpark 4.5s cubic-bezier(.6,0,.4,1) infinite!important;
+  background:linear-gradient(90deg,transparent,#45e4ff55 20% 80%,transparent)!important;animation:none!important;
 }
-@keyframes holoSpark{0%{background-position:-40% 0,0 0}60%,100%{background-position:140% 0,0 0}}
+.overlay .panel:before{
+  inset:0 auto auto 22px!important;width:22%;height:2px;border:0!important;border-radius:0!important;opacity:1;
+  background:linear-gradient(90deg,transparent,var(--holo) 40%,#fff 50%,var(--holo) 60%,transparent)!important;
+  transform:translateX(-110%);will-change:transform;animation:holoSpark 4.5s cubic-bezier(.6,0,.4,1) infinite;
+}
+@keyframes holoSpark{0%{transform:translateX(-110%)}60%,100%{transform:translateX(420%)}}
 
 .overlay h1,.overlay h2{text-shadow:0 0 18px #45e4ff55,0 0 2px #45e4ff99}
 .overlay h2{letter-spacing:.5px}
 .overlay .eyebrow{color:var(--holo)!important;letter-spacing:4px;text-shadow:0 0 10px #45e4ff88}
-.overlay .eyebrow:before{content:"";display:inline-block;width:7px;height:7px;margin:0 9px 1px 0;background:var(--holo);box-shadow:0 0 8px var(--holo);vertical-align:middle;animation:holoBlink 1.6s steps(2,jump-none) infinite}
-@keyframes holoBlink{50%{opacity:.15}}
+.overlay .eyebrow:before{content:"";display:inline-block;width:7px;height:7px;margin:0 9px 1px 0;background:var(--holo);box-shadow:0 0 8px var(--holo);vertical-align:middle}
 
 /* ---------- buttons ---------- */
 .overlay .actions button:not(.card),.overlay nav button,#menu .actions button,.overlay .panel>button:not(.card){
@@ -920,13 +920,14 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 .overlay .primary,#menu .primary,.overlay .actions button.primary,#menu .actions button.primary,.overlay .panel>button.primary{
   --be:#ffffffaa;border:0!important;border-radius:0!important;clip-path:var(--chamfer-btn);
   color:#021220!important;text-transform:uppercase;letter-spacing:3px;font-weight:900;
-  background:linear-gradient(105deg,transparent 35%,#ffffffb0 48%,transparent 60%) -160% 0/260% 100% no-repeat,var(--btn-edge),linear-gradient(90deg,#2fcfff,#8ff6ff 50%,#2fcfff)!important;
-  box-shadow:0 0 24px #45e4ff66!important;text-shadow:none;
-  animation:holoSweep 3.6s ease-in-out infinite;
+  background:var(--btn-edge),linear-gradient(90deg,#2fcfff,#8ff6ff 50%,#2fcfff)!important;
+  box-shadow:0 0 24px #45e4ff66!important;text-shadow:none;position:relative;
 }
+.overlay .actions button.primary:after,#menu .actions button.primary:after,.overlay .panel>button.primary:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;
+  background:linear-gradient(105deg,transparent 30%,#ffffffa0 50%,transparent 70%);transform:translateX(-100%);will-change:transform;animation:holoSweep 3.6s ease-in-out infinite}
 .overlay .actions button.primary:hover,#menu .actions button.primary:hover,.overlay .actions button.primary:focus-visible,.overlay .primary:hover{filter:brightness(1.12);box-shadow:0 0 34px #45e4ffaa!important;outline:none}
 .overlay .primary:active{transform:translateY(1px) scale(.99)}
-@keyframes holoSweep{0%,55%{background-position:-160% 0,top left,bottom right,0 0}100%{background-position:160% 0,top left,bottom right,0 0}}
+@keyframes holoSweep{0%,55%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 
 /* menu: index tags like a command list */
 #menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu){text-align:left;padding-left:40px!important}
@@ -960,8 +961,8 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 .overlay .card.rarity-card:hover,.overlay .card.rarity-card:focus-visible{border-color:var(--rc)!important;box-shadow:inset 0 0 40px color-mix(in srgb,var(--rc) 22%,transparent),0 0 26px color-mix(in srgb,var(--rc) 40%,transparent)!important}
 .overlay .card.rarity-card:is([data-rarity="2"],[data-rarity="3"],[data-rarity="4"],[data-rarity="5"],[data-rarity="6"]){box-shadow:inset 0 0 36px color-mix(in srgb,var(--rc) 18%,transparent),0 0 14px color-mix(in srgb,var(--rc) 22%,transparent)!important}
 .overlay .card.rarity-card:is([data-rarity="4"],[data-rarity="5"],[data-rarity="6"]):after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(105deg,transparent 40%,color-mix(in srgb,var(--rc) 30%,transparent) 48%,#ffffff30 50%,transparent 58%) 0 0/300% 100% no-repeat;animation:raritySweep 3.4s ease-in-out infinite}
-@keyframes raritySweep{0%,40%{background-position:120% 0}100%{background-position:-20% 0}}
+  background:linear-gradient(105deg,transparent 30%,color-mix(in srgb,var(--rc) 30%,transparent) 46%,#ffffff30 50%,transparent 70%);transform:translateX(-100%);will-change:transform;animation:raritySweep 3.4s ease-in-out infinite}
+@keyframes raritySweep{0%,40%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .overlay .card.rarity-card:is([data-rarity="5"],[data-rarity="6"]):before{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 46px color-mix(in srgb,var(--rc) 45%,transparent),inset 0 0 0 1px var(--rc);opacity:.25;animation:rarityPulse 2.2s ease-in-out infinite}
 .overlay .card.rarity-card:is([data-rarity="5"],[data-rarity="6"]) .rarity-label:before{animation:holoSpin 2.4s linear infinite}
 @keyframes rarityPulse{50%{opacity:1}}
@@ -1005,8 +1006,7 @@ body,input,select,textarea,button{font-family:var(--game-font)}
   -webkit-mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 9px);mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 9px);
   background:linear-gradient(90deg,#1b9fe0,var(--holo) 70%,var(--holo-hi))!important;box-shadow:0 0 10px var(--holo)}
 .hud .track.health .fill{background:linear-gradient(90deg,#c4205f,var(--holo-hot) 70%,#ffb3d4)!important}
-.hud .track:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,#ffffff70,transparent) 0 0/40px 100% no-repeat;animation:holoGlint 3.2s linear infinite;mix-blend-mode:screen}
-@keyframes holoGlint{0%{background-position:-40px 0}70%,100%{background-position:calc(100% + 40px) 0}}
+.hud .track:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#ffffff30,transparent 55%)}
 #hpText,#level{letter-spacing:1.5px;font-weight:800;color:#d7f7ff;text-shadow:0 0 8px #45e4ff77}
 
 /* bottom loadout dock */
@@ -1015,46 +1015,47 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 .slot{border-radius:0!important;border-color:var(--holo-dim)!important;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);background:#05132699!important}
 .racklabel{color:var(--holo)!important;opacity:.8}
 
-/* dash: add a rotating tick ring around the circular gauge */
+/* dash: a tick ring around the circular gauge (static: nothing in the play HUD animates every frame) */
 #dashButton{overflow:visible}
 #dashButton:after{content:"";position:absolute;inset:-7px;border-radius:50%;pointer-events:none;
   background:repeating-conic-gradient(from 0deg,var(--holo) 0 2deg,transparent 2deg 15deg);
   -webkit-mask:radial-gradient(circle,transparent calc(50% - 3px),#000 calc(50% - 3px) 50%,transparent 50%);mask:radial-gradient(circle,transparent calc(50% - 3px),#000 calc(50% - 3px) 50%,transparent 50%);
-  opacity:.6;animation:holoSpin 14s linear infinite}
+  opacity:.6}
 
-/* ---------- decor layer (holo-hud.js) ---------- */
+/* ---------- decor layer (holo-hud.js) ----------
+   Performance: every element animating at once is its own layer redrawn over the live game canvases each
+   frame, so only the radar sweep and the tick ring animate continuously (transform only, no masks). The bars,
+   chevrons, blips, ruler marker and inner arc are stepped a few times a second by holo-hud.js instead. */
 .holo-deco{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:var(--holo);font:600 10px/1.5 var(--game-font);letter-spacing:2px}
 .holo-deco *{position:absolute}
 .hd-grid{inset:0;background:linear-gradient(#45e4ff0c 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,#45e4ff0c 1px,transparent 1px) 0 0/48px 48px;
-  -webkit-mask:radial-gradient(ellipse at center,#000 20%,transparent 75%);mask:radial-gradient(ellipse at center,#000 20%,transparent 75%)}
-.hd-scan{left:0;right:0;top:0;height:90px;background:linear-gradient(180deg,transparent,#45e4ff06 70%,#45e4ff2a 98%,transparent);animation:holoScan 7s linear infinite}
-@keyframes holoScan{from{transform:translateY(-160px)}to{transform:translateY(100vh)}}
+  opacity:.7}
+.hd-scan{left:0;right:0;top:0;height:90px;background:linear-gradient(180deg,transparent,#45e4ff06 70%,#45e4ff2a 98%,transparent);animation:holoScan 2.4s cubic-bezier(.35,0,.65,1) both}
+@keyframes holoScan{from{transform:translateY(-160px)}to{transform:translateY(100vh);visibility:hidden}}
 
-.hd-radar{left:-110px;bottom:-110px;width:380px;height:380px;border-radius:50%;opacity:.7;
+/* no opacity on the radar/ring containers: a translucent group around a moving layer is re-blended every frame */
+.hd-radar{left:-110px;bottom:-110px;width:380px;height:380px;border-radius:50%;
   background:radial-gradient(circle,transparent 0 3px,var(--holo) 3px 4px,transparent 4px),
     repeating-radial-gradient(circle,transparent 0 46px,#45e4ff40 46px 47px),
     linear-gradient(var(--holo-dim),var(--holo-dim)) center/1px 100% no-repeat,linear-gradient(var(--holo-dim),var(--holo-dim)) center/100% 1px no-repeat,
     radial-gradient(circle,#45e4ff10,transparent 70%);
   border:1px solid var(--holo-mid)}
-.hd-sweep{inset:0;border-radius:50%;background:conic-gradient(from 0deg,#45e4ff66,#45e4ff22 25deg,transparent 70deg);animation:holoSpin 4s linear infinite}
-.hd-blip{width:6px;height:6px;border-radius:50%;background:var(--holo-hot);box-shadow:0 0 10px var(--holo-hot);left:62%;top:30%;animation:holoPing 4s ease-out infinite}
-.hd-blip2{left:30%;top:58%;background:var(--holo-amber);box-shadow:0 0 10px var(--holo-amber);animation-delay:-1.7s}
-@keyframes holoPing{0%,10%{opacity:1;transform:scale(1.4)}60%,100%{opacity:0;transform:scale(.6)}}
+.hd-sweep{inset:0;border-radius:50%;background:conic-gradient(from 0deg,#45e4ff48,#45e4ff18 25deg,transparent 70deg);will-change:transform;animation:holoSpin 4s linear infinite}
+.hd-blip{width:6px;height:6px;border-radius:50%;background:var(--holo-hot);box-shadow:0 0 10px var(--holo-hot);left:62%;top:30%;opacity:0}
+.hd-blip2{left:30%;top:58%;background:var(--holo-amber);box-shadow:0 0 10px var(--holo-amber)}
 
-.hd-ring{right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;opacity:.65}
-.hd-ring i{inset:0;border-radius:50%}
-.hd-ring i:first-child{background:repeating-conic-gradient(var(--holo) 0 1deg,transparent 1deg 6deg);
-  -webkit-mask:radial-gradient(circle,transparent 62%,#000 62% 66%,transparent 66%);mask:radial-gradient(circle,transparent 62%,#000 62% 66%,transparent 66%);animation:holoSpin 30s linear infinite}
-.hd-ring i:nth-child(2){inset:30px;border:2px solid transparent;border-top-color:var(--holo);border-left-color:#45e4ff55;animation:holoSpin 6s linear infinite reverse;box-shadow:inset 0 0 0 1px #45e4ff22}
+.hd-ring{right:-70px;top:-70px;width:300px;height:300px;border-radius:50%}
+.hd-ring>*{opacity:.65}
+.hd-ring svg{inset:0;width:100%;height:100%;will-change:transform;animation:holoSpin 30s linear infinite}
+.hd-ring i{inset:30px;border-radius:50%;border:2px solid transparent;border-top-color:var(--holo);border-left-color:#45e4ff55;box-shadow:inset 0 0 0 1px #45e4ff22;transition:transform .5s ease-out}
 .hd-ring-num{left:50%;top:50%;transform:translate(-50%,-50%);font-size:34px;font-weight:800;letter-spacing:0;text-shadow:0 0 14px var(--holo);opacity:.8}
 @keyframes holoSpin{to{transform:rotate(1turn)}}
 
 .hd-ruler{left:8%;right:8%;height:10px;background:repeating-linear-gradient(90deg,#45e4ff66 0 1px,transparent 1px 10px) bottom/100% 5px no-repeat,repeating-linear-gradient(90deg,var(--holo) 0 1px,transparent 1px 50px) bottom/100% 10px no-repeat;opacity:.5;
-  -webkit-mask:linear-gradient(90deg,transparent,#000 20% 80%,transparent);mask:linear-gradient(90deg,transparent,#000 20% 80%,transparent)}
+}
 .hd-ruler-t{top:max(6px,env(safe-area-inset-top))}
 .hd-ruler-b{bottom:max(6px,env(safe-area-inset-bottom));transform:scaleY(-1)}
-.hd-ruler-b i{top:0;width:12px;height:10px;left:0;background:var(--holo);box-shadow:0 0 10px var(--holo);clip-path:polygon(50% 100%,0 0,100% 0);animation:holoRuler 9s ease-in-out infinite alternate}
-@keyframes holoRuler{to{left:calc(100% - 12px)}}
+.hd-ruler-b i{top:0;width:12px;height:10px;left:0;background:var(--holo);box-shadow:0 0 10px var(--holo);clip-path:polygon(50% 100%,0 0,100% 0);transition:left .6s ease-in-out}
 
 .hd-readout{display:flex;flex-direction:column;gap:2px;opacity:.6;text-shadow:0 0 6px #45e4ff88}
 .hd-readout span,.hd-readout em{position:static;font-style:normal}
@@ -1063,15 +1064,11 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 .hd-readout-r{right:18px;bottom:24%;text-align:right;align-items:flex-end}
 
 .hd-chev{right:24px;top:52%;display:flex;gap:3px}
-.hd-chev i{position:static;width:12px;height:16px;background:var(--holo);clip-path:polygon(0 0,45% 0,100% 50%,45% 100%,0 100%,55% 50%);animation:holoChev 1.4s linear infinite;opacity:.15}
-.hd-chev i:nth-child(2){animation-delay:.15s}.hd-chev i:nth-child(3){animation-delay:.3s}.hd-chev i:nth-child(4){animation-delay:.45s}
-@keyframes holoChev{0%,40%{opacity:.9}100%{opacity:.12}}
+.hd-chev i{position:static;width:12px;height:16px;background:var(--holo);clip-path:polygon(0 0,45% 0,100% 50%,45% 100%,0 100%,55% 50%);opacity:.15}
+.hd-chev i.on{opacity:.9}
 
 .hd-bars{bottom:max(26px,env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:3px;height:34px;left:290px}
-.hd-bars i{position:static;width:4px;height:100%;background:linear-gradient(0deg,var(--holo),#45e4ff33);transform-origin:bottom;animation:holoEq 1.1s ease-in-out infinite alternate;opacity:.6}
-.hd-bars i:nth-child(2n){animation-duration:.8s}.hd-bars i:nth-child(3n){animation-duration:1.4s}.hd-bars i:nth-child(5n){animation-duration:.65s}
-.hd-bars i:nth-child(4n+1){animation-delay:-.4s}
-@keyframes holoEq{from{transform:scaleY(.15)}to{transform:scaleY(1)}}
+.hd-bars i{position:static;width:4px;height:100%;background:linear-gradient(0deg,var(--holo),#45e4ff33);transform-origin:bottom;transform:scaleY(.4);opacity:.6}
 
 @media(max-width:700px){
   .hd-readout,.hd-chev,.hd-bars{display:none}
@@ -1083,10 +1080,14 @@ body,input,select,textarea,button{font-family:var(--game-font)}
   .overlay nav button{letter-spacing:.4px;font-size:10px!important;padding-left:2px!important;padding-right:2px!important}
   .overlay .actions button:not(.card){letter-spacing:.8px}
 }
+/* Still version: the device asks for reduced motion, the game's Motion setting is on (html.gfx-reduced-motion),
+   or graphics are effectively Low, chosen or stepped down by Auto on a struggling device (html.gfx-lite). */
 @media(prefers-reduced-motion:reduce){
-  .holo-deco *,.overlay .panel:after,.overlay .primary,#menu .primary,.overlay .eyebrow:before,.hud .track:after,#dashButton:after,.overlay .card.rarity-card,.overlay .card.rarity-card:after,.overlay .card.rarity-card:before,.overlay .card.rarity-card .rarity-label,.overlay .card.rarity-card .rarity-label:before{animation:none!important}
-  .hd-scan{display:none}
+  .holo-deco *,.overlay .panel:before,.overlay .panel:after,.overlay .actions button.primary:after,#menu .actions button.primary:after,.overlay .panel>button.primary:after,.hud .track:after,#dashButton:after,.overlay .card.rarity-card,.overlay .card.rarity-card:after,.overlay .card.rarity-card:before,.overlay .card.rarity-card .rarity-label,.overlay .card.rarity-card .rarity-label:before{animation:none!important}
+  .hd-scan,.overlay .panel:before,.overlay .actions button.primary:after,#menu .actions button.primary:after,.overlay .panel>button.primary:after{display:none}
 }
+html:is(.gfx-lite,.gfx-reduced-motion) .holo-deco *,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel:before,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) #menu .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel>button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) .hud .track:after,html:is(.gfx-lite,.gfx-reduced-motion) #dashButton:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card:before,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card .rarity-label,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card .rarity-label:before{animation:none!important}
+html:is(.gfx-lite,.gfx-reduced-motion) .hd-scan,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel:before,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) #menu .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel>button.primary:after{display:none}
 </style><!-- Exo 2 font licence:
 Copyright 2013 The Exo 2 Project Authors (https://github.com/googlefonts/Exo-2.0)
 
@@ -1994,7 +1995,7 @@ function cleanGraphics(raw){let out={...graphicsDefaults};if(raw&&typeof raw==='
 let graphics={...graphicsDefaults},graphicsStorage=true,autoGraphicsTier=1,graphicsVisual={...graphicsPresets.medium};
 try{let savedGraphics=profileStorage.getItem('ns_graphics');try{graphics=cleanGraphics(JSON.parse(savedGraphics||'null'))}catch(e){}}catch(e){graphicsStorage=false}
 const graphicsTiming={frames:0,totalCost:0,totalInterval:0,lastSample:0,lastDraw:null,nextDraw:null,lastRAF:null,refresh:1000/60,slow:0,fast:0,fps:0,lastDrawCost:0};
-function refreshGraphicsVisual(){let style=graphics.preset==='auto'?graphicsPresets[['low','medium','high'][autoGraphicsTier]]:graphicsPresets[graphics.preset]||graphics;graphicsVisual={...style};reducedMotion=graphics.motion==='on'||graphics.motion==='system'&&!!motionMedia?.matches;document.documentElement?.classList.toggle('gfx-reduced-motion',reducedMotion);document.documentElement?.classList.toggle('gfx-low',!graphicsVisual.glow)}
+function refreshGraphicsVisual(){let style=graphics.preset==='auto'?graphicsPresets[['low','medium','high'][autoGraphicsTier]]:graphicsPresets[graphics.preset]||graphics;graphicsVisual={...style};reducedMotion=graphics.motion==='on'||graphics.motion==='system'&&!!motionMedia?.matches;document.documentElement?.classList.toggle('gfx-reduced-motion',reducedMotion);document.documentElement?.classList.toggle('gfx-low',!graphicsVisual.glow);document.documentElement?.classList.toggle('gfx-lite',graphics.preset==='low'||graphics.preset==='auto'&&autoGraphicsTier===0)}
 refreshGraphicsVisual();
 const graphicsCrowd={active:false,until:0};
 function updateGraphicsCrowd(){let was=graphicsCrowd.active;if(!s||state==='menu'||graphics.preset!=='auto'){graphicsCrowd.active=false;graphicsCrowd.until=0;return}let visible=0,frozen=0;for(let e of s.enemies)if(e.hp>0&&Math.abs(e.x-s.p.x)<W/2+45&&Math.abs(e.y-s.p.y)<H/2+45){visible++;if(e.freeze>0)frozen++}let busy=visible>=20||frozen>=6||s.shots.length>=80||s.hostile.length>=40||(s.combatBlasts?.length||0)>=12,calm=visible<14&&frozen<3&&s.shots.length<40&&s.hostile.length<20&&(s.combatBlasts?.length||0)<6;if(busy){graphicsCrowd.active=true;graphicsCrowd.until=s.t+3}else if(calm&&s.t>=graphicsCrowd.until)graphicsCrowd.active=false;if(was!==graphicsCrowd.active)syncGraphicsUI()}
@@ -6068,33 +6069,50 @@ function outpostMarker(L) {
 }
 if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('click', e => { let b = e.target && e.target.closest && e.target.closest('[data-outpost]'); if (b) { e.preventDefault(); openOutpost(); } });
 
-// Holo HUD decor: one shared layer of animated sci-fi bits (radar sweep, tick rings,
-// rulers, grid, scanline, ticking telemetry) that lives inside whichever overlay is on top.
+// Holo HUD decor: one shared layer of sci-fi bits (radar sweep, tick rings, rulers, grid, scanline,
+// ticking telemetry) that lives inside whichever overlay is on top.
 // Purely decorative: aria-hidden, no pointer events, and inert outside a real browser DOM.
+// Performance: only the radar sweep and the tick ring animate every frame (in CSS, transform only).
+// Everything else is stepped here a few times a second, which costs a tiny repaint instead of
+// extra layers redrawn over the live game canvases every frame.
 function initHoloDecor(){
   if(typeof document==='undefined'||typeof document.createElement!=='function'||!document.body||typeof MutationObserver!=='function')return;
   const deco=document.createElement('div');
   deco.className='holo-deco';deco.setAttribute('aria-hidden','true');
+  let ticks='';for(let i=0;i<60;i++)ticks+='<line x1="50" y1="'+(i%5?2:.5)+'" x2="50" y2="'+(i%5?4.5:5.5)+'" transform="rotate('+i*6+' 50 50)"/>';
   deco.innerHTML='<div class="hd-grid"></div><div class="hd-scan"></div>'+
     '<div class="hd-radar"><i class="hd-sweep"></i><b class="hd-blip"></b><b class="hd-blip hd-blip2"></b></div>'+
-    '<div class="hd-ring"><i></i><i></i><span class="hd-ring-num">00</span></div>'+
+    '<div class="hd-ring"><svg viewBox="0 0 100 100" stroke="currentColor" stroke-width=".6">'+ticks+'</svg><i></i><span class="hd-ring-num">00</span></div>'+
     '<div class="hd-ruler hd-ruler-t"></div><div class="hd-ruler hd-ruler-b"><i></i></div>'+
     '<div class="hd-readout hd-readout-l"></div><div class="hd-readout hd-readout-r"></div>'+
     '<div class="hd-chev"><i></i><i></i><i></i><i></i></div>'+
     '<div class="hd-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>';
-  const left=deco.querySelector('.hd-readout-l'),right=deco.querySelector('.hd-readout-r'),ringNum=deco.querySelector('.hd-ring-num');
+  const $d=q=>deco.querySelector(q),$all=q=>[...deco.querySelectorAll(q)];
+  const left=$d('.hd-readout-l'),right=$d('.hd-readout-r'),ringNum=$d('.hd-ring-num'),arc=$d('.hd-ring i'),marker=$d('.hd-ruler-b i');
+  const bars=$all('.hd-bars i'),chev=$all('.hd-chev i'),blips=$all('.hd-blip');
   const hex=n=>Math.floor(Math.random()*n).toString(16).toUpperCase().padStart(4,'0');
   const pct=()=>String(60+Math.floor(Math.random()*40)).padStart(2,'0');
-  let timer=0;
+  const still=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)');
+  let timer=0,step=0,arcTurn=0,markerAt=0;
   function tick(){
-    left.innerHTML='<span>SYS//'+hex(65535)+'</span><span>PWR '+pct()+'%</span><span>MEM '+pct()+'%</span><span>NET '+pct()+'%</span><span>LNK <em>OK</em></span>';
-    right.innerHTML='<span>SECTOR '+hex(255)+'</span><span>VEC '+(Math.random()*360).toFixed(1)+'°</span><span>FLUX '+(Math.random()*9).toFixed(2)+'</span>';
-    ringNum.textContent=pct();
+    step++;
+    if(step%2===1){
+      left.innerHTML='<span>SYS//'+hex(65535)+'</span><span>PWR '+pct()+'%</span><span>MEM '+pct()+'%</span><span>NET '+pct()+'%</span><span>LNK <em>OK</em></span>';
+      right.innerHTML='<span>SECTOR '+hex(255)+'</span><span>VEC '+(Math.random()*360).toFixed(1)+'°</span><span>FLUX '+(Math.random()*9).toFixed(2)+'</span>';
+      ringNum.textContent=pct();
+    }
+    const root=document.documentElement;   // also still with the game's Motion setting or Low graphics
+    if(still&&still.matches||root.classList.contains('gfx-reduced-motion')||root.classList.contains('gfx-lite'))return;
+    for(const b of bars)b.style.transform='scaleY('+(.15+Math.random()*.85).toFixed(2)+')';
+    chev.forEach((c,i)=>c.classList.toggle('on',i===step%(chev.length+2)));
+    blips.forEach((b,i)=>{b.style.opacity=(step+i*5)%9<2?'1':'0'});
+    if(step%3===0){arcTurn-=40;arc.style.transform='rotate('+arcTurn+'deg)'}
+    if(step%6===0){markerAt=Math.random()*100;marker.style.left='calc('+markerAt.toFixed(1)+'% - '+(markerAt*.12).toFixed(1)+'px)'}
   }
   const overlays=()=>[...document.querySelectorAll('.overlay')].filter(o=>!o.classList.contains('hidden'));
   function rehome(){
     const open=overlays(),top=open[open.length-1];
-    if(top){if(deco.parentNode!==top)top.insertBefore(deco,top.firstChild);if(!timer){tick();timer=setInterval(tick,650)}}
+    if(top){if(deco.parentNode!==top)top.insertBefore(deco,top.firstChild);if(!timer){tick();timer=setInterval(tick,330)}}
     else{if(deco.parentNode)deco.parentNode.removeChild(deco);if(timer){clearInterval(timer);timer=0}}
   }
   const watch=new MutationObserver(rehome);
