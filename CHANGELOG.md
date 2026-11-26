@@ -162,6 +162,17 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## 1.6.0 — Holo HUD, rarity-coloured upgrades and lighter ship models
+
+- **New look for every menu and the in-game HUD:** sci-fi command-deck panels with angled corners, glowing corner brackets and a grid-glass background, with a spark of light running along the top edge. Buttons and tabs are angled with glowing edges; Play and Resume are charged cyan with a light sweep.
+- **Moving bits behind every menu:** a radar sweep with blinking contacts, a rotating tick ring with a changing readout, a drifting scanline, rulers with a sliding marker, pulsing arrows, equaliser bars and ticking system readouts. They only run while a menu is open, so combat isn't affected.
+- **In-game HUD:** segmented glowing HP and XP bars with a running glint, bracketed stats, angled pause/settings buttons and loadout dock, a rotating tick ring around the Dash gauge, and a restyled flight tutorial box.
+- **Rarity colours on upgrade cards:** each card's frame, corners, glow and label take its rarity colour. Rare and Epic glow, Mythic adds a light sweep, Legendary also pulses, and Ascendant's glow cycles through colours.
+- All new motion switches off when your device asks for reduced motion; phones get a trimmed-down version of the menu decorations.
+- **Faster hangar loading:** the 3D ship and fitting models are compressed (meshopt) from 41 MB to 10 MB, so the Vanguard hull downloads 149 KB instead of 606 KB and each fitting pack about 320 KB instead of about 1.4 MB. Ships look the same.
+- **Ship art pipeline:** one command, `node art/blender/bake-ships.mjs` (`--blender` to re-export from Blender first), rebuilds the models, combat outlines and sprites and checks the fleet. A new *Bake Blender ships* GitHub workflow runs it whenever the ship scripts change. Re-baking on another machine no longer rewrites every sprite, the wing export no longer shuffles its vertices each run, and the fleet check no longer counts the repair bot as a ship.
+- `TEST-TEXTURE-SEAMS.cjs` now checks the sector backgrounds the game actually ships (v0800).
+
 ## 1.5.0 — Mission board, Lost Signal outpost and Neon Slots
 
 - **Mission board** (hangar, Missions tab): three missions on offer, one each of Easy, Medium and Hard, with goals like defeating a sector's boss, surviving minutes, a combo, rescues, breaches, evolving weapons, or a boss without taking a hit. Accept up to two. A "MISSION COMPLETE" pop-up appears the moment you achieve one. Rewards are paid when the run ends: 60/120/220 credits and 80/160/300 ship XP, and Hard missions also drop a part. Completed missions are replaced, accepted ones show on the star map and results screen, and new missions cost 20 credits. The old contracts are now the **Achievements** list underneath.
