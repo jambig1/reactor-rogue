@@ -94,6 +94,29 @@
 }
 .overlay .card:hover,.overlay .card:focus-visible{border-color:var(--holo)!important;box-shadow:inset 0 0 40px #45e4ff30,0 0 26px #45e4ff44!important;transform:translateY(-3px);outline:none}
 
+/* rarity-tinted upgrade cards: frame, corners and label take the tier colour;
+   rare+ glow, mythic+ get a light sweep, legendary+ pulse, ascendant shifts hue */
+.overlay .card.rarity-card{--rc:var(--rarity,var(--holo));position:relative;
+  border-color:color-mix(in srgb,var(--rc) 55%,transparent)!important;
+  background:linear-gradient(135deg,transparent 9px,var(--rc) 9px 11px,transparent 11px) top left/22px 22px no-repeat,linear-gradient(-45deg,transparent 9px,var(--rc) 9px 11px,transparent 11px) bottom right/22px 22px no-repeat,
+    linear-gradient(90deg,var(--rc) 0 56px,transparent 56px) 14px 0/100% 2px no-repeat,
+    radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--rc) 16%,transparent),transparent 65%),
+    linear-gradient(var(--holo-faint) 1px,transparent 1px) 0 0/18px 18px,linear-gradient(180deg,#0a2240f2,#050f20f5)!important;
+  box-shadow:inset 0 0 30px color-mix(in srgb,var(--rc) 10%,transparent)!important}
+.overlay .card.rarity-card .rarity-label{color:var(--rc)!important;text-shadow:0 0 10px var(--rc)}
+.overlay .card.rarity-card .rarity-label:before{content:"";display:inline-block;width:6px;height:6px;margin:0 7px 1px 0;background:var(--rc);transform:rotate(45deg);box-shadow:0 0 6px var(--rc)}
+.overlay .card.rarity-card:hover,.overlay .card.rarity-card:focus-visible{border-color:var(--rc)!important;box-shadow:inset 0 0 40px color-mix(in srgb,var(--rc) 22%,transparent),0 0 26px color-mix(in srgb,var(--rc) 40%,transparent)!important}
+.overlay .card.rarity-card:is([data-rarity="2"],[data-rarity="3"],[data-rarity="4"],[data-rarity="5"],[data-rarity="6"]){box-shadow:inset 0 0 36px color-mix(in srgb,var(--rc) 18%,transparent),0 0 14px color-mix(in srgb,var(--rc) 22%,transparent)!important}
+.overlay .card.rarity-card:is([data-rarity="4"],[data-rarity="5"],[data-rarity="6"]):after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(105deg,transparent 40%,color-mix(in srgb,var(--rc) 30%,transparent) 48%,#ffffff30 50%,transparent 58%) 0 0/300% 100% no-repeat;animation:raritySweep 3.4s ease-in-out infinite}
+@keyframes raritySweep{0%,40%{background-position:120% 0}100%{background-position:-20% 0}}
+.overlay .card.rarity-card:is([data-rarity="5"],[data-rarity="6"]):before{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 46px color-mix(in srgb,var(--rc) 45%,transparent),inset 0 0 0 1px var(--rc);opacity:.25;animation:rarityPulse 2.2s ease-in-out infinite}
+.overlay .card.rarity-card:is([data-rarity="5"],[data-rarity="6"]) .rarity-label:before{animation:holoSpin 2.4s linear infinite}
+@keyframes rarityPulse{50%{opacity:1}}
+.overlay .card.rarity-card[data-rarity="6"]:before{animation:rarityPulse 2.2s ease-in-out infinite,rarityHue 6s linear infinite}
+.overlay .card.rarity-card[data-rarity="6"] .rarity-label{animation:rarityHue 6s linear infinite}
+@keyframes rarityHue{to{filter:hue-rotate(360deg)}}
+
 /* inner boxes: squared holo sub-panels */
 .overlay .panel :is(.run-route,.unlock-box,.challenge-box,.control-option,.pause-card,.radar-card,.crew-card,.merchant-card,details){border-radius:0!important;border-color:var(--holo-dim)!important;box-shadow:inset 0 0 24px #45e4ff0c}
 .overlay .panel :is(.run-route,.unlock-box,.challenge-box,.control-option){background:linear-gradient(90deg,var(--holo) 0 40px,transparent 40px) 0 0/100% 1px no-repeat,#05142acc!important}
@@ -209,6 +232,6 @@
   .overlay .actions button:not(.card){letter-spacing:.8px}
 }
 @media(prefers-reduced-motion:reduce){
-  .holo-deco *,.overlay .panel:after,.overlay .primary,#menu .primary,.overlay .eyebrow:before,.hud .track:after,#dashButton:after{animation:none!important}
+  .holo-deco *,.overlay .panel:after,.overlay .primary,#menu .primary,.overlay .eyebrow:before,.hud .track:after,#dashButton:after,.overlay .card.rarity-card,.overlay .card.rarity-card:after,.overlay .card.rarity-card:before,.overlay .card.rarity-card .rarity-label,.overlay .card.rarity-card .rarity-label:before{animation:none!important}
   .hd-scan{display:none}
 }
