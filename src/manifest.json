@@ -40,6 +40,7 @@
   "src/game/world/pods-rift-hive.js",
   "src/game/ui/missions.js",
   "src/game/ui/outpost.js",
-  "src/game/ui/holo-hud.js"
+  "src/game/ui/holo-hud.js",
+  "src/game/ui/touch-layout.js"
  ]
 }

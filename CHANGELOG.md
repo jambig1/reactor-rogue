@@ -162,6 +162,13 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
+## Unreleased
+
+- **Move the touch buttons:** Settings → Movement → *Move touch buttons* lets you drag Dash (and Fire, when firing is manual) wherever your thumbs rest. Positions are saved with your profile, follow screen rotation, always stay fully on screen, and *Reset to default* puts them back. Keyboard users can nudge a button with the arrow keys.
+- The ability card (for example DOUBLE DASH) no longer overlaps the loadout dock; it sits just above it whatever the dock's height.
+- **itch.io build fixed:** `build-itch.sh` now includes the files the game loads on demand (3D hangar code, model loader, ship and fitting models, hangar backdrop, combat ship sprites). Before, the itch version showed the flat fallback ship in the hangar and lost the detailed combat ship. The stale v0.98 zip is no longer stored in the repository.
+- New `TEST-TOUCH-LAYOUT.cjs` (Playwright).
+
 ## 1.6.0 — Holo HUD, rarity-coloured upgrades and lighter ship models
 
 - **New look for every menu and the in-game HUD:** sci-fi command-deck panels with angled corners, glowing corner brackets and a grid-glass background, with a spark of light running along the top edge. Buttons and tabs are angled with glowing edges; Play and Resume are charged cyan with a light sweep.
