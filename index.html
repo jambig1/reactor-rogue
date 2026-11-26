@@ -849,6 +849,221 @@ body,input,select,textarea,button{font-family:var(--game-font)}
 .slot-spin{width:100%;max-width:260px}
 .slot-pays{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px;margin-top:12px;font-size:12px;color:#9fb4c8}.slot-pays i{font-style:normal;letter-spacing:1px}
 .outpost-foot{display:flex;justify-content:flex-end;margin-top:12px}
+
+/* ===== HOLO HUD LAYER =====
+   Sci-fi command-deck skin over the existing UI: chamfered holo frames, corner brackets,
+   grid glass, segmented telemetry bars, angled buttons with light sweeps and an animated
+   decor layer (radar, tick rings, rulers, readouts) injected by src/game/ui/holo-hud.js. */
+:root{
+  --holo:#45e4ff;--holo-hi:#a6f4ff;--holo-mid:#45e4ff80;--holo-dim:#45e4ff3a;--holo-faint:#45e4ff14;
+  --holo-deep:#041022;--holo-glass:#071a2fe8;--holo-hot:#ff5fa8;--holo-amber:#ffc65c;
+  --holo-frame:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%2345e4ff'%3E%3Cpath stroke-opacity='.5' d='M16.5 .5H113.5L119.5 6.5V103.5L103.5 119.5H6.5L.5 113.5V16.5Z'/%3E%3Cpath stroke-width='2.5' d='M1.2 32V16.8L16.8 1.2H36M118.8 88V103.2L103.2 118.8H84M98 1.2H113.2L118.8 6.8V16M22 118.8H6.8L1.2 113.2V104'/%3E%3C/g%3E%3Cg fill='%2345e4ff'%3E%3Crect x='6' y='22' width='3' height='3'/%3E%3Crect x='6' y='28' width='3' height='3' fill-opacity='.5'/%3E%3Cpath d='M111 96l3-3v8h-3z' fill-opacity='.7'/%3E%3C/g%3E%3C/svg%3E");
+  --chamfer-panel:polygon(16px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 16px),calc(100% - 16px) 100%,6px 100%,0 calc(100% - 6px),0 16px);
+  --chamfer-btn:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);
+  --btn-edge:linear-gradient(135deg,transparent 5.6px,var(--be,var(--holo-mid)) 5.6px 7.2px,transparent 7.2px) top left/16px 16px no-repeat,linear-gradient(-45deg,transparent 5.6px,var(--be,var(--holo-mid)) 5.6px 7.2px,transparent 7.2px) bottom right/16px 16px no-repeat;
+}
+
+/* ---------- overlay backdrop ---------- */
+.overlay{isolation:isolate;background:radial-gradient(ellipse at 50% 40%,#06172dcc,#020812ee 75%)!important}
+
+/* ---------- panels: chamfered holo glass ---------- */
+.overlay .panel{
+  border:1px solid transparent!important;border-radius:0!important;
+  border-image:var(--holo-frame) 40 / 40px stretch;
+  clip-path:var(--chamfer-panel);
+  background:
+    linear-gradient(var(--holo-faint) 1px,transparent 1px) 0 0/26px 26px,
+    linear-gradient(90deg,var(--holo-faint) 1px,transparent 1px) 0 0/26px 26px,
+    radial-gradient(ellipse at 50% 0,#0f3552cc,transparent 60%),
+    linear-gradient(180deg,#081c33f0,#040d1df5)!important;
+  box-shadow:inset 0 0 60px #45e4ff12,inset 0 1px #45e4ff22!important;
+}
+/* inner hazard strip, top right */
+.overlay .panel:before{
+  inset:9px 22px auto auto!important;width:64px;height:5px;border:0!important;border-radius:0!important;
+  background:repeating-linear-gradient(-55deg,var(--holo) 0 3px,transparent 3px 7px);opacity:.55;
+}
+/* top light bar: a travelling spark along the frame */
+.overlay .panel:after{
+  left:22px!important;right:12px!important;top:0!important;height:2px!important;
+  background:linear-gradient(90deg,transparent,var(--holo) 45%,#fff 50%,var(--holo) 55%,transparent) 0 0/30% 100% no-repeat,linear-gradient(90deg,transparent,#45e4ff55 20% 80%,transparent)!important;
+  animation:holoSpark 4.5s cubic-bezier(.6,0,.4,1) infinite!important;
+}
+@keyframes holoSpark{0%{background-position:-40% 0,0 0}60%,100%{background-position:140% 0,0 0}}
+
+.overlay h1,.overlay h2{text-shadow:0 0 18px #45e4ff55,0 0 2px #45e4ff99}
+.overlay h2{letter-spacing:.5px}
+.overlay .eyebrow{color:var(--holo)!important;letter-spacing:4px;text-shadow:0 0 10px #45e4ff88}
+.overlay .eyebrow:before{content:"";display:inline-block;width:7px;height:7px;margin:0 9px 1px 0;background:var(--holo);box-shadow:0 0 8px var(--holo);vertical-align:middle;animation:holoBlink 1.6s steps(2,jump-none) infinite}
+@keyframes holoBlink{50%{opacity:.15}}
+
+/* ---------- buttons ---------- */
+.overlay .actions button:not(.card),.overlay nav button,#menu .actions button,.overlay .panel>button:not(.card){
+  border-radius:0!important;clip-path:var(--chamfer-btn);
+  border:1px solid var(--holo-dim)!important;
+  background:var(--btn-edge),linear-gradient(90deg,#45e4ff10,#45e4ff04 60%,#45e4ff12),#06162bd9!important;
+  color:#cdf6ff!important;text-transform:uppercase;letter-spacing:1.6px;font-weight:700;
+  box-shadow:inset 0 0 14px #45e4ff10!important;transition:background-color .15s,border-color .15s,color .15s,box-shadow .15s,transform .12s;
+  position:relative;
+}
+.overlay .actions button:not(.card):hover,.overlay nav button:hover,.overlay .actions button:not(.card):focus-visible,.overlay nav button:focus-visible{
+  --be:var(--holo);border-color:var(--holo)!important;color:#fff!important;outline:none;
+  background:var(--btn-edge),linear-gradient(90deg,#45e4ff30,#45e4ff10 60%,#45e4ff30),#0a2541!important;
+  box-shadow:inset 0 0 22px #45e4ff35,0 0 0 1px #45e4ff40!important;
+}
+.overlay nav button[aria-selected=true],#paused nav.pause-tabs button[aria-selected=true]{
+  --be:var(--holo-hi);border-color:var(--holo)!important;color:#04101f!important;text-shadow:none;
+  background:var(--btn-edge),linear-gradient(180deg,#8ff3ff,#3fd6ff)!important;box-shadow:0 0 18px #45e4ff66!important;
+}
+
+/* primary: charged cyan with a light sweep */
+.overlay .primary,#menu .primary,.overlay .actions button.primary,#menu .actions button.primary,.overlay .panel>button.primary{
+  --be:#ffffffaa;border:0!important;border-radius:0!important;clip-path:var(--chamfer-btn);
+  color:#021220!important;text-transform:uppercase;letter-spacing:3px;font-weight:900;
+  background:linear-gradient(105deg,transparent 35%,#ffffffb0 48%,transparent 60%) -160% 0/260% 100% no-repeat,var(--btn-edge),linear-gradient(90deg,#2fcfff,#8ff6ff 50%,#2fcfff)!important;
+  box-shadow:0 0 24px #45e4ff66!important;text-shadow:none;
+  animation:holoSweep 3.6s ease-in-out infinite;
+}
+.overlay .actions button.primary:hover,#menu .actions button.primary:hover,.overlay .actions button.primary:focus-visible,.overlay .primary:hover{filter:brightness(1.12);box-shadow:0 0 34px #45e4ffaa!important;outline:none}
+.overlay .primary:active{transform:translateY(1px) scale(.99)}
+@keyframes holoSweep{0%,55%{background-position:-160% 0,top left,bottom right,0 0}100%{background-position:160% 0,top left,bottom right,0 0}}
+
+/* menu: index tags like a command list */
+#menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu){text-align:left;padding-left:40px!important}
+#menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu):before{content:"";position:absolute;left:16px;top:50%;width:8px;height:8px;margin-top:-4px;border:1px solid var(--holo);transform:rotate(45deg);box-shadow:0 0 6px var(--holo-mid)}
+#menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu):hover:before{background:var(--holo)}
+#menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu):after{content:"";position:absolute;right:14px;top:50%;width:18px;height:1px;background:linear-gradient(90deg,transparent,var(--holo));box-shadow:4px 0 0 -0px var(--holo)}
+#menu #profileMenu,#menu #websiteMenu{clip-path:none!important;background:none!important;border:0!important;box-shadow:none!important;text-transform:none;letter-spacing:.5px;color:#8fdcf0!important}
+#menu #profileMenu:hover,#menu #websiteMenu:hover{color:#fff!important}
+
+/* ---------- choice cards ---------- */
+.overlay .card{
+  border-radius:0!important;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+  border:1px solid var(--holo-dim)!important;
+  background:linear-gradient(135deg,transparent 9px,var(--holo) 9px 11px,transparent 11px) top left/22px 22px no-repeat,linear-gradient(-45deg,transparent 9px,var(--holo) 9px 11px,transparent 11px) bottom right/22px 22px no-repeat,
+    linear-gradient(var(--holo-faint) 1px,transparent 1px) 0 0/18px 18px,linear-gradient(180deg,#0a2240f2,#050f20f5)!important;
+  box-shadow:inset 0 0 30px #45e4ff10!important;transition:transform .14s,box-shadow .14s,border-color .14s!important;
+}
+.overlay .card:hover,.overlay .card:focus-visible{border-color:var(--holo)!important;box-shadow:inset 0 0 40px #45e4ff30,0 0 26px #45e4ff44!important;transform:translateY(-3px);outline:none}
+
+/* inner boxes: squared holo sub-panels */
+.overlay .panel :is(.run-route,.unlock-box,.challenge-box,.control-option,.pause-card,.radar-card,.crew-card,.merchant-card,details){border-radius:0!important;border-color:var(--holo-dim)!important;box-shadow:inset 0 0 24px #45e4ff0c}
+.overlay .panel :is(.run-route,.unlock-box,.challenge-box,.control-option){background:linear-gradient(90deg,var(--holo) 0 40px,transparent 40px) 0 0/100% 1px no-repeat,#05142acc!important}
+.overlay .panel .control-option[aria-pressed=true]{border-color:var(--holo)!important;background:linear-gradient(90deg,var(--holo) 0 3px,transparent 3px),linear-gradient(90deg,#45e4ff2a,#45e4ff08)!important;box-shadow:0 0 16px #45e4ff33!important}
+.overlay .panel .control-option strong{color:var(--holo-hi)!important}
+
+/* flight tutorial transmission box */
+#coach{border-radius:0!important;border-color:var(--holo-mid)!important;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
+  background:linear-gradient(90deg,var(--holo) 0 50px,transparent 50px) 12px 0/100% 1px no-repeat,linear-gradient(var(--holo-faint) 1px,transparent 1px) 0 0/16px 16px,#04122af0!important;box-shadow:inset 0 0 30px #45e4ff1c!important}
+#coachStep{color:var(--holo)!important;letter-spacing:3px}
+
+/* chips, inputs, details */
+.overlay .chips span{border-radius:0!important;border:1px solid var(--holo-dim)!important;background:#45e4ff0d!important;color:#bdefff!important;letter-spacing:1px}
+
+/* ---------- in-game HUD ---------- */
+.hud .top{position:relative;padding-bottom:6px}
+.hud .top:after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:5px;pointer-events:none;
+  background:linear-gradient(90deg,var(--holo) 0 60px,transparent 60px) 0 100%/100% 1px no-repeat,
+    repeating-linear-gradient(90deg,#45e4ff55 0 1px,transparent 1px 12px) 0 100%/100% 4px no-repeat;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);mask:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);opacity:.55}
+.hud .stats>span{position:relative;padding:3px 10px;border-left:1px solid var(--holo-dim);letter-spacing:1px}
+.hud .stats>span:before{content:"";position:absolute;left:-1px;top:0;width:5px;height:1px;background:var(--holo)}
+.hud .stats>span:after{content:"";position:absolute;left:-1px;bottom:0;width:5px;height:1px;background:var(--holo)}
+.hud .stats b{color:var(--holo)!important;text-shadow:0 0 10px #45e4ffaa}
+#clock{color:#e9fbff;text-shadow:0 0 12px #45e4ff99}
+#pause,.settings-link{border-radius:0!important;clip-path:var(--chamfer-btn);border:1px solid var(--holo-mid)!important;
+  background:var(--btn-edge),#06162bcc!important;color:var(--holo-hi)!important;box-shadow:inset 0 0 12px #45e4ff22!important}
+#pause:hover,.settings-link:hover{--be:var(--holo);border-color:var(--holo)!important;background:var(--btn-edge),#0d2b48!important}
+
+/* segmented telemetry bars with a running glint */
+.hud .track{border-radius:0!important;border:1px solid var(--holo-dim)!important;background:#04101fcc!important;height:9px!important;position:relative;
+  clip-path:polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%)}
+.hud .track .fill{position:relative;
+  -webkit-mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 9px);mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 9px);
+  background:linear-gradient(90deg,#1b9fe0,var(--holo) 70%,var(--holo-hi))!important;box-shadow:0 0 10px var(--holo)}
+.hud .track.health .fill{background:linear-gradient(90deg,#c4205f,var(--holo-hot) 70%,#ffb3d4)!important}
+.hud .track:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,#ffffff70,transparent) 0 0/40px 100% no-repeat;animation:holoGlint 3.2s linear infinite;mix-blend-mode:screen}
+@keyframes holoGlint{0%{background-position:-40px 0}70%,100%{background-position:calc(100% + 40px) 0}}
+#hpText,#level{letter-spacing:1.5px;font-weight:800;color:#d7f7ff;text-shadow:0 0 8px #45e4ff77}
+
+/* bottom loadout dock */
+.loadout{border-radius:0!important;border:1px solid var(--holo-dim)!important;clip-path:polygon(14px 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%,0 14px);
+  background:linear-gradient(90deg,var(--holo) 0 80px,transparent 80px) 14px 0/100% 1px no-repeat,linear-gradient(180deg,#071a30e6,#030b18f0)!important;box-shadow:inset 0 0 30px #45e4ff12!important}
+.slot{border-radius:0!important;border-color:var(--holo-dim)!important;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);background:#05132699!important}
+.racklabel{color:var(--holo)!important;opacity:.8}
+
+/* dash: add a rotating tick ring around the circular gauge */
+#dashButton{overflow:visible}
+#dashButton:after{content:"";position:absolute;inset:-7px;border-radius:50%;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,var(--holo) 0 2deg,transparent 2deg 15deg);
+  -webkit-mask:radial-gradient(circle,transparent calc(50% - 3px),#000 calc(50% - 3px) 50%,transparent 50%);mask:radial-gradient(circle,transparent calc(50% - 3px),#000 calc(50% - 3px) 50%,transparent 50%);
+  opacity:.6;animation:holoSpin 14s linear infinite}
+
+/* ---------- decor layer (holo-hud.js) ---------- */
+.holo-deco{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:var(--holo);font:600 10px/1.5 var(--game-font);letter-spacing:2px}
+.holo-deco *{position:absolute}
+.hd-grid{inset:0;background:linear-gradient(#45e4ff0c 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,#45e4ff0c 1px,transparent 1px) 0 0/48px 48px;
+  -webkit-mask:radial-gradient(ellipse at center,#000 20%,transparent 75%);mask:radial-gradient(ellipse at center,#000 20%,transparent 75%)}
+.hd-scan{left:0;right:0;top:0;height:90px;background:linear-gradient(180deg,transparent,#45e4ff06 70%,#45e4ff2a 98%,transparent);animation:holoScan 7s linear infinite}
+@keyframes holoScan{from{transform:translateY(-160px)}to{transform:translateY(100vh)}}
+
+.hd-radar{left:-110px;bottom:-110px;width:380px;height:380px;border-radius:50%;opacity:.7;
+  background:radial-gradient(circle,transparent 0 3px,var(--holo) 3px 4px,transparent 4px),
+    repeating-radial-gradient(circle,transparent 0 46px,#45e4ff40 46px 47px),
+    linear-gradient(var(--holo-dim),var(--holo-dim)) center/1px 100% no-repeat,linear-gradient(var(--holo-dim),var(--holo-dim)) center/100% 1px no-repeat,
+    radial-gradient(circle,#45e4ff10,transparent 70%);
+  border:1px solid var(--holo-mid)}
+.hd-sweep{inset:0;border-radius:50%;background:conic-gradient(from 0deg,#45e4ff66,#45e4ff22 25deg,transparent 70deg);animation:holoSpin 4s linear infinite}
+.hd-blip{width:6px;height:6px;border-radius:50%;background:var(--holo-hot);box-shadow:0 0 10px var(--holo-hot);left:62%;top:30%;animation:holoPing 4s ease-out infinite}
+.hd-blip2{left:30%;top:58%;background:var(--holo-amber);box-shadow:0 0 10px var(--holo-amber);animation-delay:-1.7s}
+@keyframes holoPing{0%,10%{opacity:1;transform:scale(1.4)}60%,100%{opacity:0;transform:scale(.6)}}
+
+.hd-ring{right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;opacity:.65}
+.hd-ring i{inset:0;border-radius:50%}
+.hd-ring i:first-child{background:repeating-conic-gradient(var(--holo) 0 1deg,transparent 1deg 6deg);
+  -webkit-mask:radial-gradient(circle,transparent 62%,#000 62% 66%,transparent 66%);mask:radial-gradient(circle,transparent 62%,#000 62% 66%,transparent 66%);animation:holoSpin 30s linear infinite}
+.hd-ring i:nth-child(2){inset:30px;border:2px solid transparent;border-top-color:var(--holo);border-left-color:#45e4ff55;animation:holoSpin 6s linear infinite reverse;box-shadow:inset 0 0 0 1px #45e4ff22}
+.hd-ring-num{left:50%;top:50%;transform:translate(-50%,-50%);font-size:34px;font-weight:800;letter-spacing:0;text-shadow:0 0 14px var(--holo);opacity:.8}
+@keyframes holoSpin{to{transform:rotate(1turn)}}
+
+.hd-ruler{left:8%;right:8%;height:10px;background:repeating-linear-gradient(90deg,#45e4ff66 0 1px,transparent 1px 10px) bottom/100% 5px no-repeat,repeating-linear-gradient(90deg,var(--holo) 0 1px,transparent 1px 50px) bottom/100% 10px no-repeat;opacity:.5;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 20% 80%,transparent);mask:linear-gradient(90deg,transparent,#000 20% 80%,transparent)}
+.hd-ruler-t{top:max(6px,env(safe-area-inset-top))}
+.hd-ruler-b{bottom:max(6px,env(safe-area-inset-bottom));transform:scaleY(-1)}
+.hd-ruler-b i{top:0;width:12px;height:10px;left:0;background:var(--holo);box-shadow:0 0 10px var(--holo);clip-path:polygon(50% 100%,0 0,100% 0);animation:holoRuler 9s ease-in-out infinite alternate}
+@keyframes holoRuler{to{left:calc(100% - 12px)}}
+
+.hd-readout{display:flex;flex-direction:column;gap:2px;opacity:.6;text-shadow:0 0 6px #45e4ff88}
+.hd-readout span,.hd-readout em{position:static;font-style:normal}
+.hd-readout em{color:#7dffb3}
+.hd-readout-l{left:18px;top:30%}
+.hd-readout-r{right:18px;bottom:24%;text-align:right;align-items:flex-end}
+
+.hd-chev{right:24px;top:52%;display:flex;gap:3px}
+.hd-chev i{position:static;width:12px;height:16px;background:var(--holo);clip-path:polygon(0 0,45% 0,100% 50%,45% 100%,0 100%,55% 50%);animation:holoChev 1.4s linear infinite;opacity:.15}
+.hd-chev i:nth-child(2){animation-delay:.15s}.hd-chev i:nth-child(3){animation-delay:.3s}.hd-chev i:nth-child(4){animation-delay:.45s}
+@keyframes holoChev{0%,40%{opacity:.9}100%{opacity:.12}}
+
+.hd-bars{bottom:max(26px,env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:3px;height:34px;left:290px}
+.hd-bars i{position:static;width:4px;height:100%;background:linear-gradient(0deg,var(--holo),#45e4ff33);transform-origin:bottom;animation:holoEq 1.1s ease-in-out infinite alternate;opacity:.6}
+.hd-bars i:nth-child(2n){animation-duration:.8s}.hd-bars i:nth-child(3n){animation-duration:1.4s}.hd-bars i:nth-child(5n){animation-duration:.65s}
+.hd-bars i:nth-child(4n+1){animation-delay:-.4s}
+@keyframes holoEq{from{transform:scaleY(.15)}to{transform:scaleY(1)}}
+
+@media(max-width:700px){
+  .hd-readout,.hd-chev,.hd-bars{display:none}
+  .hd-radar{width:240px;height:240px;left:-90px;bottom:-90px}
+  .hd-ring{width:190px;height:190px;right:-60px;top:-60px}
+  .hd-ring-num{font-size:22px}
+  #menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu){padding-left:34px!important}
+  #menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu):before{left:12px}
+  .overlay nav button{letter-spacing:.4px;font-size:10px!important;padding-left:2px!important;padding-right:2px!important}
+  .overlay .actions button:not(.card){letter-spacing:.8px}
+}
+@media(prefers-reduced-motion:reduce){
+  .holo-deco *,.overlay .panel:after,.overlay .primary,#menu .primary,.overlay .eyebrow:before,.hud .track:after,#dashButton:after{animation:none!important}
+  .hd-scan{display:none}
+}
 </style><!-- Exo 2 font licence:
 Copyright 2013 The Exo 2 Project Authors (https://github.com/googlefonts/Exo-2.0)
 
@@ -5829,4 +6044,39 @@ function outpostMarker(L) {
   return '<button class="map-outpost" data-outpost="1" style="left:' + x + '%;top:' + y + 'px" aria-label="Visit the Lost Signal outpost"><i class="op-ring"></i><i class="op-core"></i><span class="planet-tag"><b>Lost Signal</b><em>Outpost · shop &amp; slots</em></span></button>';
 }
 if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('click', e => { let b = e.target && e.target.closest && e.target.closest('[data-outpost]'); if (b) { e.preventDefault(); openOutpost(); } });
+
+// Holo HUD decor: one shared layer of animated sci-fi bits (radar sweep, tick rings,
+// rulers, grid, scanline, ticking telemetry) that lives inside whichever overlay is on top.
+// Purely decorative: aria-hidden, no pointer events, and inert outside a real browser DOM.
+function initHoloDecor(){
+  if(typeof document==='undefined'||typeof document.createElement!=='function'||!document.body||typeof MutationObserver!=='function')return;
+  const deco=document.createElement('div');
+  deco.className='holo-deco';deco.setAttribute('aria-hidden','true');
+  deco.innerHTML='<div class="hd-grid"></div><div class="hd-scan"></div>'+
+    '<div class="hd-radar"><i class="hd-sweep"></i><b class="hd-blip"></b><b class="hd-blip hd-blip2"></b></div>'+
+    '<div class="hd-ring"><i></i><i></i><span class="hd-ring-num">00</span></div>'+
+    '<div class="hd-ruler hd-ruler-t"></div><div class="hd-ruler hd-ruler-b"><i></i></div>'+
+    '<div class="hd-readout hd-readout-l"></div><div class="hd-readout hd-readout-r"></div>'+
+    '<div class="hd-chev"><i></i><i></i><i></i><i></i></div>'+
+    '<div class="hd-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>';
+  const left=deco.querySelector('.hd-readout-l'),right=deco.querySelector('.hd-readout-r'),ringNum=deco.querySelector('.hd-ring-num');
+  const hex=n=>Math.floor(Math.random()*n).toString(16).toUpperCase().padStart(4,'0');
+  const pct=()=>String(60+Math.floor(Math.random()*40)).padStart(2,'0');
+  let timer=0;
+  function tick(){
+    left.innerHTML='<span>SYS//'+hex(65535)+'</span><span>PWR '+pct()+'%</span><span>MEM '+pct()+'%</span><span>NET '+pct()+'%</span><span>LNK <em>OK</em></span>';
+    right.innerHTML='<span>SECTOR '+hex(255)+'</span><span>VEC '+(Math.random()*360).toFixed(1)+'°</span><span>FLUX '+(Math.random()*9).toFixed(2)+'</span>';
+    ringNum.textContent=pct();
+  }
+  const overlays=()=>[...document.querySelectorAll('.overlay')].filter(o=>!o.classList.contains('hidden'));
+  function rehome(){
+    const open=overlays(),top=open[open.length-1];
+    if(top){if(deco.parentNode!==top)top.insertBefore(deco,top.firstChild);if(!timer){tick();timer=setInterval(tick,650)}}
+    else{if(deco.parentNode)deco.parentNode.removeChild(deco);if(timer){clearInterval(timer);timer=0}}
+  }
+  const watch=new MutationObserver(rehome);
+  for(const o of document.querySelectorAll('.overlay'))watch.observe(o,{attributes:true,attributeFilter:['class']});
+  rehome();
+}
+initHoloDecor();
 </script><script src="site-app.js" defer></script><script src="cloud-config.js" defer></script><script src="cloud-save.js" defer></script></body></html>

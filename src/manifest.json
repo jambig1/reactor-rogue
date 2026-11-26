@@ -5,7 +5,8 @@
   "src/styles/part-3.css",
   "src/styles/part-4.css",
   "src/styles/part-5.css",
-  "src/styles/part-6.css"
+  "src/styles/part-6.css",
+  "src/styles/part-7.css"
  ],
  "game": [
   "src/game/ships/combat-sprite.js",
@@ -38,6 +39,7 @@
   "src/game/game/powerups-death.js",
   "src/game/world/pods-rift-hive.js",
   "src/game/ui/missions.js",
-  "src/game/ui/outpost.js"
+  "src/game/ui/outpost.js",
+  "src/game/ui/holo-hud.js"
  ]
 }
