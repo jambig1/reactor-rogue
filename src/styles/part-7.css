@@ -1,0 +1,238 @@
+/* ===== HOLO HUD LAYER =====
+   Sci-fi command-deck skin over the existing UI: chamfered holo frames, corner brackets,
+   grid glass, segmented telemetry bars, angled buttons with light sweeps and an animated
+   decor layer (radar, tick rings, rulers, readouts) injected by src/game/ui/holo-hud.js. */
+:root{
+  --holo:#45e4ff;--holo-hi:#a6f4ff;--holo-mid:#45e4ff80;--holo-dim:#45e4ff3a;--holo-faint:#45e4ff14;
+  --holo-deep:#041022;--holo-glass:#071a2fe8;--holo-hot:#ff5fa8;--holo-amber:#ffc65c;
+  --holo-frame:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%2345e4ff'%3E%3Cpath stroke-opacity='.5' d='M16.5 .5H113.5L119.5 6.5V103.5L103.5 119.5H6.5L.5 113.5V16.5Z'/%3E%3Cpath stroke-width='2.5' d='M1.2 32V16.8L16.8 1.2H36M118.8 88V103.2L103.2 118.8H84M98 1.2H113.2L118.8 6.8V16M22 118.8H6.8L1.2 113.2V104'/%3E%3C/g%3E%3Cg fill='%2345e4ff'%3E%3Crect x='6' y='22' width='3' height='3'/%3E%3Crect x='6' y='28' width='3' height='3' fill-opacity='.5'/%3E%3Cpath d='M111 96l3-3v8h-3z' fill-opacity='.7'/%3E%3C/g%3E%3C/svg%3E");
+  --chamfer-panel:polygon(16px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 16px),calc(100% - 16px) 100%,6px 100%,0 calc(100% - 6px),0 16px);
+  --chamfer-btn:polygon(9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%,0 9px);
+  --btn-edge:linear-gradient(135deg,transparent 5.6px,var(--be,var(--holo-mid)) 5.6px 7.2px,transparent 7.2px) top left/16px 16px no-repeat,linear-gradient(-45deg,transparent 5.6px,var(--be,var(--holo-mid)) 5.6px 7.2px,transparent 7.2px) bottom right/16px 16px no-repeat;
+}
+
+/* ---------- overlay backdrop ---------- */
+.overlay{isolation:isolate;background:radial-gradient(ellipse at 50% 40%,#06172dcc,#020812ee 75%)!important}
+
+/* ---------- panels: chamfered holo glass ---------- */
+.overlay .panel{
+  border:1px solid transparent!important;border-radius:0!important;
+  border-image:var(--holo-frame) 40 / 40px stretch;
+  clip-path:var(--chamfer-panel);
+  background:
+    repeating-linear-gradient(-55deg,#45e4ff8c 0 3px,transparent 3px 7px) right 22px top 9px/64px 5px no-repeat,
+    linear-gradient(var(--holo-faint) 1px,transparent 1px) 0 0/26px 26px,
+    linear-gradient(90deg,var(--holo-faint) 1px,transparent 1px) 0 0/26px 26px,
+    radial-gradient(ellipse at 50% 0,#0f3552cc,transparent 60%),
+    linear-gradient(180deg,#081c33f0,#040d1df5)!important;
+  box-shadow:inset 0 0 60px #45e4ff12,inset 0 1px #45e4ff22!important;
+}
+/* top light bar (static) and a travelling spark along it. The spark moves with transform, so the
+   GPU slides it; animating background-position would repaint the panel's top edge every frame. */
+.overlay .panel:after{
+  left:22px!important;right:12px!important;top:0!important;height:2px!important;
+  background:linear-gradient(90deg,transparent,#45e4ff55 20% 80%,transparent)!important;animation:none!important;
+}
+.overlay .panel:before{
+  inset:0 auto auto 22px!important;width:22%;height:2px;border:0!important;border-radius:0!important;opacity:1;
+  background:linear-gradient(90deg,transparent,var(--holo) 40%,#fff 50%,var(--holo) 60%,transparent)!important;
+  transform:translateX(-110%);will-change:transform;animation:holoSpark 4.5s cubic-bezier(.6,0,.4,1) infinite;
+}
+@keyframes holoSpark{0%{transform:translateX(-110%)}60%,100%{transform:translateX(420%)}}
+
+.overlay h1,.overlay h2{text-shadow:0 0 18px #45e4ff55,0 0 2px #45e4ff99}
+.overlay h2{letter-spacing:.5px}
+.overlay .eyebrow{color:var(--holo)!important;letter-spacing:4px;text-shadow:0 0 10px #45e4ff88}
+.overlay .eyebrow:before{content:"";display:inline-block;width:7px;height:7px;margin:0 9px 1px 0;background:var(--holo);box-shadow:0 0 8px var(--holo);vertical-align:middle}
+
+/* ---------- buttons ---------- */
+.overlay .actions button:not(.card),.overlay nav button,#menu .actions button,.overlay .panel>button:not(.card){
+  border-radius:0!important;clip-path:var(--chamfer-btn);
+  border:1px solid var(--holo-dim)!important;
+  background:var(--btn-edge),linear-gradient(90deg,#45e4ff10,#45e4ff04 60%,#45e4ff12),#06162bd9!important;
+  color:#cdf6ff!important;text-transform:uppercase;letter-spacing:1.6px;font-weight:700;
+  box-shadow:inset 0 0 14px #45e4ff10!important;transition:background-color .15s,border-color .15s,color .15s,box-shadow .15s,transform .12s;
+  position:relative;
+}
+.overlay .actions button:not(.card):hover,.overlay nav button:hover,.overlay .actions button:not(.card):focus-visible,.overlay nav button:focus-visible{
+  --be:var(--holo);border-color:var(--holo)!important;color:#fff!important;outline:none;
+  background:var(--btn-edge),linear-gradient(90deg,#45e4ff30,#45e4ff10 60%,#45e4ff30),#0a2541!important;
+  box-shadow:inset 0 0 22px #45e4ff35,0 0 0 1px #45e4ff40!important;
+}
+.overlay nav button[aria-selected=true],#paused nav.pause-tabs button[aria-selected=true]{
+  --be:var(--holo-hi);border-color:var(--holo)!important;color:#04101f!important;text-shadow:none;
+  background:var(--btn-edge),linear-gradient(180deg,#8ff3ff,#3fd6ff)!important;box-shadow:0 0 18px #45e4ff66!important;
+}
+
+/* primary: charged cyan with a light sweep */
+.overlay .primary,#menu .primary,.overlay .actions button.primary,#menu .actions button.primary,.overlay .panel>button.primary{
+  --be:#ffffffaa;border:0!important;border-radius:0!important;clip-path:var(--chamfer-btn);
+  color:#021220!important;text-transform:uppercase;letter-spacing:3px;font-weight:900;
+  background:var(--btn-edge),linear-gradient(90deg,#2fcfff,#8ff6ff 50%,#2fcfff)!important;
+  box-shadow:0 0 24px #45e4ff66!important;text-shadow:none;position:relative;
+}
+.overlay .actions button.primary:after,#menu .actions button.primary:after,.overlay .panel>button.primary:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;
+  background:linear-gradient(105deg,transparent 30%,#ffffffa0 50%,transparent 70%);transform:translateX(-100%);will-change:transform;animation:holoSweep 3.6s ease-in-out infinite}
+.overlay .actions button.primary:hover,#menu .actions button.primary:hover,.overlay .actions button.primary:focus-visible,.overlay .primary:hover{filter:brightness(1.12);box-shadow:0 0 34px #45e4ffaa!important;outline:none}
+.overlay .primary:active{transform:translateY(1px) scale(.99)}
+@keyframes holoSweep{0%,55%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* menu: index tags like a command list */
+#menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu){text-align:left;padding-left:40px!important}
+#menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu):before{content:"";position:absolute;left:16px;top:50%;width:8px;height:8px;margin-top:-4px;border:1px solid var(--holo);transform:rotate(45deg);box-shadow:0 0 6px var(--holo-mid)}
+#menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu):hover:before{background:var(--holo)}
+#menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu):after{content:"";position:absolute;right:14px;top:50%;width:18px;height:1px;background:linear-gradient(90deg,transparent,var(--holo));box-shadow:4px 0 0 -0px var(--holo)}
+#menu #profileMenu,#menu #websiteMenu{clip-path:none!important;background:none!important;border:0!important;box-shadow:none!important;text-transform:none;letter-spacing:.5px;color:#8fdcf0!important}
+#menu #profileMenu:hover,#menu #websiteMenu:hover{color:#fff!important}
+
+/* ---------- choice cards ---------- */
+.overlay .card{
+  border-radius:0!important;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+  border:1px solid var(--holo-dim)!important;
+  background:linear-gradient(135deg,transparent 9px,var(--holo) 9px 11px,transparent 11px) top left/22px 22px no-repeat,linear-gradient(-45deg,transparent 9px,var(--holo) 9px 11px,transparent 11px) bottom right/22px 22px no-repeat,
+    linear-gradient(var(--holo-faint) 1px,transparent 1px) 0 0/18px 18px,linear-gradient(180deg,#0a2240f2,#050f20f5)!important;
+  box-shadow:inset 0 0 30px #45e4ff10!important;transition:transform .14s,box-shadow .14s,border-color .14s!important;
+}
+.overlay .card:hover,.overlay .card:focus-visible{border-color:var(--holo)!important;box-shadow:inset 0 0 40px #45e4ff30,0 0 26px #45e4ff44!important;transform:translateY(-3px);outline:none}
+
+/* rarity-tinted upgrade cards: frame, corners and label take the tier colour;
+   rare+ glow, mythic+ get a light sweep, legendary+ pulse, ascendant shifts hue */
+.overlay .card.rarity-card{--rc:var(--rarity,var(--holo));position:relative;
+  border-color:color-mix(in srgb,var(--rc) 55%,transparent)!important;
+  background:linear-gradient(135deg,transparent 9px,var(--rc) 9px 11px,transparent 11px) top left/22px 22px no-repeat,linear-gradient(-45deg,transparent 9px,var(--rc) 9px 11px,transparent 11px) bottom right/22px 22px no-repeat,
+    linear-gradient(90deg,var(--rc) 0 56px,transparent 56px) 14px 0/100% 2px no-repeat,
+    radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--rc) 16%,transparent),transparent 65%),
+    linear-gradient(var(--holo-faint) 1px,transparent 1px) 0 0/18px 18px,linear-gradient(180deg,#0a2240f2,#050f20f5)!important;
+  box-shadow:inset 0 0 30px color-mix(in srgb,var(--rc) 10%,transparent)!important}
+.overlay .card.rarity-card .rarity-label{color:var(--rc)!important;text-shadow:0 0 10px var(--rc)}
+.overlay .card.rarity-card .rarity-label:before{content:"";display:inline-block;width:6px;height:6px;margin:0 7px 1px 0;background:var(--rc);transform:rotate(45deg);box-shadow:0 0 6px var(--rc)}
+.overlay .card.rarity-card:hover,.overlay .card.rarity-card:focus-visible{border-color:var(--rc)!important;box-shadow:inset 0 0 40px color-mix(in srgb,var(--rc) 22%,transparent),0 0 26px color-mix(in srgb,var(--rc) 40%,transparent)!important}
+.overlay .card.rarity-card:is([data-rarity="2"],[data-rarity="3"],[data-rarity="4"],[data-rarity="5"],[data-rarity="6"]){box-shadow:inset 0 0 36px color-mix(in srgb,var(--rc) 18%,transparent),0 0 14px color-mix(in srgb,var(--rc) 22%,transparent)!important}
+.overlay .card.rarity-card:is([data-rarity="4"],[data-rarity="5"],[data-rarity="6"]):after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(105deg,transparent 30%,color-mix(in srgb,var(--rc) 30%,transparent) 46%,#ffffff30 50%,transparent 70%);transform:translateX(-100%);will-change:transform;animation:raritySweep 3.4s ease-in-out infinite}
+@keyframes raritySweep{0%,40%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.overlay .card.rarity-card:is([data-rarity="5"],[data-rarity="6"]):before{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 46px color-mix(in srgb,var(--rc) 45%,transparent),inset 0 0 0 1px var(--rc);opacity:.25;animation:rarityPulse 2.2s ease-in-out infinite}
+.overlay .card.rarity-card:is([data-rarity="5"],[data-rarity="6"]) .rarity-label:before{animation:holoSpin 2.4s linear infinite}
+@keyframes rarityPulse{50%{opacity:1}}
+.overlay .card.rarity-card[data-rarity="6"]:before{animation:rarityPulse 2.2s ease-in-out infinite,rarityHue 6s linear infinite}
+.overlay .card.rarity-card[data-rarity="6"] .rarity-label{animation:rarityHue 6s linear infinite}
+@keyframes rarityHue{to{filter:hue-rotate(360deg)}}
+
+/* inner boxes: squared holo sub-panels */
+.overlay .panel :is(.run-route,.unlock-box,.challenge-box,.control-option,.pause-card,.radar-card,.crew-card,.merchant-card,details){border-radius:0!important;border-color:var(--holo-dim)!important;box-shadow:inset 0 0 24px #45e4ff0c}
+.overlay .panel :is(.run-route,.unlock-box,.challenge-box,.control-option){background:linear-gradient(90deg,var(--holo) 0 40px,transparent 40px) 0 0/100% 1px no-repeat,#05142acc!important}
+.overlay .panel .control-option[aria-pressed=true]{border-color:var(--holo)!important;background:linear-gradient(90deg,var(--holo) 0 3px,transparent 3px),linear-gradient(90deg,#45e4ff2a,#45e4ff08)!important;box-shadow:0 0 16px #45e4ff33!important}
+.overlay .panel .control-option strong{color:var(--holo-hi)!important}
+
+/* flight tutorial transmission box */
+#coach{border-radius:0!important;border-color:var(--holo-mid)!important;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
+  background:linear-gradient(90deg,var(--holo) 0 50px,transparent 50px) 12px 0/100% 1px no-repeat,linear-gradient(var(--holo-faint) 1px,transparent 1px) 0 0/16px 16px,#04122af0!important;box-shadow:inset 0 0 30px #45e4ff1c!important}
+#coachStep{color:var(--holo)!important;letter-spacing:3px}
+
+/* chips, inputs, details */
+.overlay .chips span{border-radius:0!important;border:1px solid var(--holo-dim)!important;background:#45e4ff0d!important;color:#bdefff!important;letter-spacing:1px}
+
+/* ---------- in-game HUD ---------- */
+.hud .top{position:relative;padding-bottom:6px}
+.hud .top:after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:5px;pointer-events:none;
+  background:linear-gradient(90deg,var(--holo) 0 60px,transparent 60px) 0 100%/100% 1px no-repeat,
+    repeating-linear-gradient(90deg,#45e4ff55 0 1px,transparent 1px 12px) 0 100%/100% 4px no-repeat;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);mask:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);opacity:.55}
+.hud .stats>span{position:relative;padding:3px 10px;border-left:1px solid var(--holo-dim);letter-spacing:1px}
+.hud .stats>span:before{content:"";position:absolute;left:-1px;top:0;width:5px;height:1px;background:var(--holo)}
+.hud .stats>span:after{content:"";position:absolute;left:-1px;bottom:0;width:5px;height:1px;background:var(--holo)}
+.hud .stats b{color:var(--holo)!important;text-shadow:0 0 10px #45e4ffaa}
+#clock{color:#e9fbff;text-shadow:0 0 12px #45e4ff99}
+#pause,.settings-link{border-radius:0!important;clip-path:var(--chamfer-btn);border:1px solid var(--holo-mid)!important;
+  background:var(--btn-edge),#06162bcc!important;color:var(--holo-hi)!important;box-shadow:inset 0 0 12px #45e4ff22!important}
+#pause:hover,.settings-link:hover{--be:var(--holo);border-color:var(--holo)!important;background:var(--btn-edge),#0d2b48!important}
+
+/* segmented telemetry bars with a running glint */
+.hud .track{border-radius:0!important;border:1px solid var(--holo-dim)!important;background:#04101fcc!important;height:9px!important;position:relative;
+  clip-path:polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%)}
+.hud .track .fill{position:relative;
+  -webkit-mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 9px);mask:repeating-linear-gradient(90deg,#000 0 7px,transparent 7px 9px);
+  background:linear-gradient(90deg,#1b9fe0,var(--holo) 70%,var(--holo-hi))!important;box-shadow:0 0 10px var(--holo)}
+.hud .track.health .fill{background:linear-gradient(90deg,#c4205f,var(--holo-hot) 70%,#ffb3d4)!important}
+.hud .track:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#ffffff30,transparent 55%)}
+#hpText,#level{letter-spacing:1.5px;font-weight:800;color:#d7f7ff;text-shadow:0 0 8px #45e4ff77}
+
+/* bottom loadout dock */
+.loadout{border-radius:0!important;border:1px solid var(--holo-dim)!important;clip-path:polygon(14px 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%,0 14px);
+  background:linear-gradient(90deg,var(--holo) 0 80px,transparent 80px) 14px 0/100% 1px no-repeat,linear-gradient(180deg,#071a30e6,#030b18f0)!important;box-shadow:inset 0 0 30px #45e4ff12!important}
+.slot{border-radius:0!important;border-color:var(--holo-dim)!important;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);background:#05132699!important}
+.racklabel{color:var(--holo)!important;opacity:.8}
+
+/* dash: a tick ring around the circular gauge (static: nothing in the play HUD animates every frame) */
+#dashButton{overflow:visible}
+#dashButton:after{content:"";position:absolute;inset:-7px;border-radius:50%;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,var(--holo) 0 2deg,transparent 2deg 15deg);
+  -webkit-mask:radial-gradient(circle,transparent calc(50% - 3px),#000 calc(50% - 3px) 50%,transparent 50%);mask:radial-gradient(circle,transparent calc(50% - 3px),#000 calc(50% - 3px) 50%,transparent 50%);
+  opacity:.6}
+
+/* ---------- decor layer (holo-hud.js) ----------
+   Performance: every element animating at once is its own layer redrawn over the live game canvases each
+   frame, so only the radar sweep and the tick ring animate continuously (transform only, no masks). The bars,
+   chevrons, blips, ruler marker and inner arc are stepped a few times a second by holo-hud.js instead. */
+.holo-deco{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;color:var(--holo);font:600 10px/1.5 var(--game-font);letter-spacing:2px}
+.holo-deco *{position:absolute}
+.hd-grid{inset:0;background:linear-gradient(#45e4ff0c 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,#45e4ff0c 1px,transparent 1px) 0 0/48px 48px;
+  opacity:.7}
+.hd-scan{left:0;right:0;top:0;height:90px;background:linear-gradient(180deg,transparent,#45e4ff06 70%,#45e4ff2a 98%,transparent);animation:holoScan 2.4s cubic-bezier(.35,0,.65,1) both}
+@keyframes holoScan{from{transform:translateY(-160px)}to{transform:translateY(100vh);visibility:hidden}}
+
+/* no opacity on the radar/ring containers: a translucent group around a moving layer is re-blended every frame */
+.hd-radar{left:-110px;bottom:-110px;width:380px;height:380px;border-radius:50%;
+  background:radial-gradient(circle,transparent 0 3px,var(--holo) 3px 4px,transparent 4px),
+    repeating-radial-gradient(circle,transparent 0 46px,#45e4ff40 46px 47px),
+    linear-gradient(var(--holo-dim),var(--holo-dim)) center/1px 100% no-repeat,linear-gradient(var(--holo-dim),var(--holo-dim)) center/100% 1px no-repeat,
+    radial-gradient(circle,#45e4ff10,transparent 70%);
+  border:1px solid var(--holo-mid)}
+.hd-sweep{inset:0;border-radius:50%;background:conic-gradient(from 0deg,#45e4ff48,#45e4ff18 25deg,transparent 70deg);will-change:transform;animation:holoSpin 4s linear infinite}
+.hd-blip{width:6px;height:6px;border-radius:50%;background:var(--holo-hot);box-shadow:0 0 10px var(--holo-hot);left:62%;top:30%;opacity:0}
+.hd-blip2{left:30%;top:58%;background:var(--holo-amber);box-shadow:0 0 10px var(--holo-amber)}
+
+.hd-ring{right:-70px;top:-70px;width:300px;height:300px;border-radius:50%}
+.hd-ring>*{opacity:.65}
+.hd-ring svg{inset:0;width:100%;height:100%;will-change:transform;animation:holoSpin 30s linear infinite}
+.hd-ring i{inset:30px;border-radius:50%;border:2px solid transparent;border-top-color:var(--holo);border-left-color:#45e4ff55;box-shadow:inset 0 0 0 1px #45e4ff22;transition:transform .5s ease-out}
+.hd-ring-num{left:50%;top:50%;transform:translate(-50%,-50%);font-size:34px;font-weight:800;letter-spacing:0;text-shadow:0 0 14px var(--holo);opacity:.8}
+@keyframes holoSpin{to{transform:rotate(1turn)}}
+
+.hd-ruler{left:8%;right:8%;height:10px;background:repeating-linear-gradient(90deg,#45e4ff66 0 1px,transparent 1px 10px) bottom/100% 5px no-repeat,repeating-linear-gradient(90deg,var(--holo) 0 1px,transparent 1px 50px) bottom/100% 10px no-repeat;opacity:.5;
+}
+.hd-ruler-t{top:max(6px,env(safe-area-inset-top))}
+.hd-ruler-b{bottom:max(6px,env(safe-area-inset-bottom));transform:scaleY(-1)}
+.hd-ruler-b i{top:0;width:12px;height:10px;left:0;background:var(--holo);box-shadow:0 0 10px var(--holo);clip-path:polygon(50% 100%,0 0,100% 0);transition:left .6s ease-in-out}
+
+.hd-readout{display:flex;flex-direction:column;gap:2px;opacity:.6;text-shadow:0 0 6px #45e4ff88}
+.hd-readout span,.hd-readout em{position:static;font-style:normal}
+.hd-readout em{color:#7dffb3}
+.hd-readout-l{left:18px;top:30%}
+.hd-readout-r{right:18px;bottom:24%;text-align:right;align-items:flex-end}
+
+.hd-chev{right:24px;top:52%;display:flex;gap:3px}
+.hd-chev i{position:static;width:12px;height:16px;background:var(--holo);clip-path:polygon(0 0,45% 0,100% 50%,45% 100%,0 100%,55% 50%);opacity:.15}
+.hd-chev i.on{opacity:.9}
+
+.hd-bars{bottom:max(26px,env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:3px;height:34px;left:290px}
+.hd-bars i{position:static;width:4px;height:100%;background:linear-gradient(0deg,var(--holo),#45e4ff33);transform-origin:bottom;transform:scaleY(.4);opacity:.6}
+
+@media(max-width:700px){
+  .hd-readout,.hd-chev,.hd-bars{display:none}
+  .hd-radar{width:240px;height:240px;left:-90px;bottom:-90px}
+  .hd-ring{width:190px;height:190px;right:-60px;top:-60px}
+  .hd-ring-num{font-size:22px}
+  #menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu){padding-left:34px!important}
+  #menu .actions button:not(.primary):not(#profileMenu):not(#websiteMenu):before{left:12px}
+  .overlay nav button{letter-spacing:.4px;font-size:10px!important;padding-left:2px!important;padding-right:2px!important}
+  .overlay .actions button:not(.card){letter-spacing:.8px}
+}
+/* Still version: the device asks for reduced motion, the game's Motion setting is on (html.gfx-reduced-motion),
+   or graphics are effectively Low, chosen or stepped down by Auto on a struggling device (html.gfx-lite). */
+@media(prefers-reduced-motion:reduce){
+  .holo-deco *,.overlay .panel:before,.overlay .panel:after,.overlay .actions button.primary:after,#menu .actions button.primary:after,.overlay .panel>button.primary:after,.hud .track:after,#dashButton:after,.overlay .card.rarity-card,.overlay .card.rarity-card:after,.overlay .card.rarity-card:before,.overlay .card.rarity-card .rarity-label,.overlay .card.rarity-card .rarity-label:before{animation:none!important}
+  .hd-scan,.overlay .panel:before,.overlay .actions button.primary:after,#menu .actions button.primary:after,.overlay .panel>button.primary:after{display:none}
+}
+html:is(.gfx-lite,.gfx-reduced-motion) .holo-deco *,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel:before,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) #menu .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel>button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) .hud .track:after,html:is(.gfx-lite,.gfx-reduced-motion) #dashButton:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card:before,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card .rarity-label,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .card.rarity-card .rarity-label:before{animation:none!important}
+html:is(.gfx-lite,.gfx-reduced-motion) .hd-scan,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel:before,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) #menu .actions button.primary:after,html:is(.gfx-lite,.gfx-reduced-motion) .overlay .panel>button.primary:after{display:none}

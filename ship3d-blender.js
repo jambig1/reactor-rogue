@@ -8,9 +8,10 @@ const fittingAssets = new Map();
 export const hasBlenderShip = id => models.has(id);
 export const fittingSlots = parts => Object.entries(parts).filter(([,id]) => fittingIds.includes(id)).map(([slot]) => slot);
 
+// Hull and fitting models are meshopt-compressed (EXT_meshopt_compression) by art/blender/bake-ships.mjs.
 function loadScene(url) {
-  return import('./vendor/three-0.187.0/GLTFLoader.js')
-    .then(({ GLTFLoader }) => new GLTFLoader().loadAsync(new URL(url, import.meta.url).href))
+  return Promise.all([import('./vendor/three-0.187.0/GLTFLoader.js'), import('./vendor/three-0.187.0/meshopt_decoder.module.js')])
+    .then(([{ GLTFLoader }, { MeshoptDecoder }]) => new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(new URL(url, import.meta.url).href))
     .then(({ scene }) => scene);
 }
 

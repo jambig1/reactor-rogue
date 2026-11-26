@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 1.5.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 1.6.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -191,3 +191,10 @@ Matter.js (vendor/matter-js-0.20.0, classic defer script) drives cosmetic wrecka
 Ship system lives just before `let hangar=loadHangar()`: `shipBranches`, `shipNodes` (fx callbacks build a bonus object), `shipState()` (hangar.ship, v1), `nodeState`/`buyShipNode`/`respecShip`, `applyShipTree()` (called after applyPowerUps in start) and `applyShipTreeItems()` (after initShipIdentity). Hooks: critChance (+s.tree.crit), dash cooldown (s.tree.dashCd), hurtPlayer (s.tree.taken), weapon damage of the starter (s.tree.starter). Ship XP is awarded incrementally in commitHangar via the `shipxp` checkpoint. Preflight step 1 renders `renderShipScreen()` into #pilotPicker; step 2 renders `renderStarMap()` into #preflightSectorCards. `shipOwned()` also accepts `treePilot()`. Classic roster code (hangar ship licences, mastery) still exists but is no longer reachable from launch.
 
 Phase 2: `shipParts`/`partSlots`/`partState()` (hangar.ship.parts {owned,eq}, hangar.ship.paint) live with the ship code; part fx feed the same bonus object (`wslots`/`pslots` → `s.slots`, read by `slotCap(kind)` in pool(), the HUD racks and discovery). Boss part drops happen in commitHangar (checkpointed by old.bosses). `affinityPick` in rollChoices nudges card 2 toward `classAffinity[cls]` 40% of the time. Trails: `drawShipTrail` (cosmetic, outside s).
+
+
+### 1.6.0
+Holo HUD: `src/styles/part-7.css` is a skin layered over the older stylesheets (tokens `--holo*`, a 9-slice SVG frame in `--holo-frame` plus matching `clip-path` chamfers). `src/game/ui/holo-hud.js` builds one `aria-hidden` `.holo-deco` element and a MutationObserver moves it into the topmost visible `.overlay` (a z-index:-1 child; `.overlay` is `isolation:isolate`); its readout timer only runs while an overlay is open, and it does nothing without a real DOM (test harnesses). Upgrade cards carry `data-rarity` (rank into `rarities`) for the tier effects.
+
+Ship art: `node art/blender/bake-ships.mjs [--blender] [--force]` (see AGENTS.md). Hull and fitting `.glb` files are EXT_meshopt_compression (glTF-Transform 4.5.1, pinned); every loader calls `setMeshoptDecoder` with `vendor/three-0.187.0/meshopt_decoder.module.js`. Only compress fresh Blender exports: re-compressing changes the bytes. `Wasp.glb` (Blender source) and `repair-bot.glb` stay uncompressed. The sprite bake keeps an existing sprite unless its size changes or it differs visibly (opacity-weighted mean > 4.5/255 or > 6% of pixels > 24 apart).
+
