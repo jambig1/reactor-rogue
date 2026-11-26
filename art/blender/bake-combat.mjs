@@ -8,6 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import * as T from '../../vendor/three-0.187.0/three.module.js';
 import { GLTFLoader } from '../../vendor/three-0.187.0/GLTFLoader.js';
+import { MeshoptDecoder } from '../../vendor/three-0.187.0/meshopt_decoder.module.js';
 import { slotOfObject } from '../../ship3d-blender.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url)), root = path.join(here, '..', '..');
@@ -25,7 +26,7 @@ const layerOfName = name => {
 };
 const LAYERS = ['panel', 'paint', 'dark', 'mark', 'canopy', 'glow'];
 
-const loadFile = f => new Promise((ok, bad) => { const b = fs.readFileSync(f); new GLTFLoader().parse(b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength), '', g => ok(g.scene), bad); });
+const loadFile = f => new Promise((ok, bad) => { const b = fs.readFileSync(f); new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parse(b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength), '', g => ok(g.scene), bad); });
 const isGlow = m => !!(m.emissive && m.emissive.getHex() && (m.emissiveIntensity ?? 1) > 0);
 const layerFor = m => { const n = m.name || ''; if (/canopy/i.test(n)) return 'canopy'; if (isGlow(m) || /guidance|lights/i.test(n)) return 'glow'; if (/hull paint|midnight ceramic/i.test(n)) return 'paint'; if (/graphite|heat|enamel/i.test(n)) return 'dark'; if (/stencil|markings|edges|edging/i.test(n)) return 'mark'; return 'panel'; };
 
