@@ -1,0 +1,52 @@
+name: Bake Blender ships
+# Re-exports the hulls and fittings from the Blender author scripts, re-bakes the combat outlines and
+# sprites, checks the fleet, and commits any changed art back to the same branch. Runs when the ship
+# scripts or bake tools change, or by hand from the Actions tab (tick "force" to rewrite every sprite).
+on:
+  push:
+    paths:
+      - 'art/blender/author-fleet.py'
+      - 'art/blender/author-fittings.py'
+      - 'art/blender/bake-*.mjs'
+      - 'art/blender/bake-*.cjs'
+      - 'art/blender/check-fleet.mjs'
+      - 'ship3d-blender.js'
+      - '.github/workflows/blender-ships.yml'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Rewrite every combat sprite, even ones that look unchanged'
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: blender-ships-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  ships:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install bpy==4.5.16
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # Playwright drives the runner's Chrome for the sprites; glTF-Transform compresses the models.
+      # Both pinned and installed outside the repo.
+      - run: npm install --prefix "$RUNNER_TEMP/deps" --no-save --no-package-lock playwright@1.63.0 @gltf-transform/cli@4.5.1
+      - name: Export and bake the ships
+        env:
+          NODE_PATH: ${{ runner.temp }}/deps/node_modules
+          BLENDER_PYTHON: python
+        run: node art/blender/bake-ships.mjs --blender ${{ inputs.force && '--force' || '' }}
+      - name: Commit changed art
+        run: |
+          git add art/blender/*.glb art/blender/fittings art/combat combat-hulls-v1300.js
+          if git diff --cached --quiet; then echo "No change"; exit 0; fi
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Bake Blender ships [skip ci]'
+          git push origin HEAD:${{ github.ref_name }}

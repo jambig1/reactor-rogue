@@ -10,5 +10,8 @@
   and every function is visible to every file. Function declarations can be moved between files freely;
   top-level statements (`let`/`const`, calls) must keep their relative order.
 - Tests: `node TEST-<name>.cjs` (they read the built `index.html`, so build first).
-- Combat ship sprites/outlines are generated from the Blender models:
-  `node art/blender/bake-combat.mjs` then `node art/blender/bake-combat-sprites.cjs`.
+- Ship art comes from the Blender author scripts (`art/blender/author-*.py`). One command rebuilds it:
+  `node art/blender/bake-ships.mjs` re-bakes the combat outlines and sprites and checks the fleet;
+  add `--blender` to re-export and meshopt-compress the hull/fitting models first (needs bpy 4.5.16 on
+  Python 3.11, e.g. `blender-python`), and `--force` to rewrite sprites that look unchanged.
+  The *Bake Blender ships* GitHub workflow runs it with `--blender` when the ship scripts change.
