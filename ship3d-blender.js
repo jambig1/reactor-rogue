@@ -145,7 +145,7 @@ export function buildBlenderShip(T, id, template, record, parts, catalog) {
           let material = materials.get(object.material);
           if (!material) {
             material = object.material.clone();
-            material.emissive.lerp(trim, .16);
+            if (record.accent) material.emissive.set(record.accent); else material.emissive.lerp(trim, .16);
             material.toneMapped = false;
             materials.set(object.material, material);
             disposables.push(material);
@@ -165,6 +165,12 @@ export function buildBlenderShip(T, id, template, record, parts, catalog) {
     });
     disposables.push(fitting);
     if (slot === 'engine') outlets = fitting.nozzles;
+  }
+  // v1.7 cosmetic finish for the painted body.
+  const finish = { gloss: [.55, .22], satin: [.6, .45], matte: [.18, .85], chrome: [1, .08] }[record.finish];
+  if (finish) for (const mesh of bodyMeshes) {
+    const m = mesh.material;
+    if (m && 'metalness' in m && !(m.transparent && m.opacity < .9)) { m.metalness = finish[0]; m.roughness = finish[1]; if (record.finish === 'chrome') m.envMapIntensity = 1.6; }
   }
   const flare = new T.MeshBasicMaterial({ color: exhaust, transparent: true, opacity: .55, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false });
   const core = new T.MeshBasicMaterial({ color: trim, toneMapped: false });

@@ -84,7 +84,7 @@ function renderCrewView(){let html=crewQuarters();let rows=crewOwned().map(id=>'
  return html+(rows?'<h4>Crew and your build</h4><ul class="crew-syn">'+rows+'</ul>':'')}
 
 // ---- Dispatch ----
-function hubBody(){if(shipView==='gear')return renderGearView();if(shipView==='stats')return renderStatsView();if(shipView==='workshop')return renderWorkshopView();if(shipView==='crew')return renderCrewView();if(shipView==='loadouts')return typeof renderLoadoutsView==='function'?renderLoadoutsView():renderLoadouts();if(shipView==='collection')return typeof renderCollectionView==='function'?renderCollectionView():'';return null}
+function hubBody(){if(shipView==='gear')return renderGearView();if(shipView==='stats')return renderStatsView();if(shipView==='workshop')return renderWorkshopView();if(shipView==='crew')return renderCrewView();if(shipView==='loadouts')return typeof renderLoadoutsView==='function'?renderLoadoutsView():renderLoadouts();if(shipView==='paint')return renderCosmeticsTop()+'<h4>Colours</h4>'+renderPaintView();if(shipView==='collection')return typeof renderCollectionView==='function'?renderCollectionView():'';return null}
 
 function hubClick(e){let t=e.target.closest('[data-hub-slot],[data-gear-pick],[data-gear-equip],[data-gear-fav],[data-gear-upgrade],[data-hub-stats],[data-hangar-action]');if(!t||!t.closest('#pilotPicker'))return;
  if(t.dataset.hubSlot){shipView='gear';partSlotView=t.dataset.hubSlot;gearSel='';partPreview=''}

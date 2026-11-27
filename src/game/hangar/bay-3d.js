@@ -3,8 +3,8 @@ if(typeof document!=='undefined'&&document.addEventListener){document.addEventLi
 
 
 // v0.99 hangar bay: a live, animated view of your ship on the Your ship screen (cosmetic canvas, own loop).
-function bayParts(){let o={};for(let q of partSlots){let d=equippedPart(q.id);if(d)o[q.id]=d.id}if(typeof partPreview!=='undefined'&&partPreview){let d=shipParts.find(x=>x.id===partPreview);if(d)o[d.slot]=d.id}return o}
-function bayPilot(){let sh=shipState(),p=pilots.find(x=>x.id===treePilot())||pilots[1];partState();return {...p,color:sh.paint.hull||(sh.cls==='gunship'&&!sh.spec?'#ffb070':p.color),pattern:sh.paint.pattern||'none',patternColor:sh.paint.patternColor||'',glow:sh.paint.glow??1,parts:bayParts(),partTint:sh.paint.partTint||'match'}}
+function bayParts(){let o={};for(let q of partSlots){let d=visualPart(q.id);if(d)o[q.id]=d.id}if(typeof partPreview!=='undefined'&&partPreview){let d=shipParts.find(x=>x.id===partPreview);if(d)o[d.slot]=d.id}return o}
+function bayPilot(){let sh=shipState(),p=pilots.find(x=>x.id===treePilot())||pilots[1];partState();return {...p,color:sh.paint.hull||(sh.cls==='gunship'&&!sh.spec?'#ffb070':p.color),pattern:sh.paint.pattern||'none',patternColor:sh.paint.patternColor||'',glow:sh.paint.glow??1,parts:bayParts(),partTint:sh.paint.partTint||'match',accent:sh.paint.partTint==='accent'&&sh.paint.accent?sh.paint.accent:'',finish:sh.paint.finish||'factory',decal:sh.paint.decal||'none'}}
 const bayFx={sparks:[],pts:[],ghosts:[],last:0,running:false,rot:0,rotVel:0,offX:0,offY:0,roll:0,drag:null,bursts:[],flash:0,flashC:'#fff',beam:0,clunks:[]};
 function bayBurst(color,count=26,slot){let B=bayFx;B.flash=1;B.flashC=color;let spots={mount:[0,-28],wings:[-25,4],engine:[0,24],plating:[0,2]},o=slot?spots[slot]:[0,0];for(let i=0;i<count;i++){let a=Math.random()*TAU,sp=60+Math.random()*(slot?110:200);B.bursts.push({lx:o[0],ly:o[1],vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,age:0,life:.5+Math.random()*.5,c:Math.random()<.3?'#ffffff':color,r:1+Math.random()*2.4})}if(slot)B.clunks.push({slot,age:0,c:color})}
 // v1.1 3D hangar ship: record the 2D hull/part drawing as shapes and hand them to ship3d-v1100.js.
@@ -29,8 +29,8 @@ function shipRecorder(){let M=[1,0,0,1,0,0],stack=[],path=[],sub=null,filled=nul
   createLinearGradient:()=>({addColorStop(){}}),createRadialGradient:()=>({addColorStop(){}}),createConicGradient:()=>({addColorStop(){}}),createPattern:()=>null,isPointInPath:()=>false};
  return {ctx:c,out}}
 function recordShip3D(pilot){let R=shipRecorder(),p={...pilot,pattern:'none'};try{drawIdentityHull(p,0,shipPainter(R.ctx),{preview:true,pilot:p,items:{},hullFace:0,face:0,dashTime:0,boostTime:0,ambushTime:0,phaseTime:0,flightVisual:{heading:0,thrust:0}})}catch(e){}
- let rec={shapes:R.out.shapes,lines:R.out.lines,color:p.color,trail:shipState().paint.trailColor||p.color,engines:[],pattern:pilot.pattern||'none',patternColor:pilot.patternColor||p.color};
- if(rec.pattern!=='none'){let cv=document.createElement('canvas');cv.width=cv.height=512;let g=cv.getContext('2d');g.fillStyle='#25394c';g.fillRect(0,0,512,512);g.translate(256,256);g.scale(8,8);drawHullPattern(g,[[-32,-32],[32,-32],[32,32],[-32,32]],rec.pattern,rec.patternColor);rec.patternCanvas=cv}
+ let rec={shapes:R.out.shapes,lines:R.out.lines,color:p.color,trail:shipState().paint.trailColor||p.color,engines:[],pattern:pilot.pattern||'none',patternColor:pilot.patternColor||p.color,accent:pilot.accent||'',finish:pilot.finish||'factory',decal:pilot.decal||'none'};
+ if(rec.pattern!=='none'||rec.decal!=='none'){let cv=document.createElement('canvas');cv.width=cv.height=512;let g=cv.getContext('2d');g.fillStyle='#25394c';g.fillRect(0,0,512,512);g.translate(256,256);g.scale(8,8);if(rec.pattern!=='none')drawHullPattern(g,[[-32,-32],[32,-32],[32,32],[-32,32]],rec.pattern,rec.patternColor);if(rec.decal!=='none')for(let x of [-11,11])g.save(),g.translate(x,2),drawHullDecal(g,rec.decal,rec.accent||rec.patternColor||rec.color,4.2),g.restore();rec.patternCanvas=cv}
  try{let d=partOn(p,'engine');if(d){for(let nz of engineGeo(p,d.id).nozzles)rec.engines.push([-nz.y,nz.x,nz.w*1.2])}else{let M=hullMetrics(hullShapeOf(p)),y=p.id==='bastion'?16:9;rec.engines.push([-M.maxY+2,-y,2.2],[-M.maxY+2,y,2.2])}}catch(e){}
  return rec}
 const bay3d={state:'',ship:null,canvas:null,off:false};

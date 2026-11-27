@@ -164,6 +164,15 @@
 
 ## Unreleased
 
+### Cosmetics
+
+- **Paint schemes** you earn by playing: Neon Expanse, Storm Relay and Solar Throne (beat a boss there), Phantom Armada (find the Phantom Drive), Veteran (ship level 15), Reactor Ace (25 reactor bosses), Shipwright (collect 50% of parts) and a livery for each class keystone. One tap sets colours, finish, pattern, markings and trail; tweak anything afterwards. Locked schemes say how to earn them.
+- **Accent colour**: part lights in their own colour, separate from your hull neon (Appearance → Accent, or Part lights → Accent colour). Shows on the 3D fittings and the fitted parts' outline in flight.
+- **Finishes**: Factory, Gloss, Satin, Matte or Chrome on the 3D ship; in flight a subtle sheen or a darker, flatter look.
+- **Squadron markings**: Roundel, Reactor, Star or Hex mark, painted on the hull in the hangar and in flight.
+- **Part appearance**: show another part you own in a slot (or keep it plain) while the equipped part keeps its stats and signature.
+- Colours are kept bright enough to read against the arena. Loadouts save all of it.
+
 ### Skill tree
 
 - **Techniques**: a new tier at 3 points in each branch, two per class, that change how you fight rather than adding a percentage. Interceptor: Ghost Step (dash through enemies to damage them) and Tempo (dashes stack +8% damage). Juggernaut: Unbreakable (survive one lethal hit every 60 s) and Momentum Plating (your dash/ram shoves and hits by armour). Gunship: Focus Fire (+4% per hit on the same target, up to +20%) and Overheat Cycle (+35% damage for 2.5 s every 10 s). Carrier: Drone Overclock (+25% drone, satellite and turret damage) and Recycler (repair 5 hull every 15 kills).
