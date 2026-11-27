@@ -9,7 +9,7 @@ run('hangar.bosses=0;hangar.ship=null;shipState().pts=20');assert.equal(run('buy
 run('for(let i=0;i<3;i++){buyShipNode("j_hull");buyShipNode("j_armour")}');assert.equal(run('buyShipNode("j_class")'),false,'one class at a time');
 assert(run('buyShipNode("i_burn")'));assert(run('buyShipNode("i_reflex")'));assert.equal(run('buyShipNode("i_spec","sovereign")'),false);assert(run('buyShipNode("i_spec","spectre")'));assert.equal(run('treePilot()'),'spectre');assert(run('buyShipNode("i_key")'));assert.equal(run('shipState().pts'),20-17);
 // Respec refunds every point for credits.
-run('hangar.credits=1000');let cost=run('respecCost()');assert.equal(cost,25*17);assert(run('respecShip()'));assert.equal(run('shipState().pts'),20);assert.equal(run('treePilot()'),'vanguard');assert.equal(run('hangar.credits'),1000-cost);
+run('hangar.credits=1000');let cost=run('respecCost()');assert.equal(cost,0,'first refund is free');assert(run('respecShip()'));assert.equal(run('shipState().pts'),20);assert.equal(run('treePilot()'),'vanguard');assert.equal(run('hangar.credits'),1000-cost);
 // Ship XP levels up and grants skill points.
 run('hangar.ship=null;var sh=shipState();sh.pts=0');assert.equal(run('shipGainXP(250+400)'),2);assert.equal(run('shipState().lvl'),3);assert.equal(run('shipState().pts'),2);
 // Star map: planets with stills, boss names in the detail, locked planets cannot be chosen.

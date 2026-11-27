@@ -164,6 +164,14 @@
 
 ## Unreleased
 
+### Skill tree
+
+- **Techniques**: a new tier at 3 points in each branch, two per class, that change how you fight rather than adding a percentage. Interceptor: Ghost Step (dash through enemies to damage them) and Tempo (dashes stack +8% damage). Juggernaut: Unbreakable (survive one lethal hit every 60 s) and Momentum Plating (your dash/ram shoves and hits by armour). Gunship: Focus Fire (+4% per hit on the same target, up to +20%) and Overheat Cycle (+35% damage for 2.5 s every 10 s). Carrier: Drone Overclock (+25% drone, satellite and turret damage) and Recycler (repair 5 hull every 15 kills).
+- **Mastery**: five ranks after the keystone in your class branch, so levelling keeps paying off after the tree is complete.
+- **Class identity**: each branch shows its fantasy, strengths, weaknesses and the gear it pairs with, plus exactly what becoming that class changes (hull, speed, dash, starting weapon) before you commit.
+- **Active skills**: every skill you own in one list, with the equipped parts it works with.
+- **Cheaper experimentation**: your first refund is free; later ones cost 25 credits per point, capped at 400. Every point always comes back exactly.
+
 ### Ship customisation overhaul
 
 - **One ship hub.** Play → Your ship is now where you manage everything: Equipment, Skills, Crew, Workshop, Appearance, Loadouts and Collection, plus a full Stats inspection. Your ship sits in a larger 3D bay with slot chips around it; tap one to manage that slot. Selecting a part previews it on the model.

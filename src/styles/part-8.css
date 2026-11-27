@@ -152,3 +152,22 @@
 .col-sector{padding:8px;border:1px solid #45e4ff26;background:#05132a;display:flex;flex-direction:column;gap:4px}.col-sector b{font-size:12px;color:#e8f6ff}.col-sector small{font-size:10.5px;color:#7d93a8}
 .col-sector span{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#7d93a8}.col-sector span img{width:26px;height:26px;filter:brightness(0) drop-shadow(0 0 1px var(--rc))}.col-sector span.got{color:var(--rc)}.col-sector span.got img{filter:none}
 .col-titles{display:flex;gap:6px;flex-wrap:wrap}.col-title{display:flex;flex-direction:column;padding:6px 12px!important;font-size:11.5px!important}.col-title small{font-size:9px;opacity:.7}.col-title.on{border-color:#ff6fd8!important;color:#ffd1f3!important}
+
+/* skill tree (v1.7): class identity, techniques, mastery, active skills */
+.class-identity{border:1px solid color-mix(in srgb,var(--bc) 45%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--bc) 12%,transparent),#04101f);padding:10px 12px;margin:8px 0 10px}
+.ci-fantasy{margin:0 0 8px;font-size:13px;color:#e8f6ff;font-style:italic}
+.ci-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ci-grid span{font-size:11.5px;color:#a9bdcf;line-height:1.35}.ci-grid small{display:block;font-size:9px;letter-spacing:1.6px;color:var(--bc);font-weight:800}
+.ci-preview{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;padding-top:8px;border-top:1px solid #ffffff12;font-size:12px;color:#cfe6f5}
+.ci-preview>small{flex-basis:100%;font-size:10px;letter-spacing:1px;color:#93a9bd}
+.ci-preview span small{display:block;font-size:9px;color:#7d93a8;letter-spacing:1px;text-transform:uppercase}.ci-preview b{color:var(--bc)}
+.ci-now{margin:8px 0 0;font-size:12px;color:var(--bc);font-weight:700}
+.tree-node.tech{border-style:solid;box-shadow:inset 3px 0 0 color-mix(in srgb,var(--bc) 70%,transparent)}
+.tree-node.mastery{box-shadow:inset 0 -2px 0 #ffd76a}
+.tree-node.needkey{opacity:.55}
+.active-skills ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.active-skills li{display:flex;flex-direction:column;padding:6px 8px;border-left:2px solid var(--bc,#45e4ff);background:#05132a}
+.active-skills b{font-size:12px;color:#e8f6ff}.active-skills span{font-size:11.5px;color:#a9bdcf}.active-skills em{font-style:normal;font-size:11px;color:#7dffb3}
+@media(max-width:650px){.ci-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.ship-screen.view-skills .radar-card{display:none}}
+.tree-tabs button[aria-selected=true] small{color:#04101f!important;opacity:.75}

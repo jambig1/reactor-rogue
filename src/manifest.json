@@ -47,6 +47,7 @@
   "src/game/ui/holo-hud.js",
   "src/game/ui/touch-layout.js",
   "src/game/ui/ship-hub.js",
-  "src/game/ui/ship-progression.js"
+  "src/game/ui/ship-progression.js",
+  "src/game/ui/skill-tree.js"
  ]
 }
