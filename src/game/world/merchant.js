@@ -40,7 +40,7 @@ let devUnlocked=devRemembered(),devLaunch=null;
 const devPassword='ReactorBert';
 function devRemembered(){try{return localStorage.getItem('rr_dev_remember')==='1'}catch(e){return false}}
 function devRemember(on){try{localStorage.setItem('rr_dev_remember',on?'1':'0')}catch(e){}}
-function initDevRun(){s.dev={test:!!devLaunch,god:false,freeze:false,infiniteAbility:false,speed:1};devLaunch=null}
+function initDevRun(){s.dev={test:!!devLaunch,god:false,freeze:false,infiniteAbility:false,speed:1};devLaunch=null;try{$('devRunBadge').textContent='DEV TEST · NO PROGRESSION'}catch(e){}}
 function devRunActive(){return !!s&&state==='settings'&&settingsReturn==='pause'}
 function devMark(){if(!devUnlocked||!devRunActive())return false;s.dev.test=true;s.hangarReport='Developer test - new progress and records are not saved.';return true}
 function devNotice(message){$('devNotice').textContent=message}

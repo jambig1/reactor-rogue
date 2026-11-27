@@ -128,7 +128,7 @@ const launchCards=[
  {id:'magnet',name:'Gravity Collector',glyph:'∩',color:'#c4a1ff',up:'Pickup radius ×2.5 · +20% XP from gems',down:''}];
 let launchCardHand=[];
 function launchCard(id){return !!s&&s.launchCard===id}
-function critChance(){return .05+(s.tree?.crit||0)+.08*support('crit')+(launchCard('crit')?.15:0)}
+function critChance(){return .05+(s.tree?.crit||0)+sigCritBonus()+.08*support('crit')+(launchCard('crit')?.15:0)}
 function launchCardDamage(e){return (launchCard('glass')?1.45:launchCard('iron')?.85:1)*(launchCard('boss')&&(e?.boss||e?.finalBoss||e?.systemOwner)?1.7:1)}
 function dealLaunchCards(){let seed=Date.now()%100000,pool=[...launchCards],hand=[];for(let k=0;k<3&&pool.length;k++){let j=Math.floor(cityHash(seed,k,613)*pool.length)%pool.length;hand.push(pool.splice(j,1)[0])}return hand}
 function openLaunchCards(){if(!s||state!=='play'||s.dev?.test||s.launchCard!==undefined)return false;launchCardHand=dealLaunchCards();state='launchCard';resetInput();

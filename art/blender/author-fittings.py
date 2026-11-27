@@ -1,4 +1,4 @@
-"""Export all 16 swappable fittings for every Reactor Rogue hull from Blender."""
+"""Export all swappable fittings (21 since v1.7) for every Reactor Rogue hull from Blender."""
 import importlib
 import math
 import sys
@@ -13,15 +13,17 @@ material, loft, plate, pipe, ring = fleet.material, fleet.loft, fleet.plate, fle
 DEST=fleet.DEST/"fittings"
 DEST.mkdir(exist_ok=True)
 
-ENGINE=("e_twin","e_ion","e_fusion","e_nova")
-WING=("w_razor","w_vane","w_prism","w_phantom")
-MOUNT=("m_heavy","m_rotary","m_array","m_siege")
-PLATING=("p_reactive","p_light","p_heavy","p_aegis")
+ENGINE=("e_twin","e_ion","e_fusion","e_nova","e_phantom")
+WING=("w_razor","w_vane","w_prism","w_phantom","w_graviton")
+MOUNT=("m_heavy","m_rotary","m_array","m_siege","m_solarfang")
+PLATING=("p_reactive","p_light","p_heavy","p_aegis","p_chitin","p_titan")
 PALETTES={
     "e_twin":(.14,.61,1),"e_ion":(.32,.39,1),"e_fusion":(.67,.26,1),"e_nova":(1,.51,.095),
     "w_razor":(.2,.69,1),"w_vane":(.1,.92,.69),"w_prism":(.56,.25,1),"w_phantom":(1,.58,.13),
     "m_heavy":(.20,.56,1),"m_rotary":(.22,.63,1),"m_array":(.66,.25,1),"m_siege":(.09,.91,.83),
     "p_reactive":(.9,.30,.12),"p_light":(.24,.58,1),"p_heavy":(.63,.26,1),"p_aegis":(.14,.62,1),
+    # v1.7 sector exotics and epics
+    "e_phantom":(1,.32,.86),"w_graviton":(.62,.36,1),"m_solarfang":(1,.47,.08),"p_chitin":(.36,1,.42),"p_titan":(1,.62,.16),
 }
 
 WASP_HULL=[(-29,2.6,2.1,2.2,0),(-26,5.2,3.5,3.8,0),(-17,7,5.2,4.4,0),
@@ -85,6 +87,14 @@ def engine(ship, item, signal):
                 for j in range(4):
                     pipe("Violet ion grille",(x+3.8+j*.93,y-r*.61,z+r*.94),
                          (x+3.8+j*.93,y+r*.61,z+r*.94),.15,.15,signal,6)
+            elif item=="e_phantom":
+                # Phantom Drive: a slimmer nacelle wrapped in three magenta phase rings, with ghost vanes.
+                for k,xx in enumerate((x+1.6,x+4.2,x+6.8)):
+                    ring("Phase ring",(xx,y,z),r*(1.24-.08*k),.17,signal)
+                for side in (-1,1):
+                    plate("Phase vane",[(x+1,y+side*r*.55,z+r*.6),(x+1.4,y+side*r*1.55,z+r*.2),
+                          (x+8.4,y+side*r*1.05,z+r*.55),(x+7.4,y+side*r*.55,z+r*.85)],.22,ceramic)
+                    pipe("Phase vane edge",(x+1.4,y+side*r*1.55,z+r*.2),(x+8.4,y+side*r*1.05,z+r*.55),.09,.09,signal,6)
             elif item=="e_fusion":
                 cx=x+5.7
                 pipe("Fusion reaction chamber",(cx,y,z+r*.72),(cx,y,z+r*1.30),r*.84,r*.75,dark,12)
@@ -109,6 +119,8 @@ def engine(ship, item, signal):
 # One side of the equip-card silhouette in tip-span and nose-to-tail units.
 # The thin attachment below it is fitted separately to the ship.
 CARD_WINGS={
+    "w_graviton":[(0,0),(.20,.08),(.55,.22),(.92,.40),(1,.55),(.86,.70),
+                  (.62,.72),(.75,.86),(.58,.96),(.30,.84),(0,.70)],
     "w_phantom":[(0,0),(.10,.19),(.56,.36),(.83,.51),(.59,.57),(.54,.64),
                  (.65,.74),(.86,.86),(1,1),(.77,.91),(.45,.79),(.18,.75),(0,.67),(.06,.33)],
     "w_prism":[(0,0),(.24,.12),(.36,.29),(.73,.46),(1,1),(.72,.89),
@@ -171,6 +183,15 @@ def wing(ship,item,signal,proxy):
         trim("Fine gold spar",frame+frame[:1],.08,brass,.27)
         trim("Cyan energy veins",[(.21,.43),(.34,.48),(.45,.63),(.65,.77)],.08,cyan_glass,.36)
         trim("Cyan energy veins",[(.24,.68),(.36,.59),(.53,.48)],.07,cyan_glass,.36)
+    elif item=="w_graviton":
+        # Graviton Wings: a tip-mounted gravity lens and two flux rings across the blade.
+        panel("Graviton blade inlay",[(.12,.18),(.62,.33),(.80,.52),(.52,.66),(.16,.62)],.26,ceramic,.2)
+        tip=point(.86,.56,.55)
+        ring("Gravity lens outer",tip,1.6,.22,signal,"top")
+        ring("Gravity lens inner",tip,.9,.16,signal,"top")
+        pipe("Gravity lens core",(tip[0],tip[1],tip[2]-.3),(tip[0],tip[1],tip[2]+.5),.55,.45,prism,10)
+        trim("Graviton flux line",[(.10,.30),(.48,.42),(.80,.55)],.09,signal,.33)
+        trim("Graviton flux line",[(.12,.58),(.45,.62),(.72,.70)],.08,signal,.33)
     elif item=="w_prism":
         glass=[(.14,.41),(.34,.30),(.67,.51),(.86,.88),(.61,.79),(.25,.72)]
         panel("Violet Prism sail",glass,.31,prism,.22)
@@ -240,6 +261,17 @@ def mount(ship,item,signal):
                 loft("Overslung emitter arm",[(x+1,.42,.55,.51,z0+.53),
                      (x+3,.48,.86,.56,z0+1.21),(end,.36,.43,.43,z0+.91)],alloy,yp,.39)
                 pipe("Focus rail",(x+3,yp,z0+1.97),(end-.3,yp,z0+1.42),.125,.085,signal,6)
+        elif item=="m_solarfang":
+            muzzle=x+length*.62+3
+            pipe("Solar Fang emitter barrel",(x,yy,z0),(muzzle,yy,z0),.95*height,.72*height,alloy,12)
+            nozzle(muzzle,yy,z0,.8*height,12,signal,-1)
+            for j in range(4):
+                ring("Solar heat-sink fin",(x+1.2+j*1.15,yy,z0),1.45*height,.2,signal if j%2 else dark)
+            for j in (-1,1):
+                # Curved heat-sink fangs that sweep forward either side of the barrel.
+                plate("Solar fang",[(x+1,yy+j*1.0*height,z0+.2),(x+3.5,yy+j*2.3*height,z0+.35),
+                      (muzzle+1.2,yy+j*1.25*height,z0+.3),(muzzle-.6,yy+j*.85*height,z0+.25)],.32,brass)
+                pipe("Solar fang edge",(x+3.5,yy+j*2.3*height,z0+.36),(muzzle+1.2,yy+j*1.25*height,z0+.31),.1,.07,signal,6)
         else:
             for j in (-1,1):
                 yp=yy+j*.78*height
@@ -254,23 +286,52 @@ def mount(ship,item,signal):
                 pipe("Siege rail separator",(xx,yy-.81*height,z0+.87),(xx,yy+.81*height,z0+.87),.19,.19,dark,6)
 
 
+def dorsal_spine(item,stations,signal,proxy):
+    # v1.7: every plating also reinforces the spine, so armour reads as structure rather than loose tiles.
+    roots=stations[1:-1]
+    xs=[x for x,*_ in roots]
+    x0,x1=min(xs),max(xs)
+    half=min(w for _,w,*_ in roots)*(.36 if item in ("p_titan","p_heavy") else .26)
+    def top(px,py,rise):
+        ok,at,_,_=proxy.ray_cast((px,py,80),(0,0,-1))
+        return (px,py,(at.z if ok else 0)+rise)
+    rise=.8 if item=="p_titan" else .55
+    steps=7
+    left=[top(x0+(x1-x0)*i/steps,-half*(1-.35*abs(i/steps-.5)),rise) for i in range(steps+1)]
+    right=[top(x0+(x1-x0)*i/steps,half*(1-.35*abs(i/steps-.5)),rise) for i in range(steps+1)]
+    mat=brass if item=="p_aegis" else ceramic if item=="p_chitin" else armour
+    plate("Dorsal armour spine",left+right[::-1],.5,mat)
+    for i in range(1,steps):
+        a,b=left[i],right[i]
+        pipe("Spine rib",(a[0],a[1],a[2]+.06),(b[0],b[1],b[2]+.06),.11,.11,signal if i%2 else alloy,6)
+    if item=="p_titan":
+        # Titan: heavy flank bulwarks bolted along both sides of the spine.
+        for side in (-1,1):
+            for i in range(0,steps,2):
+                a=top(x0+(x1-x0)*i/steps,side*half*1.9,rise-.2)
+                b=top(x0+(x1-x0)*(i+1.6)/steps,side*half*1.9,rise-.2)
+                plate("Titan bulwark",[(a[0],a[1]-side*.9,a[2]+.4),(b[0],b[1]-side*.9,b[2]+.4),(b[0],b[1]+side*.9,b[2]-.3),(a[0],a[1]+side*.9,a[2]-.3)],.9,armour)
+                pipe("Titan bulwark weld",(a[0],a[1],a[2]+.5),(b[0],b[1],b[2]+.5),.13,.13,signal,6)
+
+
 def plating(ship,item,signal,proxy):
     stations=fleet.HULLS.get(ship,WASP_HULL)
-    n=4 if item=="p_heavy" else 3
+    dorsal_spine(item,stations,signal,proxy)
+    n=4 if item in ("p_heavy","p_titan","p_chitin") else 3
     roots=stations[1:-1]
     if len(roots)>n:
         roots=roots[1:n+1]
     for side in (-1,1):
         for x,w,_,_,_ in roots:
             y=w*side*(.47 if item!="p_light" else .61)
-            length=3.4 if item=="p_light" else 4.7 if item=="p_reactive" else 5.2 if item=="p_aegis" else 6.2
-            width=min(w*.51,3.8) if item=="p_heavy" else min(w*.4,2.7)
+            length=3.4 if item=="p_light" else 5.2 if item=="p_reactive" else 5.8 if item=="p_aegis" else 4.4 if item=="p_chitin" else 6.6
+            width=min(w*.55,4.2) if item in ("p_heavy","p_titan") else min(w*.46,3.1)
             for face in (1,-1):
                 hit,p,_,_=proxy.ray_cast((x,y,80*face),(0,0,-face))
                 if not hit:
                     continue
                 z=p.z
-                height=.69 if item=="p_heavy" else .39
+                height=.95 if item=="p_titan" else .69 if item=="p_heavy" else .45
                 cap=z+face*height
                 outline=[(-.50,-.25),(-.32,-.50),(.33,-.50),(.50,-.26),(.50,.26),(.33,.50),(-.32,.50),(-.50,.25)]
                 def point(u,v,rise=0):
@@ -297,6 +358,19 @@ def plating(ship,item,signal,proxy):
                         hexagon=[(shift+.225*math.cos(i*math.tau/6),.34*math.sin(i*math.tau/6))
                                  for i in range(6)]
                         traced(hexagon+hexagon[:1],signal,.089)
+                elif item=="p_chitin":
+                    # Overlapping organic scales with glowing green veins between them.
+                    for k,u0 in enumerate((-.42,-.14,.14)):
+                        scale=[(u0,-.42),(u0+.30,-.30),(u0+.36,0),(u0+.30,.30),(u0,.42),(u0+.08,0)]
+                        plate("Chitin scale",[point(u,v,.18+.06*k) for u,v in scale],face*.32,ceramic)
+                    traced([(-.46,0),(-.2,-.1),(.1,.1),(.44,0)],signal,.1)
+                elif item=="p_titan":
+                    layer=[(-.46,-.4),(.40,-.42),(.48,0),(.40,.42),(-.46,.4)]
+                    plate("Titan siege slab",[point(u,v,.3) for u,v in layer],face*.55,alloy)
+                    traced([(-.44,-.3),(.38,-.3)],signal,.13)
+                    traced([(-.44,.3),(.38,.3)],signal,.13)
+                    for u in (-.3,0,.3):
+                        ring("Titan bolt",point(u,0,.36),.32,.1,brass,"top")
                 elif item=="p_heavy":
                     shield=[(-.44,-.22),(-.29,-.35),(.31,-.35),(.45,-.13),
                             (.45,.13),(.31,.35),(-.29,.35),(-.44,.22)]
@@ -328,7 +402,7 @@ def export_ship(ship, wing_only=False):
     slots=(("wings",WING),) if wing_only else (("engine",ENGINE),("wings",WING),("mount",MOUNT),("plating",PLATING))
     for item in (item for _,ids in slots for item in ids):
         before=set(bpy.context.scene.objects)
-        glow=material(f"{item} emitter",PALETTES[item],.1,.28,2.1)
+        glow=material(f"{item} emitter",PALETTES[item],.1,.28,2.8)
         if item in ENGINE:
             engine(ship,item,glow)
         elif item in WING:

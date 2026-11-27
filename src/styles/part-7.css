@@ -170,6 +170,34 @@
   -webkit-mask:radial-gradient(circle,transparent calc(50% - 3px),#000 calc(50% - 3px) 50%,transparent 50%);mask:radial-gradient(circle,transparent calc(50% - 3px),#000 calc(50% - 3px) 50%,transparent 50%);
   opacity:.6}
 
+/* ability card sits just above the loadout dock, whatever its height (--dock-clear is set by touch-layout.js) */
+#abilityHUD{bottom:calc(var(--dock-clear,82px) + 8px)!important}
+
+/* ---------- touch layout editor (touch-layout.js) ---------- */
+.touch-layout-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;padding:12px 14px;text-align:left;
+  border:1px solid var(--holo-dim);background:linear-gradient(90deg,var(--holo) 0 40px,transparent 40px) 0 0/100% 1px no-repeat,#05142acc}
+.touch-layout-row strong{display:block;color:var(--holo-hi);font-size:13px}
+.touch-layout-row span{display:block;color:#a9bdcf;font-size:12px;margin-top:3px}
+.touch-layout-row button{flex:none}
+#touchLayout{align-items:flex-start;background:#020812b0!important}
+#touchLayout .holo-deco{display:none}
+/* faint outline of the loadout dock, so buttons aren't dropped onto the slots */
+#touchLayout:after{content:"LOADOUT DOCK";position:fixed;left:20px;right:20px;bottom:max(15px,env(safe-area-inset-bottom));height:max(40px,calc(var(--dock-clear,82px) - 15px));pointer-events:none;
+  border:1px dashed #45e4ff55;background:#45e4ff0a;color:#45e4ff88;font:700 10px var(--game-font);letter-spacing:3px;display:flex;align-items:center;justify-content:center}
+@media(max-width:650px){#touchLayout:after{left:10px;right:10px}}
+@media(max-height:520px){#touchLayout .touch-layout-panel{padding:12px 18px}#touchLayout .touch-layout-panel p,#touchLayout .touch-layout-panel .eyebrow{display:none}#touchLayout .touch-layout-panel h2{font-size:20px;margin:0}#touchLayout .touch-layout-panel .actions{margin-top:8px}}
+#touchLayout .touch-layout-panel{width:min(520px,100%);padding:20px 24px}
+#touchLayout .touch-layout-panel p{font-size:13px;margin:6px 0 0}
+#touchLayout .touch-layout-panel .actions{margin-top:14px}
+.touch-handle{position:fixed;z-index:2;right:108px;bottom:85px;width:72px;height:72px;padding:0;border-radius:50%!important;cursor:grab;touch-action:none;user-select:none;
+  display:flex;align-items:center;justify-content:center;font:800 11px var(--game-font);letter-spacing:1px;color:#b7ffe9;
+  border:2px dashed var(--holo)!important;background:radial-gradient(circle,#0b2a3dee 60%,#45e4ff33)!important;box-shadow:0 0 0 6px #45e4ff14,0 0 22px #45e4ff55!important}
+.touch-handle-fire{right:20px;width:76px;height:76px;color:#ffd3a3;border-color:#ffb86e!important;background:radial-gradient(circle,#2a1f30ee 60%,#ffb86e33)!important;box-shadow:0 0 0 6px #ffb86e14,0 0 22px #ffb86e55!important}
+.touch-handle:hover,.touch-handle:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.touch-handle.dragging{cursor:grabbing;box-shadow:0 0 0 10px #45e4ff22,0 0 34px var(--holo)!important}
+.touch-handle-fire.dragging{box-shadow:0 0 0 10px #ffb86e22,0 0 34px #ffb86e!important}
+@media(max-width:650px){.touch-handle:not(.touch-handle-fire){right:100px;width:64px;height:64px}.touch-layout-row{flex-direction:column;align-items:stretch}}
+
 /* ---------- decor layer (holo-hud.js) ----------
    Performance: every element animating at once is its own layer redrawn over the live game canvases each
    frame, so only the radar sweep and the tick ring animate continuously (transform only, no masks). The bars,

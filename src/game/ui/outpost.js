@@ -1,15 +1,15 @@
 // v1.5 Lost Signal outpost: a stop on the star map between planets. Buy ship parts with credits (stock refreshes
 // after every run) and try the Neon Slots casino. Credits only; the slots return about 92% over time.
-var outpostPrices = [0, 120, 260, 520];
+var outpostPrices = [0, 90, 140, 260, 520, 0];   // by part rarity; exotics are never sold, they are found
 var outpostQuotes = ['Signal steady. Browse, pilot.', 'Fresh salvage from the last convoy. Mostly legal.', 'Feeling lucky? The machine certainly is.', 'Everything fits. Eventually.'];
 var outpostView = 'parts';
 function outpostState() {
   let o = hangar.outpost;
   if (!o || o.v !== 1) o = hangar.outpost = { v: 1, stock: [], restock: true, spins: 0, won: 0, bet: 10 };
   if (o.restock || !o.stock.length) {
-    let ps = partState(), pool = shipParts.filter(d => d.r > 0 && !ps.owned[d.id]), pick = [];
-    if (!pool.length) pool = shipParts.filter(d => d.r > 0);
-    while (pick.length < 3 && pool.length) { let w = pool.map(d => [0, 6, 3, 1][d.r]), tot = w.reduce((a, b) => a + b, 0), n = Math.random() * tot, i = 0; for (; i < pool.length - 1; i++) { n -= w[i]; if (n <= 0) break; } pick.push(pool[i].id); pool.splice(i, 1); }
+    let ps = partState(), pool = shipParts.filter(d => d.r > 0 && d.src === 'any' && !ps.owned[d.id]), pick = [];
+    if (!pool.length) pool = shipParts.filter(d => d.r > 0 && d.src === 'any');
+    while (pick.length < 3 && pool.length) { let w = pool.map(d => [0, 6, 4, 2, 1, 0][d.r] || 0), tot = w.reduce((a, b) => a + b, 0), n = Math.random() * tot, i = 0; for (; i < pool.length - 1; i++) { n -= w[i]; if (n <= 0) break; } pick.push(pool[i].id); pool.splice(i, 1); }
     o.stock = pick; o.restock = false; try { saveHangar(); } catch (e) {}
   }
   return o;

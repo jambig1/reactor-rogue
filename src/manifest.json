@@ -6,7 +6,8 @@
   "src/styles/part-4.css",
   "src/styles/part-5.css",
   "src/styles/part-6.css",
-  "src/styles/part-7.css"
+  "src/styles/part-7.css",
+  "src/styles/part-8.css"
  ],
  "game": [
   "src/game/ships/combat-sprite.js",
@@ -17,6 +18,9 @@
   "src/game/audio/music.js",
   "src/game/ui/level-ups.js",
   "src/game/ui/records-contracts.js",
+  "src/game/ships/equipment-catalogue.js",
+  "src/game/ships/ship-signatures.js",
+  "src/game/ships/ship-stats.js",
   "src/game/ui/star-map.js",
   "src/game/hangar/bay-3d.js",
   "src/game/hangar/bay-drones-radar-loadouts.js",
@@ -40,6 +44,10 @@
   "src/game/world/pods-rift-hive.js",
   "src/game/ui/missions.js",
   "src/game/ui/outpost.js",
-  "src/game/ui/holo-hud.js"
+  "src/game/ui/holo-hud.js",
+  "src/game/ui/touch-layout.js",
+  "src/game/ui/ship-hub.js",
+  "src/game/ui/ship-progression.js",
+  "src/game/ui/skill-tree.js"
  ]
 }
