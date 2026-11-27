@@ -14,12 +14,12 @@ function bakedOutlets(pilot){let B=hullBake(pilot.id);if(!B)return [];let e=(pil
 function bakedImage(pilot,pieces,key){let hit=bakedHullCache.get(key);if(hit)return hit;if(typeof document==='undefined'||!document.createElement||!pieces.length)return null;
  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(let p of pieces)for(let l of p.body)for(let [x,y] of l){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y)}
  let S=4,P=4,cv=document.createElement('canvas');cv.width=Math.ceil((x1-x0+P*2)*S);cv.height=Math.ceil((y1-y0+P*2)*S);let g=cv.getContext('2d');if(!g||!g.setTransform)return null;
- g.setTransform(S,0,0,S,(P-x0)*S,(P-y0)*S);let c=pilot.color||'#65f7ef',glow=pilot.glow??1;
+ g.setTransform(S,0,0,S,(P-x0)*S,(P-y0)*S);let c=pilot.color||'#65f7ef',glow=pilot.glow??1,nc=p=>p.__core||pilot.partTint!=='accent'||!pilot.accent?c:pilot.accent;   // fitted parts take the accent colour when chosen
  let path=loops=>{g.beginPath();for(let l of loops){g.moveTo(l[0][0],l[0][1]);for(let i=1;i<l.length;i++)g.lineTo(l[i][0],l[i][1]);g.closePath()}};
  let fill=(loops,style,alpha=1)=>{if(!loops||!loops.length)return;g.globalAlpha=alpha;g.fillStyle=style;path(loops);g.fill('evenodd');g.globalAlpha=1};
  // 1) one neon glow and outline around the whole silhouette (inner seams get covered by the fills below)
  g.save();g.shadowColor=c;g.shadowBlur=2.4*S*glow;for(let p of pieces)fill(p.body,'#0a1420');g.restore();
- g.strokeStyle=c;g.lineWidth=1.1;g.lineJoin='round';for(let p of pieces){path(p.body);g.stroke()}
+ g.lineWidth=1.1;g.lineJoin='round';for(let p of pieces){g.strokeStyle=nc(p);path(p.body);g.stroke()}
  // 2) each piece in order: base, shading, paint, markings, canopy, lights, and a faint seam
  for(let p of pieces){let sp=bakedSprite(p);
   if(sp){let [bx0,by0,bx1,by1]=p.img.box,bw=bx1-bx0,bh=by1-by0;g.drawImage(sp,bx0,by0,bw,bh);
@@ -53,11 +53,14 @@ function bakedImage(pilot,pieces,key){let hit=bakedHullCache.get(key);if(hit)ret
   if(p.glow){g.save();g.shadowColor=c;g.shadowBlur=2*S;fill(p.glow,c);fill(p.glow,'#ffffff',.35);g.restore()}
   g.save();path(p.body);g.clip('evenodd');g.strokeStyle='#ffffff26';g.lineWidth=.9;path(p.body);g.stroke();g.restore();
   if(p!==pieces[0]){g.strokeStyle='#02060c';g.globalAlpha=.6;g.lineWidth=.35;path(p.body);g.stroke();g.globalAlpha=1}}
- if(pieces.some(p=>bakedSprite(p))){g.save();g.shadowColor=c;g.shadowBlur=1.3*S*glow;g.strokeStyle=c;g.globalAlpha=1;g.lineWidth=1.25;g.lineJoin='round';for(let p of pieces){path(p.body);g.stroke()}g.restore()}
+ // v1.7 cosmetics: finish sheen/flattening and a squadron marking on the core, clipped to the ship itself.
+ if(pilot.finish&&pilot.finish!=='factory'){g.save();g.globalCompositeOperation='source-atop';g.globalAlpha={gloss:.06,satin:.04,matte:.22,chrome:.12}[pilot.finish]||0;g.fillStyle=pilot.finish==='matte'?'#000':'#fff';g.fillRect(x0-P,y0-P,x1-x0+P*2,y1-y0+P*2);g.restore()}
+ if(pilot.decal&&pilot.decal!=='none'){let core=pieces.find(p=>p.__core);if(core){let a=1e9,b=1e9,cc=-1e9,d=-1e9;for(let l of core.body)for(let [x,y] of l){a=Math.min(a,x);b=Math.min(b,y);cc=Math.max(cc,x);d=Math.max(d,y)}g.save();g.globalCompositeOperation='source-atop';g.translate((a+cc)/2,(b+d)/2);drawHullDecal(g,pilot.decal,pilot.accent||pilot.patternColor||c,Math.min(cc-a,d-b)*.16);g.restore()}}
+ if(pieces.some(p=>bakedSprite(p))){g.save();g.shadowBlur=1.3*S*glow;g.globalAlpha=1;g.lineWidth=1.25;g.lineJoin='round';for(let p of pieces){g.shadowColor=g.strokeStyle=nc(p);path(p.body);g.stroke()}g.restore()}
  hit={cv,x:x0-P,y:y0-P,S};bakedHullCache.set(key,hit);if(bakedHullCache.size>48)bakedHullCache.delete(bakedHullCache.keys().next().value);return hit}
-function bakedHullImage(pilot){let B=hullBake(pilot.id);if(!B||!B.core)return null;if(B.stock.engine&&!B.stock.engine.outlets)B.stock.engine.outlets=B.outlets;else if(!B.stock.engine&&!B.core.outlets)B.core.outlets=B.outlets;let pt=pilot.parts||{};
+function bakedHullImage(pilot){let B=hullBake(pilot.id);if(!B||!B.core)return null;if(B.stock.engine&&!B.stock.engine.outlets)B.stock.engine.outlets=B.outlets;else if(!B.stock.engine&&!B.core.outlets)B.core.outlets=B.outlets;let pt=pilot.parts||{};B.core.__core=true;
  let pieces=[bakedPiece(B,pilot,'wings'),B.core,bakedPiece(B,pilot,'engine'),bakedPiece(B,pilot,'mount'),bakedPiece(B,pilot,'plating')].filter(Boolean);
- return bakedImage(pilot,pieces,['hull',pilot.id,pilot.color,pilot.pattern||'',pilot.patternColor||'',pilot.glow??1,pt.wings||'',pt.engine||'',pt.mount||'',pt.plating||''].join('|'))}
+ return bakedImage(pilot,pieces,['hull',pilot.id,pilot.color,pilot.pattern||'',pilot.patternColor||'',pilot.glow??1,pt.wings||'',pt.engine||'',pt.mount||'',pt.plating||'',pilot.partTint||'',pilot.accent||'',pilot.finish||'',pilot.decal||''].join('|'))}
 function bakedMountImage(pilot){let B=hullBake(pilot.id);if(!B)return null;let m=bakedPiece(B,pilot,'mount');if(!m)return null;return bakedImage(pilot,[m],['mount',pilot.id,pilot.color,pilot.glow??1,(pilot.parts||{}).mount||''].join('|'))}
 function stampBaked(ctx,im){ctx.save();ctx.rotate(Math.PI/2);ctx.drawImage(im.cv,im.x,im.y,im.cv.width/im.S,im.cv.height/im.S);ctx.restore()}
 // Draws in pilot space (nose +x). Return true when drawn.

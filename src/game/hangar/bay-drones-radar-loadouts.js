@@ -120,7 +120,7 @@ function partFit(pilot,slot,id){let sh=hullShapeOf(pilot),minY=Math.min(...sh.ma
  w=Math.max(10,span*.24);let h=w*ar;return {w,h,x:0,y:minY+h*.42}}
 // Recolour a part's lights to the ship colour (metal untouched); parts behind the hull get a touch of shade.
 const partTintCache={};
-function partCanvas(id,col,mode,back){let im=partImg(id);if(!im||!im.complete||!im.naturalWidth)return null;let d0=shipParts.find(x=>x.id===id),neon=mode==='match'?col:(partRarity[d0?.r||0]||partRarity[0]).c,key=id+'|'+neon+'|'+(back?1:0);if(partTintCache[key])return partTintCache[key];if(typeof document==='undefined')return im;
+function partCanvas(id,col,mode,back){let im=partImg(id);if(!im||!im.complete||!im.naturalWidth)return null;let d0=shipParts.find(x=>x.id===id),neon=mode==='match'?col:String(mode).startsWith('accent:')?String(mode).slice(7):(partRarity[d0?.r||0]||partRarity[0]).c,key=id+'|'+neon+'|'+(back?1:0);if(partTintCache[key])return partTintCache[key];if(typeof document==='undefined')return im;
  // Neon conversion: metal -> the hull's navy panel palette, lights -> the neon colour, a thick glowing neon outline
  // round the silhouette and faint neon seams on the panel lines, so parts match the ships' flat neon style.
  try{let c=document.createElement('canvas'),W=im.naturalWidth,H=im.naturalHeight;c.width=W;c.height=H;let g=c.getContext('2d');g.drawImage(im,0,0);let D=g.getImageData(0,0,W,H),px=D.data,N=hexToHsl(neon)||{h:170,s:90,l:65},nh=N.h/360,ns=Math.max(.55,N.s/100);
@@ -137,7 +137,7 @@ function partCanvas(id,col,mode,back){let im=partImg(id);if(!im||!im.complete||!
     let gx=x>0&&x<W-1?lum[j+1]-lum[j-1]:0,gy=y>0&&y<H-1?lum[j+W]-lum[j-W]:0,gm=Math.hypot(gx,gy);if(gm>.22){let a2=Math.min(.55,(gm-.22)*1.6);base=base.map((v,k)=>v+(nc[k]*255-v)*a2)}out=base}
    px[i]=out[0]*shade;px[i+1]=out[1]*shade;px[i+2]=out[2]*shade}
   g.putImageData(D,0,0);return partTintCache[key]=c}catch(e){return im}}
-function partTintMode(pilot){return pilot.partTint||'match'}
+function partTintMode(pilot){return pilot.partTint==='accent'&&pilot.accent?'accent:'+pilot.accent:pilot.partTint||'match'}
 function drawShipParts(g,pilot,layer){let P=pilot&&pilot.parts;if(!P||typeof g.drawImage!=='function')return;if(layer==='front'){if(P.plating){g.save();g.rotate(Math.PI/2);try{drawHullPlating(g,pilot,hullShapeOf(pilot),pilot.color)}catch(e){}g.restore()}return}let slots=layer==='back'?['wings','engine']:layer==='nose'?['mount']:[];if(!slots.length)return;g.save();g.rotate(Math.PI/2);g.shadowBlur=0;
  for(let slot of slots){let id=P[slot];if(!id)continue;let d=shipParts.find(x=>x.id===id);if(!d||d.r<1)continue;let cv=partCanvas(id,pilot.color,partTintMode(pilot),layer==='back');if(!cv)continue;let f=partFit(pilot,slot,id);
   try{g.shadowColor=pilot.color;g.shadowBlur=graphicsShadow(8);g.drawImage(cv,f.x-f.w/2,f.y-f.h/2,f.w,f.h)}catch(e){}}

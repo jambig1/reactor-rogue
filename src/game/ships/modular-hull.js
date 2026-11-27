@@ -28,7 +28,7 @@ function drawModularEngine(g,pilot){let d=partOn(pilot,'engine');if(!d)return;le
 // with the same panel fills, neon strokes and glow, and fitted from the hull's own outline. Wings and engines go
 // behind the hull so its edge overlaps their roots; plating and gun mounts go on top. Stock parts draw nothing.
 function hullMetrics(shape){let xs=shape.map(q=>Math.abs(q[0])),span=Math.max(...xs),wide=shape.reduce((a,q)=>Math.abs(q[0])>Math.abs(a[0])?q:a,shape[0]);return {span,minY:Math.min(...shape.map(q=>q[1])),maxY:Math.max(...shape.map(q=>q[1])),wideY:wide[1]}}
-function partAccent(pilot,d){return pilot.partTint==='rarity'?partRarity[d.r].c:pilot.color}
+function partAccent(pilot,d){return pilot.partTint==='rarity'?partRarity[d.r].c:pilot.partTint==='accent'&&pilot.accent?pilot.accent:pilot.color}
 function engineGeo(pilot,id){let M=hullMetrics(hullShapeOf(pilot)),y=M.maxY+1;return {e_twin:{nozzles:[-10,-5,5,10].map(x=>({x,y:y+3,w:1.6,len:.9}))},e_ion:{nozzles:[-7,7].map(x=>({x,y:y+4,w:1.1,len:1.15}))},e_fusion:{nozzles:[{x:0,y:y+6,w:2.4,len:1.1},{x:-9,y:y+3,w:1.4,len:.8},{x:9,y:y+3,w:1.4,len:.8}]},e_nova:{nozzles:[-7,7].map(x=>({x,y:y+7,w:3,len:1.6,ring:true}))}}[id]||{nozzles:[]}}
 function drawPartsGeo(paint,p,layer,shape,t=0){let P=p.parts;if(!P)return;const {ctx,poly,circle}=paint;let c=p.color,M=hullMetrics(shape),sp=M.span,fill='#1b2e42',fill2='#264958',dark='#0c1828',RM=reducedMotion,T=RM?0:t;
  let ring=(x,y,r,f,st,w)=>{ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fillStyle=f;ctx.fill();ctx.strokeStyle=st;ctx.lineWidth=w;ctx.stroke()},glowOn=(d)=>{ctx.shadowColor=c;ctx.shadowBlur=graphicsShadow(d&&d.r>=4?13:d&&d.r>=2?10:8)},glowOff=()=>{ctx.shadowBlur=0};
