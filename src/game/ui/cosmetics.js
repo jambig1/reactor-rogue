@@ -49,11 +49,13 @@ function renderCosmeticsTop(){let sh=shipState(),pt=sh.paint;
  let decal='<div class="trail-pick cos-pick">'+shipDecals.map(d=>'<button data-cos-decal="'+d.id+'" aria-pressed="'+((pt.decal||'none')===d.id)+'">'+decalSvg(d.id)+d.name+'</button>').join('')+'</div>';
  let looks=partSlots.filter(q=>q.id!=='reactor').map(q=>{let eq=equippedPart(q.id),cur=pt.look?.[q.id]||'',opts=shipParts.filter(d=>d.slot===q.id&&partState().owned[d.id]);return '<label class="cos-look"><span>'+q.name+'</span><select data-cos-look="'+q.id+'"><option value="">As equipped ('+esc(eq.name)+')</option>'+opts.filter(d=>d.id!==eq.id).map(d=>'<option value="'+d.id+'"'+(cur===d.id?' selected':'')+'>Look like '+esc(d.name)+'</option>').join('')+'</select></label>'}).join('');
  return '<h4>Paint schemes</h4><p class="fine">Earned by playing. A scheme sets colours, finish, pattern and markings in one tap; change any of it afterwards.</p>'+schemes+
+  '<h4>In-flight look</h4><div class="trail-pick cos-pick"><button data-cos-inflight="hangar" aria-pressed="'+(pt.inflight!=='neon')+'">Hangar model</button><button data-cos-inflight="neon" aria-pressed="'+(pt.inflight==='neon')+'">Classic neon</button></div><p class="fine">Hangar model flies the ship as it looks here: real materials, lights and engines glowing. Classic neon outlines the whole ship in your colour.</p>'+
   '<h4>Finish</h4>'+finish+'<p class="fine">Repaints the hull: Gloss and Satin in your hull colour, Matte nearly black, Chrome silver. In the hangar and in flight.</p><h4>Squadron markings</h4>'+decal+
   '<h4>Part appearance</h4><p class="fine">Show another part you own in a slot. Stats always come from the equipped part.</p><div class="cos-looks">'+looks+'</div>'}
-function cosmeticsClick(e){let t=e.target.closest('[data-cos-scheme],[data-cos-finish],[data-cos-decal]');if(!t||!t.closest('#pilotPicker'))return;let pt=shipState().paint;
+function cosmeticsClick(e){let t=e.target.closest('[data-cos-scheme],[data-cos-finish],[data-cos-decal],[data-cos-inflight]');if(!t||!t.closest('#pilotPicker'))return;let pt=shipState().paint;
  if(t.dataset.cosScheme){if(applyScheme(t.dataset.cosScheme)){bayBurst(readableColour(pt.hull||bayPilot().color),26);sound('reward')}}
  else if(t.dataset.cosFinish){pt.finish=t.dataset.cosFinish;pt.scheme='';saveHangar();sound('ui')}
+ else if(t.dataset.cosInflight){pt.inflight=t.dataset.cosInflight;saveHangar();sound('ui')}
  else if(t.dataset.cosDecal){pt.decal=t.dataset.cosDecal;pt.scheme='';saveHangar();sound('ui')}
  e.preventDefault();e.stopPropagation();renderPreflight()}
 function cosmeticsChange(e){let t=e.target;if(!t.dataset||t.dataset.cosLook===undefined||!t.closest('#pilotPicker'))return;let pt=shipState().paint;pt.look=pt.look||{};if(t.value)pt.look[t.dataset.cosLook]=t.value;else delete pt.look[t.dataset.cosLook];saveHangar();renderPreflight()}
