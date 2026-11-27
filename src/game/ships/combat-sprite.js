@@ -14,29 +14,33 @@ function bakedOutlets(pilot){let B=hullBake(pilot.id);if(!B)return [];let e=(pil
 function bakedImage(pilot,pieces,key){let hit=bakedHullCache.get(key);if(hit)return hit;if(typeof document==='undefined'||!document.createElement||!pieces.length)return null;
  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(let p of pieces)for(let l of p.body)for(let [x,y] of l){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y)}
  let S=4,P=4,cv=document.createElement('canvas');cv.width=Math.ceil((x1-x0+P*2)*S);cv.height=Math.ceil((y1-y0+P*2)*S);let g=cv.getContext('2d');if(!g||!g.setTransform)return null;
- g.setTransform(S,0,0,S,(P-x0)*S,(P-y0)*S);let c=pilot.color||'#65f7ef',glow=pilot.glow??1,nc=p=>p.__core||pilot.partTint!=='accent'||!pilot.accent?c:pilot.accent;   // fitted parts take the accent colour when chosen
+ g.setTransform(S,0,0,S,(P-x0)*S,(P-y0)*S);let c=pilot.color||'#65f7ef',glow=pilot.glow??1,nc=p=>p.__core||pilot.partTint!=='accent'||!pilot.accent?c:pilot.accent,   // fitted parts take the accent colour when chosen
+  real=pilot.inflight!=='neon'&&pieces.some(p=>bakedSprite(p));   // v1.7 default: look like the hangar model, neon only where the model glows
  let path=loops=>{g.beginPath();for(let l of loops){g.moveTo(l[0][0],l[0][1]);for(let i=1;i<l.length;i++)g.lineTo(l[i][0],l[i][1]);g.closePath()}};
  let fill=(loops,style,alpha=1)=>{if(!loops||!loops.length)return;g.globalAlpha=alpha;g.fillStyle=style;path(loops);g.fill('evenodd');g.globalAlpha=1};
  // 1) one neon glow and outline around the whole silhouette (inner seams get covered by the fills below)
- g.save();g.shadowColor=c;g.shadowBlur=2.4*S*glow;for(let p of pieces)fill(p.body,'#0a1420');g.restore();
- g.lineWidth=1.1;g.lineJoin='round';for(let p of pieces){g.strokeStyle=nc(p);path(p.body);g.stroke()}
+ if(real){g.save();g.shadowColor='#000000c0';g.shadowBlur=1.4*S;g.shadowOffsetY=.5*S;for(let p of pieces)fill(p.body,'#0a1018');g.restore();g.lineWidth=.6;g.lineJoin='round';g.strokeStyle='#04070c';for(let p of pieces){path(p.body);g.stroke()}}
+ else{g.save();g.shadowColor=c;g.shadowBlur=2.4*S*glow;for(let p of pieces)fill(p.body,'#0a1420');g.restore();
+ g.lineWidth=1.1;g.lineJoin='round';for(let p of pieces){g.strokeStyle=nc(p);path(p.body);g.stroke()}}
  // 2) each piece in order: base, shading, paint, markings, canopy, lights, and a faint seam
  for(let p of pieces){let sp=bakedSprite(p);
   if(sp){let [bx0,by0,bx1,by1]=p.img.box,bw=bx1-bx0,bh=by1-by0;g.drawImage(sp,bx0,by0,bw,bh);
    // the original neon look: dark navy-steel body (keeping the rendered shading), colour only as neon lines
-   g.save();path(p.body);g.clip('evenodd');g.globalCompositeOperation='color';g.fillStyle='#2a4660';g.fillRect(bx0,by0,bw,bh);g.globalCompositeOperation='multiply';g.globalAlpha=.9;g.fillStyle='#3a5068';g.fillRect(bx0,by0,bw,bh);g.restore();
+   if(real){g.save();path(p.body);g.clip('evenodd');g.globalCompositeOperation='multiply';g.globalAlpha=.88;g.fillStyle='#5d6876';g.fillRect(bx0,by0,bw,bh);g.restore();if(p.paint){g.save();path(p.paint);g.clip('evenodd');for(let [op,col,al] of finishBody(pilot.finish||'factory',c,true)){g.globalCompositeOperation=op;g.globalAlpha=al;if(col==='sheen'){let sh=g.createLinearGradient(bx0,by0,bx1,by1);sh.addColorStop(0,'#ffffff00');sh.addColorStop(.45,'#ffffff');sh.addColorStop(.55,'#ffffff00');g.fillStyle=sh}else g.fillStyle=col;g.fillRect(bx0,by0,bw,bh)}g.restore()}}
+   else{g.save();path(p.body);g.clip('evenodd');for(let [op,col,al] of finishBody(pilot.finish,c)){g.globalCompositeOperation=op;g.globalAlpha=al;if(col==='sheen'){let sh=g.createLinearGradient(bx0,by0,bx1,by1);sh.addColorStop(0,'#ffffff00');sh.addColorStop(.45,'#ffffff');sh.addColorStop(.55,'#ffffff00');g.fillStyle=sh}else g.fillStyle=col;g.fillRect(bx0,by0,bw,bh)}g.restore()}
    if(p.canopy){let gr=g.createLinearGradient(0,by0,0,by1);gr.addColorStop(0,'#eafcff');gr.addColorStop(.3,'#7fe6ff');gr.addColorStop(1,'#1a5a78');g.save();g.shadowColor='#9ff0ff';g.shadowBlur=1.6*S;fill(p.canopy,gr);g.restore();
     g.save();path(p.canopy);g.clip('evenodd');g.fillStyle='#ffffffb0';g.beginPath();for(let l of p.canopy){let cx=0,cy=0;for(let [x,y] of l){cx+=x;cy+=y}cx/=l.length;cy/=l.length;g.ellipse(cx-.6,cy-1.6,.7,1.6,0,0,TAU)}g.fill();g.restore();
-    g.save();g.strokeStyle=c;g.lineWidth=.55;g.shadowColor=c;g.shadowBlur=.8*S;path(p.canopy);g.stroke();g.restore()}
+    if(!real){g.save();g.strokeStyle=c;g.lineWidth=.55;g.shadowColor=c;g.shadowBlur=.8*S;path(p.canopy);g.stroke();g.restore()}else{g.save();g.strokeStyle='#04070c';g.lineWidth=.35;path(p.canopy);g.stroke();g.restore()}}
    // A-style inner neon: spine circuitry, armour edges, markings and lights in the player's colour
-   g.save();g.lineJoin='round';g.shadowColor=c;
+   if(real){g.save();g.lineJoin='round';if(p.ridge){g.globalAlpha=.25;g.strokeStyle='#ffffff';g.lineWidth=.25;path(p.ridge);g.stroke()}if(p.dark){g.globalAlpha=.55;g.strokeStyle='#05080d';g.lineWidth=.3;path(p.dark);g.stroke()}if(p.mark)fill(p.mark,'#d5e0ea',.5);if(p.paint){g.globalAlpha=.7;g.strokeStyle='#05080d';g.lineWidth=.3;path(p.paint);g.stroke()}g.restore()}
+   else{g.save();g.lineJoin='round';g.shadowColor=c;
    if(p.ridge){g.globalAlpha=.55;g.strokeStyle=c;g.lineWidth=.35;g.shadowBlur=.6*S;path(p.ridge);g.stroke()}
    if(p.dark){g.globalAlpha=.45;g.strokeStyle=c;g.lineWidth=.3;g.shadowBlur=.4*S;path(p.dark);g.stroke()}
    if(p.mark){g.globalAlpha=.9;g.shadowBlur=.8*S;fill(p.mark,c,.75)}
    g.restore();
-   if(p.paint){g.save();fill(p.paint,c,.08);g.globalAlpha=.9;g.strokeStyle=c;g.lineWidth=.5;g.lineJoin='round';g.shadowColor=c;g.shadowBlur=.5*S;path(p.paint);g.stroke();g.restore()}
+   if(p.paint){g.save();fill(p.paint,c,.08);g.globalAlpha=.9;g.strokeStyle=c;g.lineWidth=.5;g.lineJoin='round';g.shadowColor=c;g.shadowBlur=.5*S;path(p.paint);g.stroke();g.restore()}}
    if(p.paint&&pilot.pattern&&pilot.pattern!=='none')try{g.save();path(p.paint);g.clip('evenodd');g.globalAlpha=.12;drawHullPattern(g,[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],pilot.pattern,pilot.patternColor||c);g.restore()}catch(e){}
-   if(p.glow){g.save();g.shadowColor=c;g.shadowBlur=2*S;fill(p.glow,c,1);fill(p.glow,'#ffffff',.35);g.restore()}
+   if(p.glow){g.save();g.shadowColor=nc(p);g.shadowBlur=(real?1.1:2)*S;fill(p.glow,nc(p),1);fill(p.glow,'#ffffff',.35);g.restore()}
    if(p.outlets)for(let [ox,oy,orr] of p.outlets){g.save();g.shadowColor=c;g.shadowBlur=1.6*S;g.fillStyle=c;g.beginPath();g.arc(ox,oy,Math.max(.8,orr*.6),0,TAU);g.fill();g.fillStyle='#ffffffcc';g.beginPath();g.arc(ox,oy,Math.max(.4,orr*.28),0,TAU);g.fill();g.restore()}
    if(p!==pieces[0]){g.strokeStyle='#02060c';g.globalAlpha=.5;g.lineWidth=.3;path(p.body);g.stroke();g.globalAlpha=1}
    continue}
@@ -53,14 +57,14 @@ function bakedImage(pilot,pieces,key){let hit=bakedHullCache.get(key);if(hit)ret
   if(p.glow){g.save();g.shadowColor=c;g.shadowBlur=2*S;fill(p.glow,c);fill(p.glow,'#ffffff',.35);g.restore()}
   g.save();path(p.body);g.clip('evenodd');g.strokeStyle='#ffffff26';g.lineWidth=.9;path(p.body);g.stroke();g.restore();
   if(p!==pieces[0]){g.strokeStyle='#02060c';g.globalAlpha=.6;g.lineWidth=.35;path(p.body);g.stroke();g.globalAlpha=1}}
- // v1.7 cosmetics: finish sheen/flattening and a squadron marking on the core, clipped to the ship itself.
- if(pilot.finish&&pilot.finish!=='factory'){g.save();g.globalCompositeOperation='source-atop';g.globalAlpha={gloss:.06,satin:.04,matte:.22,chrome:.12}[pilot.finish]||0;g.fillStyle=pilot.finish==='matte'?'#000':'#fff';g.fillRect(x0-P,y0-P,x1-x0+P*2,y1-y0+P*2);g.restore()}
- if(pilot.decal&&pilot.decal!=='none'){let core=pieces.find(p=>p.__core);if(core){let a=1e9,b=1e9,cc=-1e9,d=-1e9;for(let l of core.body)for(let [x,y] of l){a=Math.min(a,x);b=Math.min(b,y);cc=Math.max(cc,x);d=Math.max(d,y)}g.save();g.globalCompositeOperation='source-atop';g.translate((a+cc)/2,(b+d)/2);drawHullDecal(g,pilot.decal,pilot.accent||pilot.patternColor||c,Math.min(cc-a,d-b)*.16);g.restore()}}
- if(pieces.some(p=>bakedSprite(p))){g.save();g.shadowBlur=1.3*S*glow;g.globalAlpha=1;g.lineWidth=1.25;g.lineJoin='round';for(let p of pieces){g.shadowColor=g.strokeStyle=nc(p);path(p.body);g.stroke()}g.restore()}
+ // v1.7 cosmetics: a squadron marking on the core, clipped to the ship itself (the finish is applied to the body above).
+ if(pilot.decal&&pilot.decal!=='none'){let core=pieces.find(p=>p.__core);if(core){let a=1e9,b=1e9,cc=-1e9,d=-1e9;for(let l of core.body)for(let [x,y] of l){a=Math.min(a,x);b=Math.min(b,y);cc=Math.max(cc,x);d=Math.max(d,y)}g.save();g.globalCompositeOperation='source-atop';g.translate((a+cc)/2,(b+d)/2);g.shadowColor='#000';g.shadowBlur=1.2*S;drawHullDecal(g,pilot.decal,pilot.accent||pilot.patternColor||c,Math.min(cc-a,d-b)*.3);g.restore()}}
+ if(real){g.save();g.globalAlpha=.5*Math.min(1.6,glow);g.lineWidth=.45;g.lineJoin='round';for(let p of pieces){g.strokeStyle=nc(p);path(p.body);g.stroke()}g.restore()}
+ else if(pieces.some(p=>bakedSprite(p))){g.save();g.shadowBlur=1.3*S*glow;g.globalAlpha=1;g.lineWidth=1.25;g.lineJoin='round';for(let p of pieces){g.shadowColor=g.strokeStyle=nc(p);path(p.body);g.stroke()}g.restore()}
  hit={cv,x:x0-P,y:y0-P,S};bakedHullCache.set(key,hit);if(bakedHullCache.size>48)bakedHullCache.delete(bakedHullCache.keys().next().value);return hit}
 function bakedHullImage(pilot){let B=hullBake(pilot.id);if(!B||!B.core)return null;if(B.stock.engine&&!B.stock.engine.outlets)B.stock.engine.outlets=B.outlets;else if(!B.stock.engine&&!B.core.outlets)B.core.outlets=B.outlets;let pt=pilot.parts||{};B.core.__core=true;
  let pieces=[bakedPiece(B,pilot,'wings'),B.core,bakedPiece(B,pilot,'engine'),bakedPiece(B,pilot,'mount'),bakedPiece(B,pilot,'plating')].filter(Boolean);
- return bakedImage(pilot,pieces,['hull',pilot.id,pilot.color,pilot.pattern||'',pilot.patternColor||'',pilot.glow??1,pt.wings||'',pt.engine||'',pt.mount||'',pt.plating||'',pilot.partTint||'',pilot.accent||'',pilot.finish||'',pilot.decal||''].join('|'))}
+ return bakedImage(pilot,pieces,['hull',pilot.id,pilot.color,pilot.pattern||'',pilot.patternColor||'',pilot.glow??1,pt.wings||'',pt.engine||'',pt.mount||'',pt.plating||'',pilot.partTint||'',pilot.accent||'',pilot.finish||'',pilot.decal||'',pilot.inflight||''].join('|'))}
 function bakedMountImage(pilot){let B=hullBake(pilot.id);if(!B)return null;let m=bakedPiece(B,pilot,'mount');if(!m)return null;return bakedImage(pilot,[m],['mount',pilot.id,pilot.color,pilot.glow??1,(pilot.parts||{}).mount||''].join('|'))}
 function stampBaked(ctx,im){ctx.save();ctx.rotate(Math.PI/2);ctx.drawImage(im.cv,im.x,im.y,im.cv.width/im.S,im.cv.height/im.S);ctx.restore()}
 // Draws in pilot space (nose +x). Return true when drawn.
@@ -151,3 +155,12 @@ let weaponArtAtlas=null;if(typeof Image!=='undefined'){weaponArtAtlas=new Image(
 const attackArtFamilies={bolt:'needle',rapid:'repeater',scatter:'pellet',arc:'disc',mines:'mine',gravity:'gravity',singularity:'void',cannon:'shell',rocket:'missile',seeker:'drone',nova:'pulse',chain:'lightning',blade:'blade',toxic:'corrosion',frost:'crystal',laser:'beam',harpoon:'tether',ember:'wake',prism:'satellite',scrap:'shrapnel',buoy:'pylon',saw:'saw',mortar:'bombardment',nanite:'swarm',phaseTorp:'torpedo',sonic:'pressure',rail:'rail',flak:'flak',crescent:'crescent',fence:'fence',leech:'siphon',cryoCharge:'cryoMine',ram:'ram',sails:'solar',voidSeed:'seed',stasisNet:'net',spire:'storm',echoRing:'echo',crossfire:'crossfire',rupture:'drill',ionGuard:'guardian',plasmaRain:'plasma',prismTrace:'tracer',cometAxe:'scythe',ionCurtain:'curtain',corona:'aura',plasmaWhip:'lash',twinWisps:'binary'};
 const attackAtlasRegions={bolt:[120,286,394,81],missile:[762,240,355,177],scythe:[179,769,311,338],guardian:[803,822,275,236]};
 let attackArt={tracks:new WeakMap,impacts:[],muzzles:[],sprites:0,fields:0,details:0,repair:0,repairWait:0,repairLife:0,shieldHits:[],shieldReform:0,shieldPrevious:0,reactions:new WeakMap,kick:0,kickAngle:0,kickWait:0,contactWait:0};
+// Body colour treatment per finish for the combat sprite: blend steps [operation, colour, alpha] over the rendered
+// shading. Factory keeps the original navy steel; Gloss/Satin paint the body in the hull colour (Gloss brighter, with a
+// sheen); Matte goes flat near-black; Chrome goes bright silver with a sheen.
+function finishBody(finish,c,panels){let mix=(a,b,t)=>{let pa=parseInt(a.slice(1),16),pb=parseInt(b.slice(1),16),r=k=>Math.round(((pa>>k)&255)*(1-t)+((pb>>k)&255)*t);return '#'+[16,8,0].map(k=>r(k).toString(16).padStart(2,'0')).join('')},hex=/^#[0-9a-f]{6}$/i.test(c)?c:'#65f7ef';
+ if(finish==='gloss')return [['color',hex,1],['screen',mix(hex,'#000000',.4),.8],['screen','sheen',.32]];
+ if(finish==='satin')return [['color',hex,1],['screen',mix(hex,'#000000',.68),.55]];
+ if(finish==='matte')return [['color','#2a3038',1],['multiply','#3c424a',1]];
+ if(finish==='chrome')return [['color','#8f9aa6',1],['screen','#a9b4bf',.85],['screen','sheen',.45]];
+ return panels?[['color','#2c3644',.85],['multiply','#46505e',.6]]:[['color','#2a4660',1],['multiply','#3a5068',.9]]}

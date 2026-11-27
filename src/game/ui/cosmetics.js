@@ -2,7 +2,7 @@
 // markings and part appearance overrides. Cosmetic only: nothing here touches stats. Stored in hangar.ship.paint:
 // accent, finish, decal, look {slot: partId}, scheme. The 3D bay, the in-run ship and loadouts all read it.
 const shipFinishes=[{id:'factory',name:'Factory'},{id:'gloss',name:'Gloss'},{id:'satin',name:'Satin'},{id:'matte',name:'Matte'},{id:'chrome',name:'Chrome'}];
-const shipDecals=[{id:'none',name:'None'},{id:'roundel',name:'Roundel'},{id:'reactor',name:'Reactor'},{id:'star',name:'Star'},{id:'hexmark',name:'Hex mark'}];
+const shipDecals=[{id:'none',name:'None'},{id:'roundel',name:'Roundel'},{id:'reactor',name:'Reactor'},{id:'star',name:'Star'},{id:'hexmark',name:'Hex mark'},{id:'crosshair',name:'Crosshair'},{id:'sunburst',name:'Sunburst'},{id:'triad',name:'Triad'},{id:'diamond',name:'Diamond'},{id:'petal',name:'Petal'},{id:'atom',name:'Atom'}];
 // Schemes set a whole livery at once. `need` returns true when earned; `how` says how to earn it.
 const shipSchemes=[
  {id:'factory',name:'Factory',p:{hull:'',accent:'',pattern:'none',finish:'factory',decal:'none',trail:'standard',trailColor:''},how:'Always available',need:()=>true},
@@ -26,6 +26,12 @@ function drawHullDecal(g,decal,c,size=5){if(!decal||decal==='none')return;g.save
  else if(decal==='reactor'){g.beginPath();g.arc(0,0,size,0,Math.PI*2);g.stroke();for(let i=0;i<6;i++){let a=i*Math.PI/3;g.beginPath();g.moveTo(Math.cos(a)*size*.35,Math.sin(a)*size*.35);g.lineTo(Math.cos(a)*size*.85,Math.sin(a)*size*.85);g.stroke()}g.beginPath();g.arc(0,0,size*.22,0,Math.PI*2);g.fill()}
  else if(decal==='star'){g.beginPath();for(let i=0;i<12;i++){let a=i*Math.PI/6,r=i%2?size*.42:size;g.lineTo(Math.cos(a)*r,Math.sin(a)*r)}g.closePath();g.fill()}
  else if(decal==='hexmark'){for(let k of [1,.55]){g.beginPath();for(let i=0;i<6;i++){let a=i*Math.PI/3+Math.PI/6;g.lineTo(Math.cos(a)*size*k,Math.sin(a)*size*k)}g.closePath();g.stroke()}}
+ else if(decal==='crosshair'){g.beginPath();g.arc(0,0,size*.7,0,Math.PI*2);g.stroke();for(let [x,y] of [[1,0],[-1,0],[0,1],[0,-1]]){g.beginPath();g.moveTo(x*size*.35,y*size*.35);g.lineTo(x*size,y*size);g.stroke()}g.beginPath();g.arc(0,0,size*.12,0,Math.PI*2);g.fill()}
+ else if(decal==='sunburst'){g.beginPath();g.arc(0,0,size*.36,0,Math.PI*2);g.fill();for(let i=0;i<12;i++){let a=i*Math.PI/6,r=i%2?.72:1;g.beginPath();g.moveTo(Math.cos(a)*size*.48,Math.sin(a)*size*.48);g.lineTo(Math.cos(a)*size*r,Math.sin(a)*size*r);g.stroke()}}
+ else if(decal==='triad'){for(let i=0;i<3;i++){let a=i*Math.PI*2/3-Math.PI/2;g.beginPath();g.arc(Math.cos(a)*size*.45,Math.sin(a)*size*.45,size*.36,0,Math.PI*2);g.stroke()}g.beginPath();g.arc(0,0,size*.14,0,Math.PI*2);g.fill()}
+ else if(decal==='diamond'){for(let k of [1,.62,.28]){g.beginPath();g.moveTo(0,-size*k);g.lineTo(size*k,0);g.lineTo(0,size*k);g.lineTo(-size*k,0);g.closePath();if(k<.3)g.fill();else g.stroke()}}
+ else if(decal==='petal'){for(let i=0;i<6;i++){let a=i*Math.PI/3;g.beginPath();g.ellipse(Math.cos(a)*size*.5,Math.sin(a)*size*.5,size*.46,size*.2,a,0,Math.PI*2);g.stroke()}g.beginPath();g.arc(0,0,size*.16,0,Math.PI*2);g.fill()}
+ else if(decal==='atom'){for(let i=0;i<3;i++){g.beginPath();g.ellipse(0,0,size,size*.34,i*Math.PI/3,0,Math.PI*2);g.stroke()}g.beginPath();g.arc(0,0,size*.18,0,Math.PI*2);g.fill()}
  g.restore()}
 
 // Inline SVG icons for the marking buttons (same shapes as drawHullDecal).
@@ -34,6 +40,8 @@ function decalSvg(id){let pts=(n,r,off=0)=>Array.from({length:n},(_,i)=>{let a=i
   reactor:'<circle r="5" fill="none" stroke="currentColor" stroke-width=".9"/>'+[0,1,2,3,4,5].map(i=>{let a=i*Math.PI/3;return '<line x1="'+(Math.cos(a)*1.75).toFixed(2)+'" y1="'+(Math.sin(a)*1.75).toFixed(2)+'" x2="'+(Math.cos(a)*4.25).toFixed(2)+'" y2="'+(Math.sin(a)*4.25).toFixed(2)+'" stroke="currentColor" stroke-width=".9"/>'}).join('')+'<circle r="1.1" fill="currentColor"/>',
   star:'<polygon fill="currentColor" points="'+Array.from({length:12},(_,i)=>{let a=i*Math.PI/6,r=i%2?2.1:5;return (Math.cos(a)*r).toFixed(2)+','+(Math.sin(a)*r).toFixed(2)}).join(' ')+'"/>',
   hexmark:'<polygon fill="none" stroke="currentColor" stroke-width=".9" points="'+pts(6,5,Math.PI/6)+'"/><polygon fill="none" stroke="currentColor" stroke-width=".9" points="'+pts(6,2.75,Math.PI/6)+'"/>'}[id];
+ if(!inner&&id!=='none'){// newer shapes: drawn with the same canvas routine as the hull, so the icon always matches
+  try{let cv=document.createElement('canvas');cv.width=cv.height=48;let g=cv.getContext('2d');g.translate(24,24);g.scale(4,4);drawHullDecal(g,id,'#dff6ff',5);return '<img class="decal-ico" alt="" src="'+cv.toDataURL()+'">'}catch(e){return ''}}
  return inner?'<svg viewBox="-6 -6 12 12" class="decal-ico" aria-hidden="true">'+inner+'</svg>':''}
 function renderCosmeticsTop(){let sh=shipState(),pt=sh.paint;
  let schemes='<div class="cos-schemes">'+shipSchemes.map(sc=>{let ok=sc.need(),p=sc.p;return '<button class="cos-scheme'+(pt.scheme===sc.id?' on':'')+'" data-cos-scheme="'+sc.id+'" '+(ok?'':'disabled')+' title="'+esc(sc.how)+'"><i style="--a:'+(p.hull||'#65fbd2')+';--b:'+(p.accent||p.hull||'#65fbd2')+'"></i><b>'+esc(sc.name)+'</b><small>'+(ok?(pt.scheme===sc.id?'Applied':'Earned'):'🔒 '+esc(sc.how))+'</small></button>'}).join('')+'</div>';
@@ -41,11 +49,13 @@ function renderCosmeticsTop(){let sh=shipState(),pt=sh.paint;
  let decal='<div class="trail-pick cos-pick">'+shipDecals.map(d=>'<button data-cos-decal="'+d.id+'" aria-pressed="'+((pt.decal||'none')===d.id)+'">'+decalSvg(d.id)+d.name+'</button>').join('')+'</div>';
  let looks=partSlots.filter(q=>q.id!=='reactor').map(q=>{let eq=equippedPart(q.id),cur=pt.look?.[q.id]||'',opts=shipParts.filter(d=>d.slot===q.id&&partState().owned[d.id]);return '<label class="cos-look"><span>'+q.name+'</span><select data-cos-look="'+q.id+'"><option value="">As equipped ('+esc(eq.name)+')</option>'+opts.filter(d=>d.id!==eq.id).map(d=>'<option value="'+d.id+'"'+(cur===d.id?' selected':'')+'>Look like '+esc(d.name)+'</option>').join('')+'</select></label>'}).join('');
  return '<h4>Paint schemes</h4><p class="fine">Earned by playing. A scheme sets colours, finish, pattern and markings in one tap; change any of it afterwards.</p>'+schemes+
-  '<h4>Finish</h4>'+finish+'<p class="fine">Shown on the 3D ship; in flight it adds a subtle sheen or a darker, flatter look.</p><h4>Squadron markings</h4>'+decal+
+  '<h4>In-flight look</h4><div class="trail-pick cos-pick"><button data-cos-inflight="hangar" aria-pressed="'+(pt.inflight!=='neon')+'">Hangar model</button><button data-cos-inflight="neon" aria-pressed="'+(pt.inflight==='neon')+'">Classic neon</button></div><p class="fine">Hangar model flies the ship as it looks here: real materials, lights and engines glowing. Classic neon outlines the whole ship in your colour.</p>'+
+  '<h4>Finish</h4>'+finish+'<p class="fine">Repaints the hull: Gloss and Satin in your hull colour, Matte nearly black, Chrome silver. In the hangar and in flight.</p><h4>Squadron markings</h4>'+decal+
   '<h4>Part appearance</h4><p class="fine">Show another part you own in a slot. Stats always come from the equipped part.</p><div class="cos-looks">'+looks+'</div>'}
-function cosmeticsClick(e){let t=e.target.closest('[data-cos-scheme],[data-cos-finish],[data-cos-decal]');if(!t||!t.closest('#pilotPicker'))return;let pt=shipState().paint;
+function cosmeticsClick(e){let t=e.target.closest('[data-cos-scheme],[data-cos-finish],[data-cos-decal],[data-cos-inflight]');if(!t||!t.closest('#pilotPicker'))return;let pt=shipState().paint;
  if(t.dataset.cosScheme){if(applyScheme(t.dataset.cosScheme)){bayBurst(readableColour(pt.hull||bayPilot().color),26);sound('reward')}}
  else if(t.dataset.cosFinish){pt.finish=t.dataset.cosFinish;pt.scheme='';saveHangar();sound('ui')}
+ else if(t.dataset.cosInflight){pt.inflight=t.dataset.cosInflight;saveHangar();sound('ui')}
  else if(t.dataset.cosDecal){pt.decal=t.dataset.cosDecal;pt.scheme='';saveHangar();sound('ui')}
  e.preventDefault();e.stopPropagation();renderPreflight()}
 function cosmeticsChange(e){let t=e.target;if(!t.dataset||t.dataset.cosLook===undefined||!t.closest('#pilotPicker'))return;let pt=shipState().paint;pt.look=pt.look||{};if(t.value)pt.look[t.dataset.cosLook]=t.value;else delete pt.look[t.dataset.cosLook];saveHangar();renderPreflight()}

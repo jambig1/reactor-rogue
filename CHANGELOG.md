@@ -166,10 +166,11 @@
 
 ### Cosmetics
 
+- **In flight your ship now looks like the hangar model**: gunmetal panels with the model's real shading, your finish on the painted panels, dark panel seams and stencils, and neon only where the model actually glows (guidance lights, part lights, engines), plus a faint rim so you can always find your ship. The old all-neon look is still available under Appearance → In-flight look → Classic neon.
 - **Paint schemes** you earn by playing: Neon Expanse, Storm Relay and Solar Throne (beat a boss there), Phantom Armada (find the Phantom Drive), Veteran (ship level 15), Reactor Ace (25 reactor bosses), Shipwright (collect 50% of parts) and a livery for each class keystone. One tap sets colours, finish, pattern, markings and trail; tweak anything afterwards. Locked schemes say how to earn them.
 - **Accent colour**: part lights in their own colour, separate from your hull neon (Appearance → Accent, or Part lights → Accent colour). Shows on the 3D fittings and the fitted parts' outline in flight.
-- **Finishes**: Factory, Gloss, Satin, Matte or Chrome on the 3D ship; in flight a subtle sheen or a darker, flatter look.
-- **Squadron markings**: Roundel, Reactor, Star or Hex mark, painted on the hull in the hangar and in flight.
+- **Finishes** that repaint the hull: Gloss (bright paint in your hull colour), Satin (softer, pastel), Matte (nearly black, flat), Chrome (silver, reflective) or Factory, in the hangar and in flight.
+- **Squadron markings**: Roundel, Reactor, Star, Hex mark, Crosshair, Sunburst, Triad, Diamond, Petal or Atom, laid on the wings in the hangar and on the hull in flight.
 - **Part appearance**: show another part you own in a slot (or keep it plain) while the equipped part keeps its stats and signature.
 - Colours are kept bright enough to read against the arena. Loadouts save all of it.
 
