@@ -30,7 +30,8 @@ function shipRecorder(){let M=[1,0,0,1,0,0],stack=[],path=[],sub=null,filled=nul
  return {ctx:c,out}}
 function recordShip3D(pilot){let R=shipRecorder(),p={...pilot,pattern:'none'};try{drawIdentityHull(p,0,shipPainter(R.ctx),{preview:true,pilot:p,items:{},hullFace:0,face:0,dashTime:0,boostTime:0,ambushTime:0,phaseTime:0,flightVisual:{heading:0,thrust:0}})}catch(e){}
  let rec={shapes:R.out.shapes,lines:R.out.lines,color:p.color,trail:shipState().paint.trailColor||p.color,engines:[],pattern:pilot.pattern||'none',patternColor:pilot.patternColor||p.color,accent:pilot.accent||'',finish:pilot.finish||'factory',decal:pilot.decal||'none'};
- if(rec.pattern!=='none'||rec.decal!=='none'){let cv=document.createElement('canvas');cv.width=cv.height=512;let g=cv.getContext('2d');g.fillStyle='#25394c';g.fillRect(0,0,512,512);g.translate(256,256);g.scale(8,8);if(rec.pattern!=='none')drawHullPattern(g,[[-32,-32],[32,-32],[32,32],[-32,32]],rec.pattern,rec.patternColor);if(rec.decal!=='none')for(let x of [-11,11])g.save(),g.translate(x,2),drawHullDecal(g,rec.decal,rec.accent||rec.patternColor||rec.color,4.2),g.restore();rec.patternCanvas=cv}
+ if(rec.pattern!=='none'){let cv=document.createElement('canvas');cv.width=cv.height=512;let g=cv.getContext('2d');g.fillStyle='#25394c';g.fillRect(0,0,512,512);g.translate(256,256);g.scale(8,8);drawHullPattern(g,[[-32,-32],[32,-32],[32,32],[-32,32]],rec.pattern,rec.patternColor);rec.patternCanvas=cv}
+ if(rec.decal!=='none'){let cv=document.createElement('canvas');cv.width=cv.height=128;let g=cv.getContext('2d');g.translate(64,64);g.scale(10.5,10.5);g.shadowColor='#000';g.shadowBlur=6;drawHullDecal(g,rec.decal,rec.accent||rec.patternColor||rec.color,5.2);rec.decalCanvas=cv}
  try{let d=partOn(p,'engine');if(d){for(let nz of engineGeo(p,d.id).nozzles)rec.engines.push([-nz.y,nz.x,nz.w*1.2])}else{let M=hullMetrics(hullShapeOf(p)),y=p.id==='bastion'?16:9;rec.engines.push([-M.maxY+2,-y,2.2],[-M.maxY+2,y,2.2])}}catch(e){}
  return rec}
 const bay3d={state:'',ship:null,canvas:null,off:false};
@@ -41,7 +42,7 @@ function bay3dDraw(c,f){let S=bay3d.ship;
  if(bay3d.state==='loading'&&bay3dWanted()){bay3d.waiting=true;if(bay3d.canvas)bay3d.canvas.style.display='none';return true}
  if(bay3d.state!=='ready'||!S||S.lost||!bay3dWanted()){if(bay3d.canvas)bay3d.canvas.style.display='none';return false}
  let cv=bay3d.canvas;if(cv.parentNode!==c.parentNode)c.parentNode.insertBefore(cv,c.nextSibling);cv.style.display='block';
- let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor]);if(key!==bay3d.key){
+ let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor,p.accent,p.finish,p.decal]);if(key!==bay3d.key){
    let previous=bay3d.key&&JSON.parse(bay3d.key);
    if(!previous||previous[0]!==p.id||JSON.stringify(previous[2])!==JSON.stringify(p.parts)){
      bayFx.rot=bayFx.pitch=bayFx.rotVel=bayFx.pitchVel=bayFx.roll=0;
@@ -61,7 +62,7 @@ function bay3dDraw(c,f){let S=bay3d.ship;
 // True while the hangar's 3D ship hasn't arrived yet: nothing ship-attached (trail, build effects) should show.
 function bayShipWaiting(){return bay3dWanted()&&(bay3d.state==='loading'||(bay3d.state==='ready'&&!!bay3d.ship&&(bay3d.ship.pending||bay3d.waiting)))}
 // Once the 3D engine is up, hand it the current ship so its model downloads and builds before the hangar opens.
-function bay3dWarm(){if(bay3d.state==='loading'){setTimeout(bay3dWarm,150);return}let S=bay3d.ship;if(bay3d.state!=='ready'||!S||bay3d.key)return;try{let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor]);bay3d.key=key;S.setShip(key,recordShip3D(p))}catch(e){}}
+function bay3dWarm(){if(bay3d.state==='loading'){setTimeout(bay3dWarm,150);return}let S=bay3d.ship;if(bay3d.state!=='ready'||!S||bay3d.key)return;try{let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor,p.accent,p.finish,p.decal]);bay3d.key=key;S.setShip(key,recordShip3D(p))}catch(e){}}
 // Start downloading the current ship's hangar model while the player is still on the menu.
 function prefetchHangarShip(){try{preloadBakedShip(bayPilot())}catch(e){}if(!bay3dWanted()||bay3d.prefetched)return;bay3d.prefetched=1;try{bay3dStart();bay3dWarm()}catch(e){}try{let p=bayPilot();import('./ship3d-blender.js').then(m=>{if(!m.hasBlenderShip(p.id))return;m.loadBlenderShip(p.id).catch(()=>{});for(let slot of m.fittingSlots(p.parts||{}))m.loadBlenderFittings(p.id,slot).catch(()=>{})}).catch(()=>{})}catch(e){}}
 if(typeof window!=='undefined'&&typeof setTimeout==='function'&&typeof document!=='undefined'&&document.readyState!==undefined)setTimeout(()=>{try{prefetchHangarShip()}catch(e){}},1500);

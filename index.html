@@ -1446,7 +1446,7 @@ function bakedImage(pilot,pieces,key){let hit=bakedHullCache.get(key);if(hit)ret
  for(let p of pieces){let sp=bakedSprite(p);
   if(sp){let [bx0,by0,bx1,by1]=p.img.box,bw=bx1-bx0,bh=by1-by0;g.drawImage(sp,bx0,by0,bw,bh);
    // the original neon look: dark navy-steel body (keeping the rendered shading), colour only as neon lines
-   g.save();path(p.body);g.clip('evenodd');g.globalCompositeOperation='color';g.fillStyle='#2a4660';g.fillRect(bx0,by0,bw,bh);g.globalCompositeOperation='multiply';g.globalAlpha=.9;g.fillStyle='#3a5068';g.fillRect(bx0,by0,bw,bh);g.restore();
+   g.save();path(p.body);g.clip('evenodd');for(let [op,col,al] of finishBody(pilot.finish,c)){g.globalCompositeOperation=op;g.globalAlpha=al;if(col==='sheen'){let sh=g.createLinearGradient(bx0,by0,bx1,by1);sh.addColorStop(0,'#ffffff00');sh.addColorStop(.45,'#ffffff');sh.addColorStop(.55,'#ffffff00');g.fillStyle=sh}else g.fillStyle=col;g.fillRect(bx0,by0,bw,bh)}g.restore();
    if(p.canopy){let gr=g.createLinearGradient(0,by0,0,by1);gr.addColorStop(0,'#eafcff');gr.addColorStop(.3,'#7fe6ff');gr.addColorStop(1,'#1a5a78');g.save();g.shadowColor='#9ff0ff';g.shadowBlur=1.6*S;fill(p.canopy,gr);g.restore();
     g.save();path(p.canopy);g.clip('evenodd');g.fillStyle='#ffffffb0';g.beginPath();for(let l of p.canopy){let cx=0,cy=0;for(let [x,y] of l){cx+=x;cy+=y}cx/=l.length;cy/=l.length;g.ellipse(cx-.6,cy-1.6,.7,1.6,0,0,TAU)}g.fill();g.restore();
     g.save();g.strokeStyle=c;g.lineWidth=.55;g.shadowColor=c;g.shadowBlur=.8*S;path(p.canopy);g.stroke();g.restore()}
@@ -1475,9 +1475,8 @@ function bakedImage(pilot,pieces,key){let hit=bakedHullCache.get(key);if(hit)ret
   if(p.glow){g.save();g.shadowColor=c;g.shadowBlur=2*S;fill(p.glow,c);fill(p.glow,'#ffffff',.35);g.restore()}
   g.save();path(p.body);g.clip('evenodd');g.strokeStyle='#ffffff26';g.lineWidth=.9;path(p.body);g.stroke();g.restore();
   if(p!==pieces[0]){g.strokeStyle='#02060c';g.globalAlpha=.6;g.lineWidth=.35;path(p.body);g.stroke();g.globalAlpha=1}}
- // v1.7 cosmetics: finish sheen/flattening and a squadron marking on the core, clipped to the ship itself.
- if(pilot.finish&&pilot.finish!=='factory'){g.save();g.globalCompositeOperation='source-atop';g.globalAlpha={gloss:.06,satin:.04,matte:.22,chrome:.12}[pilot.finish]||0;g.fillStyle=pilot.finish==='matte'?'#000':'#fff';g.fillRect(x0-P,y0-P,x1-x0+P*2,y1-y0+P*2);g.restore()}
- if(pilot.decal&&pilot.decal!=='none'){let core=pieces.find(p=>p.__core);if(core){let a=1e9,b=1e9,cc=-1e9,d=-1e9;for(let l of core.body)for(let [x,y] of l){a=Math.min(a,x);b=Math.min(b,y);cc=Math.max(cc,x);d=Math.max(d,y)}g.save();g.globalCompositeOperation='source-atop';g.translate((a+cc)/2,(b+d)/2);drawHullDecal(g,pilot.decal,pilot.accent||pilot.patternColor||c,Math.min(cc-a,d-b)*.16);g.restore()}}
+ // v1.7 cosmetics: a squadron marking on the core, clipped to the ship itself (the finish is applied to the body above).
+ if(pilot.decal&&pilot.decal!=='none'){let core=pieces.find(p=>p.__core);if(core){let a=1e9,b=1e9,cc=-1e9,d=-1e9;for(let l of core.body)for(let [x,y] of l){a=Math.min(a,x);b=Math.min(b,y);cc=Math.max(cc,x);d=Math.max(d,y)}g.save();g.globalCompositeOperation='source-atop';g.translate((a+cc)/2,(b+d)/2);g.shadowColor='#000';g.shadowBlur=1.2*S;drawHullDecal(g,pilot.decal,pilot.accent||pilot.patternColor||c,Math.min(cc-a,d-b)*.3);g.restore()}}
  if(pieces.some(p=>bakedSprite(p))){g.save();g.shadowBlur=1.3*S*glow;g.globalAlpha=1;g.lineWidth=1.25;g.lineJoin='round';for(let p of pieces){g.shadowColor=g.strokeStyle=nc(p);path(p.body);g.stroke()}g.restore()}
  hit={cv,x:x0-P,y:y0-P,S};bakedHullCache.set(key,hit);if(bakedHullCache.size>48)bakedHullCache.delete(bakedHullCache.keys().next().value);return hit}
 function bakedHullImage(pilot){let B=hullBake(pilot.id);if(!B||!B.core)return null;if(B.stock.engine&&!B.stock.engine.outlets)B.stock.engine.outlets=B.outlets;else if(!B.stock.engine&&!B.core.outlets)B.core.outlets=B.outlets;let pt=pilot.parts||{};B.core.__core=true;
@@ -1573,6 +1572,16 @@ let weaponArtAtlas=null;if(typeof Image!=='undefined'){weaponArtAtlas=new Image(
 const attackArtFamilies={bolt:'needle',rapid:'repeater',scatter:'pellet',arc:'disc',mines:'mine',gravity:'gravity',singularity:'void',cannon:'shell',rocket:'missile',seeker:'drone',nova:'pulse',chain:'lightning',blade:'blade',toxic:'corrosion',frost:'crystal',laser:'beam',harpoon:'tether',ember:'wake',prism:'satellite',scrap:'shrapnel',buoy:'pylon',saw:'saw',mortar:'bombardment',nanite:'swarm',phaseTorp:'torpedo',sonic:'pressure',rail:'rail',flak:'flak',crescent:'crescent',fence:'fence',leech:'siphon',cryoCharge:'cryoMine',ram:'ram',sails:'solar',voidSeed:'seed',stasisNet:'net',spire:'storm',echoRing:'echo',crossfire:'crossfire',rupture:'drill',ionGuard:'guardian',plasmaRain:'plasma',prismTrace:'tracer',cometAxe:'scythe',ionCurtain:'curtain',corona:'aura',plasmaWhip:'lash',twinWisps:'binary'};
 const attackAtlasRegions={bolt:[120,286,394,81],missile:[762,240,355,177],scythe:[179,769,311,338],guardian:[803,822,275,236]};
 let attackArt={tracks:new WeakMap,impacts:[],muzzles:[],sprites:0,fields:0,details:0,repair:0,repairWait:0,repairLife:0,shieldHits:[],shieldReform:0,shieldPrevious:0,reactions:new WeakMap,kick:0,kickAngle:0,kickWait:0,contactWait:0};
+// Body colour treatment per finish for the combat sprite: blend steps [operation, colour, alpha] over the rendered
+// shading. Factory keeps the original navy steel; Gloss/Satin paint the body in the hull colour (Gloss brighter, with a
+// sheen); Matte goes flat near-black; Chrome goes bright silver with a sheen.
+function finishBody(finish,c){let mix=(a,b,t)=>{let pa=parseInt(a.slice(1),16),pb=parseInt(b.slice(1),16),r=k=>Math.round(((pa>>k)&255)*(1-t)+((pb>>k)&255)*t);return '#'+[16,8,0].map(k=>r(k).toString(16).padStart(2,'0')).join('')},hex=/^#[0-9a-f]{6}$/i.test(c)?c:'#65f7ef';
+ if(finish==='gloss')return [['color',hex,1],['screen',mix(hex,'#000000',.4),.8],['screen','sheen',.32]];
+ if(finish==='satin')return [['color',hex,1],['screen',mix(hex,'#000000',.68),.55]];
+ if(finish==='matte')return [['color','#2a3038',1],['multiply','#3c424a',1]];
+ if(finish==='chrome')return [['color','#8f9aa6',1],['screen','#a9b4bf',.85],['screen','sheen',.45]];
+ return [['color','#2a4660',1],['multiply','#3a5068',.9]]}
+
 function resetAttackArt(){attackArt={tracks:new WeakMap,impacts:[],muzzles:[],sprites:0,fields:0,details:0,repair:0,repairWait:0,repairLife:0,shieldHits:[],shieldReform:0,shieldPrevious:0,reactions:new WeakMap,kick:0,kickAngle:0,kickWait:0,contactWait:0}}
 function resetAttackArtFrame(){attackArt.sprites=0;attackArt.fields=0;attackArt.details=0}
 function attackArtDetailed(){return graphicsDetailed()&&!(graphics.preset==='auto'&&graphicsCrowd.active)}
@@ -3146,7 +3155,8 @@ function shipRecorder(){let M=[1,0,0,1,0,0],stack=[],path=[],sub=null,filled=nul
  return {ctx:c,out}}
 function recordShip3D(pilot){let R=shipRecorder(),p={...pilot,pattern:'none'};try{drawIdentityHull(p,0,shipPainter(R.ctx),{preview:true,pilot:p,items:{},hullFace:0,face:0,dashTime:0,boostTime:0,ambushTime:0,phaseTime:0,flightVisual:{heading:0,thrust:0}})}catch(e){}
  let rec={shapes:R.out.shapes,lines:R.out.lines,color:p.color,trail:shipState().paint.trailColor||p.color,engines:[],pattern:pilot.pattern||'none',patternColor:pilot.patternColor||p.color,accent:pilot.accent||'',finish:pilot.finish||'factory',decal:pilot.decal||'none'};
- if(rec.pattern!=='none'||rec.decal!=='none'){let cv=document.createElement('canvas');cv.width=cv.height=512;let g=cv.getContext('2d');g.fillStyle='#25394c';g.fillRect(0,0,512,512);g.translate(256,256);g.scale(8,8);if(rec.pattern!=='none')drawHullPattern(g,[[-32,-32],[32,-32],[32,32],[-32,32]],rec.pattern,rec.patternColor);if(rec.decal!=='none')for(let x of [-11,11])g.save(),g.translate(x,2),drawHullDecal(g,rec.decal,rec.accent||rec.patternColor||rec.color,4.2),g.restore();rec.patternCanvas=cv}
+ if(rec.pattern!=='none'){let cv=document.createElement('canvas');cv.width=cv.height=512;let g=cv.getContext('2d');g.fillStyle='#25394c';g.fillRect(0,0,512,512);g.translate(256,256);g.scale(8,8);drawHullPattern(g,[[-32,-32],[32,-32],[32,32],[-32,32]],rec.pattern,rec.patternColor);rec.patternCanvas=cv}
+ if(rec.decal!=='none'){let cv=document.createElement('canvas');cv.width=cv.height=128;let g=cv.getContext('2d');g.translate(64,64);g.scale(10.5,10.5);g.shadowColor='#000';g.shadowBlur=6;drawHullDecal(g,rec.decal,rec.accent||rec.patternColor||rec.color,5.2);rec.decalCanvas=cv}
  try{let d=partOn(p,'engine');if(d){for(let nz of engineGeo(p,d.id).nozzles)rec.engines.push([-nz.y,nz.x,nz.w*1.2])}else{let M=hullMetrics(hullShapeOf(p)),y=p.id==='bastion'?16:9;rec.engines.push([-M.maxY+2,-y,2.2],[-M.maxY+2,y,2.2])}}catch(e){}
  return rec}
 const bay3d={state:'',ship:null,canvas:null,off:false};
@@ -3157,7 +3167,7 @@ function bay3dDraw(c,f){let S=bay3d.ship;
  if(bay3d.state==='loading'&&bay3dWanted()){bay3d.waiting=true;if(bay3d.canvas)bay3d.canvas.style.display='none';return true}
  if(bay3d.state!=='ready'||!S||S.lost||!bay3dWanted()){if(bay3d.canvas)bay3d.canvas.style.display='none';return false}
  let cv=bay3d.canvas;if(cv.parentNode!==c.parentNode)c.parentNode.insertBefore(cv,c.nextSibling);cv.style.display='block';
- let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor]);if(key!==bay3d.key){
+ let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor,p.accent,p.finish,p.decal]);if(key!==bay3d.key){
    let previous=bay3d.key&&JSON.parse(bay3d.key);
    if(!previous||previous[0]!==p.id||JSON.stringify(previous[2])!==JSON.stringify(p.parts)){
      bayFx.rot=bayFx.pitch=bayFx.rotVel=bayFx.pitchVel=bayFx.roll=0;
@@ -3177,7 +3187,7 @@ function bay3dDraw(c,f){let S=bay3d.ship;
 // True while the hangar's 3D ship hasn't arrived yet: nothing ship-attached (trail, build effects) should show.
 function bayShipWaiting(){return bay3dWanted()&&(bay3d.state==='loading'||(bay3d.state==='ready'&&!!bay3d.ship&&(bay3d.ship.pending||bay3d.waiting)))}
 // Once the 3D engine is up, hand it the current ship so its model downloads and builds before the hangar opens.
-function bay3dWarm(){if(bay3d.state==='loading'){setTimeout(bay3dWarm,150);return}let S=bay3d.ship;if(bay3d.state!=='ready'||!S||bay3d.key)return;try{let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor]);bay3d.key=key;S.setShip(key,recordShip3D(p))}catch(e){}}
+function bay3dWarm(){if(bay3d.state==='loading'){setTimeout(bay3dWarm,150);return}let S=bay3d.ship;if(bay3d.state!=='ready'||!S||bay3d.key)return;try{let p=bayPilot(),key=JSON.stringify([p.id,p.color,p.parts,p.partTint,p.glow,shipState().paint.trailColor,p.pattern,p.patternColor,p.accent,p.finish,p.decal]);bay3d.key=key;S.setShip(key,recordShip3D(p))}catch(e){}}
 // Start downloading the current ship's hangar model while the player is still on the menu.
 function prefetchHangarShip(){try{preloadBakedShip(bayPilot())}catch(e){}if(!bay3dWanted()||bay3d.prefetched)return;bay3d.prefetched=1;try{bay3dStart();bay3dWarm()}catch(e){}try{let p=bayPilot();import('./ship3d-blender.js').then(m=>{if(!m.hasBlenderShip(p.id))return;m.loadBlenderShip(p.id).catch(()=>{});for(let slot of m.fittingSlots(p.parts||{}))m.loadBlenderFittings(p.id,slot).catch(()=>{})}).catch(()=>{})}catch(e){}}
 if(typeof window!=='undefined'&&typeof setTimeout==='function'&&typeof document!=='undefined'&&document.readyState!==undefined)setTimeout(()=>{try{prefetchHangarShip()}catch(e){}},1500);
@@ -6815,7 +6825,7 @@ Object.assign(nodeTags,{i_ghost:['dash','close'],i_tempo:['dash','aggressive'],i
 // markings and part appearance overrides. Cosmetic only: nothing here touches stats. Stored in hangar.ship.paint:
 // accent, finish, decal, look {slot: partId}, scheme. The 3D bay, the in-run ship and loadouts all read it.
 const shipFinishes=[{id:'factory',name:'Factory'},{id:'gloss',name:'Gloss'},{id:'satin',name:'Satin'},{id:'matte',name:'Matte'},{id:'chrome',name:'Chrome'}];
-const shipDecals=[{id:'none',name:'None'},{id:'roundel',name:'Roundel'},{id:'reactor',name:'Reactor'},{id:'star',name:'Star'},{id:'hexmark',name:'Hex mark'}];
+const shipDecals=[{id:'none',name:'None'},{id:'roundel',name:'Roundel'},{id:'reactor',name:'Reactor'},{id:'star',name:'Star'},{id:'hexmark',name:'Hex mark'},{id:'crosshair',name:'Crosshair'},{id:'sunburst',name:'Sunburst'},{id:'triad',name:'Triad'},{id:'diamond',name:'Diamond'},{id:'petal',name:'Petal'},{id:'atom',name:'Atom'}];
 // Schemes set a whole livery at once. `need` returns true when earned; `how` says how to earn it.
 const shipSchemes=[
  {id:'factory',name:'Factory',p:{hull:'',accent:'',pattern:'none',finish:'factory',decal:'none',trail:'standard',trailColor:''},how:'Always available',need:()=>true},
@@ -6839,6 +6849,12 @@ function drawHullDecal(g,decal,c,size=5){if(!decal||decal==='none')return;g.save
  else if(decal==='reactor'){g.beginPath();g.arc(0,0,size,0,Math.PI*2);g.stroke();for(let i=0;i<6;i++){let a=i*Math.PI/3;g.beginPath();g.moveTo(Math.cos(a)*size*.35,Math.sin(a)*size*.35);g.lineTo(Math.cos(a)*size*.85,Math.sin(a)*size*.85);g.stroke()}g.beginPath();g.arc(0,0,size*.22,0,Math.PI*2);g.fill()}
  else if(decal==='star'){g.beginPath();for(let i=0;i<12;i++){let a=i*Math.PI/6,r=i%2?size*.42:size;g.lineTo(Math.cos(a)*r,Math.sin(a)*r)}g.closePath();g.fill()}
  else if(decal==='hexmark'){for(let k of [1,.55]){g.beginPath();for(let i=0;i<6;i++){let a=i*Math.PI/3+Math.PI/6;g.lineTo(Math.cos(a)*size*k,Math.sin(a)*size*k)}g.closePath();g.stroke()}}
+ else if(decal==='crosshair'){g.beginPath();g.arc(0,0,size*.7,0,Math.PI*2);g.stroke();for(let [x,y] of [[1,0],[-1,0],[0,1],[0,-1]]){g.beginPath();g.moveTo(x*size*.35,y*size*.35);g.lineTo(x*size,y*size);g.stroke()}g.beginPath();g.arc(0,0,size*.12,0,Math.PI*2);g.fill()}
+ else if(decal==='sunburst'){g.beginPath();g.arc(0,0,size*.36,0,Math.PI*2);g.fill();for(let i=0;i<12;i++){let a=i*Math.PI/6,r=i%2?.72:1;g.beginPath();g.moveTo(Math.cos(a)*size*.48,Math.sin(a)*size*.48);g.lineTo(Math.cos(a)*size*r,Math.sin(a)*size*r);g.stroke()}}
+ else if(decal==='triad'){for(let i=0;i<3;i++){let a=i*Math.PI*2/3-Math.PI/2;g.beginPath();g.arc(Math.cos(a)*size*.45,Math.sin(a)*size*.45,size*.36,0,Math.PI*2);g.stroke()}g.beginPath();g.arc(0,0,size*.14,0,Math.PI*2);g.fill()}
+ else if(decal==='diamond'){for(let k of [1,.62,.28]){g.beginPath();g.moveTo(0,-size*k);g.lineTo(size*k,0);g.lineTo(0,size*k);g.lineTo(-size*k,0);g.closePath();if(k<.3)g.fill();else g.stroke()}}
+ else if(decal==='petal'){for(let i=0;i<6;i++){let a=i*Math.PI/3;g.beginPath();g.ellipse(Math.cos(a)*size*.5,Math.sin(a)*size*.5,size*.46,size*.2,a,0,Math.PI*2);g.stroke()}g.beginPath();g.arc(0,0,size*.16,0,Math.PI*2);g.fill()}
+ else if(decal==='atom'){for(let i=0;i<3;i++){g.beginPath();g.ellipse(0,0,size,size*.34,i*Math.PI/3,0,Math.PI*2);g.stroke()}g.beginPath();g.arc(0,0,size*.18,0,Math.PI*2);g.fill()}
  g.restore()}
 
 // Inline SVG icons for the marking buttons (same shapes as drawHullDecal).
@@ -6847,6 +6863,8 @@ function decalSvg(id){let pts=(n,r,off=0)=>Array.from({length:n},(_,i)=>{let a=i
   reactor:'<circle r="5" fill="none" stroke="currentColor" stroke-width=".9"/>'+[0,1,2,3,4,5].map(i=>{let a=i*Math.PI/3;return '<line x1="'+(Math.cos(a)*1.75).toFixed(2)+'" y1="'+(Math.sin(a)*1.75).toFixed(2)+'" x2="'+(Math.cos(a)*4.25).toFixed(2)+'" y2="'+(Math.sin(a)*4.25).toFixed(2)+'" stroke="currentColor" stroke-width=".9"/>'}).join('')+'<circle r="1.1" fill="currentColor"/>',
   star:'<polygon fill="currentColor" points="'+Array.from({length:12},(_,i)=>{let a=i*Math.PI/6,r=i%2?2.1:5;return (Math.cos(a)*r).toFixed(2)+','+(Math.sin(a)*r).toFixed(2)}).join(' ')+'"/>',
   hexmark:'<polygon fill="none" stroke="currentColor" stroke-width=".9" points="'+pts(6,5,Math.PI/6)+'"/><polygon fill="none" stroke="currentColor" stroke-width=".9" points="'+pts(6,2.75,Math.PI/6)+'"/>'}[id];
+ if(!inner&&id!=='none'){// newer shapes: drawn with the same canvas routine as the hull, so the icon always matches
+  try{let cv=document.createElement('canvas');cv.width=cv.height=48;let g=cv.getContext('2d');g.translate(24,24);g.scale(4,4);drawHullDecal(g,id,'#dff6ff',5);return '<img class="decal-ico" alt="" src="'+cv.toDataURL()+'">'}catch(e){return ''}}
  return inner?'<svg viewBox="-6 -6 12 12" class="decal-ico" aria-hidden="true">'+inner+'</svg>':''}
 function renderCosmeticsTop(){let sh=shipState(),pt=sh.paint;
  let schemes='<div class="cos-schemes">'+shipSchemes.map(sc=>{let ok=sc.need(),p=sc.p;return '<button class="cos-scheme'+(pt.scheme===sc.id?' on':'')+'" data-cos-scheme="'+sc.id+'" '+(ok?'':'disabled')+' title="'+esc(sc.how)+'"><i style="--a:'+(p.hull||'#65fbd2')+';--b:'+(p.accent||p.hull||'#65fbd2')+'"></i><b>'+esc(sc.name)+'</b><small>'+(ok?(pt.scheme===sc.id?'Applied':'Earned'):'🔒 '+esc(sc.how))+'</small></button>'}).join('')+'</div>';
@@ -6854,7 +6872,7 @@ function renderCosmeticsTop(){let sh=shipState(),pt=sh.paint;
  let decal='<div class="trail-pick cos-pick">'+shipDecals.map(d=>'<button data-cos-decal="'+d.id+'" aria-pressed="'+((pt.decal||'none')===d.id)+'">'+decalSvg(d.id)+d.name+'</button>').join('')+'</div>';
  let looks=partSlots.filter(q=>q.id!=='reactor').map(q=>{let eq=equippedPart(q.id),cur=pt.look?.[q.id]||'',opts=shipParts.filter(d=>d.slot===q.id&&partState().owned[d.id]);return '<label class="cos-look"><span>'+q.name+'</span><select data-cos-look="'+q.id+'"><option value="">As equipped ('+esc(eq.name)+')</option>'+opts.filter(d=>d.id!==eq.id).map(d=>'<option value="'+d.id+'"'+(cur===d.id?' selected':'')+'>Look like '+esc(d.name)+'</option>').join('')+'</select></label>'}).join('');
  return '<h4>Paint schemes</h4><p class="fine">Earned by playing. A scheme sets colours, finish, pattern and markings in one tap; change any of it afterwards.</p>'+schemes+
-  '<h4>Finish</h4>'+finish+'<p class="fine">Shown on the 3D ship; in flight it adds a subtle sheen or a darker, flatter look.</p><h4>Squadron markings</h4>'+decal+
+  '<h4>Finish</h4>'+finish+'<p class="fine">Repaints the hull: Gloss and Satin in your hull colour, Matte nearly black, Chrome silver. In the hangar and in flight.</p><h4>Squadron markings</h4>'+decal+
   '<h4>Part appearance</h4><p class="fine">Show another part you own in a slot. Stats always come from the equipped part.</p><div class="cos-looks">'+looks+'</div>'}
 function cosmeticsClick(e){let t=e.target.closest('[data-cos-scheme],[data-cos-finish],[data-cos-decal]');if(!t||!t.closest('#pilotPicker'))return;let pt=shipState().paint;
  if(t.dataset.cosScheme){if(applyScheme(t.dataset.cosScheme)){bayBurst(readableColour(pt.hull||bayPilot().color),26);sound('reward')}}

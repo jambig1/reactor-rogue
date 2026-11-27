@@ -13,5 +13,6 @@ assert.equal(run('s.pilot.parts.engine'),'e_fusion','the run shows the chosen lo
 assert.equal(run('s.pilot.finish'),'chrome');assert.equal(run('s.pilot.decal'),'star');assert.equal(run('s.pilot.partTint'),'accent');assert.equal(run('s.pilot.accent'),'#ff00aa');
 assert.equal(run(`partTintMode(s.pilot)`),'accent:#ff00aa');assert.equal(run(`partAccent(s.pilot,shipParts.find(x=>x.id==='e_nova'))`),'#ff00aa');
 run(`shipState().paint.look={engine:'e_twin'};state='menu';s=null;start()`);assert.notEqual(run('s.pilot.parts.engine'),'e_twin','cannot show a part you do not own');
+for(let f of ['gloss','satin','matte','chrome'])assert.notEqual(run(`JSON.stringify(finishBody('${f}','#ff6a8e'))`),run(`JSON.stringify(finishBody('factory','#ff6a8e'))`),f+' changes the combat body');assert.equal(run(`shipDecals.length`),11,'ten markings plus none');
 run(`state='menu';s=null`);console.log('PASS cosmetics: earned schemes, readable colours, accent/finish/decal in the run, look overrides cosmetic only');}
 eval(fs.readFileSync(require('path').join(__dirname,'TEST-MENUS.cjs'),'utf8').split('\n').slice(0,5).join('\n')+'\n;('+main.toString()+')();');

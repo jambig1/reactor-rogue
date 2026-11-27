@@ -24,7 +24,7 @@ function bakedImage(pilot,pieces,key){let hit=bakedHullCache.get(key);if(hit)ret
  for(let p of pieces){let sp=bakedSprite(p);
   if(sp){let [bx0,by0,bx1,by1]=p.img.box,bw=bx1-bx0,bh=by1-by0;g.drawImage(sp,bx0,by0,bw,bh);
    // the original neon look: dark navy-steel body (keeping the rendered shading), colour only as neon lines
-   g.save();path(p.body);g.clip('evenodd');g.globalCompositeOperation='color';g.fillStyle='#2a4660';g.fillRect(bx0,by0,bw,bh);g.globalCompositeOperation='multiply';g.globalAlpha=.9;g.fillStyle='#3a5068';g.fillRect(bx0,by0,bw,bh);g.restore();
+   g.save();path(p.body);g.clip('evenodd');for(let [op,col,al] of finishBody(pilot.finish,c)){g.globalCompositeOperation=op;g.globalAlpha=al;if(col==='sheen'){let sh=g.createLinearGradient(bx0,by0,bx1,by1);sh.addColorStop(0,'#ffffff00');sh.addColorStop(.45,'#ffffff');sh.addColorStop(.55,'#ffffff00');g.fillStyle=sh}else g.fillStyle=col;g.fillRect(bx0,by0,bw,bh)}g.restore();
    if(p.canopy){let gr=g.createLinearGradient(0,by0,0,by1);gr.addColorStop(0,'#eafcff');gr.addColorStop(.3,'#7fe6ff');gr.addColorStop(1,'#1a5a78');g.save();g.shadowColor='#9ff0ff';g.shadowBlur=1.6*S;fill(p.canopy,gr);g.restore();
     g.save();path(p.canopy);g.clip('evenodd');g.fillStyle='#ffffffb0';g.beginPath();for(let l of p.canopy){let cx=0,cy=0;for(let [x,y] of l){cx+=x;cy+=y}cx/=l.length;cy/=l.length;g.ellipse(cx-.6,cy-1.6,.7,1.6,0,0,TAU)}g.fill();g.restore();
     g.save();g.strokeStyle=c;g.lineWidth=.55;g.shadowColor=c;g.shadowBlur=.8*S;path(p.canopy);g.stroke();g.restore()}
@@ -53,9 +53,8 @@ function bakedImage(pilot,pieces,key){let hit=bakedHullCache.get(key);if(hit)ret
   if(p.glow){g.save();g.shadowColor=c;g.shadowBlur=2*S;fill(p.glow,c);fill(p.glow,'#ffffff',.35);g.restore()}
   g.save();path(p.body);g.clip('evenodd');g.strokeStyle='#ffffff26';g.lineWidth=.9;path(p.body);g.stroke();g.restore();
   if(p!==pieces[0]){g.strokeStyle='#02060c';g.globalAlpha=.6;g.lineWidth=.35;path(p.body);g.stroke();g.globalAlpha=1}}
- // v1.7 cosmetics: finish sheen/flattening and a squadron marking on the core, clipped to the ship itself.
- if(pilot.finish&&pilot.finish!=='factory'){g.save();g.globalCompositeOperation='source-atop';g.globalAlpha={gloss:.06,satin:.04,matte:.22,chrome:.12}[pilot.finish]||0;g.fillStyle=pilot.finish==='matte'?'#000':'#fff';g.fillRect(x0-P,y0-P,x1-x0+P*2,y1-y0+P*2);g.restore()}
- if(pilot.decal&&pilot.decal!=='none'){let core=pieces.find(p=>p.__core);if(core){let a=1e9,b=1e9,cc=-1e9,d=-1e9;for(let l of core.body)for(let [x,y] of l){a=Math.min(a,x);b=Math.min(b,y);cc=Math.max(cc,x);d=Math.max(d,y)}g.save();g.globalCompositeOperation='source-atop';g.translate((a+cc)/2,(b+d)/2);drawHullDecal(g,pilot.decal,pilot.accent||pilot.patternColor||c,Math.min(cc-a,d-b)*.16);g.restore()}}
+ // v1.7 cosmetics: a squadron marking on the core, clipped to the ship itself (the finish is applied to the body above).
+ if(pilot.decal&&pilot.decal!=='none'){let core=pieces.find(p=>p.__core);if(core){let a=1e9,b=1e9,cc=-1e9,d=-1e9;for(let l of core.body)for(let [x,y] of l){a=Math.min(a,x);b=Math.min(b,y);cc=Math.max(cc,x);d=Math.max(d,y)}g.save();g.globalCompositeOperation='source-atop';g.translate((a+cc)/2,(b+d)/2);g.shadowColor='#000';g.shadowBlur=1.2*S;drawHullDecal(g,pilot.decal,pilot.accent||pilot.patternColor||c,Math.min(cc-a,d-b)*.3);g.restore()}}
  if(pieces.some(p=>bakedSprite(p))){g.save();g.shadowBlur=1.3*S*glow;g.globalAlpha=1;g.lineWidth=1.25;g.lineJoin='round';for(let p of pieces){g.shadowColor=g.strokeStyle=nc(p);path(p.body);g.stroke()}g.restore()}
  hit={cv,x:x0-P,y:y0-P,S};bakedHullCache.set(key,hit);if(bakedHullCache.size>48)bakedHullCache.delete(bakedHullCache.keys().next().value);return hit}
 function bakedHullImage(pilot){let B=hullBake(pilot.id);if(!B||!B.core)return null;if(B.stock.engine&&!B.stock.engine.outlets)B.stock.engine.outlets=B.outlets;else if(!B.stock.engine&&!B.core.outlets)B.core.outlets=B.outlets;let pt=pilot.parts||{};B.core.__core=true;
@@ -151,3 +150,12 @@ let weaponArtAtlas=null;if(typeof Image!=='undefined'){weaponArtAtlas=new Image(
 const attackArtFamilies={bolt:'needle',rapid:'repeater',scatter:'pellet',arc:'disc',mines:'mine',gravity:'gravity',singularity:'void',cannon:'shell',rocket:'missile',seeker:'drone',nova:'pulse',chain:'lightning',blade:'blade',toxic:'corrosion',frost:'crystal',laser:'beam',harpoon:'tether',ember:'wake',prism:'satellite',scrap:'shrapnel',buoy:'pylon',saw:'saw',mortar:'bombardment',nanite:'swarm',phaseTorp:'torpedo',sonic:'pressure',rail:'rail',flak:'flak',crescent:'crescent',fence:'fence',leech:'siphon',cryoCharge:'cryoMine',ram:'ram',sails:'solar',voidSeed:'seed',stasisNet:'net',spire:'storm',echoRing:'echo',crossfire:'crossfire',rupture:'drill',ionGuard:'guardian',plasmaRain:'plasma',prismTrace:'tracer',cometAxe:'scythe',ionCurtain:'curtain',corona:'aura',plasmaWhip:'lash',twinWisps:'binary'};
 const attackAtlasRegions={bolt:[120,286,394,81],missile:[762,240,355,177],scythe:[179,769,311,338],guardian:[803,822,275,236]};
 let attackArt={tracks:new WeakMap,impacts:[],muzzles:[],sprites:0,fields:0,details:0,repair:0,repairWait:0,repairLife:0,shieldHits:[],shieldReform:0,shieldPrevious:0,reactions:new WeakMap,kick:0,kickAngle:0,kickWait:0,contactWait:0};
+// Body colour treatment per finish for the combat sprite: blend steps [operation, colour, alpha] over the rendered
+// shading. Factory keeps the original navy steel; Gloss/Satin paint the body in the hull colour (Gloss brighter, with a
+// sheen); Matte goes flat near-black; Chrome goes bright silver with a sheen.
+function finishBody(finish,c){let mix=(a,b,t)=>{let pa=parseInt(a.slice(1),16),pb=parseInt(b.slice(1),16),r=k=>Math.round(((pa>>k)&255)*(1-t)+((pb>>k)&255)*t);return '#'+[16,8,0].map(k=>r(k).toString(16).padStart(2,'0')).join('')},hex=/^#[0-9a-f]{6}$/i.test(c)?c:'#65f7ef';
+ if(finish==='gloss')return [['color',hex,1],['screen',mix(hex,'#000000',.4),.8],['screen','sheen',.32]];
+ if(finish==='satin')return [['color',hex,1],['screen',mix(hex,'#000000',.68),.55]];
+ if(finish==='matte')return [['color','#2a3038',1],['multiply','#3c424a',1]];
+ if(finish==='chrome')return [['color','#8f9aa6',1],['screen','#a9b4bf',.85],['screen','sheen',.45]];
+ return [['color','#2a4660',1],['multiply','#3a5068',.9]]}

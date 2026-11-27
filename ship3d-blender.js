@@ -166,11 +166,54 @@ export function buildBlenderShip(T, id, template, record, parts, catalog) {
     disposables.push(fitting);
     if (slot === 'engine') outlets = fitting.nozzles;
   }
-  // v1.7 cosmetic finish for the painted body.
-  const finish = { gloss: [.55, .22], satin: [.6, .45], matte: [.18, .85], chrome: [1, .08] }[record.finish];
-  if (finish) for (const mesh of bodyMeshes) {
-    const m = mesh.material;
-    if (m && 'metalness' in m && !(m.transparent && m.opacity < .9)) { m.metalness = finish[0]; m.roughness = finish[1]; if (record.finish === 'chrome') m.envMapIntensity = 1.6; }
+  // v1.7 cosmetic finish. Painted panels take the hull colour at a depth that suits the finish; every other
+  // surface follows the finish's sheen, so the five finishes read as genuinely different paint jobs.
+  const finishes = {
+    gloss:  { paint: .75, metal: .3, rough: .08, env: 1.9, body: [.7, .16], tint: 0 },
+    satin:  { paint: .32, metal: .5, rough: .55, env: .8, body: [.6, .5], tint: -.15, grey: .3 },
+    matte:  { paint: .16, metal: .02, rough: .96, env: .2,  body: [.05, .95], tint: -.45 },
+    chrome: { paint: null, metal: 1,  rough: .05, env: 2.4, body: [1, .1], tint: .45 },
+  };
+  const f = finishes[record.finish];
+  if (f) {
+    const hull = new T.Color(record.color || '#69f5e1'), chrome = new T.Color('#dfe7ee'), grey = new T.Color('#9aa6b2'), black = new T.Color('#06080c');
+    const seen = new Set();
+    for (const mesh of bodyMeshes) {
+      const m = mesh.material;
+      if (!m || seen.has(m) || !('metalness' in m) || (m.transparent && m.opacity < .9)) continue;
+      seen.add(m);
+      const painted = /hull paint|midnight ceramic/i.test(m.name || '');
+      if (painted) {
+        if (f.paint === null) m.color.copy(chrome);
+        else m.color.copy(hull).multiplyScalar(f.paint).lerp(black, record.finish === 'matte' ? .55 : 0).lerp(grey, f.grey || 0);
+        m.metalness = f.metal; m.roughness = f.rough; m.envMapIntensity = f.env;
+      } else {
+        m.metalness = f.body[0]; m.roughness = f.body[1]; m.envMapIntensity = f.env;
+        if (f.tint > 0) m.color.lerp(grey, f.tint); else if (f.tint < 0) m.color.lerp(black, -f.tint);
+      }
+    }
+  }
+  // Squadron markings: real decals laid on the top surface of the hull, one either side of the spine.
+  if (record.decalCanvas) {
+    root.updateMatrixWorld(true);
+    const box = new T.Box3().setFromObject(root), size = box.getSize(new T.Vector3()), axes = ['x', 'y', 'z'];
+    const upAxis = axes.reduce((a, b) => size[a] < size[b] ? a : b), lon = axes.reduce((a, b) => size[a] > size[b] ? a : b), lat = axes.find(a => a !== upAxis && a !== lon);
+    const tex = new T.CanvasTexture(record.decalCanvas); tex.colorSpace = T.SRGBColorSpace;
+    const mat = new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -4 });
+    const geo = new T.PlaneGeometry(1, 1), ray = new T.Raycaster(), down = new T.Vector3(), centre = box.getCenter(new T.Vector3());
+    down[upAxis] = record.decalUp ? -record.decalUp : -1;
+    for (const side of [-1, 1]) {
+      const from = centre.clone(); from[lat] += side * size[lat] * (record.decalSpread || .2); from[lon] -= size[lon] * .06; from[upAxis] = down[upAxis] < 0 ? box.max[upAxis] + 5 : box.min[upAxis] - 5;
+      ray.set(from, down);
+      const hit = ray.intersectObjects(bodyMeshes, false)[0];
+      if (!hit) continue;
+      const d = new T.Mesh(geo, mat);
+      d.scale.setScalar(Math.min(size[lat], size[lon]) * .15);
+      d.position.copy(hit.point).addScaledVector(down, -.06);
+      d.lookAt(d.position.clone().addScaledVector(down, -1));
+      root.add(d); glowMeshes.push(d);
+    }
+    disposables.push(tex, mat, geo);
   }
   const flare = new T.MeshBasicMaterial({ color: exhaust, transparent: true, opacity: .55, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false });
   const core = new T.MeshBasicMaterial({ color: trim, toneMapped: false });
