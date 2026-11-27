@@ -17,9 +17,11 @@ function partRevealAfterRun(){if(typeof document==='undefined'||!document.body||
  try{$('prInspect').focus()}catch(e){}}
 
 // ---- Named loadouts: parts, appearance and crew. Skills are not swapped (they cost points to change). ----
-function shipLoadouts(){let sh=shipState();if(!Array.isArray(sh.loadouts2)){sh.loadouts2=[];for(let L of sh.loadouts||[])if(L&&L.eq)sh.loadouts2.push({name:(L.label||'Loadout').slice(0,24),eq:{...L.eq},paint:{...(L.paint||{})},crew:[]})}return sh.loadouts2}
+// Save backups refuse text containing < > & " ' (so a backup can never inject markup); keep every name we store safe.
+function safeSaveText(t){return String(t==null?'':t).replace(/[<>&"']/g,'')}
+function shipLoadouts(){let sh=shipState();if(!Array.isArray(sh.loadouts2)){sh.loadouts2=[];for(let L of sh.loadouts||[])if(L&&L.eq)sh.loadouts2.push({name:safeSaveText(L.label||'Loadout').slice(0,24),eq:{...L.eq},paint:{...(L.paint||{})},crew:[]})}for(let L of sh.loadouts2)if(L&&typeof L.name==='string'&&L.name!==safeSaveText(L.name))L.name=safeSaveText(L.name);if(typeof sh.name==='string'&&sh.name!==safeSaveText(sh.name))sh.name=safeSaveText(sh.name);for(let L of sh.loadouts||[])if(L&&typeof L.label==='string')L.label=safeSaveText(L.label);return sh.loadouts2}
 let loadoutMsg='',loadoutRename=-1;
-function snapshotLoadout(name){let ps=partState(),sh=shipState();return {name:(name||'Loadout').slice(0,24),eq:{...ps.eq},paint:JSON.parse(JSON.stringify(sh.paint||{})),crew:[...crewAssigned()]}}
+function snapshotLoadout(name){let ps=partState(),sh=shipState();return {name:safeSaveText(name||'Loadout').slice(0,24),eq:{...ps.eq},paint:JSON.parse(JSON.stringify(sh.paint||{})),crew:[...crewAssigned()]}}
 function saveNewLoadout(){let L=shipLoadouts();if(L.length>=8)return false;L.push(snapshotLoadout(shipClassName()+' · '+equippedPart('engine').name.split(' ')[0]+' '+(L.length+1)));saveHangar();return true}
 function applyLoadout(i){let L=shipLoadouts()[i];if(!L)return null;let ps=partState(),missing=[];for(let q of partSlots){let id=L.eq?.[q.id];if(!id)continue;if(ps.owned[id])ps.eq[q.id]=id;else missing.push(shipParts.find(x=>x.id===id)?.name||id)}
  let sh=shipState();sh.paint={...sh.paint,...(L.paint||{})};if(Array.isArray(L.crew)){let own=crewOwned();sh.crew=L.crew.filter(id=>own.includes(id)).slice(0,crewSeats());let gone=L.crew.filter(id=>!own.includes(id));if(gone.length)missing.push(...gone.map(crewName))}saveHangar();return missing}
@@ -57,5 +59,5 @@ function progressionClick(e){let t=e.target.closest('[data-lo-load],[data-lo-sav
  else if(t.dataset.colTitle!==undefined){shipState().title=t.dataset.colTitle;saveHangar();sound('ui')}
  else if(t.dataset.sim){e.preventDefault();e.stopPropagation();startTestFlight(t.dataset.sim);return}
  e.preventDefault();e.stopPropagation();renderPreflight()}
-function progressionChange(e){let t=e.target;if(t.dataset&&t.dataset.loName!==undefined){let L=shipLoadouts(),i=+t.dataset.loName;if(L[i]){L[i].name=(t.value.trim()||L[i].name).slice(0,24);saveHangar()}loadoutRename=-1;renderPreflight()}}
+function progressionChange(e){let t=e.target;if(t.dataset&&t.dataset.loName!==undefined){let L=shipLoadouts(),i=+t.dataset.loName;if(L[i]){L[i].name=safeSaveText(t.value.trim()||L[i].name).slice(0,24);saveHangar()}loadoutRename=-1;renderPreflight()}}
 if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',progressionClick,true);document.addEventListener('change',progressionChange)}
