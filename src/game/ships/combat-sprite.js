@@ -59,7 +59,7 @@ function bakedImage(pilot,pieces,key){let hit=bakedHullCache.get(key);if(hit)ret
   if(p!==pieces[0]){g.strokeStyle='#02060c';g.globalAlpha=.6;g.lineWidth=.35;path(p.body);g.stroke();g.globalAlpha=1}}
  // v1.7 cosmetics: a squadron marking on the core, clipped to the ship itself (the finish is applied to the body above).
  if(pilot.decal&&pilot.decal!=='none'){let core=pieces.find(p=>p.__core);if(core){let a=1e9,b=1e9,cc=-1e9,d=-1e9;for(let l of core.body)for(let [x,y] of l){a=Math.min(a,x);b=Math.min(b,y);cc=Math.max(cc,x);d=Math.max(d,y)}g.save();g.globalCompositeOperation='source-atop';g.translate((a+cc)/2,(b+d)/2);g.shadowColor='#000';g.shadowBlur=1.2*S;drawHullDecal(g,pilot.decal,pilot.accent||pilot.patternColor||c,Math.min(cc-a,d-b)*.3);g.restore()}}
- if(real){g.save();g.globalAlpha=.5*Math.min(1.6,glow);g.lineWidth=.45;g.lineJoin='round';for(let p of pieces){g.strokeStyle=nc(p);path(p.body);g.stroke()}g.restore()}
+ if(real){g.save();g.globalAlpha=.7*Math.min(1.4,glow);g.lineWidth=.5;g.lineJoin='round';for(let p of pieces){g.strokeStyle=nc(p);path(p.body);g.stroke()}g.restore()}
  else if(pieces.some(p=>bakedSprite(p))){g.save();g.shadowBlur=1.3*S*glow;g.globalAlpha=1;g.lineWidth=1.25;g.lineJoin='round';for(let p of pieces){g.shadowColor=g.strokeStyle=nc(p);path(p.body);g.stroke()}g.restore()}
  hit={cv,x:x0-P,y:y0-P,S};bakedHullCache.set(key,hit);if(bakedHullCache.size>48)bakedHullCache.delete(bakedHullCache.keys().next().value);return hit}
 function bakedHullImage(pilot){let B=hullBake(pilot.id);if(!B||!B.core)return null;if(B.stock.engine&&!B.stock.engine.outlets)B.stock.engine.outlets=B.outlets;else if(!B.stock.engine&&!B.core.outlets)B.core.outlets=B.outlets;let pt=pilot.parts||{};B.core.__core=true;
@@ -75,7 +75,7 @@ function drawBakedMount(ctx,pilot){let im=bakedMountImage(pilot);if(!im||!ctx.dr
 // outright when memory runs out, with no error at all, so a small snapshot is saved every few seconds and the
 // session is marked clean whenever the page is hidden or closed normally. An unclean session on the next load
 // becomes a "closed unexpectedly" report.
-const crashVersion='1.6.0',crashMon={frames:0,lastFrames:0,fps:0,errors:[],session:null,pending:null};
+const crashVersion='1.7.0',crashMon={frames:0,lastFrames:0,fps:0,errors:[],session:null,pending:null};
 function crashStore(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
 function crashReports(){let r=crashStore('rr_crash_reports');return Array.isArray(r)?r:[]}
 function addCrashReport(r){let list=crashReports();list.unshift(r);crashStore('rr_crash_reports',list.slice(0,6));return r}

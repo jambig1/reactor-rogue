@@ -186,3 +186,9 @@
 .trail-pick.cos-pick{display:flex!important;flex-wrap:wrap;gap:6px}
 .trail-pick.cos-pick button{flex:0 1 auto;min-height:0!important;padding:8px 12px!important;display:inline-flex;align-items:center;gap:6px}
 .trail-pick.cos-pick .decal-ico{width:18px;height:18px;margin:0}
+/* v1.7 first-time hub tips */
+.hub-hint{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding:9px 12px;border:1px solid color-mix(in srgb,var(--bc,#65fbd2) 55%,transparent);border-left-width:3px;border-radius:8px;background:color-mix(in srgb,var(--bc,#65fbd2) 9%,rgba(6,12,22,.85));font-size:13px;line-height:1.4;color:#dfeaf5}
+.hub-hint b{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--bc,#65fbd2)}
+.hub-hint span{flex:1}
+.hub-hint button{flex:none;min-height:34px;padding:4px 12px;border-radius:6px;border:1px solid color-mix(in srgb,var(--bc,#65fbd2) 60%,transparent);background:transparent;color:inherit;font:inherit;cursor:pointer}
+@media (max-width:560px){.hub-hint{flex-wrap:wrap}.hub-hint span{flex-basis:100%;order:2}.hub-hint button{order:3;margin-left:auto}}

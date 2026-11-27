@@ -162,6 +162,8 @@
   background:linear-gradient(90deg,var(--holo) 0 80px,transparent 80px) 14px 0/100% 1px no-repeat,linear-gradient(180deg,#071a30e6,#030b18f0)!important;box-shadow:inset 0 0 30px #45e4ff12!important}
 .slot{border-radius:0!important;border-color:var(--holo-dim)!important;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);background:#05132699!important}
 .racklabel{color:var(--holo)!important;opacity:.8}
+.loadout.dock{padding:7px 16px 8px;align-items:flex-end}
+.loadout.dock .racklabel{white-space:nowrap}@media(max-width:520px){.loadout.dock .racklabel{letter-spacing:.6px}}
 
 /* dash: a tick ring around the circular gauge (static: nothing in the play HUD animates every frame) */
 #dashButton{overflow:visible}

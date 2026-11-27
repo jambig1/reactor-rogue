@@ -108,8 +108,8 @@
 .bay-id h3{display:flex;align-items:center;gap:6px}.bay-id button.rename{min-height:0;min-width:0;margin:0;box-shadow:none;flex:none;background:#ffffff14;border:1px solid #ffffff22;color:#bffcff;border-radius:7px;width:24px;height:24px;padding:0;font-size:12px;line-height:1;text-shadow:none}
 #shipNameInput{margin-top:3px;width:min(190px,48vw);font:600 18px var(--game-font,'Exo 2',sans-serif);letter-spacing:1px;color:#e8fbff;background:#071122;border:1px solid #65f7ef;border-radius:8px;padding:5px 8px}
 .loadout-help{margin:-2px 0 8px}.loadouts{display:flex;flex-direction:column;gap:7px}
-.loadout{display:grid;grid-template-columns:28px 1fr auto auto;gap:8px;align-items:center;padding:8px 10px;border-radius:12px;border:1px solid #ffffff1a;background:linear-gradient(160deg,#0d1b30,#071122)}
-.loadout b{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#65f7ef1f;color:#65f7ef}.loadout span{font-size:12px;color:#c8d8e8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.loadout.empty span{color:#5f7488}.loadout button{font-size:11px;padding:6px 10px}
+.loadouts .loadout{display:grid;grid-template-columns:28px 1fr auto auto;gap:8px;align-items:center;padding:8px 10px;border-radius:12px;border:1px solid #ffffff1a;background:linear-gradient(160deg,#0d1b30,#071122)}
+.loadouts .loadout b{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#65f7ef1f;color:#65f7ef}.loadouts .loadout span{font-size:12px;color:#c8d8e8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.loadout.empty span{color:#5f7488}.loadouts .loadout button{font-size:11px;padding:6px 10px}
 .pattern-pick{grid-template-columns:repeat(3,1fr)}
 
 /* v0.99 warp + map ship */

@@ -4,7 +4,7 @@
 .bay-stats span{background:linear-gradient(180deg,#0f1d31,#070f1d);box-shadow:inset 0 1px 0 #ffffff12;padding:5px 2px 6px}
 .st-ico{display:block;width:16px;height:16px;margin-bottom:1px;opacity:.85}.st-ico svg,.st-ico img{width:16px;height:16px}
 .sv-ico{display:inline-block;width:16px;height:16px;vertical-align:-3px;margin-right:6px;opacity:.7}.sv-ico svg,.sv-ico img{width:16px;height:16px}.ship-views button[aria-pressed=true] .sv-ico{opacity:1}
-.tree-node,.part-row,.part-slot,.loadout,.spec-pick button{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.tree-node,.part-row,.part-slot,.loadouts .loadout,.spec-pick button{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
 .tree-node:after,.part-row:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,#ffffff05 0 1px,transparent 1px 3px);pointer-events:none}
 .tree-node{box-shadow:inset 0 1px 0 #ffffff14}
 .tn-ico{flex:none;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,color-mix(in srgb,var(--bc) 22%,#0a1529),#050b17);border:1px solid color-mix(in srgb,var(--bc) 40%,transparent);align-self:center}.tn-ico svg,.tn-ico img{width:26px;height:26px}

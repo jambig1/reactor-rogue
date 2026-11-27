@@ -1,6 +1,6 @@
 # Reactor Rogue maintainer notes
 
-These notes describe the current repository structure and maintenance workflow. The playable version is 1.6.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
+These notes describe the current repository structure and maintenance workflow. The playable version is 1.7.0. Earlier implementation details remain in Git history; historical benchmark results are labelled separately.
 
 ## Files and runtime
 
@@ -192,6 +192,9 @@ Ship system lives just before `let hangar=loadHangar()`: `shipBranches`, `shipNo
 
 Phase 2: `shipParts`/`partSlots`/`partState()` (hangar.ship.parts {owned,eq}, hangar.ship.paint) live with the ship code; part fx feed the same bonus object (`wslots`/`pslots` → `s.slots`, read by `slotCap(kind)` in pool(), the HUD racks and discovery). Boss part drops happen in commitHangar (checkpointed by old.bosses). `affinityPick` in rollChoices nudges card 2 toward `classAffinity[cls]` 40% of the time. Trails: `drawShipTrail` (cosmetic, outside s).
 
+
+### 1.7.0
+Ship hub: `src/game/ui/ship-hub.js` (views, equipment inventory, first-time tips in `hubHints`, dismissed per view in `hangar.ship.hints`), `ship-progression.js` (part reveal, loadouts v2, collection, test flight), `skill-tree.js`, `cosmetics.js`. Parts and rarity live in `src/game/ships/equipment-catalogue.js`, stats in `ship-stats.js`, signature mechanics in `ship-signatures.js`. Saved names go through `safeSaveText` so backups stay valid. Armour is flat reduction with a 20% floor (`armourFloor`).
 
 ### 1.6.0
 Holo HUD: `src/styles/part-7.css` is a skin layered over the older stylesheets (tokens `--holo*`, a 9-slice SVG frame in `--holo-frame` plus matching `clip-path` chamfers). `src/game/ui/holo-hud.js` builds one `aria-hidden` `.holo-deco` element and a MutationObserver moves it into the topmost visible `.overlay` (a z-index:-1 child; `.overlay` is `isolation:isolate`); its readout timer only runs while an overlay is open, and it does nothing without a real DOM (test harnesses). Upgrade cards carry `data-rarity` (rank into `rarities`) for the tier effects.

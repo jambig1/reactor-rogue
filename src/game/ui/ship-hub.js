@@ -83,6 +83,18 @@ function renderWorkshopView(){let ps=partState(),owned=shipParts.filter(d=>d.r>0
 function renderCrewView(){let html=crewQuarters();let rows=crewOwned().map(id=>'<li><b>'+crewName(id)+'</b> · '+crewSpeciality[id]+' · '+crewInfo[id].perk+' · suits '+(crewTags[id]||[]).map(t=>tagNames[t]).join(', ')+'</li>').join('');
  return html+(rows?'<h4>Crew and your build</h4><ul class="crew-syn">'+rows+'</ul>':'')}
 
+// ---- First-time guidance: one short card per view, dismissed for good once read ----
+const hubHints={
+ gear:'Tap a slot on the ship to see the parts that fit it. Pick one to compare it with what you have on, then Equip. Parts drop from runs; spend scrap to upgrade them.',
+ skills:'Earn skill points by levelling your ship. Pick a class branch: its key node unlocks techniques, and masteries open at 11 points. The first refund is free.',
+ crew:'Crew give passive bonuses. Assign them to stations; their tags show which of your parts and skills they work best with.',
+ workshop:'Workshop milestones reward you for using parts. Fly with a part to level its mastery and unlock rewards.',
+ paint:'Pick a colour scheme, finish and markings. Hangar look keeps your in-flight ship matching the 3D model; Classic neon brings back the glowing style.',
+ loadouts:'Save your current parts, skills and paint as a loadout, then switch between builds in one tap.',
+ collection:'Every part, scheme and marking you have found. Completing sets earns titles.',
+ stats:'Every stat on your ship and where it comes from.'};
+function hubHint(){let h=hubHints[shipView],sh=shipState();if(!h||(sh.hints||{})[shipView])return '';return '<div class="hub-hint" role="note"><b>Tip</b><span>'+esc(h)+'</span><button type="button" data-hint-ok="'+shipView+'">Got it</button></div>'}
+function hintClick(e){let t=e.target.closest&&e.target.closest('[data-hint-ok]');if(!t)return;let sh=shipState();(sh.hints||(sh.hints={}))[t.dataset.hintOk]=1;try{saveHangar()}catch(_){}e.preventDefault();e.stopPropagation();let c=t.closest('.hub-hint');if(c)c.remove()}
 // ---- Dispatch ----
 function hubBody(){if(shipView==='gear')return renderGearView();if(shipView==='stats')return renderStatsView();if(shipView==='workshop')return renderWorkshopView();if(shipView==='crew')return renderCrewView();if(shipView==='loadouts')return typeof renderLoadoutsView==='function'?renderLoadoutsView():renderLoadouts();if(shipView==='paint')return renderCosmeticsTop()+'<h4>Colours</h4>'+renderPaintView();if(shipView==='collection')return typeof renderCollectionView==='function'?renderCollectionView():'';return null}
 
@@ -99,4 +111,4 @@ function hubClick(e){let t=e.target.closest('[data-hub-slot],[data-gear-pick],[d
 function hubChange(e){let t=e.target;if(!t.closest||!t.closest('#pilotPicker'))return;if(t.dataset&&t.dataset.gearSet){let k=t.dataset.gearSet,v=t.value;if(k==='filter')gearFilter=v;if(k==='rarity')gearRarity=v;if(k==='sort')gearSort=v;renderPreflight()}}
 // Searching filters tiles in place so the field keeps focus while typing.
 function hubInput(e){let t=e.target;if(t.id!=='gearSearch')return;gearQuery=t.value;let q=gearQuery.trim().toLowerCase();for(let el of document.querySelectorAll('#pilotPicker .gear-tile')){let d=shipParts.find(x=>x.id===el.dataset.gearPick),own=partState().owned[d.id];el.hidden=!!q&&!(own&&d.name.toLowerCase().includes(q))&&!(d.tags||[]).some(x=>(tagNames[x]||x).includes(q))}}
-if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',hubClick,true);document.addEventListener('change',hubChange);document.addEventListener('input',hubInput)}
+if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',hubClick,true);document.addEventListener('click',hintClick,true);document.addEventListener('change',hubChange);document.addEventListener('input',hubInput)}

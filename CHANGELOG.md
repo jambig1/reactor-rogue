@@ -162,7 +162,17 @@
 
 # v0.60.0 — final encounter, weapon field effects and faster testing
 
-## Unreleased
+## 1.7.0 — Ship hub, equipment rarity, techniques and cosmetics
+
+### Release polish
+
+- **First-time tips** in every ship hub view explain what it is for; tap *Got it* and that tip never shows again.
+- **Balance**: armour can no longer reduce every hit to 1. A hit always keeps at least 20% of its force, so fully stacked tank builds still feel pressure. Checked with the automated playtest bot across six builds and two sectors.
+- In-flight ships get a slightly stronger outline so they stay readable in crowded fights.
+- Fixed: the in-run weapon dock was squeezed by a hangar style with the same class name, so the *Arsenal* label wrapped over three lines. Both rack labels now sit on one line on desktop and phone.
+- Fixed: after fitting a part that adds a slot, the next run kept showing the old number of slot boxes until you picked something up.
+- Fixed: ship or loadout names containing `&` or quotes made save backups (and cloud saves) fail validation. They are cleaned on save and on load.
+- New `TEST-SAVE-V17.cjs`: a fully maxed v1.7 profile survives backup, restore and the cloud payload limits.
 
 ### Cosmetics
 
