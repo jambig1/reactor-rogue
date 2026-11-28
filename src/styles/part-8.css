@@ -248,3 +248,8 @@ details.active-skills[open]>summary{margin-bottom:6px}
   .hub-views button{padding:8px 4px!important;font-size:10.5px!important}
   .tf-menu{margin-left:0}
 }
+/* a single sort menu, on the slot's heading row */
+.gear-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.gear-head .gear-role{flex:1;min-width:0;margin:0}
+.gear-head .gear-tools{flex:none;margin:0}
+.gear-head .gear-tools select{flex:none!important;width:auto;padding:6px 8px;font-size:11.5px}
