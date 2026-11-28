@@ -2,7 +2,9 @@
 // Workshop, Appearance, Loadouts and Collection, plus an engineering Stats inspection. The 3D bay stays the
 // centrepiece; slot chips around it jump straight to that slot. Everything reads the shared catalogue
 // (equipment-catalogue.js) and stats sheet (ship-stats.js), so numbers match the run exactly.
-const hubViews=[['gear','Equipment','armour'],['skills','Skills','scholar'],['crew','Crew','seeker'],['workshop','Workshop','power'],['paint','Appearance','area'],['loadouts','Loadouts','blade'],['collection','Collection','luck']];
+const hubViews=[['gear','Ship','armour'],['skills','Skills','scholar'],['crew','Crew','seeker'],['paint','Looks','area']];
+// Secondary views live one tap deeper: Workshop and Collection from the Ship tab, Loadouts beside the ship name, Stats from the stat strip.
+const hubMore={workshop:'Workshop',loadouts:'Loadouts',collection:'Collection',stats:'Ship stats'};
 let gearSel='',gearFilter='all',gearRarity='all',gearSort='rarity',gearQuery='';
 const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -35,7 +37,7 @@ function partSynergies(d){if(!d)return [];let sh=shipState(),out=[],tags=d.tags|
 function hubBaySlots(){let ps=partState(),side=(ids,cls)=>'<div class="bay-slots '+cls+'">'+ids.map(id=>{let q=partSlots.find(x=>x.id===id),d=equippedPart(id),n=shipParts.filter(x=>x.slot===id&&partIsNew(x.id)).length;return '<button class="bay-slot'+(shipView==='gear'&&partSlotView===id?' on':'')+'" data-hub-slot="'+id+'" style="--rc:'+partRarity[d.r].c+'" aria-label="'+q.name+': '+esc(d.name)+'"><small>'+q.name.toUpperCase()+(n?' <i class="new-dot">'+n+'</i>':'')+'</small><b>'+esc(d.name)+'</b></button>'}).join('')+'</div>';
  return side(['wings','engine','reactor'],'left')+side(['mount','plating'],'right')}
 
-function hubNav(){return '<nav class="ship-views hub-views" role="tablist">'+hubViews.map(([id,n,ic])=>{let badge=id==='gear'?shipParts.filter(x=>partIsNew(x.id)).length:id==='skills'?shipState().pts:0;return '<button role="tab" data-ship-view="'+id+'" aria-selected="'+(shipView===id)+'" aria-pressed="'+(shipView===id)+'"><i class="sv-ico">'+equipmentIcon(ic)+'</i>'+n+(badge?'<em class="hub-badge">'+badge+'</em>':'')+'</button>'}).join('')+'</nav>'}
+function hubNav(){let cur=hubMore[shipView]?'gear':shipView;return '<nav class="ship-views hub-views" role="tablist">'+hubViews.map(([id,n,ic])=>{let badge=id==='gear'?shipParts.filter(x=>partIsNew(x.id)).length:id==='skills'?shipState().pts:0;return '<button role="tab" data-ship-view="'+id+'" aria-selected="'+(cur===id)+'" aria-pressed="'+(cur===id)+'"><i class="sv-ico">'+equipmentIcon(ic)+'</i>'+n+(badge?'<em class="hub-badge">'+badge+'</em>':'')+'</button>'}).join('')+'</nav>'+(hubMore[shipView]?'<div class="hub-crumb"><button data-ship-view="gear">‹ Ship</button><b>'+hubMore[shipView]+'</b></div>':'')}
 
 // ---- Equipment ----
 function gearList(slot){let ps=partState(),q=gearQuery.trim().toLowerCase();let list=shipParts.filter(d=>d.slot===slot);
@@ -55,9 +57,10 @@ function gearInspector(d){if(!d)return '<div class="gear-inspect empty"><p>Selec
  let cur=equippedPart(d.slot),lost=!eq&&cur.sig&&cur.sig!==d.sig?'<p class="gi-lose">You would lose <b>'+partSigs[cur.sig].name+'</b> from '+esc(cur.name)+'.</p>':'';
  let syn=partSynergies(d).map(x=>'<li class="'+(x.good?'good':'warn')+'">'+esc(x.t)+'</li>').join('');
  let up=d.r>0?(lv>=5?'<span class="gi-max">Fully upgraded</span>':'<button class="gi-up" data-gear-upgrade="'+d.id+'" '+(hangar.credits<partUpgradeCost(d)?'disabled':'')+'>Upgrade to +'+(lv+1)+' · '+partUpgradeCost(d)+' credits</button>'):'';
+ let nextUp=d.r>0&&lv<5?'<p class="gi-next fine">+'+(lv+1)+': '+esc(partStatLine(d,lv+1))+(lv+1===3?' · polished finish':'')+(lv+1===5&&sig?' · '+sig.name+': '+sig.lv5:'')+'</p>':'';
  return '<div class="gear-inspect" style="--rc:'+rc.c+'"><div class="gi-art"><img src="'+partSrc(d.id)+'" alt=""></div><div class="gi-head"><small>'+rc.name.toUpperCase()+' · '+slot.name.toUpperCase()+(lv?' · +'+lv:'')+'</small><h3>'+esc(d.name)+'</h3><p class="gi-lore">'+esc(d.lore||'')+'</p></div>'+
   '<p class="gi-stats">'+esc(partStatLine(d,lv))+'</p>'+rows+lost+(sig?'<div class="gi-sig"><b>'+sig.name+'</b><span>'+sig.desc+'</span><small>'+(lv>=5?'Upgraded: ':'At +5: ')+sig.lv5+'</small></div>':'')+(syn?'<ul class="gi-syn">'+syn+'</ul>':'')+
-  '<div class="gi-actions">'+(eq?'<span class="gi-eqd">✓ Equipped</span>':'<button class="primary" data-gear-equip="'+d.id+'">Equip</button>')+up+'<button class="gi-favb" data-gear-fav="'+d.id+'" aria-pressed="'+!!ps.fav[d.id]+'">'+(ps.fav[d.id]?'★ Favourite':'☆ Favourite')+'</button></div>'+
+  nextUp+'<div class="gi-actions">'+(eq?'<span class="gi-eqd">✓ Equipped</span>':'<button class="primary" data-gear-equip="'+d.id+'">Equip</button>')+up+'<button class="gi-favb" data-gear-fav="'+d.id+'" aria-pressed="'+!!ps.fav[d.id]+'">'+(ps.fav[d.id]?'★ Favourite':'☆ Favourite')+'</button></div>'+
   '<p class="gi-src fine">Source: '+esc(partSrcLabel(d))+(ps.acq[d.id]?' · found '+new Date(ps.acq[d.id]).toLocaleDateString():'')+'</p></div>'}
 function fmtDelta(r){let d=r.delta;if(['hull','armour','speed','wslots','pslots','dashes'].includes(r.id))return (d>0?'+':'')+Math.round(d);if(r.id==='dashCd')return (d>0?'+':'')+(Math.round(d*10)/10)+' s';if(r.id==='regen')return (d>0?'+':'')+(Math.round(d*100)/100)+'/s';return (d>0?'+':'')+Math.round(d*100)+'%'}
 function renderGearView(){let ps=partState(),slot=partSlotView;if(!partSlots.some(q=>q.id===slot))slot=partSlotView='engine';let q=partSlots.find(x=>x.id===slot),list=gearList(slot);if(!gearSel||shipParts.find(x=>x.id===gearSel)?.slot!==slot)gearSel=ps.eq[slot];
@@ -67,7 +70,8 @@ function renderGearView(){let ps=partState(),slot=partSlotView;if(!partSlots.som
   '<select data-gear-set="filter" aria-label="Show">'+[['all','All'],['owned','Owned'],['new','New'],['fav','Favourites'],['missing','Undiscovered']].map(([v,n])=>'<option value="'+v+'"'+(gearFilter===v?' selected':'')+'>'+n+'</option>').join('')+'</select>'+
   '<select data-gear-set="rarity" aria-label="Rarity"><option value="all">Any rarity</option>'+partRarity.map((r,i)=>'<option value="'+i+'"'+(gearRarity===String(i)?' selected':'')+'>'+r.name+'</option>').join('')+'</select>'+
   '<select data-gear-set="sort" aria-label="Sort">'+[['rarity','Sort: rarity'],['level','Sort: upgrade level'],['recent','Sort: recently found'],['name','Sort: name']].map(([v,n])=>'<option value="'+v+'"'+(gearSort===v?' selected':'')+'>'+n+'</option>').join('')+'</select></div>';
- return slots+testFlightButtons()+'<p class="gear-role"><b>'+q.name+'</b> · '+q.role+' <span>'+owned+' / '+total+' found</span></p>'+tools+'<div class="gear-body"><div class="gear-grid">'+(list.length?list.map(gearTile).join(''):'<p class="fine">Nothing matches these filters.</p>')+'</div>'+gearInspector(shipParts.find(x=>x.id===gearSel))+'</div>'}
+ let pct=typeof collectionPct==='function'?collectionPct():0,links='<div class="hub-links"><button class="hl-col" data-ship-view="collection" style="--p:'+pct+'%"><span>Collection</span><b>'+pct+'%</b></button><button data-ship-view="workshop">Upgrades ›</button>'+testFlightMenu()+'</div>';
+ return slots+links+'<p class="gear-role"><b>'+q.name+'</b> · '+q.role+' <span>'+owned+' / '+total+' found</span></p>'+tools+'<div class="gear-body"><div class="gear-grid">'+(list.length?list.map(gearTile).join(''):'<p class="fine">Nothing matches these filters.</p>')+'</div>'+gearInspector(shipParts.find(x=>x.id===gearSel))+'</div>'}
 
 // ---- Engineering stats ----
 function renderStatsView(){let sheet=shipStatSheet(),groups=[...new Set(sheet.map(r=>r.group))];
@@ -95,6 +99,10 @@ const hubHints={
  stats:'Every stat on your ship and where it comes from.'};
 function hubHint(){let h=hubHints[shipView],sh=shipState();if(!h||(sh.hints||{})[shipView])return '';return '<div class="hub-hint" role="note"><b>Tip</b><span>'+esc(h)+'</span><button type="button" data-hint-ok="'+shipView+'">Got it</button></div>'}
 function hintClick(e){let t=e.target.closest&&e.target.closest('[data-hint-ok]');if(!t)return;let sh=shipState();(sh.hints||(sh.hints={}))[t.dataset.hintOk]=1;try{saveHangar()}catch(_){}e.preventDefault();e.stopPropagation();let c=t.closest('.hub-hint');if(c)c.remove()}
+// Collapsible panels keep their open state across re-renders (the hub redraws on every click).
+const hubOpen=new Set();
+function keepOpen(key){return ' data-keep="'+key+'"'+(hubOpen.has(key)?' open':'')}
+function keepToggle(e){let t=e.target;if(!t||!t.dataset||!t.dataset.keep)return;if(t.open)hubOpen.add(t.dataset.keep);else hubOpen.delete(t.dataset.keep)}
 // ---- Dispatch ----
 function hubBody(){if(shipView==='gear')return renderGearView();if(shipView==='stats')return renderStatsView();if(shipView==='workshop')return renderWorkshopView();if(shipView==='crew')return renderCrewView();if(shipView==='loadouts')return typeof renderLoadoutsView==='function'?renderLoadoutsView():renderLoadouts();if(shipView==='paint')return renderCosmeticsTop()+'<h4>Colours</h4>'+renderPaintView();if(shipView==='collection')return typeof renderCollectionView==='function'?renderCollectionView():'';return null}
 
@@ -111,4 +119,4 @@ function hubClick(e){let t=e.target.closest('[data-hub-slot],[data-gear-pick],[d
 function hubChange(e){let t=e.target;if(!t.closest||!t.closest('#pilotPicker'))return;if(t.dataset&&t.dataset.gearSet){let k=t.dataset.gearSet,v=t.value;if(k==='filter')gearFilter=v;if(k==='rarity')gearRarity=v;if(k==='sort')gearSort=v;renderPreflight()}}
 // Searching filters tiles in place so the field keeps focus while typing.
 function hubInput(e){let t=e.target;if(t.id!=='gearSearch')return;gearQuery=t.value;let q=gearQuery.trim().toLowerCase();for(let el of document.querySelectorAll('#pilotPicker .gear-tile')){let d=shipParts.find(x=>x.id===el.dataset.gearPick),own=partState().owned[d.id];el.hidden=!!q&&!(own&&d.name.toLowerCase().includes(q))&&!(d.tags||[]).some(x=>(tagNames[x]||x).includes(q))}}
-if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',hubClick,true);document.addEventListener('click',hintClick,true);document.addEventListener('change',hubChange);document.addEventListener('input',hubInput)}
+if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',hubClick,true);document.addEventListener('click',hintClick,true);document.addEventListener('toggle',keepToggle,true);document.addEventListener('change',hubChange);document.addEventListener('input',hubInput)}

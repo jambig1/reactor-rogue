@@ -192,3 +192,60 @@
 .hub-hint span{flex:1}
 .hub-hint button{flex:none;min-height:34px;padding:4px 12px;border-radius:6px;border:1px solid color-mix(in srgb,var(--bc,#65fbd2) 60%,transparent);background:transparent;color:inherit;font:inherit;cursor:pointer}
 @media (max-width:560px){.hub-hint{flex-wrap:wrap}.hub-hint span{flex-basis:100%;order:2}.hub-hint button{order:3;margin-left:auto}}
+/* ===== v1.7 decluttered hub ===== */
+.hub-views{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.hub-crumb{display:flex;align-items:center;gap:10px;margin:8px 0 4px}
+.hub-crumb button{padding:5px 10px!important;font-size:11px!important;letter-spacing:1px}
+.hub-crumb b{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#45e4ff}
+/* stat strip is the stats button */
+.stats-open{display:block;width:100%;margin:10px 0 0;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;clip-path:none!important;color:inherit;font:inherit;text-align:inherit;cursor:pointer}
+.stats-open .bay-stats{margin:0!important}
+.stats-open .so-more{display:block;text-align:right;margin-top:4px;font-size:11px;letter-spacing:1px;color:#45e4ff}
+.stats-open:hover .bay-stats span,.stats-open:focus-visible .bay-stats span{border-color:#45e4ff88}
+.stats-open[aria-pressed=true] .so-more{color:#ffd37a}
+/* loadouts beside the ship name */
+.bay-id .bay-lo{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;margin-top:4px;min-height:24px;padding:2px 9px!important;font-size:9.5px!important;letter-spacing:1.5px;text-transform:uppercase;background:#06142a99!important;border:1px solid #45e4ff44!important;box-shadow:none!important;clip-path:none!important;border-radius:0!important;color:#9fc4dd}
+.bay-id .bay-lo:before{content:'';width:8px;height:8px;border:1px solid currentColor;box-shadow:2px -2px 0 -1px #06142a,2px -2px 0 0 currentColor}
+.bay-lo[aria-pressed=true]{border-color:#45e4ff!important;color:#45e4ff}
+/* Ship tab: one quiet link row */
+.hub-links{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 6px}
+.hub-links>button,.tf-menu>summary{padding:6px 11px!important;font-size:11px!important;letter-spacing:1px;min-height:32px}
+.hl-col{display:flex;align-items:center;gap:8px;position:relative;overflow:hidden}
+.hl-col:after{content:'';position:absolute;left:0;bottom:0;height:2px;width:var(--p);background:#45e4ff}
+.hl-col b{color:#45e4ff}
+.tf-menu{position:relative;margin-left:auto}
+.tf-menu>summary{list-style:none;cursor:pointer;border:1px solid #45e4ff55;color:#cfe6f5;display:flex;align-items:center;gap:6px}
+.tf-menu>summary::-webkit-details-marker{display:none}
+.tf-menu>summary:after{content:'▾';font-size:10px;opacity:.7}
+.tf-menu[open]>summary:after{content:'▴'}
+.tf-pop{position:absolute;right:0;top:calc(100% + 6px);z-index:6;width:min(300px,80vw);display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:1px solid #45e4ff66;background:#06142af5;box-shadow:0 12px 28px #000a}
+.tf-pop span{flex-basis:100%;font-size:11.5px;color:#93a9bd;line-height:1.4}
+.tf-pop button{flex:1;padding:7px 10px!important;font-size:11px!important}
+.gi-next{margin:6px 0 0;color:#9fd8ff}
+/* the bay labels already pick slots on wider screens */
+@media(min-width:651px){.ship-screen .gear-slots{display:none}}
+/* Skills: compact class panel, locked tiers as one line, active skills collapsed */
+details.class-identity>summary{list-style:none;display:flex;align-items:center;gap:10px;cursor:pointer}
+details.class-identity>summary::-webkit-details-marker{display:none}
+details.class-identity .ci-fantasy{flex:1;margin:0}
+.ci-more{flex:none;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--bc)}
+.ci-more:after{content:' ▾'}
+details.class-identity[open] .ci-more:after{content:' ▴'}
+details.class-identity[open]>summary{margin-bottom:8px}
+details.locked-tier{margin:0}
+details.locked-tier>summary{list-style:none;display:flex;align-items:baseline;gap:10px;padding:7px 10px;border:1px solid #ffffff14;background:#05112266;cursor:pointer;min-height:34px}
+details.locked-tier>summary::-webkit-details-marker{display:none}
+details.locked-tier>summary span{flex:none;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#91a6bb}
+details.locked-tier>summary em{flex:1;min-width:0;font-style:normal;font-size:11.5px;color:#6f8599;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+details.locked-tier>summary small{flex:none;font-size:9px;letter-spacing:1px;color:#5f7488}
+details.locked-tier[open]>summary{margin-bottom:6px}
+details.active-skills>summary{cursor:pointer;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#91a6bb;padding:6px 0}
+details.active-skills[open]>summary{margin-bottom:6px}
+/* phones: the ship shrinks on every tab except Ship, so the content has room */
+@media(max-width:650px){
+  .ship-screen:not(.view-gear) .ss-left .bay,.ship-screen:not(.view-gear) .bay{height:clamp(130px,20vh,170px)!important}
+  .ship-screen:not(.view-gear) .bay-id h3{font-size:20px}
+  .ship-screen:not(.view-gear) .stats-open{display:none}
+  .hub-views button{padding:8px 4px!important;font-size:10.5px!important}
+  .tf-menu{margin-left:0}
+}

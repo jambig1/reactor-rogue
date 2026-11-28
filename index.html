@@ -1313,6 +1313,63 @@ html:is(.gfx-lite,.gfx-reduced-motion) .hd-scan,html:is(.gfx-lite,.gfx-reduced-m
 .hub-hint span{flex:1}
 .hub-hint button{flex:none;min-height:34px;padding:4px 12px;border-radius:6px;border:1px solid color-mix(in srgb,var(--bc,#65fbd2) 60%,transparent);background:transparent;color:inherit;font:inherit;cursor:pointer}
 @media (max-width:560px){.hub-hint{flex-wrap:wrap}.hub-hint span{flex-basis:100%;order:2}.hub-hint button{order:3;margin-left:auto}}
+/* ===== v1.7 decluttered hub ===== */
+.hub-views{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.hub-crumb{display:flex;align-items:center;gap:10px;margin:8px 0 4px}
+.hub-crumb button{padding:5px 10px!important;font-size:11px!important;letter-spacing:1px}
+.hub-crumb b{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#45e4ff}
+/* stat strip is the stats button */
+.stats-open{display:block;width:100%;margin:10px 0 0;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;clip-path:none!important;color:inherit;font:inherit;text-align:inherit;cursor:pointer}
+.stats-open .bay-stats{margin:0!important}
+.stats-open .so-more{display:block;text-align:right;margin-top:4px;font-size:11px;letter-spacing:1px;color:#45e4ff}
+.stats-open:hover .bay-stats span,.stats-open:focus-visible .bay-stats span{border-color:#45e4ff88}
+.stats-open[aria-pressed=true] .so-more{color:#ffd37a}
+/* loadouts beside the ship name */
+.bay-id .bay-lo{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;margin-top:4px;min-height:24px;padding:2px 9px!important;font-size:9.5px!important;letter-spacing:1.5px;text-transform:uppercase;background:#06142a99!important;border:1px solid #45e4ff44!important;box-shadow:none!important;clip-path:none!important;border-radius:0!important;color:#9fc4dd}
+.bay-id .bay-lo:before{content:'';width:8px;height:8px;border:1px solid currentColor;box-shadow:2px -2px 0 -1px #06142a,2px -2px 0 0 currentColor}
+.bay-lo[aria-pressed=true]{border-color:#45e4ff!important;color:#45e4ff}
+/* Ship tab: one quiet link row */
+.hub-links{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 6px}
+.hub-links>button,.tf-menu>summary{padding:6px 11px!important;font-size:11px!important;letter-spacing:1px;min-height:32px}
+.hl-col{display:flex;align-items:center;gap:8px;position:relative;overflow:hidden}
+.hl-col:after{content:'';position:absolute;left:0;bottom:0;height:2px;width:var(--p);background:#45e4ff}
+.hl-col b{color:#45e4ff}
+.tf-menu{position:relative;margin-left:auto}
+.tf-menu>summary{list-style:none;cursor:pointer;border:1px solid #45e4ff55;color:#cfe6f5;display:flex;align-items:center;gap:6px}
+.tf-menu>summary::-webkit-details-marker{display:none}
+.tf-menu>summary:after{content:'▾';font-size:10px;opacity:.7}
+.tf-menu[open]>summary:after{content:'▴'}
+.tf-pop{position:absolute;right:0;top:calc(100% + 6px);z-index:6;width:min(300px,80vw);display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:1px solid #45e4ff66;background:#06142af5;box-shadow:0 12px 28px #000a}
+.tf-pop span{flex-basis:100%;font-size:11.5px;color:#93a9bd;line-height:1.4}
+.tf-pop button{flex:1;padding:7px 10px!important;font-size:11px!important}
+.gi-next{margin:6px 0 0;color:#9fd8ff}
+/* the bay labels already pick slots on wider screens */
+@media(min-width:651px){.ship-screen .gear-slots{display:none}}
+/* Skills: compact class panel, locked tiers as one line, active skills collapsed */
+details.class-identity>summary{list-style:none;display:flex;align-items:center;gap:10px;cursor:pointer}
+details.class-identity>summary::-webkit-details-marker{display:none}
+details.class-identity .ci-fantasy{flex:1;margin:0}
+.ci-more{flex:none;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--bc)}
+.ci-more:after{content:' ▾'}
+details.class-identity[open] .ci-more:after{content:' ▴'}
+details.class-identity[open]>summary{margin-bottom:8px}
+details.locked-tier{margin:0}
+details.locked-tier>summary{list-style:none;display:flex;align-items:baseline;gap:10px;padding:7px 10px;border:1px solid #ffffff14;background:#05112266;cursor:pointer;min-height:34px}
+details.locked-tier>summary::-webkit-details-marker{display:none}
+details.locked-tier>summary span{flex:none;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#91a6bb}
+details.locked-tier>summary em{flex:1;min-width:0;font-style:normal;font-size:11.5px;color:#6f8599;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+details.locked-tier>summary small{flex:none;font-size:9px;letter-spacing:1px;color:#5f7488}
+details.locked-tier[open]>summary{margin-bottom:6px}
+details.active-skills>summary{cursor:pointer;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#91a6bb;padding:6px 0}
+details.active-skills[open]>summary{margin-bottom:6px}
+/* phones: the ship shrinks on every tab except Ship, so the content has room */
+@media(max-width:650px){
+  .ship-screen:not(.view-gear) .ss-left .bay,.ship-screen:not(.view-gear) .bay{height:clamp(130px,20vh,170px)!important}
+  .ship-screen:not(.view-gear) .bay-id h3{font-size:20px}
+  .ship-screen:not(.view-gear) .stats-open{display:none}
+  .hub-views button{padding:8px 4px!important;font-size:10.5px!important}
+  .tf-menu{margin-left:0}
+}
 </style><!-- Exo 2 font licence:
 Copyright 2013 The Exo 2 Project Authors (https://github.com/googlefonts/Exo-2.0)
 
@@ -2801,17 +2858,17 @@ function shipDebrief(){if(!s||s.dev?.test)return '';let sh=shipState(),g=s.shipG
 // Ship & skills screen (preflight step 1) and the star map (step 2).
 let treeBranch='interceptor',respecArmed=false;
 function renderShipScreen(){let sh=shipState(),pid=treePilot(),p=pilots.find(x=>x.id===pid)||pilots[1],b=shipBranches.find(x=>x.id===treeBranch)||shipBranches[0],pct=Math.round(sh.xp/shipNeed(sh.lvl)*100);
- partState();let lvlPct=Math.round(sh.xp/shipNeed(sh.lvl)*100),head='<div class="bay"><canvas id="shipBay" aria-label="Your ship"></canvas><div class="bay-hud" aria-hidden="true"><span>HANGAR 07</span><span>'+(bayFx.launch>0?'LAUNCHING':'DOCKED')+'</span></div><button class="tilt-btn'+(tiltOn?' on':'')+'" data-tilt="1" aria-label="Tilt to look around">'+(tiltOn?'TILT ON':'TILT')+'</button><div class="bay-id"><small>'+(sh.title?esc(sh.title).toUpperCase()+' · ':'')+(sh.name?shipClassName()+' · ':'')+(sh.spec?(shipBranches.find(x=>x.specs.includes(sh.spec))?.name||'')+' SPEC':sh.cls?'CLASS':'BASE HULL')+'</small>'+(renamingShip?'<input id="shipNameInput" maxlength="16" value="'+(sh.name||'').replace(/"/g,'')+'" placeholder="Name your ship">':'<h3>'+shipDisplayName().replace(/</g,'')+'<button class="rename" data-ship-rename="1" aria-label="Rename ship">✎</button></h3>')+(crewAssigned().length?'<div class="bay-crew">'+crewAssigned().map(id=>'<span title="'+crewName(id)+' · '+crewInfo[id].role+'">'+crewPortrait(id)+'</span>').join('')+'</div>':'')+'</div><div class="bay-lvl" style="--pct:'+lvlPct+'"><b>'+sh.lvl+'</b><small>LEVEL</small></div><div class="bay-pts'+(sh.pts?' hot':'')+'"><b>'+sh.pts+'</b><small>POINTS</small></div>'+hubBaySlots()+'<div class="bay-xp"><i style="width:'+lvlPct+'%"></i><span>'+sh.xp+' / '+shipNeed(sh.lvl)+' XP to level '+(sh.lvl+1)+'</span></div></div>'+shipStatChips()+'<button class="hub-inspect" data-hub-stats="1" aria-pressed="'+(shipView==='stats')+'">'+(shipView==='stats'?'Close stats':'Inspect all stats ›')+'</button>';let tabs='<nav class="tree-tabs" role="tablist">'+shipBranches.map(x=>'<button role="tab" data-tree-branch="'+x.id+'" aria-selected="'+(x.id===b.id)+'" style="--bc:'+x.color+'">'+shipIcon({...(pilots.find(q=>q.id===x.pilot)||pilots[1]),color:x.color},'tab-icon')+x.name+'<small>'+branchSpent(x.id)+' pts'+(sh.cls===x.id?' · CLASS':'')+'</small></button>').join('')+'</nav>';
+ partState();let lvlPct=Math.round(sh.xp/shipNeed(sh.lvl)*100),head='<div class="bay"><canvas id="shipBay" aria-label="Your ship"></canvas><div class="bay-hud" aria-hidden="true"><span>HANGAR 07</span><span>'+(bayFx.launch>0?'LAUNCHING':'DOCKED')+'</span></div><button class="tilt-btn'+(tiltOn?' on':'')+'" data-tilt="1" aria-label="Tilt to look around">'+(tiltOn?'TILT ON':'TILT')+'</button><div class="bay-id"><small>'+(sh.title?esc(sh.title).toUpperCase()+' · ':'')+(sh.name?shipClassName()+' · ':'')+(sh.spec?(shipBranches.find(x=>x.specs.includes(sh.spec))?.name||'')+' SPEC':sh.cls?'CLASS':'BASE HULL')+'</small>'+(renamingShip?'<input id="shipNameInput" maxlength="16" value="'+(sh.name||'').replace(/"/g,'')+'" placeholder="Name your ship">':'<h3>'+shipDisplayName().replace(/</g,'')+'<button class="rename" data-ship-rename="1" aria-label="Rename ship">✎</button></h3>')+'<button class="bay-lo" data-ship-view="loadouts" aria-pressed="'+(shipView==='loadouts')+'">Loadouts'+(shipLoadouts().length?' · '+shipLoadouts().length:'')+'</button>'+(crewAssigned().length?'<div class="bay-crew">'+crewAssigned().map(id=>'<span title="'+crewName(id)+' · '+crewInfo[id].role+'">'+crewPortrait(id)+'</span>').join('')+'</div>':'')+'</div><div class="bay-lvl" style="--pct:'+lvlPct+'"><b>'+sh.lvl+'</b><small>LEVEL</small></div><div class="bay-pts'+(sh.pts?' hot':'')+'"><b>'+sh.pts+'</b><small>POINTS</small></div>'+hubBaySlots()+'<div class="bay-xp"><i style="width:'+lvlPct+'%"></i><span>'+sh.xp+' / '+shipNeed(sh.lvl)+' XP to level '+(sh.lvl+1)+'</span></div></div>'+'<button class="stats-open" data-hub-stats="1" aria-pressed="'+(shipView==='stats')+'" aria-label="'+(shipView==='stats'?'Close ship stats':'Open all ship stats')+'">'+shipStatChips()+'<span class="so-more">'+(shipView==='stats'?'Close stats':'All stats ›')+'</span></button>';let tabs='<nav class="tree-tabs" role="tablist">'+shipBranches.map(x=>'<button role="tab" data-tree-branch="'+x.id+'" aria-selected="'+(x.id===b.id)+'" style="--bc:'+x.color+'">'+shipIcon({...(pilots.find(q=>q.id===x.pilot)||pilots[1]),color:x.color},'tab-icon')+x.name+'<small>'+branchSpent(x.id)+' pts'+(sh.cls===x.id?' · CLASS':'')+'</small></button>').join('')+'</nav>';
  let nodeHtml=d=>{let st=nodeState(d),r=sh.nodes[d.id]||0,label={owned:'OWNED',locked:'Needs '+d.req+' points in '+b.name,other:'Respec to change class',needclass:'Become '+b.name+' first',needspec:'Specialise first',needkey:'Take the keystone first',nopoints:'Need a skill point',open:'TAP TO UNLOCK'}[st];
   if(d.kind==='spec'){let chosen=sh.spec&&b.specs.includes(sh.spec);return '<div class="tree-node spec '+(chosen?'owned':st)+'"><div class="spec-pick">'+b.specs.map(id=>{let q=pilots.find(x=>x.id===id);return '<button data-tree-spec="'+id+'" '+(st==='open'?'':'disabled')+' aria-pressed="'+(sh.spec===id)+'">'+(q?shipIcon(q,'spec-icon'):'')+'<b>'+pilotName(id)+'</b><span>'+specInfo[id]+'</span></button>'}).join('')+'</div><em>'+(chosen?'SPECIALISED':st==='open'?'PICK ONE · 1 POINT':label)+'</em></div>'}
   let pips=d.max>1?'<i class="pips">'+Array.from({length:d.max},(_,i)=>'<u class="'+(i<r?'on':'')+'"></u>').join('')+'</i>':'';
   let art=d.kind==='class'?shipIcon({...(pilots.find(x=>x.id===b.pilot)||pilots[1]),color:b.color},'class-icon'):nodeIcon[d.id]?'<span class="tn-ico">'+equipmentIcon(nodeIcon[d.id])+'</span>':'';
   return '<button class="tree-node '+d.kind+' '+st+'" data-tree-node="'+d.id+'" '+(st==='open'?'':'aria-disabled="true"')+'>'+art+'<span class="tn-body"><b>'+d.name+'</b><span>'+d.desc+'</span><em>'+label+'</em></span>'+pips+'</button>'};
- let tier=(name,req,list,cls='')=>{let lit=branchSpent(b.id)>=req;return '<section class="tree-tier'+(lit?' lit':'')+' '+cls+'"><header><span>'+name+'</span><small>'+(req?req+' PTS':'START')+'</small></header><div class="tier-nodes">'+list.map(nodeHtml).join('')+'</div></section>'};
+ let tier=(name,req,list,cls='')=>{let lit=branchSpent(b.id)>=req,owned=list.some(d=>(sh.nodes[d.id]||0)>0);if(!lit&&!owned){let names=list[0]&&list[0].kind==='spec'?b.specs.map(id=>{let n=String(pilotName(id));return n[0]+n.slice(1).toLowerCase()}).join(', '):list.map(d=>d.name).join(', ');return '<details class="tree-tier locked-tier '+cls+'"'+keepOpen('tier-'+b.id+'-'+name)+'><summary><span>'+name+'</span><em>'+esc(names)+'</em><small>'+req+' PTS</small></summary><div class="tier-nodes">'+list.map(nodeHtml).join('')+'</div></details>'}return '<section class="tree-tier'+(lit?' lit':'')+' '+cls+'"><header><span>'+name+'</span><small>'+(req?req+' PTS':'START')+'</small></header><div class="tier-nodes">'+list.map(nodeHtml).join('')+'</div></section>'};
  let N=k=>shipNodes.filter(d=>d.b===b.id&&d.kind===k);
  let rows=classIdentity(b)+tier('Upgrades',0,N('stat'),'pair')+tier('Techniques',3,N('tech'),'pair')+tier('Class',6,N('class'))+tier('Modules',7,N('notable'),'pair')+tier('Specialisation',9,N('spec'))+tier('Keystone',10,N('key'))+tier('Mastery',11,N('mastery'))+activeSkills();
  let cost=respecCost(),foot='<div class="tree-foot"><button id="treeRespec" '+(shipSpent()?'':'disabled')+'>'+(respecArmed?'Tap again: refund all '+shipSpent()+' points'+(cost?' for '+cost+' credits':' (free)'):'Refund points · '+(cost?cost+' credits':'free'+(shipState().respecs?'':' the first time')))+'</button><span>'+hangar.credits+' credits</span></div>';
- if(shipView==='parts')shipView='gear';let views=hubNav();let radar='<div class="radar-card"><canvas id="radar" aria-label="Build shape"></canvas></div>';let hb=hubBody(),body=hb!==null?hb:shipView==='paint'?renderPaintView():radar+tabs+'<p class="tree-tag">'+b.tag+' · '+branchSpent(b.id)+' points spent</p><div class="tree-path">'+rows+'</div>'+foot;return '<div class="ship-screen view-'+shipView+(swipeDir?' swipe-'+swipeDir:'')+'" style="--bc:'+b.color+'"><div class="ss-left">'+head+'</div><div class="ss-right">'+views+hubHint()+body+'</div></div>'}
+ if(shipView==='parts')shipView='gear';let views=hubNav();let radar='<div class="radar-card"><canvas id="radar" aria-label="Build shape"></canvas></div>';let hb=hubBody(),body=hb!==null?hb:shipView==='paint'?renderPaintView():tabs+'<p class="tree-tag">'+b.tag+' · '+branchSpent(b.id)+' points spent</p><div class="tree-path">'+rows+'</div>'+foot;return '<div class="ship-screen view-'+shipView+(swipeDir?' swipe-'+swipeDir:'')+'" style="--bc:'+b.color+'"><div class="ss-left">'+head+'</div><div class="ss-right">'+views+hubHint()+body+'</div></div>'}
 // v1.7 SHIP EQUIPMENT CATALOGUE. One source of truth for every ship part: the inventory, comparison, workshop,
 // 3D preview, drops and the actual run all read these definitions. Stats are structured (`st`), so descriptions,
 // comparisons and gameplay can never disagree. Part ids are unchanged from v0.99/v1.0, so saves carry over.
@@ -6656,7 +6713,9 @@ wireTouchLayout();
 // Workshop, Appearance, Loadouts and Collection, plus an engineering Stats inspection. The 3D bay stays the
 // centrepiece; slot chips around it jump straight to that slot. Everything reads the shared catalogue
 // (equipment-catalogue.js) and stats sheet (ship-stats.js), so numbers match the run exactly.
-const hubViews=[['gear','Equipment','armour'],['skills','Skills','scholar'],['crew','Crew','seeker'],['workshop','Workshop','power'],['paint','Appearance','area'],['loadouts','Loadouts','blade'],['collection','Collection','luck']];
+const hubViews=[['gear','Ship','armour'],['skills','Skills','scholar'],['crew','Crew','seeker'],['paint','Looks','area']];
+// Secondary views live one tap deeper: Workshop and Collection from the Ship tab, Loadouts beside the ship name, Stats from the stat strip.
+const hubMore={workshop:'Workshop',loadouts:'Loadouts',collection:'Collection',stats:'Ship stats'};
 let gearSel='',gearFilter='all',gearRarity='all',gearSort='rarity',gearQuery='';
 const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -6689,7 +6748,7 @@ function partSynergies(d){if(!d)return [];let sh=shipState(),out=[],tags=d.tags|
 function hubBaySlots(){let ps=partState(),side=(ids,cls)=>'<div class="bay-slots '+cls+'">'+ids.map(id=>{let q=partSlots.find(x=>x.id===id),d=equippedPart(id),n=shipParts.filter(x=>x.slot===id&&partIsNew(x.id)).length;return '<button class="bay-slot'+(shipView==='gear'&&partSlotView===id?' on':'')+'" data-hub-slot="'+id+'" style="--rc:'+partRarity[d.r].c+'" aria-label="'+q.name+': '+esc(d.name)+'"><small>'+q.name.toUpperCase()+(n?' <i class="new-dot">'+n+'</i>':'')+'</small><b>'+esc(d.name)+'</b></button>'}).join('')+'</div>';
  return side(['wings','engine','reactor'],'left')+side(['mount','plating'],'right')}
 
-function hubNav(){return '<nav class="ship-views hub-views" role="tablist">'+hubViews.map(([id,n,ic])=>{let badge=id==='gear'?shipParts.filter(x=>partIsNew(x.id)).length:id==='skills'?shipState().pts:0;return '<button role="tab" data-ship-view="'+id+'" aria-selected="'+(shipView===id)+'" aria-pressed="'+(shipView===id)+'"><i class="sv-ico">'+equipmentIcon(ic)+'</i>'+n+(badge?'<em class="hub-badge">'+badge+'</em>':'')+'</button>'}).join('')+'</nav>'}
+function hubNav(){let cur=hubMore[shipView]?'gear':shipView;return '<nav class="ship-views hub-views" role="tablist">'+hubViews.map(([id,n,ic])=>{let badge=id==='gear'?shipParts.filter(x=>partIsNew(x.id)).length:id==='skills'?shipState().pts:0;return '<button role="tab" data-ship-view="'+id+'" aria-selected="'+(cur===id)+'" aria-pressed="'+(cur===id)+'"><i class="sv-ico">'+equipmentIcon(ic)+'</i>'+n+(badge?'<em class="hub-badge">'+badge+'</em>':'')+'</button>'}).join('')+'</nav>'+(hubMore[shipView]?'<div class="hub-crumb"><button data-ship-view="gear">‹ Ship</button><b>'+hubMore[shipView]+'</b></div>':'')}
 
 // ---- Equipment ----
 function gearList(slot){let ps=partState(),q=gearQuery.trim().toLowerCase();let list=shipParts.filter(d=>d.slot===slot);
@@ -6709,9 +6768,10 @@ function gearInspector(d){if(!d)return '<div class="gear-inspect empty"><p>Selec
  let cur=equippedPart(d.slot),lost=!eq&&cur.sig&&cur.sig!==d.sig?'<p class="gi-lose">You would lose <b>'+partSigs[cur.sig].name+'</b> from '+esc(cur.name)+'.</p>':'';
  let syn=partSynergies(d).map(x=>'<li class="'+(x.good?'good':'warn')+'">'+esc(x.t)+'</li>').join('');
  let up=d.r>0?(lv>=5?'<span class="gi-max">Fully upgraded</span>':'<button class="gi-up" data-gear-upgrade="'+d.id+'" '+(hangar.credits<partUpgradeCost(d)?'disabled':'')+'>Upgrade to +'+(lv+1)+' · '+partUpgradeCost(d)+' credits</button>'):'';
+ let nextUp=d.r>0&&lv<5?'<p class="gi-next fine">+'+(lv+1)+': '+esc(partStatLine(d,lv+1))+(lv+1===3?' · polished finish':'')+(lv+1===5&&sig?' · '+sig.name+': '+sig.lv5:'')+'</p>':'';
  return '<div class="gear-inspect" style="--rc:'+rc.c+'"><div class="gi-art"><img src="'+partSrc(d.id)+'" alt=""></div><div class="gi-head"><small>'+rc.name.toUpperCase()+' · '+slot.name.toUpperCase()+(lv?' · +'+lv:'')+'</small><h3>'+esc(d.name)+'</h3><p class="gi-lore">'+esc(d.lore||'')+'</p></div>'+
   '<p class="gi-stats">'+esc(partStatLine(d,lv))+'</p>'+rows+lost+(sig?'<div class="gi-sig"><b>'+sig.name+'</b><span>'+sig.desc+'</span><small>'+(lv>=5?'Upgraded: ':'At +5: ')+sig.lv5+'</small></div>':'')+(syn?'<ul class="gi-syn">'+syn+'</ul>':'')+
-  '<div class="gi-actions">'+(eq?'<span class="gi-eqd">✓ Equipped</span>':'<button class="primary" data-gear-equip="'+d.id+'">Equip</button>')+up+'<button class="gi-favb" data-gear-fav="'+d.id+'" aria-pressed="'+!!ps.fav[d.id]+'">'+(ps.fav[d.id]?'★ Favourite':'☆ Favourite')+'</button></div>'+
+  nextUp+'<div class="gi-actions">'+(eq?'<span class="gi-eqd">✓ Equipped</span>':'<button class="primary" data-gear-equip="'+d.id+'">Equip</button>')+up+'<button class="gi-favb" data-gear-fav="'+d.id+'" aria-pressed="'+!!ps.fav[d.id]+'">'+(ps.fav[d.id]?'★ Favourite':'☆ Favourite')+'</button></div>'+
   '<p class="gi-src fine">Source: '+esc(partSrcLabel(d))+(ps.acq[d.id]?' · found '+new Date(ps.acq[d.id]).toLocaleDateString():'')+'</p></div>'}
 function fmtDelta(r){let d=r.delta;if(['hull','armour','speed','wslots','pslots','dashes'].includes(r.id))return (d>0?'+':'')+Math.round(d);if(r.id==='dashCd')return (d>0?'+':'')+(Math.round(d*10)/10)+' s';if(r.id==='regen')return (d>0?'+':'')+(Math.round(d*100)/100)+'/s';return (d>0?'+':'')+Math.round(d*100)+'%'}
 function renderGearView(){let ps=partState(),slot=partSlotView;if(!partSlots.some(q=>q.id===slot))slot=partSlotView='engine';let q=partSlots.find(x=>x.id===slot),list=gearList(slot);if(!gearSel||shipParts.find(x=>x.id===gearSel)?.slot!==slot)gearSel=ps.eq[slot];
@@ -6721,7 +6781,8 @@ function renderGearView(){let ps=partState(),slot=partSlotView;if(!partSlots.som
   '<select data-gear-set="filter" aria-label="Show">'+[['all','All'],['owned','Owned'],['new','New'],['fav','Favourites'],['missing','Undiscovered']].map(([v,n])=>'<option value="'+v+'"'+(gearFilter===v?' selected':'')+'>'+n+'</option>').join('')+'</select>'+
   '<select data-gear-set="rarity" aria-label="Rarity"><option value="all">Any rarity</option>'+partRarity.map((r,i)=>'<option value="'+i+'"'+(gearRarity===String(i)?' selected':'')+'>'+r.name+'</option>').join('')+'</select>'+
   '<select data-gear-set="sort" aria-label="Sort">'+[['rarity','Sort: rarity'],['level','Sort: upgrade level'],['recent','Sort: recently found'],['name','Sort: name']].map(([v,n])=>'<option value="'+v+'"'+(gearSort===v?' selected':'')+'>'+n+'</option>').join('')+'</select></div>';
- return slots+testFlightButtons()+'<p class="gear-role"><b>'+q.name+'</b> · '+q.role+' <span>'+owned+' / '+total+' found</span></p>'+tools+'<div class="gear-body"><div class="gear-grid">'+(list.length?list.map(gearTile).join(''):'<p class="fine">Nothing matches these filters.</p>')+'</div>'+gearInspector(shipParts.find(x=>x.id===gearSel))+'</div>'}
+ let pct=typeof collectionPct==='function'?collectionPct():0,links='<div class="hub-links"><button class="hl-col" data-ship-view="collection" style="--p:'+pct+'%"><span>Collection</span><b>'+pct+'%</b></button><button data-ship-view="workshop">Upgrades ›</button>'+testFlightMenu()+'</div>';
+ return slots+links+'<p class="gear-role"><b>'+q.name+'</b> · '+q.role+' <span>'+owned+' / '+total+' found</span></p>'+tools+'<div class="gear-body"><div class="gear-grid">'+(list.length?list.map(gearTile).join(''):'<p class="fine">Nothing matches these filters.</p>')+'</div>'+gearInspector(shipParts.find(x=>x.id===gearSel))+'</div>'}
 
 // ---- Engineering stats ----
 function renderStatsView(){let sheet=shipStatSheet(),groups=[...new Set(sheet.map(r=>r.group))];
@@ -6749,6 +6810,10 @@ const hubHints={
  stats:'Every stat on your ship and where it comes from.'};
 function hubHint(){let h=hubHints[shipView],sh=shipState();if(!h||(sh.hints||{})[shipView])return '';return '<div class="hub-hint" role="note"><b>Tip</b><span>'+esc(h)+'</span><button type="button" data-hint-ok="'+shipView+'">Got it</button></div>'}
 function hintClick(e){let t=e.target.closest&&e.target.closest('[data-hint-ok]');if(!t)return;let sh=shipState();(sh.hints||(sh.hints={}))[t.dataset.hintOk]=1;try{saveHangar()}catch(_){}e.preventDefault();e.stopPropagation();let c=t.closest('.hub-hint');if(c)c.remove()}
+// Collapsible panels keep their open state across re-renders (the hub redraws on every click).
+const hubOpen=new Set();
+function keepOpen(key){return ' data-keep="'+key+'"'+(hubOpen.has(key)?' open':'')}
+function keepToggle(e){let t=e.target;if(!t||!t.dataset||!t.dataset.keep)return;if(t.open)hubOpen.add(t.dataset.keep);else hubOpen.delete(t.dataset.keep)}
 // ---- Dispatch ----
 function hubBody(){if(shipView==='gear')return renderGearView();if(shipView==='stats')return renderStatsView();if(shipView==='workshop')return renderWorkshopView();if(shipView==='crew')return renderCrewView();if(shipView==='loadouts')return typeof renderLoadoutsView==='function'?renderLoadoutsView():renderLoadouts();if(shipView==='paint')return renderCosmeticsTop()+'<h4>Colours</h4>'+renderPaintView();if(shipView==='collection')return typeof renderCollectionView==='function'?renderCollectionView():'';return null}
 
@@ -6765,7 +6830,7 @@ function hubClick(e){let t=e.target.closest('[data-hub-slot],[data-gear-pick],[d
 function hubChange(e){let t=e.target;if(!t.closest||!t.closest('#pilotPicker'))return;if(t.dataset&&t.dataset.gearSet){let k=t.dataset.gearSet,v=t.value;if(k==='filter')gearFilter=v;if(k==='rarity')gearRarity=v;if(k==='sort')gearSort=v;renderPreflight()}}
 // Searching filters tiles in place so the field keeps focus while typing.
 function hubInput(e){let t=e.target;if(t.id!=='gearSearch')return;gearQuery=t.value;let q=gearQuery.trim().toLowerCase();for(let el of document.querySelectorAll('#pilotPicker .gear-tile')){let d=shipParts.find(x=>x.id===el.dataset.gearPick),own=partState().owned[d.id];el.hidden=!!q&&!(own&&d.name.toLowerCase().includes(q))&&!(d.tags||[]).some(x=>(tagNames[x]||x).includes(q))}}
-if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',hubClick,true);document.addEventListener('click',hintClick,true);document.addEventListener('change',hubChange);document.addEventListener('input',hubInput)}
+if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',hubClick,true);document.addEventListener('click',hintClick,true);document.addEventListener('toggle',keepToggle,true);document.addEventListener('change',hubChange);document.addEventListener('input',hubInput)}
 
 // v1.7 SHIP PROGRESSION: discovery reveal, named loadouts, the equipment collection and test flights.
 // All of it reads the shared catalogue; none of it creates a new currency.
@@ -6816,6 +6881,7 @@ function startTestFlight(kind){if(!['preflight','hangar','menu'].includes(state)
  for(let id of ['preflight','hangar','menu','end','records','settings'])try{show(id,false)}catch(e){}
  if(kind==='boss'){quickTest('boss',null,false,{pilot,sector})}else{devLaunch={pilot,sector};start()}
  if(!s)return false;s.dev.test=true;s.dev.sim=true;s.hangarReport='Test flight. No credits, ship XP, parts, records or missions are earned.';try{$('devRunBadge').textContent='TEST FLIGHT · NO REWARDS'}catch(e){}return true}
+function testFlightMenu(){return '<details class="tf-menu"'+keepOpen('tf')+'><summary>Test flight</summary><div class="tf-pop"><span>Fly this exact ship with no rewards and no risk. Quit from the pause menu to come back.</span><button data-sim="waves">Waves</button><button data-sim="boss">Boss duel</button></div></details>'}
 function testFlightButtons(){return '<div class="hub-sim"><b>Test flight</b><span>Fly this exact ship with no rewards and no risk. Quit from the pause menu to come back.</span><button data-sim="waves">Waves</button><button data-sim="boss">Boss duel</button></div>'}
 
 function progressionClick(e){let t=e.target.closest('[data-lo-load],[data-lo-save],[data-lo-dup],[data-lo-ren],[data-lo-del],[data-lo-new],[data-col-title],[data-sim]');if(!t||!t.closest('#pilotPicker'))return;let L=shipLoadouts(),i;
@@ -6842,11 +6908,11 @@ function classPreview(b){let sh=shipState(),cur=shipBasePilot(),next=pilots.find
  let m0=mobility[cur.id]||{},m1=mobility[next.id]||{},w=id=>defs.find(d=>d.id===id)?.name||id,row=(l,a,c,fmt=v=>v)=>a===c?'':'<span><small>'+l+'</small>'+fmt(a)+' → <b>'+fmt(c)+'</b></span>';
  let rows=row('Hull',cur.hp,next.hp)+row('Speed',cur.speed,next.speed)+row(m1.name||'Dash',m0.charges,m1.charges,v=>v+'×')+row('Starting weapon',w(cur.starter),w(next.starter));
  return '<div class="ci-preview"><small>'+(sh.cls?'Switching to '+b.name+' (needs a refund first)':'Becoming '+b.name)+' changes:</small>'+(rows||'<span>Your hull and its +10% weapon damage.</span>')+'</div>'}
-function classIdentity(b){let info=classInfo[b.id];if(!info)return '';return '<section class="class-identity" style="--bc:'+b.color+'"><p class="ci-fantasy">'+esc(info.fantasy)+'</p><div class="ci-grid"><span><small>STRONG</small>'+esc(info.strong)+'</span><span><small>WEAK</small>'+esc(info.weak)+'</span><span><small>PAIRS WITH</small>'+esc(info.gear)+'</span></div>'+classPreview(b)+'</section>'}
+function classIdentity(b){let info=classInfo[b.id];if(!info)return '';return '<details class="class-identity"'+keepOpen('ci-'+b.id)+' style="--bc:'+b.color+'"><summary><p class="ci-fantasy">'+esc(info.fantasy)+'</p><span class="ci-more">Details</span></summary><div class="ci-grid"><span><small>STRONG</small>'+esc(info.strong)+'</span><span><small>WEAK</small>'+esc(info.weak)+'</span><span><small>PAIRS WITH</small>'+esc(info.gear)+'</span></div>'+classPreview(b)+'</details>'}
 // Every owned skill in one list, with the equipment it works with.
 function activeSkills(){let sh=shipState(),owned=shipNodes.filter(d=>(sh.nodes[d.id]||0)>0);if(!owned.length)return '';
  let eq=partSlots.map(q=>equippedPart(q.id)).filter(d=>d.r>0);
- return '<section class="active-skills"><h4>Active skills · '+owned.length+'</h4><ul>'+owned.map(d=>{let r=sh.nodes[d.id],tags=nodeTags[d.id]||[],with_=eq.filter(p=>(p.tags||[]).some(t=>tags.includes(t))).map(p=>p.name);return '<li><b>'+esc(d.name)+(d.max>1?' '+r+'/'+d.max:'')+'</b><span>'+esc(d.kind==='spec'?pilotName(sh.spec)+' specialisation':d.desc)+'</span>'+(with_.length?'<em>Works with your '+esc(with_.join(', '))+'</em>':'')+'</li>'}).join('')+'</ul></section>'}
+ return '<details class="active-skills"'+keepOpen('active')+'><summary>Active skills · '+owned.length+'</summary><ul>'+owned.map(d=>{let r=sh.nodes[d.id],tags=nodeTags[d.id]||[],with_=eq.filter(p=>(p.tags||[]).some(t=>tags.includes(t))).map(p=>p.name);return '<li><b>'+esc(d.name)+(d.max>1?' '+r+'/'+d.max:'')+'</b><span>'+esc(d.kind==='spec'?pilotName(sh.spec)+' specialisation':d.desc)+'</span>'+(with_.length?'<em>Works with your '+esc(with_.join(', '))+'</em>':'')+'</li>'}).join('')+'</ul></details>'}
 // Playstyle tags for the new skill nodes (used by equipment synergy hints too).
 Object.assign(nodeTags,{i_ghost:['dash','close'],i_tempo:['dash','aggressive'],i_mast:['evasive','crit'],j_unbreak:['tank'],j_mom:['close','tank','dash'],j_mast:['tank'],g_focus:['sustained','artillery'],g_heat:['sustained','thermal'],g_mast:['sustained'],c_overclock:['drones'],c_recycle:['sustain','salvage'],c_mast:['salvage']});
 

@@ -47,6 +47,7 @@ function startTestFlight(kind){if(!['preflight','hangar','menu'].includes(state)
  for(let id of ['preflight','hangar','menu','end','records','settings'])try{show(id,false)}catch(e){}
  if(kind==='boss'){quickTest('boss',null,false,{pilot,sector})}else{devLaunch={pilot,sector};start()}
  if(!s)return false;s.dev.test=true;s.dev.sim=true;s.hangarReport='Test flight. No credits, ship XP, parts, records or missions are earned.';try{$('devRunBadge').textContent='TEST FLIGHT · NO REWARDS'}catch(e){}return true}
+function testFlightMenu(){return '<details class="tf-menu"'+keepOpen('tf')+'><summary>Test flight</summary><div class="tf-pop"><span>Fly this exact ship with no rewards and no risk. Quit from the pause menu to come back.</span><button data-sim="waves">Waves</button><button data-sim="boss">Boss duel</button></div></details>'}
 function testFlightButtons(){return '<div class="hub-sim"><b>Test flight</b><span>Fly this exact ship with no rewards and no risk. Quit from the pause menu to come back.</span><button data-sim="waves">Waves</button><button data-sim="boss">Boss duel</button></div>'}
 
 function progressionClick(e){let t=e.target.closest('[data-lo-load],[data-lo-save],[data-lo-dup],[data-lo-ren],[data-lo-del],[data-lo-new],[data-col-title],[data-sim]');if(!t||!t.closest('#pilotPicker'))return;let L=shipLoadouts(),i;
