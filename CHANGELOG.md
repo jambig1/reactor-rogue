@@ -167,7 +167,7 @@
 ### Release polish
 
 - **Calmer ship hub.** Four tabs instead of seven: **Ship, Skills, Crew, Looks**. Loadouts sits beside your ship's name, Workshop is the *Upgrades* link on the Ship tab (and each part's inspector now shows what its next upgrade gives), Collection is a progress link with an *Undiscovered* filter, and tapping the stat strip opens all ship stats. Each of these has a *‹ Ship* link back.
-- The Ship tab drops the duplicate row of slot tiles on wider screens (the labels around the ship already pick slots) and tucks Test flight into a small menu.
+- The Ship tab drops the part search box (each slot only has a handful of parts; the filters and sort stay), the duplicate row of slot tiles on wider screens (the labels around the ship already pick slots) and tucks Test flight into a small menu.
 - The Skills page drops the build-shape chart, shows the class description in one line with *Details* for the rest, and lists tiers you can't use yet as one-line rows you can still open to plan ahead. Your active skills are a collapsed list. On phones the page is less than half as long.
 - On phones the ship view shrinks on every tab except Ship, so there's more room for the content.
 - **First-time tips** in every ship hub view explain what it is for; tap *Got it* and that tip never shows again.

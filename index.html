@@ -1157,8 +1157,7 @@ html:is(.gfx-lite,.gfx-reduced-motion) .hd-scan,html:is(.gfx-lite,.gfx-reduced-m
 .gear-role{margin:4px 0 8px;font-size:12px;color:#a9bdcf;line-height:1.4}.gear-role b{color:#e6f6ff}.gear-role span{float:right;color:var(--holo,#45e4ff)}
 .gear-tools{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .gear-tools{flex-wrap:nowrap}
-.gear-tools input,.gear-tools select{flex:1 1 90px;min-width:0;background:#04101f;color:#dff6ff;border:1px solid #45e4ff40;padding:8px 10px;font:inherit;font-size:12px}
-.gear-tools input{flex:2 1 150px}
+.gear-tools select{flex:1 1 90px;min-width:0;background:#04101f;color:#dff6ff;border:1px solid #45e4ff40;padding:8px 10px;font:inherit;font-size:12px}
 @media(max-width:650px){.gear-tools{flex-wrap:wrap}}
 .gear-body{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
 @media(min-width:1280px){.gear-body{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);align-items:start}}
@@ -6716,7 +6715,7 @@ wireTouchLayout();
 const hubViews=[['gear','Ship','armour'],['skills','Skills','scholar'],['crew','Crew','seeker'],['paint','Looks','area']];
 // Secondary views live one tap deeper: Workshop and Collection from the Ship tab, Loadouts beside the ship name, Stats from the stat strip.
 const hubMore={workshop:'Workshop',loadouts:'Loadouts',collection:'Collection',stats:'Ship stats'};
-let gearSel='',gearFilter='all',gearRarity='all',gearSort='rarity',gearQuery='';
+let gearSel='',gearFilter='all',gearRarity='all',gearSort='rarity';
 const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 // Playstyle tags each class, specialisation, crew member and skill leans towards (for synergy hints).
@@ -6751,8 +6750,8 @@ function hubBaySlots(){let ps=partState(),side=(ids,cls)=>'<div class="bay-slots
 function hubNav(){let cur=hubMore[shipView]?'gear':shipView;return '<nav class="ship-views hub-views" role="tablist">'+hubViews.map(([id,n,ic])=>{let badge=id==='gear'?shipParts.filter(x=>partIsNew(x.id)).length:id==='skills'?shipState().pts:0;return '<button role="tab" data-ship-view="'+id+'" aria-selected="'+(cur===id)+'" aria-pressed="'+(cur===id)+'"><i class="sv-ico">'+equipmentIcon(ic)+'</i>'+n+(badge?'<em class="hub-badge">'+badge+'</em>':'')+'</button>'}).join('')+'</nav>'+(hubMore[shipView]?'<div class="hub-crumb"><button data-ship-view="gear">‹ Ship</button><b>'+hubMore[shipView]+'</b></div>':'')}
 
 // ---- Equipment ----
-function gearList(slot){let ps=partState(),q=gearQuery.trim().toLowerCase();let list=shipParts.filter(d=>d.slot===slot);
- list=list.filter(d=>{let own=!!ps.owned[d.id];if(gearFilter==='owned'&&!own)return false;if(gearFilter==='new'&&!partIsNew(d.id))return false;if(gearFilter==='fav'&&!ps.fav[d.id])return false;if(gearFilter==='missing'&&own)return false;if(gearRarity!=='all'&&d.r!==+gearRarity)return false;if(q&&!(own&&d.name.toLowerCase().includes(q))&&!(d.tags||[]).some(t=>(tagNames[t]||t).includes(q)))return false;return true});
+function gearList(slot){let ps=partState();let list=shipParts.filter(d=>d.slot===slot);
+ list=list.filter(d=>{let own=!!ps.owned[d.id];if(gearFilter==='owned'&&!own)return false;if(gearFilter==='new'&&!partIsNew(d.id))return false;if(gearFilter==='fav'&&!ps.fav[d.id])return false;if(gearFilter==='missing'&&own)return false;if(gearRarity!=='all'&&d.r!==+gearRarity)return false;return true});
  let key={rarity:d=>-d.r*100-partLevel(d.id),level:d=>-partLevel(d.id)*10-d.r,recent:d=>-(ps.acq[d.id]||0),name:d=>0}[gearSort]||(d=>0);
  list.sort((a,b)=>(ps.eq[slot]===b.id)-(ps.eq[slot]===a.id)||(!!ps.owned[b.id])-(!!ps.owned[a.id])||key(a)-key(b)||a.name.localeCompare(b.name));return list}
 function gearTile(d){let ps=partState(),own=!!ps.owned[d.id],eq=ps.eq[d.slot]===d.id,lv=partLevel(d.id),rc=partRarity[d.r];
@@ -6777,7 +6776,7 @@ function fmtDelta(r){let d=r.delta;if(['hull','armour','speed','wslots','pslots'
 function renderGearView(){let ps=partState(),slot=partSlotView;if(!partSlots.some(q=>q.id===slot))slot=partSlotView='engine';let q=partSlots.find(x=>x.id===slot),list=gearList(slot);if(!gearSel||shipParts.find(x=>x.id===gearSel)?.slot!==slot)gearSel=ps.eq[slot];
  let slots='<div class="gear-slots" role="tablist">'+partSlots.map(x=>{let d=equippedPart(x.id),n=shipParts.filter(p=>p.slot===x.id&&partIsNew(p.id)).length;return '<button role="tab" data-hub-slot="'+x.id+'" aria-selected="'+(x.id===slot)+'" style="--rc:'+partRarity[d.r].c+'"><img src="'+partSrc(d.id)+'" alt=""><span><small>'+x.name.toUpperCase()+'</small><b>'+esc(d.name)+'</b></span>'+(n?'<em class="hub-badge">'+n+'</em>':'')+'</button>'}).join('')+'</div>';
  let owned=shipParts.filter(d=>d.slot===slot&&ps.owned[d.id]).length,total=shipParts.filter(d=>d.slot===slot).length;
- let tools='<div class="gear-tools"><input id="gearSearch" type="search" placeholder="Search parts or playstyle" value="'+esc(gearQuery)+'" aria-label="Search parts">'+
+ let tools='<div class="gear-tools">'+
   '<select data-gear-set="filter" aria-label="Show">'+[['all','All'],['owned','Owned'],['new','New'],['fav','Favourites'],['missing','Undiscovered']].map(([v,n])=>'<option value="'+v+'"'+(gearFilter===v?' selected':'')+'>'+n+'</option>').join('')+'</select>'+
   '<select data-gear-set="rarity" aria-label="Rarity"><option value="all">Any rarity</option>'+partRarity.map((r,i)=>'<option value="'+i+'"'+(gearRarity===String(i)?' selected':'')+'>'+r.name+'</option>').join('')+'</select>'+
   '<select data-gear-set="sort" aria-label="Sort">'+[['rarity','Sort: rarity'],['level','Sort: upgrade level'],['recent','Sort: recently found'],['name','Sort: name']].map(([v,n])=>'<option value="'+v+'"'+(gearSort===v?' selected':'')+'>'+n+'</option>').join('')+'</select></div>';
@@ -6828,9 +6827,7 @@ function hubClick(e){let t=e.target.closest('[data-hub-slot],[data-gear-pick],[d
  else return;
  e.preventDefault();e.stopPropagation();selectedPilot=preflightShip=treePilot();renderPreflight()}
 function hubChange(e){let t=e.target;if(!t.closest||!t.closest('#pilotPicker'))return;if(t.dataset&&t.dataset.gearSet){let k=t.dataset.gearSet,v=t.value;if(k==='filter')gearFilter=v;if(k==='rarity')gearRarity=v;if(k==='sort')gearSort=v;renderPreflight()}}
-// Searching filters tiles in place so the field keeps focus while typing.
-function hubInput(e){let t=e.target;if(t.id!=='gearSearch')return;gearQuery=t.value;let q=gearQuery.trim().toLowerCase();for(let el of document.querySelectorAll('#pilotPicker .gear-tile')){let d=shipParts.find(x=>x.id===el.dataset.gearPick),own=partState().owned[d.id];el.hidden=!!q&&!(own&&d.name.toLowerCase().includes(q))&&!(d.tags||[]).some(x=>(tagNames[x]||x).includes(q))}}
-if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',hubClick,true);document.addEventListener('click',hintClick,true);document.addEventListener('toggle',keepToggle,true);document.addEventListener('change',hubChange);document.addEventListener('input',hubInput)}
+if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){document.addEventListener('click',hubClick,true);document.addEventListener('click',hintClick,true);document.addEventListener('toggle',keepToggle,true);document.addEventListener('change',hubChange)}
 
 // v1.7 SHIP PROGRESSION: discovery reveal, named loadouts, the equipment collection and test flights.
 // All of it reads the shared catalogue; none of it creates a new currency.
